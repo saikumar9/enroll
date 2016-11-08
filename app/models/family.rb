@@ -521,6 +521,14 @@ class Family
     person.save!
   end
 
+  def check_for_consumer_role
+    if primary_applicant.person.consumer_role.present?
+      active_family_members.each do |family_member|
+        build_consumer_role(family_member)
+      end
+    end
+  end
+
   def enrolled_hbx_enrollments
     latest_household.try(:enrolled_hbx_enrollments)
   end
@@ -583,6 +591,7 @@ class Family
       {"$unwind" => '$households'},
       {"$unwind" => '$households.hbx_enrollments'},
       {"$match" => {"households.hbx_enrollments.aasm_state" => {"$ne" => 'inactive'} }},
+      {"$match" => {"households.hbx_enrollments.aasm_state" => {"$ne" => 'void'} }},
       {"$match" => {"households.hbx_enrollments.external_enrollment" => {"$ne" => true}}},
       {"$match" => {"households.hbx_enrollments.aasm_state" => {"$ne" => "coverage_canceled"}}},
       {"$sort" => {"households.hbx_enrollments.submitted_at" => -1 }},
