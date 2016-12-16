@@ -147,7 +147,14 @@ $(document).ready(function () {
             $(this).val("");
             $(this).focus();
         }
+        if (entered_year == (new Date().getFullYear() )){
+            alert("Please enter a date of birth that is not in current year.");
+            $(this).val("");
+            $(this).focus();
+        }
+
     });
+
 
   // mimic jquery toggle function
   $.fn.toggleClick=function(){
