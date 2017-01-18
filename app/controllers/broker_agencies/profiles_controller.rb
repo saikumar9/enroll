@@ -125,10 +125,19 @@ class BrokerAgencies::ProfilesController < ApplicationController
   end
 
   def employers
-    @datatable = Effective::Datatables::BrokerAgencyEmployersDatatable.new(:current_user => current_user, :broker_agency_profile_id => @broker_agency_profile._id)
+
+
     @memo = {}
     @broker_role = current_user.person.broker_role || nil
     @general_agency_profiles = GeneralAgencyProfile.all_by_broker_role(@broker_role, approved_only: true)
+
+    @datatable = Effective::Datatables::BrokerAgencyEmployersDatatable.new( :current_user => current_user,
+                                                                            :broker_agency_profile_id => @broker_agency_profile._id,
+                                                                            :controller_name => controller_name,
+                                                                            :general_agency_profiles => @general_agency_profiles
+                                                                            )
+
+
     respond_to do |format|
       format.js {}
     end
