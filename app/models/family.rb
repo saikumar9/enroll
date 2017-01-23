@@ -91,12 +91,14 @@ class Family
 
   index({"irs_groups.hbx_assigned_id" => 1})
   index({"family_members.person_id" => 1, hbx_assigned_id: 1})
+
+  index({"broker_agency_accounts.broker_agency_profile_id" => 1, "broker_agency_accounts.is_active" => 1}, {name: "broker_families_search_index"})
   # index("households.tax_households_id")
 
   validates :renewal_consent_through_year,
             numericality: {only_integer: true, inclusion: 2014..2025},
             :allow_nil => true
-            
+
   validate :family_integrity
 
   after_initialize :build_household
@@ -491,7 +493,7 @@ class Family
     end
     # Manage: SEPs, FamilyMemberAgeOff
     def advance_day(new_date)
-      expire_individual_market_enrollments
+      # expire_individual_market_enrollments
     end
 
     def default_search_order
@@ -567,7 +569,7 @@ class Family
       end
     end
   end
-  
+
   def enrolled_hbx_enrollments
     latest_household.try(:enrolled_hbx_enrollments)
   end
