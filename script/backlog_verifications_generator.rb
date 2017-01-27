@@ -11,6 +11,7 @@ families = Family.where({
       "aasm_state" => { "$in" => ["enrolled_contingent"] },
       "effective_on" => { "$gte" => Date.new(2016,1,1)},
       "submitted_at" => { "$gt" => Date.new(2016,7,22)},
+      "special_verification_period" => { "$gte" => Date.new(2017,03,20)}
   } }
 }).to_a
 
@@ -35,17 +36,20 @@ CSV.open("families_processed_#{TimeKeeper.date_of_record.strftime('%m_%d_%Y')}.c
 
   families.each do |family|
 
-    next if family.active_household.hbx_enrollments.where(:"special_verification_period".lt => Date.new(2016,10,26)).present?
     counter += 1
     begin
       person = family.primary_applicant.person
+
+      # checks inbox for the first reminder notice
+      next if person.inbox.blank?
+      next if person.inbox.messages.where(:"subject" => "Documents needed to confirm eligibility for your plan").blank?
 
       if person.consumer_role.blank?
         count += 1
         next
       end
 
-      event_kind = ApplicationEventKind.where(:event_name => 'verifications_backlog').first
+      event_kind = ApplicationEventKind.where(:event_name => 'second_verifications_reminder').first
 
       notice_trigger = event_kind.notice_triggers.first 
 

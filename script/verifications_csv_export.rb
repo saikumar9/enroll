@@ -4,6 +4,7 @@ families = Family.where({
       "aasm_state" => { "$in" => ["enrolled_contingent"] },
       "effective_on" => { "$gte" => Date.new(2016,1,1)},
       "submitted_at" => { "$gt" => Date.new(2016,7,22)},
+      "special_verification_period" => { "$gte" => Date.new(2017,03,20)}
   } }
 }).to_a
 
@@ -12,7 +13,7 @@ coverage_not_found = []
 pending_ssa_validation = []
 docs_uploaded = []
 
-CSV.open("verifications_backlog_notice_data_export_1.csv", "w") do |csv|
+CSV.open("verifications_backlog_notice_data_export_#{TimeKeeper.date_of_record.strftime('%m_%d_%Y')}.csv", "w") do |csv|
 
   csv << [
     'Primary HbxId',
@@ -34,29 +35,19 @@ CSV.open("verifications_backlog_notice_data_export_1.csv", "w") do |csv|
   families.each do |family|
     counter += 1
 
-    next if family.active_household.hbx_enrollments.where(:"special_verification_period".lt => Date.new(2016,10,26)).present?
-
     begin
 
     person = family.primary_applicant.person
-    # Additional checks for the next round of notices
-    #  if (person.inbox.present? && person.inbox.messages.where(:"subject" => "Documents needed to confirm eligibility for your plan").present?)
-    #   puts "already notified!!"
-    #   next
-    # end
 
-    # next if person.inbox.blank?
-    # next if person.inbox.messages.where(:"subject" => "Documents needed to confirm eligibility for your plan").blank?
-    # if secure_message = person.inbox.messages.where(:"subject" => "Documents needed to confirm eligibility for your plan").first
-    #   next if secure_message.created_at > 35.days.ago
-    # end
+    next if person.inbox.blank?
+    next if person.inbox.messages.where(:"subject" => "Documents needed to confirm eligibility for your plan").blank?
 
     if person.consumer_role.blank?
       count += 1
       next
     end
 
-      event_kind = ApplicationEventKind.where(:event_name => 'verifications_backlog').first
+      event_kind = ApplicationEventKind.where(:event_name => 'second_verifications_reminder').first
       notice_trigger = event_kind.notice_triggers.first 
 
       builder = notice_trigger.notice_builder.camelize.constantize.new(person.consumer_role, {
