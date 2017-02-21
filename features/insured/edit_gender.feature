@@ -10,14 +10,3 @@ Feature: Edit Gender on Manage Family Page
     And I click female
     And I click Save
     Then Person was successfully updated appears. 
-
-  Scenario: Admin edits gender from manage family page. 
-    Given I am an admin
-    And the consumer's gender is set to male
-    When I visit the Families Home Page
-    And then I click on the Manage Family link.
-    And then I click on the Personal tab
-    Then male should be selected
-    And I click female
-    And I click Save
-    Then Person was successfully updated appears.
