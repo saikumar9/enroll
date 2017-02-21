@@ -9,7 +9,6 @@ namespace :migrations do
     CSV.open(file_name, "w", force_quotes: true) do |csv|
       csv << field_names
 
-      results = []
       Person.all_employee_roles.each do |person|
         begin
           if person.has_active_employee_role?
