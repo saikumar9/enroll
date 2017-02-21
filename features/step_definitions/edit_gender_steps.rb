@@ -12,10 +12,6 @@ Given(/^I am a consumer$/) do
   Caches::PlanDetails.load_record_cache!
 end
 
-Given(/^I am already enrolled$/) do
-  empty
-end
-
 Given(/^my gender is set to male$/) do
   empty
 end
@@ -45,10 +41,6 @@ Then(/^Person was successfully updated appears\.$/) do
 end
 
 Given(/^I am an admin$/) do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Given(/^the consumer is already enrolled$/) do
   pending # Write code here that turns the phrase above into concrete actions
 end
 
