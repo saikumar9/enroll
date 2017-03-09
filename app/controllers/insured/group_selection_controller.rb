@@ -67,7 +67,7 @@ class Insured::GroupSelectionController < ApplicationController
 
     hbx_enrollment = build_hbx_enrollment
     if (keep_existing_plan && @hbx_enrollment.present?)
-      sep_id = @hbx_enrollment.is_shop? ? @hbx_enrollment.family.earliest_effective_shop_sep.id : @hbx_enrollment.family.earliest_effective_ivl_sep.id
+      sep_id = @hbx_enrollment.is_shop? ? @hbx_enrollment.family.earliest_effective_shop_sep.nil? ? "" : @hbx_enrollment.family.earliest_effective_shop_sep.id : @hbx_enrollment.family.earliest_effective_ivl_sep.nil? ? "" : @hbx_enrollment.family.earliest_effective_ivl_sep.id
       hbx_enrollment.special_enrollment_period_id = sep_id
       hbx_enrollment.plan = @hbx_enrollment.plan
     end
