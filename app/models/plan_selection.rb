@@ -99,11 +99,11 @@ class PlanSelection
 
   def enrollment_for_same_plan_premiums
     new_enrollment = hbx_enrollment.clone
-    new_enrollment.hbx_enrollment_members = set_enrollment_member_eligibility_dates(new_enrollment)
+    new_enrollment.hbx_enrollment_members = set_enrollment_member_eligibility_dates(new_enrollment) # Do we need to get rid of this? 
     new_enrollment
   end
 
-  def set_enrollment_member_eligibility_dates(new_enrollment)
+  def set_enrollment_member_eligibility_dates(new_enrollment) # Should this just be modified to work on coverage effective dates? 
     previous_enrollment = existing_enrollment_for_covered_individuals
 
     if previous_enrollment.blank?
