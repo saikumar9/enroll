@@ -1,6 +1,7 @@
 class Exchanges::HbxProfilesController < ApplicationController
   include DataTablesAdapter
   include SepAll
+  include Exchanges::HbxProfilesHelper
 
   before_action :modify_admin_tabs?, only: [:binder_paid, :transmit_group_xml]
   before_action :check_hbx_staff_role, except: [:request_help, :show, :assister_index, :family_index, :update_cancel_enrollment, :update_terminate_enrollment]
@@ -75,6 +76,40 @@ class Exchanges::HbxProfilesController < ApplicationController
      respond_to do |format|
        format.js
      end
+  end
+
+  def cancel_initial_plan_year_form
+    @employer_profile= Organization.where(:id => params[:id]).first.employer_profile
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def cancel_initial_plan_year
+    begin
+      @employer_profile=EmployerProfile.find(params[:id])
+      @hbx_enrollments=@employer_profile.active_plan_year.hbx_enrollments
+
+      if can_cancel_employer_plan_year?(@employer_profile)
+        @hbx_enrollments.each do |enrollment|
+          enrollment.cancel_coverage! if enrollment.may_cancel_coverage?
+        end
+        @employer_profile.active_plan_year.cancel!
+        flash["notice"] = "initial plan year cancelled"
+      else
+        @hbx_enrollments.each do |enrollment|
+          terminated_on = params[:terminated_on] if params[:terminated_on].present?
+          enrollment.update_current(terminated_on: (self.effective_on - 1.day))
+          enrollment.terminate_coverage!(terminated_on) if enrollment.may_terminate_coverage?
+        end
+        @employer_profile.active_plan_year.terminate!
+        flash["notice"] = "initial plan year terminated"
+      end
+      redirect_to exchanges_hbx_profiles_root_path
+    rescue Exception => e
+      flash["error"] = "Could not cancel initial/terminate plan year #{e.message}"
+      redirect_to exchanges_hbx_profiles_root_path
+    end
   end
 
   def employer_invoice
