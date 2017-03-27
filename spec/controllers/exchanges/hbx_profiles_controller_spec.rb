@@ -543,7 +543,9 @@ RSpec.describe Exchanges::HbxProfilesController, dbclean: :after_each do
         expect(response).to have_http_status(200)
         expect(flash.notice).to match(/Initial plan year cancelled for employer/)
       end
+    end
 
+    context "terminate case"
       it "should returns http success" do
         allow(controller).to receive(:can_cancel_employer_plan_year?).and_return(false)
         allow(controller).to receive(:terminate_initial_plan_year_process).with([hbx_enrollment], employer_profile)
@@ -551,7 +553,6 @@ RSpec.describe Exchanges::HbxProfilesController, dbclean: :after_each do
         expect(response).to have_http_status(200)
         expect(flash.notice).to match(/Initial plan year terminated for employer/)
       end
-    end
   end
 end
 
