@@ -243,7 +243,7 @@ shop_notice_triggers = [
       {
         name: 'New hires with future date of hire',
         notice_template: 'notices/shop_employee_notices/notice_for_future_date_new_hired_employee',
-        notice_builder: 'ShopEmployeeNotices::OpenEnrollmentNotice',
+        notice_builder: 'ShopEmployeeNotices::NewHireNotice',
         mpi_indicator: 'MPI_SHOP24A',
         notice_trigger_element_group: {
           market_places: ['shop'],
@@ -264,7 +264,7 @@ shop_notice_triggers = [
       {
         name: 'Open Enrollment Notice for New hires',
         notice_template: 'notices/shop_employee_notices/open_enrollment_notice_for_new_hired_employee',
-        notice_builder: 'ShopEmployeeNotices::OpenEnrollmentNotice',
+        notice_builder: 'ShopEmployeeNotices::NewHireNotice',
         mpi_indicator: 'MPI_SHOP24B',
         notice_trigger_element_group: {
           market_places: ['shop'],

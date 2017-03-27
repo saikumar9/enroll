@@ -21,7 +21,7 @@
   { content: "Good News! #{notice.employer_name}, has invited you to sign up for employer-sponsored coverage through DC Health Link and will contribute to the monthly premium to make the cost of coverage more affordable."} %>
 
 <%= render partial: 'notices/shared/paragraph', :locals =>
-  { content: "You are able to begin plan shopping on <Date of Hire> for coverage be effective on <Coverage Start Date >. In order to enroll into employer-sponsored coverage through DC Health Link, you must complete an application for enrollment by <OE End Date>. If you have other coverage, you will still want to “waive” coverage to preserve your special enrollment period rights for the plan year."} %>
+  { content: "You are able to begin plan shopping on #{notice.hired_on} for coverage be effective on #{notice.plan_year.start_on}. In order to enroll into employer-sponsored coverage through DC Health Link, you must complete an application for enrollment by #{notice.plan_year.open_enrollment_end_on}. If you have other coverage, you will still want to “waive” coverage to preserve your special enrollment period rights for the plan year."} %>
 
 <%= render partial: 'notices/shared/paragraph', :locals =>
   { content: "<strong>What is New Hire Open Enrollment?</strong>"} %>

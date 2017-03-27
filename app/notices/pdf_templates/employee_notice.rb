@@ -11,6 +11,7 @@ module PdfTemplates
     attribute :plan, PdfTemplates::Plan
     attribute :email, String
     attribute :plan_year, PdfTemplates::PlanYear
+    attribute :hired_on, Date
 
     def shop?
       return true
