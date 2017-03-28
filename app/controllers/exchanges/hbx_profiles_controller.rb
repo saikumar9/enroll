@@ -87,17 +87,18 @@ class Exchanges::HbxProfilesController < ApplicationController
 
   def cancel_initial_plan_year
     begin
-      employer_profile=EmployerProfile.find(params[:id])
-      hbx_enrollments=employer_profile.active_plan_year.hbx_enrollments
+      employer_profile = EmployerProfile.find(params[:id])
+      hbx_enrollments = employer_profile.active_plan_year.hbx_enrollments
       if can_cancel_employer_plan_year?(employer_profile)
         cancel_initial_plan_year_process(hbx_enrollments, employer_profile)
-        return_status = 200
+        post_cancel_conditions(hbx_enrollments, employer_profile)
         flash["notice"] = "Initial plan year cancelled for employer: #{employer_profile.legal_name}"
       else
         terminate_initial_plan_year_process(hbx_enrollments, employer_profile)
-        return_status = 200
+        post_cancel_conditions(hbx_enrollments, employer_profile)
         flash["notice"] = "Initial plan year terminated for employer: #{employer_profile.legal_name}"
       end
+      return_status = 200
     rescue Exception => e
       return_status = 501
       flash["error"] = "Could not cancel/terminate initial plan year for employer: #{employer_profile.legal_name}. #{e.message}"
@@ -714,5 +715,10 @@ private
       enrollment.terminate_coverage!(end_on_date) if enrollment.may_terminate_coverage?
     end
     employer_profile.active_plan_year.terminate!
+  end
+
+  def post_cancel_conditions(hbx_enrollments, employer_profile)
+    employer_profile.aasm_state = 'applicant' unless employer_profile.applicant?
+    employer_profile.save!
   end
 end
