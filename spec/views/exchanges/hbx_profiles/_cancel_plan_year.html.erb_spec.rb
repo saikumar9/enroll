@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe "exchanges/hbx_profiles/_cancel_plan_year.html.erb_spec.rb" do
+describe "exchanges/hbx_profiles/_cancel_plan_year.html.erb" do
   let(:employer_profile) { FactoryGirl.create(:employer_with_planyear) }
 
   before :each do
