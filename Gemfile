@@ -1,11 +1,17 @@
 source 'https://rubygems.org'
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.3'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
+gem 'bootstrap-sass', '~> 3.3', '>= 3.3.6'
+gem 'font-awesome-rails', '4.5.0.1'
+gem 'bootstrap-multiselect-rails', '~> 0.9.9'
+gem 'bootstrap-slider-rails', '6.0.17'
+
+# Use sass ^ rather than less
+# gem 'less-rails-bootstrap', '~> 3.3.1.0'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
@@ -31,8 +37,6 @@ gem 'jbuilder', '~> 2.0'
 
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
-gem 'less-rails-bootstrap', '~> 3.3.1.0'
-gem 'font-awesome-rails', '4.5.0.1'
 gem 'nokogiri-happymapper', :require => 'happymapper'
 gem 'nokogiri', '1.6.7.2'
 
@@ -70,7 +74,7 @@ gem 'haml'
 gem 'roo', '~> 2.1.0'
 
 # configuration support
-gem "config", '~> 1.0.0'
+gem "config", '~> 1.4.0'
 
 gem 'devise', '~> 3.4.1'
 # gem 'devise_ldap_authenticatable', '~> 0.8.1'
@@ -90,13 +94,12 @@ gem 'addressable', '2.3.8'
 # gem 'rypt', '0.2.0'
 
 gem 'language_list', '~> 1.1.0'
-gem 'bootstrap-multiselect-rails', '~> 0.9.9'
-gem 'bootstrap-slider-rails', '6.0.17'
 
 gem 'prawn', :git => "https://github.com/prawnpdf/prawn.git", :ref => '8028ca0cd2'
 gem 'virtus'
 gem 'wkhtmltopdf-binary-edge', '~> 0.12.3.0'
 gem 'wicked_pdf', '1.0.6'
+gem 'combine_pdf'
 
 # provide recaptcha services
 gem "recaptcha", '1.1.0'
@@ -160,9 +163,7 @@ group :production do
 
   # New Relic gem
   gem 'newrelic_rpm'
-
 end
 
 gem 'aws-sdk', '2.2.4'
 gem 'ruby-saml', '~> 1.3.0'
-gem 'combine_pdf'
