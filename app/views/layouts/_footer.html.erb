@@ -1,30 +1,22 @@
-<footer class="footer-wrapper module footer">
+<footer class="footer-wrapper">
   <div class="container">
+    <div class="row">
       <div class="col-md-6">
-        <div class="row">
-          <%= copyright_notice %>
-        </div>
+        <p><%= copyright_notice %></p>
       </div>
       <div class="col-md-6">
-        <div class="row">
-          <ul class="list-unstyled list-inline pull-right">
-            <li>
-              <!-- <a href="#"><%= image_tag 'icons/phone.png' %> &nbsp;(855) 532-5465</a> -->
-            </li>
-            <li>
-              <a class="call-customer-service" href="tel:<%= Settings.contact_center.phone_number %>">
-                <span>
-                  <i class="fa fa-phone fa-lg"></i> &nbsp;<%= Settings.contact_center.phone_number %>
-                </span>
-              </a>
-            </li>
-            <li>
-              <i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i> &nbsp;<%= mail_to Settings.contact_center.email_address %>
-            </li>
-            <li>
-              <i class="fa fa-question fa-lg" aria-hidden="true"></i> &nbsp;FAQs
-            </li>
-          </ul>
+        <ul class="list-unstyled list-inline pull-right">
+          <li>
+            <i class="fa fa-phone fa-lg" aria-hidden="true"></i> &nbsp;<%= link_to Settings.contact_center.phone_number, "tel:#{Settings.contact_center.phone_number}" %>
+          </li>
+          <li>
+            <i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i> &nbsp;<%= mail_to Settings.contact_center.email_address %>
+          </li>
+          <li>
+            <i class="fa fa-question fa-lg" aria-hidden="true"></i> &nbsp; <%= link_to "FAQs", Settings.site.faqs_url %>
+          </li>
+        </ul>
       </div>
     </div>
+  </div>
 </footer>
