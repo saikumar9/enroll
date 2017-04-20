@@ -1,9 +1,9 @@
 <h1>Translations</h1>
 
 <ul>
-  <% @translations.each do |translation| %>
+  <% @translations.keys.each do |key| %>
     <li>
-      <%= translation.key %>: <%= translation.value %>
+      <%= key %>: <%= @translations[key] %>
     </li>
   <% end %>
 </ul>
