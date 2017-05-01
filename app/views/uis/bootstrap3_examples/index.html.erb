@@ -196,7 +196,87 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
     </div>
 
     <h3>Button Groups</h3>
+    <p> we can group buttons in 3 different ways </p>
+    <h1>First type of grouping default is :</h1>
+    <div class="btn-group btn-group-lg">
+      <!-- we can specify the button width size here -->
+      <button type="button" class="btn btn-info"> Elon Musk</button>
+      <button type="button" class="btn btn-danger">Bill gates</button>
+      <button type="button" class="btn btn-warning">Mark</button>
+    </div>
+    <br>
+    <h2>SECOND VERTICAL TYPE: </h2>
+    <div class="btn-group-vertical btn-group-lg">
+      <!-- we can specify the button width size here -->
+      <button type="button" class="btn btn-info">Elon Musk</button>
+      <button type="button" class="btn btn-danger">Bill gates</button>
+      <button type="button" class="btn btn-warning">Mark</button>
+    </div>
+    <h2>THIRD JUSTIFIED TYPE :</h2>
+    <div class="btn-group btn-group-justified">
+      <!-- we can specify the button width size here -->
+      <button type="button" class="btn btn-info">Elon Musk</button>
+      <button type="button" class="btn btn-danger">Bill gates</button>
+      <button type="button" class="btn btn-warning">Mark</button>
+    </div>
+
     <h3>Panels</h3>
+    <div class="panel panel-success">  <!-- we can change the panel color with -info, -warning, -primary ... options -->
+      <div class="panel-heading">Panel Heading for enrollment reports goes here</div>
+      <div class="panel-body">
+        <p> It will display the all the enrollment reports </p>
+          <table class="table">
+            <thead>
+            <tr>
+              <th>HBX_ID</th>
+              <th>User NAME</th>
+              <th>Employee</th>
+              <th>DOB</th>
+              <th>SSN</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <th scope="row">9898</th>
+              <td>ELON MUSK</td>
+              <td>Tesla</td>
+              <td>10-07-1991</td>
+              <td>873-98-8889</td>
+            </tr>
+            <tr>
+              <th scope="row">7878</th>
+              <td>Gates</td>
+              <td>Microsoft</td>
+              <td>10-07-1991</td>
+              <td>869-89-8888</td>
+            </tr>
+            <tr>
+              <th scope="row">9080</th>
+              <td>Mark</td>
+              <td>Facebook</td>
+              <td>10-07-1991</td>
+              <td>973-34-2323</td>
+            </tr>
+            </tbody>
+          </table>
+      </div>
+    </div>
+    <p> We can put the list of panles with display them using JS and we can use Hover as well while moving the cursor to different panels</p>
+    <div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">History</div>
+    <div class="panel-body">
+      <p>Here goes the respective histroy text</p>
+    </div>
+    <!-- List group -->
+    <ul class="list-group">
+      <li class="list-group-item">Bibilography</li>
+      <li class="list-group-item">Qualifications</li>
+      <li class="list-group-item">Education</li>
+      <li class="list-group-item">References</li>
+    </ul>
+  </div>
+
     <h3>Tables</h3>
     <div class="table-demo-content">
       <p>
@@ -228,28 +308,589 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
       <p>Effective Datatables example</p>
       <%= render_datatable(@family_data_table) %>
     </div>
+
     <h3>Selects</h3>
+      <select class="custom-select">
+        <option selected>Open this select menu</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+       </select>
+    
     <h3>Inputs</h3>
+    <div class="form-group">
+      <label for="usr">Name:</label>
+      <input type="text" class="form-control" id="usr">
+    </div>
     <h3>File Inputs</h3>
+    <label class="custom-file">
+      <input type="file" id="file" class="custom-file-input">
+      <span class="custom-file-control"></span>
+    </label>
     <h3>Text Area</h3>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea class="form-control" rows="5" id="textarea"></textarea>
+    </div>
+
     <h3>Checkboxes and Radio Buttons</h3>
+
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="input-group">
+          <span class="input-group-addon">
+            <input type="checkbox" aria-label="...">
+          </span>
+          <input type="text" class="form-control" aria-label="...">
+        </div><!-- /input-group -->
+      </div>
+
+      <div class="col-lg-6">
+        <div class="input-group">
+          <span class="input-group-addon">
+            <input type="radio" aria-label="...">
+          </span>
+          <input type="text" class="form-control" aria-label="...">
+        </div><!-- /input-group -->
+      </div><!-- /.col-lg-6 -->
+    </div><!-- /.row -->
+
     <h3>Pagination</h3>
+    <div>
+      <h3>Pagination</h3>
+      <p>Default pagination</p>
+        <nav aria-label="Page navigation">
+          <ul class="pagination">
+            <li>
+              <a href="#" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+              <li><a href="#">1</a></li>
+              <li><a href="#">2</a></li>
+              <li><a href="#">3</a></li>
+              <li><a href="#">4</a></li>
+              <li><a href="#">5</a></li>
+            <li>
+              <a href="#" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <p>Disabled and active states</p>
+
+         <nav aria-label="Page navigation">
+          <ul class="pagination">
+          <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+          <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+          <li class="disabled"><a href="#">2 <span class="sr-only">(current)</span></a></li>
+          <li class="disabled"><a href="#">3 <span class="sr-only">(current)</span></a></li>
+          </ul>
+        </nav>
+
+
+        <p>Sizing</p>
+
+        <nav aria-label="Page navigation">
+          <ul class="pagination pagination-lg">
+            <li>
+            <a href="#">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">4</a>
+            <a href="#">5</a>
+            </li>
+          </ul>
+        </nav>
+
+
+        <nav aria-label="Page navigation">
+          <ul class="pagination">
+            <li>
+              <a href="#">1</a>
+              <a href="#">2</a>
+              <a href="#">3</a>
+              <a href="#">4</a>
+              <a href="#">5</a>
+            </li>
+          </ul>
+        </nav>
+        
+
+        <nav aria-label="Page navigation">
+          <ul class="pagination pagination-sm">
+            <li>
+              <a href="#">1</a>
+              <a href="#">2</a>
+              <a href="#">3</a>
+              <a href="#">4</a>
+              <a href="#">5</a>
+            </li>
+          </ul>
+        </nav>
+
+        
+    <h3>Pager</h3>
+      <p>Default</p>
+
+        <nav aria-label="Page navigation">
+          <ul class="pager">
+            <li><a href="#">Previous</a></li>
+            <li><a href="#">Next</a></li>
+          </ul>
+        </nav>
+
+      <p>Aligned links</p>
+        <nav aria-label="Page navigation">
+          <ul class="pager">
+            <li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> Older</a></li>
+            <li class="next"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+          </ul>
+        </nav>
+
+       <p>Optional disabled state</p> 
+
+          <nav aria-label="Page navigation">
+            <ul class="pager">
+              <li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Older</a></li>
+              <li class="next"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+            </ul>
+          </nav>
+
+    </div>
     <h3>Navigation</h3>
-    <h3>Tabs</h3>
-    <h3>Breadcrumbs</h3>
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+              <img alt="Brand" src="...">
+            </a>
+          </div>
+        </div>
+      </nav><br>
+
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Brand</a>
+          </div>
+
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+              <li><a href="#">Link</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">Separated link</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">One more separated link</a></li>
+                </ul>
+              </li>
+            </ul>
+            <form class="navbar-form navbar-left">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Search">
+              </div>
+              <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#">Link</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">Separated link</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav><br>
+
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">WebSiteName</a>
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+          </ul>
+          <button class="btn btn-danger navbar-btn">Button</button>
+        </div>
+      </nav><br>
+
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span> 
+            </button>
+            <a class="navbar-brand" href="#">WebSiteName</a>
+          </div>
+
+          <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#">Page 1</a></li>
+              <li><a href="#">Page 2</a></li> 
+              <li><a href="#">Page 3</a></li> 
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+              <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+    <h3>Tabs </h3>
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Active</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">Disabled</a>
+        </li>
+      </ul>
+    
+    <h3> Breadcrumbs </h3>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Home</li>
+      </ol>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item active">Library</li>
+      </ol>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Library</a></li>
+        <li class="breadcrumb-item active">Data</li>
+      </ol>
+    
     <h3>Progress Bars and Sliders</h3>
+<div>
+
+
+
+<h3>Default progress bar</h3>
+  <div class="progress">
+    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+    <span class="sr-only">60% Complete</span>
+  </div>
+  </div>
+
+<h3>With label</h3>
+  <div class="progress">
+    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+    60%
+  </div>
+  </div>
+  <div class="progress">
+    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;">
+    0%
+  </div>
+  </div>
+  <div class="progress">
+    <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: 2%;">
+    2%
+  </div>
+  </div>
+<h3>Contextual alternatives</h3>
+  <div class="progress">
+    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+    <span class="sr-only">40% Complete (success)</span>
+  </div>
+  </div>
+  <div class="progress">
+    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+    <span class="sr-only">20% Complete</span>
+  </div>
+  </div>
+  <div class="progress">
+    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+    <span class="sr-only">60% Complete (warning)</span>
+  </div>
+  </div>
+  <div class="progress">
+    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+    <span class="sr-only">80% Complete (danger)</span>
+  </div>
+  </div>
+<h3>Striped</h3>
+  <div class="progress">
+    <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+    <span class="sr-only">40% Complete (success)</span>
+  </div>
+  </div>
+  <div class="progress">
+    <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+    <span class="sr-only">20% Complete</span>
+  </div>
+  </div>
+  <div class="progress">
+    <div class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+    <span class="sr-only">60% Complete (warning)</span>
+  </div>
+  </div>
+  <div class="progress">
+    <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+    <span class="sr-only">80% Complete (danger)</span>
+  </div>
+  </div>
+<h3>Animated</h3>
+  <div class="progress">
+    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+    <span class="sr-only">45% Complete</span>
+  </div>
+  </div>
+<h3>Stacked</h3>
+  <div class="progress">
+    <div class="progress-bar progress-bar-success" style="width: 35%">
+    <span class="sr-only">35% Complete (success)</span>
+  </div>
+  <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 20%">
+    <span class="sr-only">20% Complete (warning)</span>
+  </div>
+  <div class="progress-bar progress-bar-danger" style="width: 10%">
+    <span class="sr-only">10% Complete (danger)</span>
+  </div>
+  </div>
+  </div>
+
+
+
+
     <h3>Tooltips and Popovers</h3>
+    <div>
+      <h3>Tooltip Four directions</h3>
+        <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="Tooltip on left">Tooltip on left</button>
+
+        <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Tooltip on top</button>
+
+        <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom">Tooltip on bottom</button>
+
+        <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="Tooltip on right">Tooltip on right</button>
+
+      <h3>Click To toggle Popover</h3>
+        <button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button>
+
+      <h3>Four directions Popover</h3>
+        <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+        Popover on left
+        </button>
+
+        <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+        Popover on top
+        </button>
+
+        <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Vivamus
+        sagittis lacus vel augue laoreet rutrum faucibus.">
+        Popover on bottom
+        </button>
+
+        <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="right" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+        Popover on right
+        </button>
+
+      <h3>Dismissal Popover</h3>
+        <a tabindex="0" class="btn btn-lg btn-danger" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">Dismissible popover</a>
+    </div>
     <h3>Alerts</h3>
+    
+    <p> Alert Example 1 </p>
+
+    <div class="alert alert-success" role="alert">...</div>
+    <div class="alert alert-info" role="alert">...</div>
+    <div class="alert alert-warning" role="alert">...</div>
+    <div class="alert alert-danger" role="alert">...</div>
+
+    <p> Dismissible alerts</p>
+
+    <div class="alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong>Warning!</strong> Better check yourself, you're not looking too good.
+    </div>
+
+    <p> Links in alerts </p>
+
+    <div class="alert alert-success" role="alert">
+    <a href="#" class="alert-link">...</a>
+    </div>
+    <div class="alert alert-info" role="alert">
+    <a href="#" class="alert-link">...</a>
+    </div>
+    <div class="alert alert-warning" role="alert">
+    <a href="#" class="alert-link">...</a>
+    </div>
+    <div class="alert alert-danger" role="alert">
+    <a href="#" class="alert-link">...</a>
+    </div>
     <h3>Tabs</h3>
+      <p> Tab Example 1 </p>
+       <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#">Home</a></li>
+        <li role="presentation"><a href="#">Profile</a></li>
+        <li role="presentation"><a href="#">Messages</a></li>
+        </ul>
+        <br>
+      <p> Tab with Dropdown </p>
+        <ul class="nav nav-tabs">
+        <li role="presentation" class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Home<span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu"></ul>
+        </li>
+        <li role="presentation"><a href="#">Profile</a></li>
+        <li role="presentation"><a href="#">Messages</a></li>
+        </ul>
+
     <h3>Badges</h3>
+      <div class="container">
+        <h2>Badges</h2>
+        <a href="#">News <span class="badge">5</span></a><br>
+        <a href="#">Comments <span class="badge">10</span></a><br>
+        <a href="#">Updates <span class="badge">2</span></a>
+      </div>
+
+      <div class="container">
+        <h2>Badges on Buttons</h2>
+        <button type="button" class="btn btn-primary">Primary <span class="badge">7</span></button><br>
+        <button type="button" class="btn btn-success">Success <span class="badge">3</span></button><br>    
+        <button type="button" class="btn btn-danger">Danger <span class="badge">5</span></button><br>     
+      </div>
+
+      <div class="container">
+      <h2>Badges</h2>
+      <a href="#">Inbox <span class="badge">42</span></a><br>
+      <button class="btn btn-primary" type="button">Messages <span class="badge">4</span></button>
+      </div>
+
+      <div class="container">
+        <h2>Badges nav-pills</h2>
+          <ul class="nav nav-pills" role="tablist">
+            <li role="presentation" class="active"><a href="#">Home <span class="badge">42</span></a></li>
+            <li role="presentation"><a href="#">Profile</a></li>
+            <li role="presentation"><a href="#">Messages <span class="badge">3</span></a></li>
+          </ul>
+      </div><br>
+
+      
     <h3>Tabs</h3>
     <h3>Wells</h3>
+      
+      <h3>Default well</h3>
+      <div class="well"> Default Well</div>
+
+      <h2>Optional classes</h2>
+
+        <h3>Large-well</h3>
+        <div class="well well-lg"> A Large Well</div>
+
+        <h3>Small-well</h3>
+        <div class="well well-sm"> A small Well</div>
+
     <h3>Carousel</h3>
+      <h3>Slides only</h3>
+      <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner" role="listbox">
+          <div class="carousel-item active">
+            <img class="d-block img-fluid" src="https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0ahUKEwi8k_Oxp8_TAhWEJCYKHdhnAOYQjRwIBw&url=https%3A%2F%2Fwww.template.net%2Fdesign-templates%2Fbackgrounds%2Fplain-background%2F&psig=AFQjCNEc8NdSVQj9g0HcYJuqD1OrtuUeuw&ust=1493749157071603">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block img-fluid" src="/resources/images/carousel/image-01.jpg" alt="Second slide">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block img-fluid" src="/resources/images/carousel/image-01.jpg" alt="Third slide">
+          </div>
+        </div>
+      </div>
+
+      <h3>With controls</h3>
+      <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner" role="listbox">
+          <div class="carousel-item active">
+            <img class="d-block img-fluid" src="/resources/images/carousel/image-01.jpg" alt="First slide">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block img-fluid" src="/resources/images/carousel/image-01.jpg" alt="Second slide">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block img-fluid" src="/resources/images/carousel/image-01.jpg" alt="Third slide">
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+
+      <h3>With indicators</h3>
+      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner" role="listbox">
+          <div class="carousel-item active">
+            <img class="d-block img-fluid" src="/resources/images/carousel/image-01.jpg" alt="First slide">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block img-fluid" src="/resources/images/carousel/image-01.jpg" alt="Second slide">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block img-fluid" src="/resources/images/carousel/image-01.jpg" alt="Third slide">
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+
+      <h3>With captions</h3>
+      <div class="carousel-item">
+        <img src="/resources/images/carousel/image-01.jpg" alt="...">
+        <div class="carousel-caption d-none d-md-block">
+          <h3>...</h3>
+          <p>...</p>
+        </div>
+      </div>
 
   </div> <!-- /container -->
-
-
-
 
     <div class="demo-row">
       <div class="demo-title">
@@ -2196,5 +2837,4 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
     </div><!-- /.demo-row -->
 
   </div><!-- /.container -->
-
 <%# end %>
