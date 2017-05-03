@@ -1,4 +1,4 @@
-namespace :load_sic_code do 
+namespace :load_sic_code do
 	desc "load sic code from xlsx file"
 	task :update_sic_code => :environment do
 		begin
@@ -15,17 +15,15 @@ namespace :load_sic_code do
       data = []
       hios_ids.each do |hios_id|
         (3..sheet.last_row).each do |i|
-          sic_data = {
+          SicRateReference.create!(
             sic: sheet.cell(i,1),
             hios_id: hios_id.to_i,
             ratio: (sheet.row(i)[headers[hios_id]] || 1.000),
             applicable_year: Time.now.year
-          }
-          data << sic_data
+          )
+          
         end
 		  end
-      SicCode.collection.insert_many(data)
-      
 	  rescue => e
 	  	puts e.inspect
 	  end
