@@ -408,6 +408,7 @@
       <p>Effective Datatables example</p>
       <%= render_datatable(@family_data_table) %>
     </div>
+    <br>
 
        <div class="demo-row demo-inputs">
          <div class="demo-title">
@@ -445,6 +446,36 @@
                <input type="text" value="An input can also be disabled" disabled="disabled" class="form-control">
                <span class="form-control-feedback fa fa-lock"></span>
              </div>
+             <h3>Disabled Inputs</h3>
+             <fieldset disabled>
+               <div class="form-group">
+                 <input type="text" id="disabledTextInput" class="form-control">
+               </div>
+             </fieldset>
+             <h3>Text Area</h3>
+             <div class="form-group">
+               <label for="comment">Comment:</label>
+               <textarea class="form-control" rows="5" id="textarea"></textarea>
+             </div>
+             <h3>File Inputs</h3>
+             <label class="custom-file">
+               <input type="file" id="file" class="custom-file-input">
+               <span class="custom-file-control"></span>
+             </label>
+             <h3>Search Boxes</h3>
+             <div class="input-group">
+               <input type="text" class="form-control" id="usr">
+               <div class="input-group-btn">
+                 <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+               </div>
+             </div>
+
+             <div class="input-group">
+               <div class="input-group-btn">
+                 <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+               </div>
+               <input type="text" class="form-control" id="usr">
+             </div>
            </form>
            <hr />
          </div>
@@ -455,46 +486,41 @@
            </div>
 
            <div class="demo-col">
-             <p>Select with Option Groups
-             <div class="mbl">
-               <select class="form-control select select-primary" name="demo-select" data-toggle="select">
-                 <optgroup label="Profile">
-                   <option value="0">My Profile</option>
-                   <option value="1">My Friends</option>
-                 </optgroup>
-                 <optgroup label="System">
-                   <option value="2">Messages</option>
-                   <option value="3">My Settings</option>
-                   <option value="4">Logout</option>
-                 </optgroup>
-               </select>
-             </div>
-             <br />
-             <p>Multiselect</p>
-             <div class="mbl">
-               <select multiple="multiple" class="form-control multiselect multiselect-info" data-toggle="select">
-                 <option value="0">1</option>
-                 <option value="1" selected>2</option>
-                 <option value="2" selected>3</option>
-                 <option value="3" selected>4</option>
-                 <option value="4">5</option>
-               </select>
-             </div>
+             <form>
+               <p>Standard Select</p>
+               <select class="custom-select">
+                 <option selected>Open this select menu</option>
+                 <option value="1">One</option>
+                 <option value="2">Two</option>
+                 <option value="3">Three</option>
+                </select>
 
+                <p>Select with Option Groups</p>
+                 <select class="form-control select select-primary" name="demo-select" data-toggle="select">
+                   <optgroup label="Profile">
+                     <option value="0">My Profile</option>
+                     <option value="1">My Friends</option>
+                   </optgroup>
+                   <optgroup label="System">
+                     <option value="2">Messages</option>
+                     <option value="3">My Settings</option>
+                     <option value="4">Logout</option>
+                   </optgroup>
+                 </select>
+
+                 <br />
+                 <p>Multiselect</p>
+                 <select multiple="multiple" class="form-control multiselect multiselect-info" data-toggle="select">
+                   <option value="0">1</option>
+                   <option value="1" selected>2</option>
+                   <option value="2" selected>3</option>
+                   <option value="3" selected>4</option>
+                   <option value="4">5</option>
+                 </select>
+               </form>
            </div><!-- ./demo-col -->
          </div> <!-- /.demo-row -->
 
-          <h3>File Inputs</h3>
-          <label class="custom-file">
-            <input type="file" id="file" class="custom-file-input">
-            <span class="custom-file-control"></span>
-          </label>
-          <h3>Text Area</h3>
-
-          <div class="form-group">
-            <label for="comment">Comment:</label>
-            <textarea class="form-control" rows="5" id="textarea"></textarea>
-          </div>
 
           <h3>Checkboxes and Radio Buttons</h3>
 
@@ -531,7 +557,7 @@
     </form>
   </div>
 
-  
+
     <h3>Pagination</h3>
     <div>
       <h3>Pagination</h3>
