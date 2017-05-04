@@ -11,7 +11,7 @@ class BrokerAgencies::ProfilesController < ApplicationController
   before_action :check_general_agency_profile_permissions_set_default, only: [:set_default_ga]
   before_action :general_agency_is_enabled?, only: [:assign, :update_assign]
 
-  layout 'single_column'
+ # layout 'single_column'
 
   def index
     @broker_agency_profiles = BrokerAgencyProfile.all
