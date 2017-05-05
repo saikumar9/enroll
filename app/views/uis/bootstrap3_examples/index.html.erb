@@ -2,96 +2,163 @@
   Bootstrap 3 Example Page
 <% end %>
 
-  <%# content_for :content do %>
-  <script src="../js/bootstrap-tagsinput.js"></script>
+<% content_for :left_navigation do %>
+  <!-- Sidebar -->
+  <div id="sidebar-wrapper">
+    <nav id="spy">
+      <ul class="sidebar-nav nav">
+        <li class="sidebar-brand">
+          <a href="#home" title="<%= l10n('.typography_link') %>">
+            <span class="fa fa-home solo"><%= l10n('.typography') %></span>
+          </a>
+        </li>
+        <li>
+          <a href="#buttons" data-scroll title="<%= l10n('.buttons_link') %>">
+            <span class="fa fa-anchor solo">Buttons</span>
+          </a>
+        </li>
+        <li>
+          <a href="#panels" data-scroll title="<%= l10n('.panels_link') %>">
+            <span class="fa fa-anchor solo">Panels</span>
+          </a>
+        </li>
+        <li>
+          <a href="#tables" data-scroll title="<%= l10n('.tables_link') %>">
+              <span class="fa fa-anchor solo">Tables</span>
+          </a>
+        </li>
+        <li>
+          <a href="#inputs" data-scroll title="<%= l10n('.inputs_link') %>">
+              <span class="fa fa-anchor solo">Inputs</span>
+          </a>
+        </li>
+        <li>
+          <a href="#pagination" data-scroll title="<%= l10n('.inputs_link') %>">
+              <span class="fa fa-anchor solo">Pagination</span>
+          </a>
+        </li>
+        <li>
+          <a href="#navigation" data-scroll title="<%= l10n('.navigation_link') %>">
+              <span class="fa fa-anchor solo">Navigation</span>
+          </a>
+        </li>
+        <li>
+          <a href="#progressbars" data-scroll title="<%= l10n('.progressbars_link') %>">
+              <span class="fa fa-anchor solo">Progress Bars</span>
+          </a>
+        </li>
+        <li>
+          <a href="#tooltips" data-scroll title="<%= l10n('.tooltips_link') %>">
+              <span class="fa fa-anchor solo">Tooltips / Popovers</span>
+          </a>
+        </li>
+        <li>
+          <a href="#alerts" data-scroll title="<%= l10n('.alerts_link') %>">
+              <span class="fa fa-anchor solo">Alerts</span>
+          </a>
+        </li>
+        <li>
+          <a href="#badges" data-scroll title="<%= l10n('.badges_link') %>">
+              <span class="fa fa-anchor solo">Badges</span>
+          </a>
+        </li>
+        <li>
+          <a href="#wells" data-scroll title="<%= l10n('.wells_link') %>">
+              <span class="fa fa-anchor solo">Wells</span>
+          </a>
+        </li>
+        <li>
+          <a href="#carousels" data-scroll title="<%= l10n('.carousels_link') %>">
+              <span class="fa fa-anchor solo">Carouselss</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+<% end %>
 
-  <h1>Typography</h1>
-  <h3>Headings</h3>
+<% content_for :main do %>
 
-  <h1>Heading 1</h1>
-  <h2>Heading 2</h2>
-  <h3>Heading 3</h3>
-  <h4>Heading 4</h4>
-  <h5>Heading 5</h5>
-  <h6>Heading 6</h6>
+  <h1 id="home"><%= l10n('.typography') %></h1>
+  <h3><%= l10n('.headings') %></h3>
 
-  <h3>Body Copy</h3>
-  <p>
-    Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula.
+  <h1><%= l10n('.heading_1') %></h1>
+  <h2><%= l10n('.heading_2') %></h2>
+  <h3><%= l10n('.heading_3') %></h3>
+  <h4><%= l10n('.heading_4') %></h4>
+  <h5><%= l10n('.heading_5') %></h5>
+  <h6><%= l10n('.heading_6') %></h6>
 
-Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Donec ullamcorper nulla non metus auctor fringilla.
-
-Maecenas sed diam eget risus varius blandit sit amet non magna. Donec id elit non mi porta gravida at eget metus. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
-</p>
+  <h3><%= l10n('.body_copy') %></h3>
+  <p><%= l10n('.body_copy_text') %></p>
 
   <h3>Lead Body Copy</h3>
-<p class="lead">
-Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus.
-</p>
+  <p class="lead">
+    Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus.
+  </p>
 
-<h3>Alignment</h3>
-<p class="text-left">Left aligned text.</p>
-<p class="text-center">Center aligned text.</p>
-<p class="text-right">Right aligned text.</p>
-<p class="text-justify">Justified text.</p>
-<p class="text-nowrap">No wrap text.</p>
+  <h3>Alignment</h3>
+  <p class="text-left">Left aligned text.</p>
+  <p class="text-center">Center aligned text.</p>
+  <p class="text-right">Right aligned text.</p>
+  <p class="text-justify">Justified text.</p>
+  <p class="text-nowrap">No wrap text.</p>
 
-<h3>Text Transforms</h3>
-<p class="text-lowercase">Lowercased text.</p>
-<p class="text-uppercase">Uppercased text.</p>
-<p class="text-capitalize">Capitalized text.</p>
-<h3>Addresses</h3>
-<address>
-  <strong>Twitter, Inc.</strong><br>
-  1355 Market Street, Suite 900<br>
-  San Francisco, CA 94103<br>
-  <abbr title="Phone">P:</abbr> (123) 456-7890
-</address>
+  <h3>Text Transforms</h3>
+  <p class="text-lowercase">Lowercased text.</p>
+  <p class="text-uppercase">Uppercased text.</p>
+  <p class="text-capitalize">Capitalized text.</p>
 
-<address>
-  <strong>Full Name</strong><br>
-  <a href="mailto:#">first.last@example.com</a>
-</address>
+  <h3>Addresses</h3>
+  <address>
+    <strong>Twitter, Inc.</strong><br>
+    1355 Market Street, Suite 900<br>
+    San Francisco, CA 94103<br>
+    <abbr title="Phone">P:</abbr> (123) 456-7890
+  </address>
 
-<h3>Unordered Lists</h3>
-<ul>
-  <li>First Item</li>
-  <li>Second Item</li>
-  <li>Third Item</li>
-  <li>Fourth Item</li>
-</ul>
+  <address>
+    <strong>Full Name</strong><br>
+    <a href="mailto:#">first.last@example.com</a>
+  </address>
 
-<h3>Ordered Lists</h3>
-<ol>
-  <li>First Item</li>
-  <li>Second Item</li>
-  <li>Third Item</li>
-  <li>Fourth Item</li>
-</ol>
+  <h3>Unordered Lists</h3>
+  <ul>
+    <li>First Item</li>
+    <li>Second Item</li>
+    <li>Third Item</li>
+    <li>Fourth Item</li>
+  </ul>
 
-<h3>Description Lists</h3>
-<dl>
-  <dt>Description Lists</dt>
-  <dd>A description list is perfect for defining terms</dd>
-  <dt>Term 2</dt>
-  <dd>This is the definition</dd>
-  <dt>This is a very long term to be defined</dt>
-  <dd>This is the definition</dd>
-</dl>
+  <h3>Ordered Lists</h3>
+  <ol>
+    <li>First Item</li>
+    <li>Second Item</li>
+    <li>Third Item</li>
+    <li>Fourth Item</li>
+  </ol>
 
-<h3>Horizontal Description</h3>
-<dl class="dl-horizontal">
-  <dt>Description Lists</dt>
-  <dd>A description list is perfect for defining terms</dd>
-  <dt>Term 2</dt>
-  <dd>This is the definition</dd>
-  <dt>This is a very long term to be defined</dt>
-  <dd>This is the definition</dd>
-</dl>
+  <h3>Description Lists</h3>
+  <dl>
+    <dt>Description Lists</dt>
+    <dd>A description list is perfect for defining terms</dd>
+    <dt>Term 2</dt>
+    <dd>This is the definition</dd>
+    <dt>This is a very long term to be defined</dt>
+    <dd>This is the definition</dd>
+  </dl>
 
-  <h1>Basic Elements</h1>
-  <div class="container">
-    <h3>Button Classes</h3>
+  <h3>Horizontal Description</h3>
+  <dl class="dl-horizontal">
+    <dt>Description Lists</dt>
+    <dd>A description list is perfect for defining terms</dd>
+    <dt>Term 2</dt>
+    <dd>This is the definition</dd>
+    <dt>This is a very long term to be defined</dt>
+    <dd>This is the definition</dd>
+  </dl>
+
+    <h3 id="buttons">Button Classes</h3>
 
     <!-- Standard button -->
     <button type="button" class="btn btn-default">Default</button>
@@ -197,7 +264,7 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
 
     <h3>Button Groups</h3>
     <p> we can group buttons in 3 different ways </p>
-    <h1>First type of grouping default is :</h1>
+    <h4>First type of grouping default is :</h4>
     <div class="btn-group btn-group-lg">
       <!-- we can specify the button width size here -->
       <button type="button" class="btn btn-info"> Elon Musk</button>
@@ -205,21 +272,35 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
       <button type="button" class="btn btn-warning">Mark</button>
     </div>
     <br>
-    <h2>SECOND VERTICAL TYPE: </h2>
+    <h4>SECOND VERTICAL TYPE: </h4>
     <div class="btn-group-vertical btn-group-lg">
       <!-- we can specify the button width size here -->
       <button type="button" class="btn btn-info">Elon Musk</button>
       <button type="button" class="btn btn-danger">Bill gates</button>
       <button type="button" class="btn btn-warning">Mark</button>
     </div>
-    <h2>THIRD JUSTIFIED TYPE :</h2>
-    <div class="btn-group btn-group-justified">
-      <!-- we can specify the button width size here -->
-      <button type="button" class="btn btn-info">Elon Musk</button>
-      <button type="button" class="btn btn-danger">Bill gates</button>
-      <button type="button" class="btn btn-warning">Mark</button>
+    <h4>THIRD JUSTIFIED TYPE :</h4>
+    <div class="container">
+      <div class="btn-group btn-group-justified">
+        <div class="btn-group">
+          <button type="button" class="btn btn-info">Elon Musk</button>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-info">Bill gates</button>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-info">Mark</button>
+        </div>
+      </div>
     </div>
-
+    <br>
+    <p> we can also mix input groups with button groups</p>
+    <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+     <div class="input-group">
+       <span class="input-group-addon" id="btnGroupAddon">@</span>
+       <input type="text" class="form-control" placeholder="dc.gov" aria-describedby="btnGroupAddon">
+     </div>
+    </div>
     <h3>Panels</h3>
     <div class="panel panel-success">  <!-- we can change the panel color with -info, -warning, -primary ... options -->
       <div class="panel-heading">Panel Heading for enrollment reports goes here</div>
@@ -261,8 +342,8 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
           </table>
       </div>
     </div>
-    <p> We can put the list of panles with display them using JS and we can use Hover as well while moving the cursor to different panels</p>
-    <div class="panel panel-default">
+    <p> We can put the list of groups in panel while displaying them using JS and we can use Hover as well while moving the cursor to different panels</p>
+    <div class="panel panel-info">
     <!-- Default panel contents -->
     <div class="panel-heading">History</div>
     <div class="panel-body">
@@ -276,6 +357,21 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
       <li class="list-group-item">References</li>
     </ul>
   </div>
+
+    <p> Panel Footer Example </p>
+    <div class="panel panel-info">
+      <div class="panel-heading">Panel header goes here</div>
+      <div class="panel-body">
+        Load the panel body content here
+      </div>
+      <style>
+        .panel-footer.panel-custom {
+          background: deepskyblue;
+          color: white;
+        }
+      </style>
+      <div class="panel-footer panel-custom">Panel footer goes here </div>
+    </div>
 
     <h3>Tables</h3>
     <div class="table-demo-content">
@@ -308,53 +404,155 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
       <p>Effective Datatables example</p>
       <%= render_datatable(@family_data_table) %>
     </div>
+    <br>
 
-    <h3>Selects</h3>
-      <select class="custom-select">
-        <option selected>Open this select menu</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-       </select>
-    
-    <h3>Inputs</h3>
-    <div class="form-group">
-      <label for="usr">Name:</label>
-      <input type="text" class="form-control" id="usr">
-    </div>
-    <h3>File Inputs</h3>
-    <label class="custom-file">
-      <input type="file" id="file" class="custom-file-input">
-      <span class="custom-file-control"></span>
-    </label>
-    <h3>Text Area</h3>
+       <div class="demo-row demo-inputs">
+         <div class="demo-title">
+           <h3 class="demo-panel-title" id="inputs">Inputs</h3>
+         </div>
+         <div class="demo-col">
+           <form>
+             <div class="form-group>">
+               <label class="control-label" for="large-input">Label for large input</label>
+               <input name="large-input" type="text" value="" placeholder="A large height input has class 'input-lg'" class="form-control input-lg">
+             </div>
+             <div class="form-group>">
+               <label class="control-label" for="small-input">Label for small input</label>
+               <input name="small-input" type="text" value="" placeholder="A small height input has class 'input-sm'" class="form-control input-sm">
+             </div>
+             <div class="form-group>">
+               <label class="control-label" for="default-input">Label for default input</label>
+               <input name="default-input" type="text" value="" placeholder="No additional class is necessary" class="form-control">
+             </div>
+             <p>Fields can have a 'has-feedback' class to allow them to provide user cues</p>
+             <div class="form-group has-success has-feedback">
+               <input type="text" value="A success feedback has class 'has-success'" class="form-control">
+               <span class="form-control-feedback fa fa-check-circle"></span>
+             </div>
+             <div class="form-group has-warning has-feedback">
+               <input type="text" value="A warning feedback has class 'has-warning'" class="form-control">
+               <span class="form-control-feedback fa fa-check-circle"></span>
+             </div>
+             <div class="form-group has-error has-feedback">
+               <input type="text" value="An error feedback has class 'has-error'" class="form-control">
+               <span class="form-control-feedback fa fa-check-circle"></span>
+             </div>
+             <hr />
+             <div class="form-group has-feedback">
+               <input type="text" value="An input can also be disabled" disabled="disabled" class="form-control">
+               <span class="form-control-feedback fa fa-lock"></span>
+             </div>
+             <h3>Disabled Inputs</h3>
+             <fieldset disabled>
+               <div class="form-group">
+                 <input type="text" id="disabledTextInput" class="form-control">
+               </div>
+             </fieldset>
+             <h3>Text Area</h3>
+             <div class="form-group">
+               <label for="comment">Comment:</label>
+               <textarea class="form-control" rows="5" id="textarea"></textarea>
+             </div>
+             <h3>File Inputs</h3>
+             <label class="custom-file">
+               <input type="file" id="file" class="custom-file-input">
+               <span class="custom-file-control"></span>
+             </label>
+             <h3>Search Boxes</h3>
+             <div class="input-group">
+               <input type="text" class="form-control" id="usr">
+               <div class="input-group-btn">
+                 <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+               </div>
+             </div>
 
-    <div class="form-group">
-      <label for="comment">Comment:</label>
-      <textarea class="form-control" rows="5" id="textarea"></textarea>
-    </div>
+             <div class="input-group">
+               <div class="input-group-btn">
+                 <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+               </div>
+               <input type="text" class="form-control" id="usr">
+             </div>
+           </form>
+           <hr />
+         </div>
 
-    <h3>Checkboxes and Radio Buttons</h3>
+         <div class="demo-row">
+           <div class="demo-title">
+             <h3 class="demo-panel-title">Selects</h3>
+           </div>
 
-    <div class="row">
-      <div class="col-lg-6">
-        <div class="input-group">
-          <span class="input-group-addon">
-            <input type="checkbox" aria-label="...">
-          </span>
-          <input type="text" class="form-control" aria-label="...">
-        </div><!-- /input-group -->
+           <div class="demo-col">
+             <form>
+               <p>Standard Select</p>
+               <select class="custom-select">
+                 <option selected>Open this select menu</option>
+                 <option value="1">One</option>
+                 <option value="2">Two</option>
+                 <option value="3">Three</option>
+                </select>
+
+                <p>Select with Option Groups</p>
+                 <select class="form-control select select-primary" name="demo-select" data-toggle="select">
+                   <optgroup label="Profile">
+                     <option value="0">My Profile</option>
+                     <option value="1">My Friends</option>
+                   </optgroup>
+                   <optgroup label="System">
+                     <option value="2">Messages</option>
+                     <option value="3">My Settings</option>
+                     <option value="4">Logout</option>
+                   </optgroup>
+                 </select>
+
+                 <br />
+                 <p>Multiselect</p>
+                 <select multiple="multiple" class="form-control multiselect multiselect-info" data-toggle="select">
+                   <option value="0">1</option>
+                   <option value="1" selected>2</option>
+                   <option value="2" selected>3</option>
+                   <option value="3" selected>4</option>
+                   <option value="4">5</option>
+                 </select>
+               </form>
+           </div><!-- ./demo-col -->
+         </div> <!-- /.demo-row -->
+
+
+          <h3>Checkboxes and Radio Buttons</h3>
+
+  <div class="container">
+    <form>
+      <div class="checkbox">
+        <label><input type="checkbox" value="">Unchecked</label>
       </div>
+      <div class="checkbox">
+        <label><input type="checkbox" value="" checked>Checked</label>
+      </div>
+      <div class="checkbox disabled">
+        <label><input type="checkbox" value="" disabled>Disabled unchecked</label>
+      </div>
+      <div class="checkbox checked">
+        <label><input type="checkbox" value="" disabled checked >Disabled checked</label>
+      </div>
+    </form>
+    <form>
+      <div class="radio">
+        <label><input type="radio" name="optradio"><span> Radio is off</span></label>
+      </div>
+      <div class="radio">
+        <label><input type="radio" name="optradio" checked><span> Radio is on</span></label>
+      </div>
+      <div class="radio disabled">
+        <label><input type="radio" name="optradio" disabled><span> Disabled radio is off</span></label>
+      </div>
+    </form>
+    <form>
+      <div class="radio disabled">
+        <label><input type="radio" name="optradio" disabled checked><span> Disabled radio is off</span></label>
+      </div>
+    </form>
+  </div>
 
-      <div class="col-lg-6">
-        <div class="input-group">
-          <span class="input-group-addon">
-            <input type="radio" aria-label="...">
-          </span>
-          <input type="text" class="form-control" aria-label="...">
-        </div><!-- /input-group -->
-      </div><!-- /.col-lg-6 -->
-    </div><!-- /.row -->
 
     <h3>Pagination</h3>
     <div>
@@ -418,7 +616,7 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
             </li>
           </ul>
         </nav>
-        
+
 
         <nav aria-label="Page navigation">
           <ul class="pagination pagination-sm">
@@ -432,7 +630,7 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
           </ul>
         </nav>
 
-        
+
     <h3>Pager</h3>
       <p>Default</p>
 
@@ -451,7 +649,7 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
           </ul>
         </nav>
 
-       <p>Optional disabled state</p> 
+       <p>Optional disabled state</p>
 
           <nav aria-label="Page navigation">
             <ul class="pager">
@@ -466,7 +664,7 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
         <div class="container-fluid">
           <div class="navbar-header">
             <a class="navbar-brand" href="#">
-              <img alt="Brand" src="...">
+              <img alt="Brand" src="https://mahealthconnector.optum.com/individual/images/logo.png">
             </a>
           </div>
         </div>
@@ -481,7 +679,9 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Brand</a>
+            <a class="navbar-brand" href="#">
+              <img alt="Brand" src="https://mahealthconnector.optum.com/individual/images/logo.png">
+            </a>
           </div>
 
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -542,7 +742,7 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
-              <span class="icon-bar"></span> 
+              <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="#">WebSiteName</a>
           </div>
@@ -551,8 +751,8 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
             <ul class="nav navbar-nav">
               <li class="active"><a href="#">Home</a></li>
               <li><a href="#">Page 1</a></li>
-              <li><a href="#">Page 2</a></li> 
-              <li><a href="#">Page 3</a></li> 
+              <li><a href="#">Page 2</a></li>
+              <li><a href="#">Page 3</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
@@ -561,23 +761,58 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
           </div>
         </div>
       </nav>
+      <div class="demo-row demo-tabs">
+        <div class="demo-title">
+          <h3 class="demo-panel-title">Tabs</h3>
+        </div>
+        <div class="demo-content">
+          <ul class="nav nav-tabs nav-append-content" role="tablist">
+            <li role="presentation" class="active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab">Popular</a></li>
+            <li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab">Newest</a></li>
+            <li role="presentation"><a href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab">Bestselling</a></li>
+            <li role="presentation" class="disabled"><a href="#tab4">Disabled Tab</a></li>
+          </ul> <!-- /tabs -->
 
-    <h3>Tabs </h3>
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link active" href="#">Active</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Disabled</a>
-        </li>
-      </ul>
-    
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="tab1">
+              <p>I'm in Section 1.</p>
+            </div>
+
+            <!-- /tabs -->
+            <div role="tabpanel" class="tab-pane" id="tab2">
+              <p>Howdy, I'm in Section 2.</p>
+            </div>
+
+            <!-- /tabs -->
+            <div role="tabpanel" class="tab-pane" id="tab3">
+              <p>Howdy, I'm in Section 3.</p>
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="tab4">
+              <p>This section is disabled.</p>
+            </div>
+          </div> <!-- /tab-content -->
+
+          <br>
+          <p> Tab with Dropdown </p>
+          <ul class="nav nav-tabs">
+            <li role="presentation" class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                Home<span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Sub Options</a></li>
+                <li><a href="#">Sub Options</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">Sub Option below a divider</a></li>
+              </ul>
+            </li>
+            <li role="presentation"><a href="#">Profile</a></li>
+            <li role="presentation"><a href="#">Messages</a></li>
+          </ul>
+        </div> <!-- /demo-content -->
+      </div> <!-- /row -->
+
     <h3> Breadcrumbs </h3>
       <ol class="breadcrumb">
         <li class="breadcrumb-item active">Home</li>
@@ -591,7 +826,7 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
         <li class="breadcrumb-item"><a href="#">Library</a></li>
         <li class="breadcrumb-item active">Data</li>
       </ol>
-    
+
     <h3>Progress Bars and Sliders</h3>
 <div>
 
@@ -720,85 +955,96 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
       <h3>Dismissal Popover</h3>
         <a tabindex="0" class="btn btn-lg btn-danger" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">Dismissible popover</a>
     </div>
-    <h3>Alerts</h3>
-    
-    <p> Alert Example 1 </p>
 
-    <div class="alert alert-success" role="alert">...</div>
-    <div class="alert alert-info" role="alert">...</div>
-    <div class="alert alert-warning" role="alert">...</div>
-    <div class="alert alert-danger" role="alert">...</div>
+    <div class="demo-row">
+      <h3 class="demo-title">Alerts</h3>
+      <div class="demo-content">
+        <!-- Alert Success -->
+        <div class="alert alert-success" role="alert">Create a div with class 'alert alert-success'</div>
+        <div class="alert alert-success">
+          <button type="button" class="close fa fa-cross" data-dismiss="alert"></button>
+          Your computer restarted <a href="#fakelink">because of a problem</a>. Sorry for any inconvenience and appreciate your patient.
+        </div>
 
-    <p> Dismissible alerts</p>
+        <div class="alert alert-success">
+          <button type="button" class="close fa fa-cross" data-dismiss="alert"></button>
+          <h4>Disc Space was extended twice. It’s ok?</h4>
+          <p>An error message is information displayed when an <a href="#fakelink">unexpected condition occurs</a>, usually on a computer or other device. On modern operating systems with graphical user interfaces, error messages are often displayed using dialog boxes.</p>
+          <a href="#fakelink" class="btn btn-primary btn-wide"><span class="fa fa-check-circle"></span>&nbsp;&nbsp;Hurray!</a>
+          <a href="#fakelink" class="btn btn-default btn-info btn-wide">Share on twitter</a>
+        </div>
 
-    <div class="alert alert-warning alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <strong>Warning!</strong> Better check yourself, you're not looking too good.
-    </div>
+        <!-- Alert Info -->
+        <div class="alert alert-info" role="alert">Create a div with class 'alert alert-info'</div>
+        <div class="alert alert-info">
+          <button type="button" class="close fa fa-cross" data-dismiss="alert"></button>
+          Your computer restarted <a href="#fakelink">because of a problem</a>. Sorry for any inconvenience and appreciate your patient.
+        </div>
 
-    <p> Links in alerts </p>
+        <div class="alert alert-info">
+          <button type="button" class="close fa fa-cross" data-dismiss="alert"></button>
+          <h4>Information Label</h4>
+          <p>An error message is information displayed when an <a href="#fakelink">unexpected condition occurs</a>, usually on a computer or other device. On modern operating systems with graphical user interfaces, error messages are often displayed using dialog boxes.</p>
+          <a href="#fakelink" class="btn btn-info btn-wide">Turn it off now</a>
+          <a href="#fakelink" class="btn btn-default btn-wide">It’s ok</a>
+        </div>
 
-    <div class="alert alert-success" role="alert">
-    <a href="#" class="alert-link">...</a>
-    </div>
-    <div class="alert alert-info" role="alert">
-    <a href="#" class="alert-link">...</a>
-    </div>
-    <div class="alert alert-warning" role="alert">
-    <a href="#" class="alert-link">...</a>
-    </div>
-    <div class="alert alert-danger" role="alert">
-    <a href="#" class="alert-link">...</a>
-    </div>
-    <h3>Tabs</h3>
-      <p> Tab Example 1 </p>
-       <ul class="nav nav-tabs">
-        <li role="presentation" class="active"><a href="#">Home</a></li>
-        <li role="presentation"><a href="#">Profile</a></li>
-        <li role="presentation"><a href="#">Messages</a></li>
-        </ul>
-        <br>
-      <p> Tab with Dropdown </p>
-        <ul class="nav nav-tabs">
-        <li role="presentation" class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Home<span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu"></ul>
-        </li>
-        <li role="presentation"><a href="#">Profile</a></li>
-        <li role="presentation"><a href="#">Messages</a></li>
-        </ul>
+        <!-- Alert Warning -->
+        <div class="alert alert-warning" role="alert">Create a div with class 'alert alert-warning'</div>
+        <div class="alert alert-warning">
+          <button type="button" class="close fa fa-cross" data-dismiss="alert"></button>
+          Your computer restarted <a href="#fakelink">because of a problem</a>. Sorry for any inconvenience and appreciate your patient.
+        </div>
 
-    <h3>Badges</h3>
-      <div class="container">
-        <h2>Badges</h2>
-        <a href="#">News <span class="badge">5</span></a><br>
-        <a href="#">Comments <span class="badge">10</span></a><br>
-        <a href="#">Updates <span class="badge">2</span></a>
-      </div>
+        <div class="alert alert-warning">
+          <button type="button" class="close fa fa-cross" data-dismiss="alert"></button>
+          <h4>Error: The change you wanted was rejected.</h4>
+          <p>An error message is information displayed when an <a href="#fakelink">unexpected condition occurs</a>, usually on a computer or other device. On modern operating systems with graphical user interfaces, error messages are often displayed using dialog boxes.</p>
+          <a href="#fakelink" class="btn btn-warning btn-wide">Turn it off now</a>
+          <a href="#fakelink" class="btn btn-default btn-wide">It’s ok</a>
+        </div>
 
-      <div class="container">
-        <h2>Badges on Buttons</h2>
-        <button type="button" class="btn btn-primary">Primary <span class="badge">7</span></button><br>
-        <button type="button" class="btn btn-success">Success <span class="badge">3</span></button><br>    
-        <button type="button" class="btn btn-danger">Danger <span class="badge">5</span></button><br>     
-      </div>
+        <!-- Alert Danger -->
+        <div class="alert alert-danger" role="alert">Create a div with class 'alert alert-danger'</div>
+        <div class="alert alert-danger">
+          <button type="button" class="close fa fa-cross" data-dismiss="alert"></button>
+          Your computer restarted <a href="#fakelink">because of a problem</a>. Sorry for any inconvenience and appreciate your patient.
+        </div>
 
-      <div class="container">
-      <h2>Badges</h2>
-      <a href="#">Inbox <span class="badge">42</span></a><br>
-      <button class="btn btn-primary" type="button">Messages <span class="badge">4</span></button>
-      </div>
+        <div class="alert alert-danger">
+          <button type="button" class="close fa fa-cross" data-dismiss="alert"></button>
+          <h4>Error: The change you wanted was rejected.</h4>
+          <p>An error message is information displayed when an <a href="#fakelink">unexpected condition occurs</a>, usually on a computer or other device. On modern operating systems with graphical user interfaces, error messages are often displayed using dialog boxes.</p>
+          <a href="#fakelink" class="btn btn-danger btn-wide">Turn it off now</a>
+          <a href="#fakelink" class="btn btn-default btn-wide">It’s ok</a>
+        </div>
+        <p> Dismissible alerts</p>
+        <div class="alert alert-warning alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <strong>Warning!</strong> Better check yourself, you're not looking too good.
+        </div>
 
-      <div class="container">
-        <h2>Badges nav-pills</h2>
-          <ul class="nav nav-pills" role="tablist">
-            <li role="presentation" class="active"><a href="#">Home <span class="badge">42</span></a></li>
-            <li role="presentation"><a href="#">Profile</a></li>
-            <li role="presentation"><a href="#">Messages <span class="badge">3</span></a></li>
-          </ul>
-      </div><br>
+      </div> <!-- /demo-content -->
+    </div> <!-- /row -->
 
+    <h2>Badges</h2>
+    <a href="#">News <span class="badge">5</span></a><br>
+    <a href="#">Comments <span class="badge">10</span></a><br>
+    <a href="#">Updates <span class="badge">2</span></a>
+
+    <h3>Badges on Buttons</h3>
+    <button type="button" class="btn btn-primary">Primary <span class="badge">7</span></button><br>
+    <button type="button" class="btn btn-success">Success <span class="badge">3</span></button><br>
+    <button type="button" class="btn btn-danger">Danger <span class="badge">5</span></button><br>
+
+    <h3>Badges nav-pills</h3>
+    <ul class="nav nav-pills" role="tablist">
+      <li role="presentation" class="active"><a href="#">Home <span class="badge">42</span></a></li>
+      <li role="presentation"><a href="#">Profile</a></li>
+      <li role="presentation"><a href="#">Messages <span class="badge">3</span></a></li>
+    </ul>
+    <br>
+         
       <h3>Modal</h3>
       <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Large Modal</button>
       <div id="myModal" class="modal fade" role="dialog">
@@ -837,8 +1083,9 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
       </div>
       
     <h3>Tabs</h3>
+
     <h3>Wells</h3>
-      
+
       <h3>Default well</h3>
       <div class="well"> Default Well</div>
 
@@ -854,14 +1101,14 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
       <h3>Slides only</h3>
       <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner" role="listbox">
-          <div class="carousel-item active">
-            <img class="d-block img-fluid" src="https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0ahUKEwi8k_Oxp8_TAhWEJCYKHdhnAOYQjRwIBw&url=https%3A%2F%2Fwww.template.net%2Fdesign-templates%2Fbackgrounds%2Fplain-background%2F&psig=AFQjCNEc8NdSVQj9g0HcYJuqD1OrtuUeuw&ust=1493749157071603">
+          <div class="carousel-item item active">
+            <img class="d-block img-fluid" src="https://dchealthlink.com/sites/all/themes/dchl/img/stock/individual-family.jpg">
           </div>
-          <div class="carousel-item">
-            <img class="d-block img-fluid" src="/resources/images/carousel/image-01.jpg" alt="Second slide">
+          <div class="carousel-item item">
+            <img class="d-block img-fluid" src="https://dchealthlink.com/sites/all/themes/dchl/img/stock/small-business.jpg" alt="Second slide">
           </div>
-          <div class="carousel-item">
-            <img class="d-block img-fluid" src="/resources/images/carousel/image-01.jpg" alt="Third slide">
+          <div class="carousel-item item">
+            <img class="d-block img-fluid" src="https://dchealthlink.com/sites/all/themes/dchl/img/stock/employee.jpg" alt="Third slide">
           </div>
         </div>
       </div>
@@ -869,25 +1116,27 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
       <h3>With controls</h3>
       <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner" role="listbox">
-          <div class="carousel-item active">
-            <img class="d-block img-fluid" src="/resources/images/carousel/image-01.jpg" alt="First slide">
+          <div class="carousel-item item active">
+            <img class="d-block img-fluid" src="https://dchealthlink.com/sites/all/themes/dchl/img/stock/individual-family.jpg" alt="First slide">
           </div>
-          <div class="carousel-item">
-            <img class="d-block img-fluid" src="/resources/images/carousel/image-01.jpg" alt="Second slide">
+          <div class="carousel-item item">
+            <img class="d-block img-fluid" src="https://dchealthlink.com/sites/all/themes/dchl/img/stock/small-business.jpg" alt="Second slide">
           </div>
-          <div class="carousel-item">
-            <img class="d-block img-fluid" src="/resources/images/carousel/image-01.jpg" alt="Third slide">
+          <div class="carousel-item item">
+            <img class="d-block img-fluid" src="https://dchealthlink.com/sites/all/themes/dchl/img/stock/employee.jpg" alt="Third slide">
           </div>
         </div>
-        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <a class="left carousel-control carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+          <span class="icon-prev" aria-hidden="true"></span>
           <span class="sr-only">Previous</span>
         </a>
-        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <a class="right carousel-control carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+          <span class="icon-next" aria-hidden="true"></span>
           <span class="sr-only">Next</span>
         </a>
       </div>
+
+      <p> To initialize $("#carouselExampleControls").carousel(); </p>
 
       <h3>With indicators</h3>
       <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -897,138 +1146,55 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
           <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
         </ol>
         <div class="carousel-inner" role="listbox">
-          <div class="carousel-item active">
-            <img class="d-block img-fluid" src="/resources/images/carousel/image-01.jpg" alt="First slide">
+          <div class="carousel-item active carousel-item item ">
+            <img class="d-block img-fluid" src="https://dchealthlink.com/sites/all/themes/dchl/img/stock/individual-family.jpg" alt="First slide">
           </div>
-          <div class="carousel-item">
-            <img class="d-block img-fluid" src="/resources/images/carousel/image-01.jpg" alt="Second slide">
+          <div class="carousel-item carousel-item item ">
+            <img class="d-block img-fluid" src="https://dchealthlink.com/sites/all/themes/dchl/img/stock/small-business.jpg" alt="Second slide">
           </div>
-          <div class="carousel-item">
-            <img class="d-block img-fluid" src="/resources/images/carousel/image-01.jpg" alt="Third slide">
+          <div class="carousel-item carousel-item item ">
+            <img class="d-block img-fluid" src="https://dchealthlink.com/sites/all/themes/dchl/img/stock/employee.jpg" alt="Third slide">
           </div>
         </div>
         <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="icon-prev carousel-control-prev-icon" aria-hidden="true"></span>
           <span class="sr-only">Previous</span>
         </a>
         <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="icon-next carousel-control-next-icon" aria-hidden="true"></span>
           <span class="sr-only">Next</span>
         </a>
       </div>
 
       <h3>With captions</h3>
-      <div class="carousel-item">
-        <img src="/resources/images/carousel/image-01.jpg" alt="...">
-        <div class="carousel-caption d-none d-md-block">
-          <h3>...</h3>
-          <p>...</p>
+      <div id="carouselWithCaptions" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner" role="listbox">
+          <div class="carousel-item active carousel-item item ">
+            <img class="d-block img-fluid" src="https://dchealthlink.com/sites/all/themes/dchl/img/stock/individual-family.jpg" alt="First slide">
+            <div class="carousel-caption">
+              <h3>Picture One Title</h3>
+              <p>Picture One Caption</p>
+             </div>
+          </div>
+          <div class="carousel-item carousel-item item ">
+            <img class="d-block img-fluid" src="https://dchealthlink.com/sites/all/themes/dchl/img/stock/small-business.jpg" alt="Second slide">
+            <div class="carousel-caption">
+              <h3>Picture Two Title</h3>
+              <p>Picture Two Caption</p>
+            </div>
+          </div>
+          <div class="carousel-item carousel-item item ">
+            <img class="d-block img-fluid" src="https://dchealthlink.com/sites/all/themes/dchl/img/stock/employee.jpg" alt="Third slide">
+            <div class="carousel-caption">
+              <h3>Picture Three Title</h3>
+              <p>Picture Three Caption</p>
+            </div>
+          </div>
         </div>
       </div>
 
-  </div> <!-- /container -->
 
-    <div class="demo-row">
-      <div class="demo-title">
-        <h3 class="demo-panel-title">Selects</h3>
-      </div>
-
-      <div class="demo-col">
-
-        <div class="mbl">
-          <select class="form-control select select-primary" data-toggle="select">
-            <optgroup label="Profile">
-              <option value="0">My Profile</option>
-              <option value="1">My Friends</option>
-            </optgroup>
-            <optgroup label="System">
-              <option value="2">Messages</option>
-              <option value="3">My Settings</option>
-              <option value="4">Logout</option>
-            </optgroup>
-          </select>
-        </div>
-
-        <div class="mbl">
-          <select multiple="multiple" class="form-control multiselect multiselect-info" data-toggle="select">
-            <option value="0">1</option>
-            <option value="1" selected>2</option>
-            <option value="2" selected>3</option>
-            <option value="3" selected>4</option>
-            <option value="4">5</option>
-          </select>
-        </div>
-
-      </div><!-- ./demo-col -->
-    </div> <!-- /.demo-row -->
-
-    <div class="demo-row demo-inputs">
-      <div class="demo-title">
-        <h3 class="demo-panel-title">Inputs</h3>
-      </div>
-      <div class="demo-col">
-        <div class="form-group">
-          <input type="text" value="" placeholder="Un-Active" class="form-control input-hg">
-        </div>
-        <div class="form-group">
-          <input type="text" value="" placeholder="Un-Active" class="form-control input-lg">
-        </div>
-        <div class="form-group">
-          <input type="text" value="" placeholder="Un-Active" class="form-control">
-        </div>
-        <div class="form-group">
-          <input type="text" value="" placeholder="Un-Active" class="form-control input-sm">
-        </div>
-        <div class="form-group has-error">
-          <input type="text" value="Error" class="form-control input-hg">
-        </div>
-        <div class="form-group has-error">
-          <input type="text" value="Error" class="form-control input-lg">
-        </div>
-        <div class="form-group has-error">
-          <input type="text" value="Error" class="form-control">
-        </div>
-        <div class="form-group has-error">
-          <input type="text" value="Error" class="form-control input-sm">
-        </div>
-      </div>
-
-      <div class="demo-col">
-        <div class="form-group has-success has-feedback">
-          <input type="text" value="Success" class="form-control input-hg">
-          <span class="form-control-feedback fa fa-check-circle"></span>
-        </div>
-        <div class="form-group has-success has-feedback">
-          <input type="text" value="Success" class="form-control input-lg">
-          <span class="form-control-feedback fa fa-check-circle"></span>
-        </div>
-        <div class="form-group has-success has-feedback">
-          <input type="text" value="Success" class="form-control">
-          <span class="form-control-feedback fa fa-check-circle"></span>
-        </div>
-        <div class="form-group has-success has-feedback">
-          <input type="text" value="Success" class="form-control input-sm">
-          <span class="form-control-feedback fa fa-check-circle"></span>
-        </div>
-        <div class="form-group has-feedback">
-          <input type="text" value="Disabled" disabled="disabled" class="form-control input-hg">
-          <span class="form-control-feedback fa fa-lock"></span>
-        </div>
-        <div class="form-group has-feedback">
-          <input type="text" value="Disabled" disabled="disabled" class="form-control input-lg">
-          <span class="form-control-feedback fa fa-lock"></span>
-        </div>
-        <div class="form-group has-feedback">
-          <input type="text" value="Disabled" disabled="disabled" class="form-control">
-          <span class="form-control-feedback fa fa-lock"></span>
-        </div>
-        <div class="form-group has-feedback">
-          <input type="text" value="Disabled" disabled="disabled" class="form-control input-sm">
-          <span class="form-control-feedback fa fa-lock"></span>
-        </div>
-      </div>
-    </div><!-- /row -->
-
+    <div>
     <div class="demo-row">
       <div class="demo-title">
         <h3 class="demo-panel-title">Input Variants</h3>
@@ -1131,22 +1297,22 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
         </div>
         <div class="form-group">
 
-<div class="input-group input-group-rounded">
+          <div class="input-group input-group-rounded">
             <input type="search" class="form-control" placeholder="Search" id="search-query-4">
             <button type="submit" class="btn"><span class="fa fa-search"></span></button>
-</div>
+          </div>
 
-<form class="form-inline">
-  <div class="form-group">
-    <label for="exampleInputName2">Name</label>
-    <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
-  </div>
-  <div class="form-group">
-    <label for="exampleInputEmail2">Email</label>
-    <input type="email" class="form-control" id="exampleInputEmail2" placeholder="jane.doe@example.com">
-  </div>
-  <button type="submit" class="btn btn-default">Send invitation</button>
-</form>
+      <form class="form-inline">
+        <div class="form-group">
+          <label for="exampleInputName2">Name</label>
+          <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputEmail2">Email</label>
+          <input type="email" class="form-control" id="exampleInputEmail2" placeholder="jane.doe@example.com">
+        </div>
+        <button type="submit" class="btn btn-default">Send invitation</button>
+      </form>
 
         </div>
         <div class="form-group">
@@ -1669,62 +1835,6 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
       </div>
     </div>
 
-    <div class="demo-row demo-tabs">
-      <div class="demo-title">
-        <h3 class="demo-panel-title">Tabs</h3>
-      </div>
-      <div class="demo-content">
-        <ul class="nav nav-tabs">
-          <li class="active"><a href="#">Popular</a></li>
-          <li><a href="#">Newest</a></li>
-          <li><a href="#">Bestselling</a></li>
-          <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-              Dropdown
-              <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-              <li><a href="#tab2">Newest</a></li>
-              <li><a href="#tab3">Bestselling</a></li>
-            </ul>
-          </li>
-        </ul> <!-- /tabs -->
-
-        <ul class="nav nav-tabs nav-append-content">
-          <li class="active"><a href="#tab1">Popular</a></li>
-          <li><a href="#tab2">Newest</a></li>
-          <li><a href="#tab3">Bestselling</a></li>
-          <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-              Dropdown
-              <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-              <li><a href="#tab2">Newest</a></li>
-              <li><a href="#tab3">Bestselling</a></li>
-            </ul>
-          </li>
-        </ul> <!-- /tabs -->
-
-        <div class="tab-content">
-          <div class="tab-pane active" id="tab1">
-            <p>I'm in Section 1.</p>
-          </div>
-
-          <!-- /tabs -->
-          <div class="tab-pane" id="tab2">
-            <p>Howdy, I'm in Section 2.</p>
-          </div>
-
-          <!-- /tabs -->
-          <div class="tab-pane" id="tab3">
-            <p>Howdy, I'm in Section 3.</p>
-          </div>
-        </div> <!-- /tab-content -->
-
-      </div>
-    </div> <!-- /row -->
-
     <div class="demo-row">
       <div class="demo-title">
         <h3 class="demo-panel-title">Icon Bars</h3>
@@ -2086,72 +2196,8 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
     </div> <!-- /row -->
 
     <div class="demo-row">
-      <h3 class="demo-title">Alerts</h3>
-      <div class="demo-content">
-        <!-- Alert Success -->
-        <div class="alert alert-success">
-          <button type="button" class="close fa fa-cross" data-dismiss="alert"></button>
-          Your computer restarted <a href="#fakelink">because of a problem</a>. Sorry for any inconvenience and appreciate your patient.
-        </div>
-
-        <div class="alert alert-success">
-          <button type="button" class="close fa fa-cross" data-dismiss="alert"></button>
-          <h4>Disc Space was extended twice. It’s ok?</h4>
-          <p>An error message is information displayed when an <a href="#fakelink">unexpected condition occurs</a>, usually on a computer or other device. On modern operating systems with graphical user interfaces, error messages are often displayed using dialog boxes.</p>
-          <a href="#fakelink" class="btn btn-primary btn-wide"><span class="fa fa-check-circle"></span>&nbsp;&nbsp;Hurray!</a>
-          <a href="#fakelink" class="btn btn-default btn-info btn-wide">Share on twitter</a>
-        </div>
-
-        <!-- Alert Info -->
-        <div class="alert alert-info">
-          <button type="button" class="close fa fa-cross" data-dismiss="alert"></button>
-          Your computer restarted <a href="#fakelink">because of a problem</a>. Sorry for any inconvenience and appreciate your patient.
-        </div>
-
-        <div class="alert alert-info">
-          <button type="button" class="close fa fa-cross" data-dismiss="alert"></button>
-          <h4>Information Label</h4>
-          <p>An error message is information displayed when an <a href="#fakelink">unexpected condition occurs</a>, usually on a computer or other device. On modern operating systems with graphical user interfaces, error messages are often displayed using dialog boxes.</p>
-          <a href="#fakelink" class="btn btn-info btn-wide">Turn it off now</a>
-          <a href="#fakelink" class="btn btn-default btn-wide">It’s ok</a>
-        </div>
-
-        <!-- Alert Error -->
-        <div class="alert alert-warning">
-          <button type="button" class="close fa fa-cross" data-dismiss="alert"></button>
-          Your computer restarted <a href="#fakelink">because of a problem</a>. Sorry for any inconvenience and appreciate your patient.
-        </div>
-
-        <div class="alert alert-warning">
-          <button type="button" class="close fa fa-cross" data-dismiss="alert"></button>
-          <h4>Error: The change you wanted was rejected.</h4>
-          <p>An error message is information displayed when an <a href="#fakelink">unexpected condition occurs</a>, usually on a computer or other device. On modern operating systems with graphical user interfaces, error messages are often displayed using dialog boxes.</p>
-          <a href="#fakelink" class="btn btn-warning btn-wide">Turn it off now</a>
-          <a href="#fakelink" class="btn btn-default btn-wide">It’s ok</a>
-        </div>
-
-        <!-- Alert Danger -->
-        <div class="alert alert-danger">
-          <button type="button" class="close fa fa-cross" data-dismiss="alert"></button>
-          Your computer restarted <a href="#fakelink">because of a problem</a>. Sorry for any inconvenience and appreciate your patient.
-        </div>
-
-        <div class="alert alert-danger">
-          <button type="button" class="close fa fa-cross" data-dismiss="alert"></button>
-          <h4>Error: The change you wanted was rejected.</h4>
-          <p>An error message is information displayed when an <a href="#fakelink">unexpected condition occurs</a>, usually on a computer or other device. On modern operating systems with graphical user interfaces, error messages are often displayed using dialog boxes.</p>
-          <a href="#fakelink" class="btn btn-danger btn-wide">Turn it off now</a>
-          <a href="#fakelink" class="btn btn-default btn-wide">It’s ok</a>
-        </div>
-      </div> <!-- /demo-content -->
-    </div> <!-- /row -->
-  </div> <!-- /.container -->
-
-  <div class="container">
-    <div class="demo-row">
       <h3 class="demo-title">Modals</h3>
     </div>
-  </div><!-- /.container -->
 
   <div class="static-modal-backdrop">
     <div class="modal">
@@ -2173,7 +2219,6 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
     </div>
   </div><!-- /.static-modal-backdrop -->
 
-  <div class="container">
     <div class="demo-row">
       <h3 class="demo-title">Glyphs <small>(70)</small></h3>
       <div class="demo-content demo-icons">
@@ -2593,7 +2638,6 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
         <h3 class="demo-panel-title">Dialog</h3>
       </div>
     </div><!-- /row -->
-  </div><!-- /.container -->
 
   <div class="dialog dialog-success">
     Activation link was sent to <span class="text-primary">m***@gmail.com</span>
@@ -2624,253 +2668,22 @@ Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis moll
     </form>
   </div> <!-- /dialog -->
 
-  <div class="container ptl">
-    <div class="demo-row menu-row">
-      <h3 class="demo-title">Bottom Menu</h3>
-    </div><!-- /.demo-row -->
-  </div><!-- /.container -->
+<% end %>
 
-  <div class="mtl pbl">
-    <div class="bottom-menu bottom-menu-inverse">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-2 col-sm-2">
-            <a href="#fakelink" class="bottom-menu-brand">Flat UI</a>
-          </div>
-          <div class="col-md-8 col-sm-8">
-            <ul class="bottom-menu-list">
-              <li><a href="#fakelink">About Us</a></li>
-              <li><a href="#fakelink">Store</a></li>
-              <li class="active"><a href="#fakelink">Jobs</a></li>
-              <li><a href="#fakelink">Privacy</a></li>
-              <li><a href="#fakelink">Terms</a></li>
-              <li><a href="#fakelink">Follow Us</a></li>
-              <li><a href="#fakelink">Support</a></li>
-              <li><a href="#fakelink">Links</a></li>
-            </ul>
-          </div>
-          <div class="col-md-2 col-sm-2">
-            <ul class="bottom-menu-iconic-list">
-              <li><a href="#fakelink" class="fa fa-pinterest"></a></li>
-              <li><a href="#fakelink" class="fa fa-facebook"></a></li>
-              <li><a href="#fakelink" class="fa fa-twitter"></a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div> <!-- /bottom-menu-inverse -->
-  </div>
+<% content_for :additional_scripts do %>
+  <% javascript_tag do %>
+    $(document).ready(function(){
+      // start carousels
+      $("#carouselExampleControls").carousel();
+      $("#carouselExampleSlidesOnly").carousel();
+      $("#carouselExampleIndicators").carousel();
 
-  <div class="bottom-menu">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-2 col-sm-2">
-          <a href="#fakelink" class="bottom-menu-brand">Flat UI</a>
-        </div>
-        <div class="col-md-8 col-sm-8">
-          <ul class="bottom-menu-list">
-            <li><a href="#fakelink">About Us</a></li>
-            <li><a href="#fakelink">Store</a></li>
-            <li class="active"><a href="#fakelink">Jobs</a></li>
-            <li><a href="#fakelink">Privacy</a></li>
-            <li><a href="#fakelink">Terms</a></li>
-            <li><a href="#fakelink">Follow Us</a></li>
-            <li><a href="#fakelink">Support</a></li>
-            <li><a href="#fakelink">Links</a></li>
-          </ul>
-        </div>
-        <div class="col-md-2 col-sm-2">
-          <ul class="bottom-menu-iconic-list">
-            <li><a href="#fakelink" class="fa fa-pinterest"></a></li>
-            <li><a href="#fakelink" class="fa fa-facebook"></a></li>
-            <li><a href="#fakelink" class="fa fa-twitter"></a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div> <!-- /bottom-menu -->
+      // initialize dropdowns
+      $(".dropdown-toggle").dropdown();
 
-  <div class="mvl pvl">
-    <div class="bottom-menu bottom-menu-large bottom-menu-inverse">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-2 col-sm-2">
-            <a href="#fakelink" class="bottom-menu-brand">Flat UI</a>
-          </div>
-          <div class="col-md-2 col-sm-2">
-            <h5 class="title">ABOUT US</h5>
-            <ul class="bottom-menu-list">
-              <li><a href="#fakelink">Dashboard</a></li>
-              <li><a href="#fakelink">Feed</a></li>
-              <li><a href="#fakelink">Forums</a></li>
-              <li><a href="#fakelink">Radio</a></li>
-              <li><a href="#fakelink">Journal</a></li>
-              <li><a href="#fakelink">Reader</a></li>
-              <li><a href="#fakelink">Store</a></li>
-            </ul>
-          </div>
-          <div class="col-md-2 col-sm-2">
-            <h5 class="title">CATEGORIES</h5>
-            <ul class="bottom-menu-list">
-              <li><a href="#fakelink">Design</a></li>
-              <li><a href="#fakelink">Freebies</a></li>
-              <li><a href="#fakelink">Tutorials</a></li>
-              <li><a href="#fakelink">Coding</a></li>
-              <li><a href="#fakelink">Inspiration</a></li>
-              <li><a href="#fakelink">WordPress</a></li>
-              <li><a href="#fakelink">Resources</a></li>
-            </ul>
-          </div>
-          <div class="col-md-2 col-sm-2">
-            <h5 class="title">NETWORKS</h5>
-            <ul class="bottom-menu-list">
-              <li><a href="#fakelink">Insight</a></li>
-              <li><a href="#fakelink">Promotion</a></li>
-              <li><a href="#fakelink">Production</a></li>
-              <li><a href="#fakelink">Planning</a></li>
-              <li><a href="#fakelink">Journal</a></li>
-              <li><a href="#fakelink">Reader</a></li>
-              <li><a href="#fakelink">Store</a></li>
-            </ul>
-          </div>
-          <div class="col-md-2 col-sm-2">
-            <h5 class="title">MAINFRAME</h5>
-            <ul class="bottom-menu-list">
-              <li><a href="#fakelink">Register / Login</a></li>
-              <li class="active"><a href="#fakelink">Jobs</a></li>
-              <li><a href="#fakelink">Contacts</a></li>
-              <li><a href="#fakelink">Privacy</a></li>
-              <li><a href="#fakelink">Terms of Use</a></li>
-            </ul>
-          </div>
-          <div class="col-md-2 col-sm-2">
-            <h5 class="title">FOLLOW US</h5>
-            <ul class="bottom-menu-list">
-              <li><a href="#fakelink">Facebook</a></li>
-              <li><a href="#fakelink">Twitter</a></li>
-              <li><a href="#fakelink">Youtube</a></li>
-              <li><a href="#fakelink">Vimeo</a></li>
-              <li><a href="#fakelink">Instagram</a></li>
-              <li><a href="#fakelink">Vine&nbsp;&nbsp;<span class="label label-small label-primary">New</span></a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div> <!-- /bottom-menu -->
-  </div>
+      // initialize nav spy
+      $('body').scrollspy({ target: '#spy', offset:80});
 
-  <div class="container ptl">
-    <div class="demo-row typography-row">
-      <div class="demo-title">
-        <h3 class="demo-panel-title">Typography</h3>
-      </div>
-      <div class="demo-content">
-        <div class="demo-type-example">
-          <h1><span class="demo-heading-note">Header 1</span>Showers across the</h1>
-        </div>
-        <div class="demo-type-example">
-          <h2><span class="demo-heading-note">Header 2</span>Give this quartet a few</h2>
-        </div>
-        <div class="demo-type-example">
-          <h3><span class="demo-heading-note">Header 3</span>The Vatican transitions to a</h3>
-        </div>
-        <div class="demo-type-example">
-          <h4><span class="demo-heading-note">Header 4</span>Great American Bites: Telluride's Oak, The</h4>
-        </div>
-        <div class="demo-type-example">
-          <h5><span class="demo-heading-note">Header 5</span>Author Diane Alberts loves her some good</h5>
-        </div>
-        <div class="demo-type-example">
-          <h6><span class="demo-heading-note">Header 6</span>With the success of young-adult book-to-movie</h6>
-        </div>
-        <div class="demo-type-example">
-          <span class="demo-text-note">Paragraph</span>
-          <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. <strong>Donec ullamcorper</strong> nulla non metus auctor fringilla. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</p>
-        </div>
-        <div class="demo-type-example">
-          <span class="demo-text-note">Image</span>
-          <img src="/resources/images/example-image.jpg" alt="example-image" class="img-rounded img-responsive">
-          <p class="img-comment"><strong>Note:</strong> gravida at eget metus. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</p>
-        </div>
-        <div class="demo-type-example">
-          <span class="demo-text-note">Lead Text</span>
-          <p class="lead">Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
-        </div>
-        <div class="demo-type-example">
-          <span class="demo-text-note">Quote</span>
-          <blockquote>
-            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Duis mollis, est non commodo luctus.</p>
-            <small>Steve Jobs, CEO Apple</small>
-          </blockquote>
-        </div>
-        <div class="demo-type-example">
-          <span class="demo-text-note">Small Font</span>
-          <p><small>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</small></p>
-        </div>
-      </div><!-- /.demo-content-wide -->
-    </div><!-- /.demo-row -->
-
-    <div class="demo-row">
-      <div class="demo-title">
-        <h3 class="demo-panel-title">Carousel</h3>
-      </div>
-      <div class="demo-content-wide ptl">
-        <div id="myCarousel" class="carousel slide" data-interval="false">
-          <!-- Indicators -->
-          <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myCarousel" data-slide-to="1"></li>
-            <li data-target="#myCarousel" data-slide-to="2"></li>
-          </ol>
-          <!-- Wrapper for slides -->
-          <div class="carousel-inner">
-            <div class="item active">
-              <img src="/resources/images/carousel/image-01.jpg" alt="" />
-              <div class="carousel-caption">
-                <h3>Thumbnail label</h3>
-                <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec.</p>
-              </div>
-            </div>
-            <div class="item">
-              <img src="/resources/images/carousel/image-02.jpg" alt="" />
-              <div class="carousel-caption">
-                <h3>Thumbnail label</h3>
-                <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec.</p>
-              </div>
-            </div>
-            <div class="item">
-              <img src="/resources/images/carousel/image-03.jpg" alt="" />
-              <div class="carousel-caption">
-                <h3>Thumbnail label</h3>
-                <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec.</p>
-              </div>
-            </div>
-          </div>
-          <!-- Controls -->
-          <a class="left carousel-control fa fa-arrow-left" href="#myCarousel" data-slide="prev"></a>
-          <a class="right carousel-control fa fa-arrow-right" href="#myCarousel" data-slide="next"></a>
-        </div>
-      </div><!-- /.demo-content -->
-    </div><!-- /.demo-row -->
-
-    <div class="demo-row demo-video">
-      <div class="demo-title">
-        <h3 class="demo-panel-title">Video</h3>
-      </div>
-      <div class="demo-content-wide">
-        <video class="video-js" preload="auto" poster="/resources/images/video/poster.jpg" data-setup="{}">
-          <source src="http://iurevych.github.com/Flat-UI-videos/big_buck_bunny.mp4" type="video/mp4">
-          <source src="http://iurevych.github.com/Flat-UI-videos/big_buck_bunny.webm" type="video/webm">
-        </video>
-      </div> <!-- /video -->
-    </div>
-
-    <div class="demo-row demo-illustrations">
-      <div class="demo-title">
-        <h3 class="demo-panel-title">Icons</h3>
-      </div>
-
-    </div><!-- /.demo-row -->
-
-  </div><!-- /.container -->
-<%# end %>
+    });
+  <% end %>
+<% end %>
