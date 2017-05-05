@@ -1,4 +1,4 @@
-namespace :load_sic_code do
+namespace :load_sic_rate_reference do
 	desc "load sic code from xlsx file"
 	task :update_sic_code => :environment do
 		begin
@@ -18,7 +18,7 @@ namespace :load_sic_code do
           SicRateReference.create!(
             sic: sheet.cell(i,1),
             hios_id: hios_id.to_i,
-            ratio: (sheet.row(i)[headers[hios_id]] || 1.000),
+            cost_ratio: (sheet.row(i)[headers[hios_id]] || 1.000),
             applicable_year: Time.now.year
           )
           
