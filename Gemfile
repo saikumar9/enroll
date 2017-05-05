@@ -166,3 +166,7 @@ end
 gem 'aws-sdk', '2.2.4'
 gem 'ruby-saml', '~> 1.3.0'
 gem 'combine_pdf'
+
+path 'components' do
+  gem 'aca-shop'
+end
