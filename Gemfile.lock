@@ -39,7 +39,7 @@ GIT
       ttfunk (~> 1.0.3)
 
 PATH
-  remote: ./project_gems/effective_datatables-2.6.14
+  remote: project_gems/effective_datatables-2.6.14
   specs:
     effective_datatables (2.6.14)
       coffee-rails
@@ -48,6 +48,20 @@ PATH
       rails (>= 3.2.0)
       sass-rails
       simple_form
+
+PATH
+  remote: components
+  specs:
+    aca-individual (0.0.1)
+      haml-rails (= 0.9.0)
+      jquery-rails (= 4.0.5)
+      rails (= 4.2.3)
+      sass-rails (= 5.0.4)
+    aca-shop (0.0.1)
+      haml-rails (= 0.9.0)
+      jquery-rails (= 4.0.5)
+      rails (= 4.2.3)
+      sass-rails (= 5.0.4)
 
 GEM
   remote: https://rubygems.org/
@@ -592,6 +606,8 @@ PLATFORMS
 
 DEPENDENCIES
   aasm (~> 4.8.0)
+  aca-individual!
+  aca-shop!
   acapi!
   action_mailer_cache_delivery (~> 0.3.7)
   addressable (= 2.3.8)
@@ -683,4 +699,4 @@ DEPENDENCIES
   wkhtmltopdf-binary-edge (~> 0.12.3.0)
 
 BUNDLED WITH
-   1.13.6
+   1.14.6

@@ -168,5 +168,6 @@ gem 'ruby-saml', '~> 1.3.0'
 gem 'combine_pdf'
 
 path 'components' do
+  gem 'aca-individual'
   gem 'aca-shop'
 end
