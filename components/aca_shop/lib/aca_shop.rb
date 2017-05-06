@@ -1,11 +1,11 @@
 require "aca/shop/engine"
 require "rails/all"
-require "haml"
 require "jquery-rails"
-require "annoyance"
-require "event_counter"
+require "aca-individual"
 
 require File.expand_path("../monkey_patches/engine.rb", __FILE__)
 
-module ACA
+module Aca
+  module Shop
+  end
 end
