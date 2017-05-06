@@ -34,3 +34,8 @@ RSpec::Core::RakeTask.new(:rspec) do |spec|
 end
 
 task :default => :rspec
+
+desc "Open an irb session preloaded with this library"
+task :console do
+  sh "irb -rubygems -I lib -r aca_shop.rb"
+end
