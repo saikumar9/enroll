@@ -1,7 +1,7 @@
 $:.push File.expand_path("../lib", __FILE__)
 
 # Maintain your gem"s version:
-require "aca_shop/version"
+require "aca/shop/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
@@ -15,8 +15,8 @@ Gem::Specification.new do |s|
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
-  if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
+  if s.respond_to?(:metadata)
+    s.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
   else
     raise "RubyGems 2.0 or newer is required to protect against " \
       "public gem pushes."
@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency "jquery-rails", "4.0.5"
 
   s.add_dependency "mongoid', '5.0.1"
-  s.add_dependency "symmetric-encryption', '~> 3.6.0"
+  # s.add_dependency "symmetric-encryption', '~> 3.6.0"
   s.add_dependency "aasm", "~> 4.8.0"
   s.add_dependency "pundit", "~> 1.0.1"
   s.add_dependency "rails-i18n", "4.0.8"
