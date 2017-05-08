@@ -10,9 +10,7 @@ namespace :load_sic_rate_reference do
       sheet.row(2).each_with_index do |header,i|
         headers[header] = i
       end
-
-			p headers.inspect
-      data = []
+      
       hios_ids.each do |hios_id|
         (3..sheet.last_row).each do |i|
           SicRateReference.create!(

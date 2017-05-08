@@ -8,6 +8,7 @@ class SicRateReference
 	
 
 	validates :sic, :hios_id, :cost_ratio, :applicable_year, presence: true
+	validates :sic, uniqueness: { scope: :hios_id }
 	
 
 end
