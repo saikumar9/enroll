@@ -1,1 +1,0 @@
-mhc_composite_rating.rb
