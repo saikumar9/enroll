@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.3'
 
@@ -7,6 +8,7 @@ gem 'rails', '4.2.3'
 # Load the Enroll App component packages used at this site
 path 'components' do
   gem 'aca_shop'
+  gem 'effective_datatables'
 end
 
 # Use SCSS for stylesheets
@@ -106,8 +108,6 @@ gem 'wicked_pdf', '1.0.6'
 # provide recaptcha services
 gem "recaptcha", '1.1.0'
 
-gem 'jquery-datatables-rails', '3.4.0'
-gem 'effective_datatables', path: './project_gems/effective_datatables-2.6.14'
 
 gem 'interactor', '3.1.0'
 gem 'interactor-rails', '2.0.2'
