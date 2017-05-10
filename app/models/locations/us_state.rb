@@ -1,4 +1,4 @@
-class State
+class Locations::State
   include Mongoid::Document
 
   NAME_IDS = [

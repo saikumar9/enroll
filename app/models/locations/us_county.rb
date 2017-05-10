@@ -1,4 +1,4 @@
-class UsCounty
+class Locations::UsCounty
   include Mongoid::Document
 
   belongs_to :geographic_rating_area

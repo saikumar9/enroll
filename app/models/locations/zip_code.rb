@@ -1,3 +1,3 @@
-class ZipCode
+class LocationsZipCode
   include Mongoid::Document
 end
