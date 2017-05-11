@@ -1,7 +1,7 @@
-module Aca
+module ACA
   module Shop
     class Engine < ::Rails::Engine
-      isolate_namespace Aca::Shop
+      isolate_namespace ACA::Shop
 
       initializer :append_migrations do |app|
         unless app.root.to_s.match root.to_s + File::SEPARATOR

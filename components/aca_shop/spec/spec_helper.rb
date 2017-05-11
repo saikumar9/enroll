@@ -3,12 +3,11 @@ require File.expand_path("../dummy/config/environment", __FILE__)
 
 require 'rspec/rails'
 require 'shoulda-matchers'
-require 'event_counter/test_helper'
 
 require 'factory_girl_rails'
 require 'pundit/rspec'
 
-Dir[Teaser::Engine.root.join("spec/support/**/*.rb")].each {|f| require f}
+Dir[ACA::Shop::Engine.root.join("spec/support/**/*.rb")].each {|f| require f}
 
 RSpec.configure do |config|
   config.use_transactional_fixtures = true
