@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  mount Teaser::Engine => "/teaser"
+  mount ACA::Shop::Engine => "/shop"
 end
