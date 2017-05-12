@@ -24,26 +24,14 @@ class QhpBuilder
 
   def search_carrier_name(file_path)
     file_path = file_path.downcase
-    carrier = if file_path.include?("aetna")
-      "Aetna"
-    elsif file_path.include?("dentegra")
-      "Dentegra"
-    elsif file_path.include?("delta")
-      "Delta Dental"
-    elsif file_path.include?("dominion")
-      "Dominion"
-    elsif file_path.include?("guardian")
-      "Guardian"
-    elsif file_path.include?("best life")
-      "BestLife"
-    elsif file_path.include?("metlife")
-      "MetLife"
-    elsif file_path.include?("united")
-      "United Health Care"
-    elsif file_path.include?("kaiser")
-      "Kaiser"
-    elsif file_path.include?("carefirst") || file_path.include?("cf")
-      "CareFirst"
+    carrier = if file_path.include?("bmc_health_net")
+      "BMC Health Net"
+    elsif file_path.include?("fallon_health")
+      "Fallon Health"
+    elsif file_path.include?("health_new_england")
+      "Health New England"
+    elsif file_path.include?("minute_man")
+      "MinuteMan"
     end
   end
 
@@ -51,52 +39,9 @@ class QhpBuilder
     @xml_plan_counter, @success_plan_counter = 0,0
     iterate_plans
     show_qhp_stats
-    mark_2015_dental_plans_as_individual
-    mark_2015_catastrophic_plans_as_individual
-    mark_one_2015_plan_as_shop
-    remove_2016_metlife_plans
-  end
-
-  def remove_2016_metlife_plans
-    # deleting metlife plans based on carrier profile id
-    Plan.where(active_year: 2016, carrier_profile_id: "53e67210eb899a460300001d").size
-  end
-
-  def mark_one_2015_plan_as_shop
-    Plan.where(active_year: 2015, hios_id: /94506DC0350012/).each do |plan|
-      plan.update_attribute(:market, "shop")
-    end
-  end
-
-  def mark_2015_catastrophic_plans_as_individual
-    Plan.catastrophic_level.by_active_year(2015).each do |plan|
-      plan.update_attribute(:market, "individual")
-    end
-  end
-
-  def mark_2015_dental_plans_as_individual
-    # find ivl dental plans that are marked as shop.
-    #delete bestone plans as they do not have corresponding serff templates.
-    Plan.shop_dental_by_active_year(2015).each do |plan|
-      if BEST_LIFE_HIOS_IDS.include?(plan.hios_id)
-        plan.destroy
-      else
-        plan.update_attribute(:market, "individual") if plan.coverage_kind == "dental"
-      end
-    end
-  end
-
-  def update_dental_plans
-    Plan.where(:active_year.in => [2015, 2016], coverage_kind: "dental").each do |plan|
-      plan.hios_id = plan.hios_base_id
-      plan.csr_variant_id = ""
-      plan.save
-    end
   end
 
   def iterate_plans
-    update_dental_plans
-    # @qhp_hash[:packages_list][:packages].each do |plans|
     @qhp_array.each do |plans|
       @plans = plans
       @xml_plan_counter += plans[:plans_list][:plans].size
@@ -152,10 +97,8 @@ class QhpBuilder
     plans_to_update.each do |up_plan|
       nation_wide, dc_in_network = parse_nation_wide_and_dc_in_network
       up_plan.update_attributes(
-          # name: @qhp.plan_marketing_name.squish!,
           hios_id: up_plan.coverage_kind == "dental" ? up_plan.hios_id.split("-").first : up_plan.hios_id,
           hios_base_id: up_plan.hios_id.split("-").first,
-          # csr_variant_id: up_plan.hios_id.include?("-") ? up_plan.hios_id.split("-").last : "",
           csr_variant_id: up_plan.coverage_kind == "dental" ? "" : up_plan.hios_id.split("-").last,
           plan_type: @qhp.plan_type.downcase,
           deductible: @qhp.qhp_cost_share_variances.first.qhp_deductable.in_network_tier_1_individual,
@@ -185,30 +128,27 @@ class QhpBuilder
   def create_plan_from_serff_data
     @qhp.qhp_cost_share_variances.each do |cost_share_variance|
       if cost_share_variance.hios_plan_and_variant_id.split("-").last != "00"
-        if cost_share_variance.plan_marketing_name[-2..-1] != "RE" # dont import plans ending with RE (Religious Exemption)
-          csr_variant_id = parse_metal_level == "dental" ? "" : /#{cost_share_variance.hios_plan_and_variant_id.split('-').last}/
-          plan = Plan.where(active_year: @plan_year,
-            hios_id: /#{@qhp.standard_component_id.strip}/,
-            hios_base_id: /#{cost_share_variance.hios_plan_and_variant_id.split('-').first}/,
-            csr_variant_id: csr_variant_id).to_a
-          next if plan.present?
-          new_plan = Plan.new(
-            name: cost_share_variance.plan_marketing_name.squish!,
-            hios_id: cost_share_variance.hios_plan_and_variant_id,
-            hios_base_id: cost_share_variance.hios_plan_and_variant_id.split("-").first,
-            csr_variant_id: cost_share_variance.hios_plan_and_variant_id.split("-").last,
-            active_year: @plan_year,
-            metal_level: parse_metal_level,
-            market: parse_market,
-            ehb: @qhp.ehb_percent_premium,
-            # carrier_profile_id: "53e67210eb899a460300000d",
-            carrier_profile_id: get_carrier_id(@carrier_name),
-            coverage_kind: @qhp.dental_plan_only_ind.downcase == "no" ? "health" : "dental",
-            dental_level: @dental_metal_level
-            )
-          if new_plan.valid?
-            new_plan.save!
-          end
+        csr_variant_id = parse_metal_level == "dental" ? "" : /#{cost_share_variance.hios_plan_and_variant_id.split('-').last}/
+        plan = Plan.where(active_year: @plan_year,
+          hios_id: /#{@qhp.standard_component_id.strip}/,
+          hios_base_id: /#{cost_share_variance.hios_plan_and_variant_id.split('-').first}/,
+          csr_variant_id: csr_variant_id).to_a
+        next if plan.present?
+        new_plan = Plan.new(
+          name: cost_share_variance.plan_marketing_name.squish!,
+          hios_id: cost_share_variance.hios_plan_and_variant_id,
+          hios_base_id: cost_share_variance.hios_plan_and_variant_id.split("-").first,
+          csr_variant_id: cost_share_variance.hios_plan_and_variant_id.split("-").last,
+          active_year: @plan_year,
+          metal_level: parse_metal_level,
+          market: parse_market,
+          ehb: @qhp.ehb_percent_premium,
+          carrier_profile_id: get_carrier_id(@carrier_name),
+          coverage_kind: @qhp.dental_plan_only_ind.downcase == "no" ? "health" : "dental",
+          dental_level: @dental_metal_level
+          )
+        if new_plan.valid?
+          new_plan.save!
         end
       end
     end

@@ -35,7 +35,8 @@ class QhpRateBuilder
         age: metlife_age,
         start_on: @rate[:effective_date],
         end_on: @rate[:expiration_date],
-        cost: calculate_metlife_cost
+        cost: calculate_metlife_cost,
+        rating_area: @rate[:rate_area_id]
       }
     end
   end
@@ -57,7 +58,8 @@ class QhpRateBuilder
         age: assign_age,
         start_on: @rate[:effective_date],
         end_on: @rate[:expiration_date],
-        cost: @rate[:primary_enrollee]
+        cost: @rate[:primary_enrollee],
+        rating_area: @rate[:rate_area_id]
       }
     end
   end
