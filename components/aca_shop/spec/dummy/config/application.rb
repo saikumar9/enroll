@@ -1,8 +1,17 @@
 require File.expand_path('../boot', __FILE__)
 
-require "rails/all"
+# require 'rails/all'
+require "action_controller/railtie"
+require "action_mailer/railtie"
+require "rails/test_unit/railtie"
+require "sprockets/railtie" # Uncomment this line for Rails 3.1+
 
-Bundler.require
+# Configure fallbacks for mongoid errors:
+require "i18n/backend/fallbacks"
+
+# Require the gems listed in Gemfile, including any gems
+# you've limited to :test, :development, or :production.
+Bundler.require(*Rails.groups)
 
 module Dummy
   class Application < Rails::Application

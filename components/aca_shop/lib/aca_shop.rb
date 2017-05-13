@@ -1,5 +1,12 @@
 require "aca/shop/engine"
-require "rails/all"
+require "action_controller/railtie"
+require "action_mailer/railtie"
+require "rails/test_unit/railtie"
+require "sprockets/railtie" # Uncomment this line for Rails 3.1+
+
+# Configure fallbacks for mongoid errors:
+require "i18n/backend/fallbacks"
+
 require "jquery-rails"
 
 # require "aca-individual"
