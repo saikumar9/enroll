@@ -7,7 +7,7 @@ gem 'rails', '4.2.3'
 
 # Load the Enroll App component packages used at this site
 path 'components' do
-  gem 'aca_shop'
+  gem 'aca_shop_market', path: "components/aca_shop_market"
   gem 'effective_datatables'
 end
 
@@ -81,7 +81,7 @@ gem "config", '~> 1.0.0'
 
 gem 'devise', '~> 3.4.1'
 # gem 'devise_ldap_authenticatable', '~> 0.8.1'
-gem "pundit", '~> 1.0.1'
+gem "pundit", '~> 1.1.0'
 
 # will provide fast group premium plan fetch
 gem 'redis-rails'
@@ -146,6 +146,7 @@ end
 
 group :test do
   gem 'mongoid-rspec', '3.0.0'
+  gem "pundit-matchers", "~> 1.2.3"
   gem 'watir'
   gem 'cucumber-rails', '~> 1.4.2', :require => false
   gem 'poltergeist'

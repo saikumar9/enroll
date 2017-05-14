@@ -2,7 +2,26 @@
 # This command will automatically be run when you run "rails" with Rails 3 gems installed from the root of your application.
 
 ENGINE_ROOT = File.expand_path('../..', __FILE__)
-ENGINE_PATH = File.expand_path('../../lib/teaser/engine', __FILE__)
+ENGINE_PATH = File.expand_path('../../lib/aca/shop/engine', __FILE__)
 
-require 'rails/all'
+# require 'rails/all'
+
+require "action_controller/railtie"
+require "action_mailer/railtie"
+require "rails/test_unit/railtie"
+require "sprockets/railtie" # Uncomment this line for Rails 3.1+
+
+# Configure fallbacks for mongoid errors:
+require "i18n/backend/fallbacks"
+
 require 'rails/engine/commands'
+
+
+# #!/usr/bin/env ruby
+# begin
+#   load File.expand_path("../spring", __FILE__)
+# rescue LoadError
+# end
+# APP_PATH = File.expand_path('../../config/application', __FILE__)
+# require_relative '../config/boot'
+# require 'rails/commands'
