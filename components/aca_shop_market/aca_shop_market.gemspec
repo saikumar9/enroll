@@ -7,7 +7,6 @@ require "aca_shop_market/version"
 Gem::Specification.new do |s|
   s.name          = "aca_shop_market"
   s.version       = AcaShopMarket::VERSION
-  s.authors       = ["Dan Thomas"]
   s.email         = ["dan.thomas@dc.gov"]
   s.authors       = ["Dan Thomas", "Bill Transue"]
   s.description   = %q{An Enroll App extension that supports the ACA Small Business Health Options Program (SHOP) Marketplace}
