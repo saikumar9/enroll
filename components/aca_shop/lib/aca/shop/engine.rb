@@ -1,4 +1,4 @@
-module ACA
+module Aca
   module Shop
     class Engine < ::Rails::Engine
       isolate_namespace Aca::Shop
