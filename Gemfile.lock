@@ -45,7 +45,7 @@ PATH
       aasm (~> 4.8.0)
       jquery-rails (= 4.0.5)
       mongoid (= 5.0.1)
-      pundit (~> 1.0.1)
+      pundit (~> 1.1.0)
       rails (~> 4.2.3)
       rails-i18n (= 4.0.8)
       sass-rails (= 5.0.4)
@@ -404,8 +404,11 @@ GEM
     pry-stack_explorer (0.4.9.2)
       binding_of_caller (>= 0.7)
       pry (>= 0.9.11)
-    pundit (1.0.1)
+    pundit (1.1.0)
       activesupport (>= 3.0.0)
+    pundit-matchers (1.2.3)
+      pundit (~> 1.1, >= 1.1.0)
+      rspec-rails (>= 3.0.0)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -662,7 +665,8 @@ DEPENDENCIES
   pry-rails
   pry-remote
   pry-stack_explorer
-  pundit (~> 1.0.1)
+  pundit (~> 1.1.0)
+  pundit-matchers (~> 1.2.3)
   rails (= 4.2.3)
   rails-i18n (= 4.0.8)
   recaptcha (= 1.1.0)
