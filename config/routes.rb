@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+
+  constraints subdomain: "aca_shop" do
+    mount AcaShopMarket::Engine, at: "/"
+  end
+
   require 'resque/server' 
   mount Resque::Server, at: '/jobs'
   devise_for :users, :controllers => { :registrations => "users/registrations", :sessions => 'users/sessions' }
