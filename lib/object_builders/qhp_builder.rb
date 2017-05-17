@@ -102,7 +102,7 @@ class QhpBuilder
           csr_variant_id: up_plan.coverage_kind == "dental" ? "" : up_plan.hios_id.split("-").last,
           plan_type: @qhp.plan_type.downcase,
           deductible: @qhp.qhp_cost_share_variances.first.qhp_deductable.in_network_tier_1_individual,
-          family_deductible: @qhp.qhp_cost_share_variances.first.qhp_deductable.in_network_tier_1_family,
+          family_deductible: @qhp.qhp_cost_share_variances.first.qhp_deductable.in_network_tier_1_family.split("|").last.squish,
           nationwide: nation_wide,
           dc_in_network: dc_in_network,
           dental_level: @dental_metal_level

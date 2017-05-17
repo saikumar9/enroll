@@ -3,8 +3,8 @@ puts "::: Generating MA Carriers:::"
 
 hbx_office = OfficeLocation.new(
     is_primary: true,
-    address: {kind: "work", address_1: "address_placeholder", address_2: "609 H St, Room 415", city: "Washington", state: "DC", zip: "20002" },
-    phone: {kind: "main", area_code: "202", number: "555-1212"}
+    address: {kind: "work", address_1: "address_placeholder", address_2: "609 H St, Room 415", city: "Boston", state: "MA", zip: "01004" },
+    phone: {kind: "main", area_code: "978", number: "555-1212"}
   )
 
 org = Organization.new(office_locations: [hbx_office], fein: "011000000", legal_name: "BMC Health Net")
