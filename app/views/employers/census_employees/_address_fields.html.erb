@@ -3,7 +3,7 @@
     <div class="row row-form-wrapper no-buffer">
 
     <div class="col-md-2 col-sm-2 col-xs-12 form-group form-group-lg no-pd">
-      <button class="btn btn-new-address" onclick="return false;">ADDRESS</button>
+      <button class="btn btn-new-address" onclick="return false;"> <%= l10n('.address_capital') %></button>
     </div>
 
     <div class="col-md-8 col-sm-8 col-xs-12 form-group form-group-lg no-pd address">
@@ -13,7 +13,7 @@
             <div class="col-md-6 col-sm-6 col-xs-12 no-pd">
               <div class="dropdown">
                 <button class="form-control floatlabel adderess-select-box form_group_lg dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                  <label><%= address_kind.humanize%> Address</label>
+                  <label><%= address_kind.humanize%> <%= l10n('.address') %></label>
                 </button>
               </div>
             </div>
