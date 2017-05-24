@@ -25,13 +25,13 @@ class QhpBuilder
   def search_carrier_name(file_path)
     file_path = file_path.downcase
     carrier = if file_path.include?("bmc_health_net")
-      "BMC Health Net"
+      "Boston Medical Center Health Plan"
     elsif file_path.include?("fallon_health")
-      "Fallon Health"
+      "FCHP"
     elsif file_path.include?("health_new_england")
       "Health New England"
     elsif file_path.include?("minute_man")
-      "MinuteMan"
+      "Minuteman Health"
     end
   end
 
