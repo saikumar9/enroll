@@ -1,21 +1,21 @@
 <div class="" id="inbox_provider_form">
   <div class="row">
     <div class="col-md-12">
-      <h3 class="title-inline">General Agencies</h3>
+      <h3 class="title-inline"><%= l10n('.general_agencies') %></h3>
       <div class="form-inline button-group-wrapper">
         <div class="btn-group" role="group" aria-label="">
           <div class="btn-group" data-toggle="buttons" name="general_agencies_tab">
             <label class="btn btn-default <%= 'active' if @status == 'is_applicant' %>">
-              <input type="radio" name="options" autocomplete="off" value="is_applicant" <%= 'checked' if @status == 'is_applicant' %>> Applicant
+              <input type="radio" name="options" autocomplete="off" value="is_applicant" <%= 'checked' if @status == 'is_applicant' %>> <%= l10n('.applicant') %>
             </label>
             <label class="btn btn-default <%= 'active' if @status == 'is_approved' %>">
-              <input type="radio" name="options" autocomplete="off" value="is_approved" <%= 'checked' if @status == 'is_approved' %>> Certified
+              <input type="radio" name="options" autocomplete="off" value="is_approved" <%= 'checked' if @status == 'is_approved' %>> <%= l10n('.certified') %>
             </label>
             <label class="btn btn-default <%= 'active' if @status == 'is_rejected' %>">
-              <input type="radio" name="options" autocomplete="off" value="is_rejected" <%= 'checked' if @status == 'is_rejected' %>> Decertified
+              <input type="radio" name="options" autocomplete="off" value="is_rejected" <%= 'checked' if @status == 'is_rejected' %>> <%= l10n('.decertified') %>
             </label>
             <label class="btn btn-default <%= 'active' if @status == 'is_suspended' %>">
-              <input type="radio" name="options" autocomplete="off" value="is_suspended" <%= 'checked' if @status == 'is_suspended' %>> Pending
+              <input type="radio" name="options" autocomplete="off" value="is_suspended" <%= 'checked' if @status == 'is_suspended' %>> <%= l10n('.pending') %>
             </label>
             <label class="btn btn-default <%= 'active' if @status == 'all' %>">
               <input type="radio" name="options" autocomplete="off" value="all" <%= 'checked' if @status == 'all' %>> All
@@ -31,12 +31,12 @@
       <table class="table">
       <% if @general_agency_profiles.present? %>
         <thead>
-          <th>Legal Name</th>
-          <th>dba</th>
-          <th>Fein</th>
-          <th>Entity Kind</th>
-          <th>Market Kind</th>
-          <th>State</th>
+          <th><%= l10n('.general_agency_name') %></th>
+          <th><%= l10n('.general_agency_dba') %></th>
+          <th><th><%= l10n('.general_agency_fein') %></th>
+          <<th><%= l10n('.general_agency_entity_kind') %></th>
+          <th><%= l10n('.general_agency_market_kind') %></th>
+          <th><%= l10n('.general_agency_state') %></th>
           <th></th>
         </thead>
         <% @general_agency_profiles.each do |general_agency_profile| %>
@@ -52,7 +52,7 @@
           </tbody>
         <% end %>
       <% else %>
-        <tr><td>No General Agency Profiles found.</td></tr>
+        <tr><td><%= l10n('.profile_existence') %>.</td></tr>
       <% end %>
       </table>
     </div>

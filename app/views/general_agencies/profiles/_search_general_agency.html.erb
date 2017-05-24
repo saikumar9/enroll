@@ -7,12 +7,12 @@
         <table class="table table-border">
           <tbody>
             <tr>
-              <th>Legal Name:</th>
+              <th><%= l10n('.general_agency_name') %></th>
               <td><%= agency.try(:legal_name) %></td>
             </tr>
 
             <tr>
-              <th>FEIN:</th>
+              <th><%= l10n('.general_agency_fein') %></th>
               <td><%= agency.try(:fein) %></td>
             </tr>
 

@@ -5,35 +5,35 @@
         <table class="table table-message-wrapper none_margin_bottom none_margin_top">
           <tbody>
             <tr>
-              <th>Staff Name:</th>
+              <th><%= l10n('.staff_name') %></th>
               <td><%= @staff.person.full_name %></td>
             </tr>
             <tr>
-              <th>Npn:</th>
+              <th><%= l10n('.npn') %></th>
               <td><%= @staff.npn %></td>
             </tr>
             <tr>
-              <th>Email:</th>
+              <th><%= l10n('.email') %></th>
               <td><%= @staff.person.work_email.try(:address) %></td>
             </tr>
             <tr>
-              <th>Agency:</th>
+              <th><%= l10n('.agency') %></th>
               <td><%= @staff.general_agency_profile.legal_name %></td>
             </tr>
             <tr>
-              <th>Market Kinds: </th>
+              <th><%= l10n('.market_kind') %></th>
               <td>
                 <%= @staff.general_agency_profile.try(:market_kind).try(:capitalize) %>
               </td>
             </tr>
             <tr>
-              <th>Languages:</th>
+              <th><%= l10n('.languages') %></th>
               <td>
                 <%= @staff.general_agency_profile.languages_spoken.map do |lang| lang.upcase end.to_sentence %>
               </td>
             </tr>
             <tr>
-              <th>Office Locations:</th>
+              <th><%= l10n('.office_locations') %></th>
               <td>
                 <% @staff.general_agency_profile.organization.office_locations.each do |office_location| %>
                   <%= office_location.address.to_html %>
@@ -42,11 +42,11 @@
               </td>
             </tr>
             <tr>
-              <th>Phone Number:</th>
+              <th><%= l10n('.phone_number') %></th>
               <td><%= @staff.general_agency_profile.phone %></td>
             </tr>
             <tr>
-              <th>History</th>
+              <th><%= l10n('.history') %></th>
               <td>
                 <% @staff.workflow_state_transitions.each do |transition| %>
                   <%= transition.to_html %>
@@ -54,7 +54,7 @@
               </td>
             </tr>
             <tr>
-              <th>Status:</th>
+              <th><%= l10n('.status') %></th>
               <td><%= @staff.current_state %></td>
             </tr>
           </tbody>

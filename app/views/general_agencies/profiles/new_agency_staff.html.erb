@@ -1,12 +1,12 @@
 <div id="general_agency_form" class="container">
-<h3>New General Agency Staff</h3>
+<h3><%= l10n('.new_general') %></h3>
 <%= link_to "General Agency", general_agency_registration_path, class: "btn btn-default" %>
 <%= form_for @organization, as: :organization, url: {action: "create"} do |f| %>
 <%= render 'shared/error_messages', :object => @organization %>
 <%= f.hidden_field :applicant_type, value: 'staff' %>
   <div class="row">
     <div class="col-md-9 col-sm-9 col-xs-12">
-      <h4>Personal Information</h4>
+      <h4><%= l10n('.personal_information') %></h4>
       <div class="row no-buffer row-form-wrapper">
         <div class="col-md-4 col-sm-4 col-xs-12 form-group-lg no-pd">
           <%= f.text_field :first_name, class: "floatlabel form-control interaction-field-control-person-first-name", required: true, placeholder: 'FIRST NAME *' %>
@@ -37,12 +37,12 @@
     <div class="col-md-9 col-sm-9 col-xs-12 general-agency-search">
       <div class="row search-dropdown-wrapper">
         <div class="col-md-12 col-sm-12 col-xs-12">
-          <h4>Select Your General Agency</h4>
+          <h4><%= l10n('.select_agency') %></h4>
           <div class="col-md-4 col-sm-6 col-xs-12 input-group input-no-pd">
             <%= f.hidden_field :general_agency_profile_id %>
             <%= text_field_tag :agency_search, nil, placeholder: 'Name/FEIN', class: 'form-control' %>
             <div class="input-group-btn">
-              <a href="#" onclick="return false;" class="btn btn-select search" data-loading-text="Loading..."><i class="fa fa-search"></i> search</a>
+              <a href="#" onclick="return false;" class="btn btn-select search" data-loading-text="Loading..."><i class="fa fa-search"></i> <%= l10n('.search') %></a>
             </div>
           </div>
         </div>
@@ -53,7 +53,7 @@
   <div class="row">
     <div class="action-group">
       <div class="row no-buffer">
-        <button type="submit" class="btn btn-primary create_general_agency_btn interaction-click-control-create-general-agency">Create General Agency</button>
+        <button type="submit" class="btn btn-primary create_general_agency_btn interaction-click-control-create-general-agency"><%= l10n('.create_general_agency') %></button>
       </div>
     </div>
   </div>
