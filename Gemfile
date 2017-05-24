@@ -7,6 +7,7 @@ gem 'rails', '4.2.3'
 
 # Load the Enroll App component packages used at this site
 path 'components' do
+  gem 'enroll_core', path: "components/enroll_core"
   gem 'aca_shop_market', path: "components/aca_shop_market"
   gem 'effective_datatables'
 end

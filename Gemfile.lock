@@ -52,6 +52,20 @@ PATH
       symmetric-encryption (~> 3.6.0)
 
 PATH
+  remote: components/enroll_core
+  specs:
+    enroll_core (0.0.1)
+      aasm (~> 4.8.0)
+      acapi
+      jquery-rails (= 4.0.5)
+      mongoid (= 5.0.1)
+      pundit (~> 1.1.0)
+      rails (~> 4.2.3)
+      rails-i18n (= 4.0.8)
+      sass-rails (= 5.0.4)
+      symmetric-encryption (~> 3.6.0)
+
+PATH
   remote: components
   specs:
     effective_datatables (2.6.14)
@@ -626,6 +640,7 @@ DEPENDENCIES
   devise (~> 3.4.1)
   effective_datatables!
   email_spec (= 2.0.0)
+  enroll_core!
   eye
   factory_girl_rails (= 4.6.0)
   fakeredis
