@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-describe SetCurrentUser do
+describe EnrollCore::SetCurrentUser do
   let(:user) { FactoryGirl.create(:user) }
 
   before do
-    extend SetCurrentUser
+    extend EnrollCore::SetCurrentUser
   end
 
   context "with module on top level model" do
