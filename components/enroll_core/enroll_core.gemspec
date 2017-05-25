@@ -28,9 +28,6 @@ Gem::Specification.new do |s|
   s.add_dependency "aasm", "~> 4.8.0"
   s.add_dependency "rails-i18n", "4.0.8"
 
-  s.add_dependency 'acapi' #, git: "https://github.com/dchbx/acapi.git", branch: 'development'
-
-
   s.add_development_dependency "spring", "1.6.3"
   s.add_development_dependency "byebug"
   s.add_development_dependency "rspec-rails", "3.4.2"
