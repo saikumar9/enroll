@@ -3,11 +3,11 @@ module EnrollCore
   class Person
     include Mongoid::Document
     include Mongoid::Timestamps
-    include Mongoid::Versioning
+    # include Mongoid::Versioning
 
     include EnrollCore::SetCurrentUser
 
-    include Notify
+    include EnrollCore::Notify
     include UnsetableSparseFields
     include FullStrippedNames
 

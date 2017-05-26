@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :person do
+  factory :person, class: EnrollCore::Person do
     # name_pfx 'Mr'
     first_name 'John'
     # middle_name 'X'

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Address, "with proper validations" do
+describe EnrollCore::Address, "with proper validations" do
   let(:address_kind) { "home" }
   let(:address_1) { "1 Clear Crk" }
   let(:city) { "Irvine" }
@@ -17,7 +17,7 @@ describe Address, "with proper validations" do
     }
   }
 
-  subject { Address.new(address_params) }
+  subject { EnrollCore::Address.new(address_params) }
 
   before :each do
     subject.valid?
@@ -88,7 +88,7 @@ describe Address, "with proper validations" do
     it { should validate_presence_of :state }
     it { should validate_presence_of :zip }
 
-    let(:person) {Person.new(first_name: "John", last_name: "Doe", gender: "male", dob: "10/10/1974", ssn: "123456789" )}
+    let(:person) {EnrollCore::Person.new(first_name: "John", last_name: "Doe", gender: "male", dob: "10/10/1974", ssn: "123456789" )}
     let(:address) {FactoryGirl.create(:address)}
     let(:employer){FactoryGirl.create(:employer_profile)}
 
@@ -98,7 +98,7 @@ describe Address, "with proper validations" do
       it "should save the address" do
         ['home', 'work', 'mailing'].each do |type|
           params.deep_merge!({kind: type})
-          address = Address.new(**params)
+          address = EnrollCore::Address.new(**params)
           person.addresses << address
           expect(address.errors[:kind].any?).to be_falsey
           expect(address.valid?).to be_truthy
@@ -111,7 +111,7 @@ end
 
 describe 'view helpers/presenters' do
   let(:address) {
-     Address.new(
+     EnrollCore::Address.new(
        address_1: "An address line 1",
        address_2: "An address line 2",
        city: "A City",
@@ -152,14 +152,14 @@ end
 describe '#home?' do
   context 'when not a home address' do
     it 'returns false' do
-      address = Address.new(kind: 'work')
+      address = EnrollCore::Address.new(kind: 'work')
       expect(address.home?).to be false
     end
   end
 
   context 'when a home address' do
     it 'returns true' do
-      address = Address.new(kind: 'home')
+      address = EnrollCore::Address.new(kind: 'home')
       expect(address.home?).to be true
     end
   end
@@ -168,18 +168,18 @@ end
 describe '#clean_fields' do
   it 'removes trailing and leading whitespace from fields' do
 
-    expect(Address.new(address_1: '   4321 Awesome Drive   ').address_1).to eq '4321 Awesome Drive'
-    expect(Address.new(address_2: '   NW   ').address_2).to eq 'NW'
-    expect(Address.new(address_3: '   Apt 6   ').address_3).to eq 'Apt 6'
-    expect(Address.new(city: '   Washington   ').city).to eq 'Washington'
-    expect(Address.new(state: '   DC   ').state).to eq 'DC'
-    expect(Address.new(zip: '   20002   ').zip).to eq '20002'
+    expect(EnrollCore::Address.new(address_1: '   4321 Awesome Drive   ').address_1).to eq '4321 Awesome Drive'
+    expect(EnrollCore::Address.new(address_2: '   NW   ').address_2).to eq 'NW'
+    expect(EnrollCore::Address.new(address_3: '   Apt 6   ').address_3).to eq 'Apt 6'
+    expect(EnrollCore::Address.new(city: '   Washington   ').city).to eq 'Washington'
+    expect(EnrollCore::Address.new(state: '   DC   ').state).to eq 'DC'
+    expect(EnrollCore::Address.new(zip: '   20002   ').zip).to eq '20002'
   end
 end
 
 describe '#matches?' do
   let(:address) {
-     Address.new(
+     EnrollCore::Address.new(
        address_1: "An address line 1",
        address_2: "An address line 2",
        city: "A City",

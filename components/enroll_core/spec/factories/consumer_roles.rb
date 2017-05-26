@@ -1,5 +1,6 @@
 FactoryGirl.define do
-  factory :consumer_role do
+
+  factory :consumer_role, class: EnrollCore::ConsumerRole do
     association :person
     sequence(:ssn) { |n| "7"+SecureRandom.random_number.to_s[2..8][0..-((Math.log(n+1,10))+1)]+"#{n+1}"}
     dob "01/01/1980"
@@ -12,7 +13,7 @@ FactoryGirl.define do
     bookmark_url nil
   end
 
-  factory(:consumer_role_person, {class: ::Person}) do
+  factory(:consumer_role_person, class: EnrollCore::Person) do
     first_name { Forgery(:name).first_name }
     last_name { Forgery(:name).first_name }
     gender { Forgery(:personal).gender }
@@ -21,8 +22,9 @@ FactoryGirl.define do
   end
 
 
-  factory(:consumer_role_object, {class: ::ConsumerRole}) do
+  factory(:consumer_role_object, class: EnrollCore::ConsumerRole) do
     is_applicant true
     person { FactoryGirl.create(:consumer_role_person) }
   end
+
 end

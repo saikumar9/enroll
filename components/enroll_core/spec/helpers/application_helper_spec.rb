@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe ApplicationHelper, :type => :helper do
+RSpec.describe EnrollCore::ApplicationHelper, :type => :helper do
 
   describe "#dob_in_words" do
     it "returns date of birth in words for < 1 year" do
