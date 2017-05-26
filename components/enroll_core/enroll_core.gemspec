@@ -18,27 +18,41 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*"]
   s.metadata["yard.run"] = "yri" # use "yard" to build full HTML docs.
 
-  s.add_dependency "rails", "~> 4.2.3"
-  s.add_dependency "sass-rails", "5.0.4"
-  s.add_dependency "jquery-rails", "4.0.5"
+  s.add_dependency "rails", "~> 5.1.1"
+  s.add_dependency "rails-i18n", "~> 5.0.0"
 
-  s.add_dependency "mongoid", "5.0.1"
+  s.add_dependency "mongoid", "6.1.0"
   s.add_dependency "pundit", "~> 1.1.0"
-  s.add_dependency "symmetric-encryption", "~> 3.6.0"
-  s.add_dependency "aasm", "~> 4.8.0"
-  s.add_dependency "rails-i18n", "4.0.8"
+  s.add_dependency "symmetric-encryption", "~> 3.9.0"
+  s.add_dependency "aasm", "~> 4.12.0"
 
-  s.add_development_dependency "spring", "1.6.3"
+  s.add_dependency "money-rails"
+  s.add_dependency "config"
+  s.add_dependency "devise"
+  # s.add_dependency "mongoid-versioning"
+
+  s.add_development_dependency "spring"
+  s.add_development_dependency "spring-commands-rspec"
+  s.add_development_dependency "spring-commands-cucumber"
+
   s.add_development_dependency "byebug"
-  s.add_development_dependency "rspec-rails", "3.4.2"
-  s.add_development_dependency "database_cleaner", "1.5.3"
+  s.add_development_dependency "rspec-rails"
+  s.add_development_dependency "mongoid-rspec"
+  s.add_development_dependency "shoulda-matchers"
 
-  s.add_development_dependency "mongoid-rspec", "3.0.0"
-  s.add_development_dependency "pundit-matchers","~> 1.2.3"
+  s.add_development_dependency "database_cleaner"
 
-  s.add_development_dependency "factory_girl_rails", "4.6.0"
-  s.add_development_dependency "capybara", "2.6.2"
+  s.add_development_dependency "pundit-matchers"
+  s.add_development_dependency "factory_girl_rails"
 
-  s.add_development_dependency "shoulda-matchers", "3.1.1"
-  s.add_development_dependency "poltergeist", "1.11.0"
+  s.add_development_dependency "poltergeist"
+
+###
+
+  # s.add_dependency "jquery-rails", "4.0.5"
+  # s.add_development_dependency "capybara"
+  # s.add_dependency "sass-rails", "5.0.4"
+
+
+
 end
