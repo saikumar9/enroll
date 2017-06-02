@@ -69,7 +69,7 @@
           <div class="breadcrumbs"><%= yield(:breadcrumbs) if content_for?(:breadcrumbs) %></div>
           <%= content_for?(:main) ? yield(:main) : yield %>
         </main>
-      </div>
+      </div>          
     <% end %>
 
     <%= render 'layouts/application_footer' %>
