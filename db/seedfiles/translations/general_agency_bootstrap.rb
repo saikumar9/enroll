@@ -1,4 +1,4 @@
-GENERAL_AGENCY_EXAMPLE_TRANSLATIONS {
+GENERAL_AGENCY_TRANSLATIONS {
   "en.general_agencies.profile.new_agency_staff.new_general" => "New General Agency Staff",
   "en.general_agencies.profile.new_agency_staff.personal_information" => "Personal Information",
   "en.general_agencies.profile.new_agency_staff.select_agency" => "Select Your General Agency",
