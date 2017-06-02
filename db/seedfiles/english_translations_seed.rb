@@ -8,7 +8,6 @@ puts "::: Generating English Translations :::"
 MAIN_TRANSLATIONS = {
   "en.shared.my_portal_links.my_insured_portal" => "My Insured Portal"
 }
-
 translations = [
   BOOTSTRAP_EXAMPLE_TRANSLATIONS,
   LAYOUT_TRANSLATIONS,
