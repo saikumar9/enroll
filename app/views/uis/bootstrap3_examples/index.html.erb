@@ -234,9 +234,9 @@
                  <input type="text" id="disabledTextInput" class="form-control">
                </div>
              </fieldset>
-             <h3>Text Area</h3>
+             <h3><%= l10n('.text_area') %></h3>
              <div class="form-group">
-               <label for="comment">Comment:</label>
+               <label for="comment"><%= l10n('.comment') %></label>
                <textarea class="form-control" rows="5" id="textarea"></textarea>
              </div>
              <h3><%= l10n('.file_input') %></h3>
@@ -304,40 +304,44 @@
          </div> <!-- /.demo-row -->
 
 
-          <h3>Checkboxes and Radio Buttons</h3>
+           <h3><%= l10n('.check_box') %></h3> 
 
-  <div class="container">
-    <form>
-      <div class="checkbox">
-        <label><input type="checkbox" value="">Unchecked</label>
-      </div>
-      <div class="checkbox">
-        <label><input type="checkbox" value="" checked>Checked</label>
-      </div>
-      <div class="checkbox disabled">
-        <label><input type="checkbox" value="" disabled>Disabled unchecked</label>
-      </div>
-      <div class="checkbox checked">
-        <label><input type="checkbox" value="" disabled checked >Disabled checked</label>
-      </div>
-    </form>
-    <form>
-      <div class="radio">
-        <label><input type="radio" name="optradio"><span> Radio is off</span></label>
-      </div>
-      <div class="radio">
-        <label><input type="radio" name="optradio" checked><span> Radio is on</span></label>
-      </div>
-      <div class="radio disabled">
-        <label><input type="radio" name="optradio" disabled><span> Disabled radio is off</span></label>
-      </div>
-    </form>
-    <form>
-      <div class="radio disabled">
-        <label><input type="radio" name="optradio" disabled checked><span> Disabled radio is off</span></label>
-      </div>
-    </form>
-  </div>
+          <div class="container">
+            <form>
+              <div class="checkbox">
+                <label><input type="checkbox" value=""><%= l10n('.unchecked') %></label>
+              </div>
+              <div class="checkbox">
+                <label><input type="checkbox" value="" checked><%= l10n('.checked') %></label>
+              </div>
+              <div class="checkbox disabled">
+                <label><input type="checkbox" value="" disabled><%= l10n('.disabled_unchecked') %></label>
+              </div>
+              <div class="checkbox checked">
+                <label><input type="checkbox" value="" disabled checked ><%= l10n('.disabled_checked') %></label>
+              </div>
+            </form>
+          </div>
+
+          <h3> <%= l10n('.radio_button') %></h3>
+          <div class="container">
+            <form>
+              <div class="radio">
+                <label><input type="radio" name="optradio"><span><%= l10n('.radio_off') %></span></label>
+              </div>
+              <div class="radio">
+                <label><input type="radio" name="optradio" checked><span><%= l10n('.radio_on') %></span></label>
+              </div>
+              <div class="radio disabled">
+                <label><input type="radio" name="optradio" disabled><span><%= l10n('.disabled_radio_off') %></span></label>
+              </div>
+            </form>
+            <form>
+              <div class="radio disabled">
+                <label><input type="radio" name="optradio" disabled checked><span><%= l10n('.disabled_radio_on') %></span></label>
+              </div>
+            </form>
+          </div>
 
 
     <h3>Pagination</h3>
@@ -376,7 +380,7 @@
         </nav>
 
 
-        <p>Sizing</p>
+        <p>Large Sizing</p>
 
         <nav aria-label="Page navigation">
           <ul class="pagination pagination-lg">
@@ -391,6 +395,7 @@
         </nav>
 
 
+        <p>Default Sizing</p>
         <nav aria-label="Page navigation">
           <ul class="pagination">
             <li>
@@ -403,7 +408,7 @@
           </ul>
         </nav>
 
-
+        <p>Small sizing</p>
         <nav aria-label="Page navigation">
           <ul class="pagination pagination-sm">
             <li>
@@ -599,29 +604,29 @@
         </div> <!-- /demo-content -->
       </div> <!-- /row -->
 
-    <h3> Breadcrumbs </h3>
+    <h3><%= l10n('.breadcrumbs') %></h3>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item active">Home</li>
+        <li class="breadcrumb-item active"><%= l10n('.home') %></li>
       </ol>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item active">Library</li>
+        <li class="breadcrumb-item"><a href="#"><%= l10n('.home') %></a></li>
+        <li class="breadcrumb-item active"><%= l10n('.library') %></li>
       </ol>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item"><a href="#">Library</a></li>
-        <li class="breadcrumb-item active">Data</li>
+        <li class="breadcrumb-item"><a href="#"><%= l10n('.home') %></a></li>
+        <li class="breadcrumb-item"><a href="#"><%= l10n('.library') %></a></li>
+        <li class="breadcrumb-item active"><%= l10n('.data') %></a></li>
       </ol>
 
-    <h3>Progress Bars and Sliders</h3>
+     <h3><%= l10n('.progress_bar_and_sliders') %></h3>
 <div>
 
 
 
-<h3>Default progress bar</h3>
+<h3><%= l10n('.default_progress_bar') %></h3>
   <div class="progress">
     <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-    <span class="sr-only">60% Complete</span>
+    <span class="sr-only">60% <%= l10n('.complete') %></span>
   </div>
   </div>
 
@@ -641,31 +646,31 @@
     2%
   </div>
   </div>
-<h3>Contextual alternatives</h3>
+<h3><%= l10n('.contextual_alternatives') %></h3>
   <div class="progress">
     <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-    <span class="sr-only">40% Complete (success)</span>
+    <span class="sr-only">40% <%= l10n('.complete') %> (<%= l10n('.success') %>)</span>
   </div>
   </div>
   <div class="progress">
     <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
-    <span class="sr-only">20% Complete</span>
+    <span class="sr-only">20% <%= l10n('.complete') %></span>
   </div>
   </div>
   <div class="progress">
     <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-    <span class="sr-only">60% Complete (warning)</span>
+    <span class="sr-only">60% <%= l10n('.complete') %> (<%= l10n('.warning') %>)</span>
   </div>
   </div>
   <div class="progress">
     <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
-    <span class="sr-only">80% Complete (danger)</span>
+    <span class="sr-only">80% <%= l10n('.complete') %> (<%= l10n('.danger') %>)</span>
   </div>
   </div>
 <h3>Striped</h3>
   <div class="progress">
     <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-    <span class="sr-only">40% Complete (success)</span>
+    <span class="sr-only">40% <%= l10n('.complete') %> (<%= l10n('.success') %>)</span>
   </div>
   </div>
   <div class="progress">
@@ -675,71 +680,69 @@
   </div>
   <div class="progress">
     <div class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-    <span class="sr-only">60% Complete (warning)</span>
+    <span class="sr-only">60% <%= l10n('.complete') %> (<%= l10n('.warning') %>)</span>
   </div>
   </div>
   <div class="progress">
     <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
-    <span class="sr-only">80% Complete (danger)</span>
+    <span class="sr-only">80% <%= l10n('.complete') %> (<%= l10n('.danger') %>)</span>
   </div>
   </div>
 <h3>Animated</h3>
   <div class="progress">
     <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
-    <span class="sr-only">45% Complete</span>
+    <span class="sr-only">45% <%= l10n('.complete') %></span>
   </div>
   </div>
 <h3>Stacked</h3>
   <div class="progress">
     <div class="progress-bar progress-bar-success" style="width: 35%">
-    <span class="sr-only">35% Complete (success)</span>
+    <span class="sr-only">35% <%= l10n('.complete') %> (<%= l10n('.success') %>)</span>
   </div>
   <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 20%">
-    <span class="sr-only">20% Complete (warning)</span>
+    <span class="sr-only">20% <%= l10n('.complete') %> (<%= l10n('.warning') %>)</span>
   </div>
   <div class="progress-bar progress-bar-danger" style="width: 10%">
-    <span class="sr-only">10% Complete (danger)</span>
+    <span class="sr-only">10% <%= l10n('.complete') %> (<%= l10n('.danger') %>)</span>
   </div>
   </div>
   </div>
 
 
 
-
-    <h3>Tooltips and Popovers</h3>
+<h3><%= l10n('.tooltips_and_popovers') %></h3>
     <div>
-      <h3>Tooltip Four directions</h3>
-        <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="Tooltip on left">Tooltip on left</button>
+      <h3><%= l10n('.tooltip_four_directions') %></h3>
+        <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="<%= l10n('.tooltip_on_left_link') %>"><%= l10n('.tooltip_on_left') %></button>
 
-        <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Tooltip on top</button>
+        <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="<%= l10n('.tooltip_on_top_link') %>"><%= l10n('.tooltip_on_top') %></button>
 
-        <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom">Tooltip on bottom</button>
+        <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="<%= l10n('.tooltip_on_bottom_link') %>"><%= l10n('.tooltip_on_bottom') %></button>
 
-        <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="Tooltip on right">Tooltip on right</button>
+        <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="<%= l10n('.tooltip_on_right_link') %>"><%= l10n('.tooltip_on_right') %></button>
 
-      <h3>Click To toggle Popover</h3>
-        <button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button>
+      <h3><%= l10n('.click_to_toggle_Popover') %></h3>
+        <button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="<%= l10n('.click_to_toggle_Popover_link') %>" data-content="<%= l10n('.toggle_Popover_content') %>"><%= l10n('.click_to_toggle_Popover') %></button>
 
-      <h3>Four directions Popover</h3>
-        <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
-        Popover on left
+      <h3><%= l10n('.four_directions_popover') %></h3>
+        <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="left" data-content="<%= l10n('.popover_on_left_data') %>">
+          <%= l10n('.popover_on_left') %>
         </button>
 
-        <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
-        Popover on top
+        <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" data-content="<%= l10n('.popover_on_top_data') %>">
+          <%= l10n('.popover_on_top') %>
         </button>
 
-        <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Vivamus
-        sagittis lacus vel augue laoreet rutrum faucibus.">
-        Popover on bottom
+        <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<%= l10n('.popover_on_bottom_data') %>">
+          <%= l10n('.popover_on_bottom') %>
         </button>
 
-        <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="right" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
-        Popover on right
+        <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="right" data-content="<%= l10n('.popover_on_right_data') %>">
+          <%= l10n('.popover_on_right') %>
         </button>
 
-      <h3>Dismissal Popover</h3>
-        <a tabindex="0" class="btn btn-lg btn-danger" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">Dismissible popover</a>
+      <h3><%= l10n('.dismissal_popover') %></h3>
+        <a tabindex="0" class="btn btn-lg btn-danger" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="<%= l10n('.dismissal_popover_content') %>"><%= l10n('.dismissal_popover') %></a>
     </div>
 
     <div class="demo-row">
@@ -867,21 +870,21 @@
       
     <h3><%= l10n('.tabs') %></h3>
 
-    <h3>Wells</h3>
+    <h3><%= l10n('.Wells') %></h3>
 
-      <h3>Default well</h3>
-      <div class="well"> Default Well</div>
+      <h3><%= l10n('.default_well') %></h3>
+      <div class="well"> Default well</div>
 
-      <h2>Optional classes</h2>
+      <h2><%= l10n('.optional_classes') %></h2>
 
-        <h3>Large-well</h3>
+        <h3><%= l10n('.large_well') %></h3>
         <div class="well well-lg"> A Large Well</div>
 
-        <h3>Small-well</h3>
+        <h3><%= l10n('.small_well') %></h3>
         <div class="well well-sm"> A small Well</div>
 
-    <h3>Carousel</h3>
-      <h3>Slides only</h3>
+    <h3><%= l10n('.carousels') %></h3>
+      <h3><%= l10n('.slides_only') %></h3>
       <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner" role="listbox">
           <div class="carousel-item item active">
@@ -896,7 +899,7 @@
         </div>
       </div>
 
-      <h3>With controls</h3>
+      <h3><%= l10n('.with_controls') %></h3>
       <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner" role="listbox">
           <div class="carousel-item item active">
@@ -921,7 +924,7 @@
 
       <p> To initialize $("#carouselExampleControls").carousel(); </p>
 
-      <h3>With indicators</h3>
+      <h3><%= l10n('.with_indicators') %></h3>
       <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
           <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -949,28 +952,28 @@
         </a>
       </div>
 
-      <h3>With captions</h3>
+      <h3><%= l10n('.with_captions') %></h3>
       <div id="carouselWithCaptions" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner" role="listbox">
           <div class="carousel-item active carousel-item item ">
             <img class="d-block img-fluid" src="https://dchealthlink.com/sites/all/themes/dchl/img/stock/individual-family.jpg" alt="First slide">
             <div class="carousel-caption">
-              <h3>Picture One Title</h3>
-              <p>Picture One Caption</p>
+              <h3><%= l10n('.picture_one_title') %></h3>
+              <p><%= l10n('.picture_one_caption') %></p>
              </div>
           </div>
           <div class="carousel-item carousel-item item ">
             <img class="d-block img-fluid" src="https://dchealthlink.com/sites/all/themes/dchl/img/stock/small-business.jpg" alt="Second slide">
             <div class="carousel-caption">
-              <h3>Picture Two Title</h3>
-              <p>Picture Two Caption</p>
+              <h3><%= l10n('.picture_two_title') %></h3>
+              <p><%= l10n('.picture_two_caption') %></p>
             </div>
           </div>
           <div class="carousel-item carousel-item item ">
             <img class="d-block img-fluid" src="https://dchealthlink.com/sites/all/themes/dchl/img/stock/employee.jpg" alt="Third slide">
             <div class="carousel-caption">
-              <h3>Picture Three Title</h3>
-              <p>Picture Three Caption</p>
+              <h3><%= l10n('.picture_three_title') %></h3>
+              <p><%= l10n('.picture_three_caption') %></p>
             </div>
           </div>
         </div>

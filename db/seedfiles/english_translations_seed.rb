@@ -1,6 +1,11 @@
+Dir.glob('db/seedfiles/translations/*').each do |file|
+  require_relative 'translations/' + File.basename(file,File.extname(file))
+end
+
 puts "*"*80
 puts "::: Generating English Translations :::"
 
+<<<<<<< HEAD
 translations = {
   "en.layouts.application_brand.call_customer_service" => "Call Customer Service",
   "en.layouts.application_brand.help" => "Help",
@@ -83,7 +88,18 @@ translations = {
   "en.welcome.index.signed_in_as" => "Signed in as %{current_user}",
   "en.welcome.index.welcome_email" => "Welcome %{current_user}",
   "en.welcome.index.welcome_to_site_name" => "Welcome to %{short_name}"
+=======
+MAIN_TRANSLATIONS = {
+  "en.shared.my_portal_links.my_insured_portal" => "My Insured Portal"
+>>>>>>> 10a8851f5eb8156ab699e9c593dcf0183b14029e
 }
+translations = [
+  BOOTSTRAP_EXAMPLE_TRANSLATIONS,
+  LAYOUT_TRANSLATIONS,
+  MAIN_TRANSLATIONS,
+  USERS_ORPHANS_TRANSLATIONS,
+  WELCOME_INDEX_TRANSLATIONS
+].reduce({}, :merge)
 
 translations.keys.each do |k|
   Translation.where(key: k).first_or_create.update_attributes!(value: "\"#{translations[k]}\"")
