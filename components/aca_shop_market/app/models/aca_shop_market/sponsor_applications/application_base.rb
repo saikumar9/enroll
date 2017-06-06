@@ -1,7 +1,6 @@
-module Aca
-  module Shop
-    module BenefitApplication
-      module BaseApplication
+module AcaShopMarket
+  module SponsorApplications
+      class ApplicationBase
         include SetCurrentUser
         include Mongoid::Document
         include Mongoid::Timestamps
@@ -37,9 +36,28 @@ module Aca
 
         validate :application_date_checks
 
+
+        def is_application_eligible?
+          return false unless is_within_hbx_area?
+          return false unless is_timely_submitted?
+          return false unless is_non_owner_threshhold_met?
+          return false unless is_employee_count_less_than_maximum?
+          return false unless is_employer_contribution_minimum_met?
+          true
+        end
+
+        def is_enrollment_eligible?
+          return false unless is_minimum_enrollment_met?
+          return false unless 
+          true
+        end
+
       private
 
-        def application_date_checks
+        def is_timely_submitted?
+        end
+
+      def application_date_checks
           return if canceled? || expired? || renewing_canceled?
           return if start_on.blank? || end_on.blank? || open_enrollment_start_on.blank? || open_enrollment_end_on.blank?
           return if imported_plan_year
@@ -86,5 +104,4 @@ module Aca
 
       end
     end
-  end
 end
