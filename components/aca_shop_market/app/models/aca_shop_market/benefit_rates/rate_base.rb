@@ -1,4 +1,4 @@
-module Aca
+module AcaShopMarket
   module Shop
     module SponsorContributions
       module PremiumCredits
