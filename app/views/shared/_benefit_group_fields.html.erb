@@ -40,13 +40,14 @@
     </div>
   </div>
   <%= render "shared/reference_plans_list", f: f, p: p %>
-
-  <span class="starter" style="display: inline-block;">
+  <div class="row health">
+    <div class="col-xs-12">
         <h1><%= @plan_year.new_record? ? 'Health – Set Up Benefit Package' : 'Health - Edit Benefit Package' %></h1>
-        <div class="col-xs-9" style="padding-left:0px !important">
-        <h4>Let's start by creating a benefit package. As you complete the fields below, you can scroll up or down to change your choices at any time to see how it impacts your costs.</h4>
+        <div class="col-xs-9" style="padding-left:0px !important;">
+          <span class="starter" style="display: inline-block;">
+          <h4>Let's start by creating a benefit package. As you complete the fields below, you can scroll up or down to change your choices at any time to see how it impacts your costs.</h4>
+          </span>
         </div>
-      </span>
       <% if @plan_year.new_record? == false %>
         <div class="col-xs-3">
         <span class="pull-right">
@@ -57,10 +58,11 @@
             <%= link_to "Employee Costs", employee_costs_employers_employer_profile_plan_years_path(@employer_profile), id: "edit_employee_costs_link", class: "hidden" %>
           </div>
         </span>
-        </div>
+    </div>
+  </div>
       <% end %>
-
-
+      <br class="clear"/>
+   <br/>
 
   <div class="col-xs-12 offerings">
     <div class="row row-form-wrapper no-buffer heading">
