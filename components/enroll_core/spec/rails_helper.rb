@@ -1,24 +1,22 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 
 ENV["RAILS_ENV"] ||= 'test'
+
 require File.expand_path("../dummy/config/environment.rb", __FILE__)
 
 require 'rspec/rails'
 require 'spec_helper'
+require 'factory_girl_rails'
+
 require 'mongoid-rspec'
-require 'capybara'
+require 'capybara/rspec'
 require 'pundit/rspec'
 require 'database_cleaner'
 
-require 'factory_girl_rails'
 require 'support/factory_girl'
-require File.join(File.dirname(__FILE__), "factories", "wrapping_sequence")
 require 'shoulda/matchers'
 
 Rails.backtrace_cleaner.remove_silencers!
-
-# Load support files
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
@@ -40,7 +38,8 @@ end
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+# Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+Dir[EnrollCore::Engine.root.join("spec/support/**/*.rb")].each { |f| require f }
 
 RSpec.configure do |config|
   # RSpec Rails can automatically mix in different behaviours to your tests
@@ -57,7 +56,18 @@ RSpec.configure do |config|
   # The different available types are documented in the features, such as in
   # https://relishapp.com/rspec/rspec-rails/docs
 
+  config.disable_monkey_patching!
   config.include Mongoid::Matchers, type: :model
+
+  config.mock_with :rspec
+  config.use_transactional_fixtures = true
+  config.infer_base_class_for_anonymous_controllers = false
+
+  config.warnings = false
+  config.profile_examples = nil 
+  config.order = :random 
+  Kernel.srand config.seed
+
 
   config.after(:example, :dbclean => :after_each) do
     DatabaseCleaner.clean
