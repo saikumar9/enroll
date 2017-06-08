@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe ConsumerRolesHelper, :type => :helper do
+RSpec.describe EnrollCore::ConsumerRolesHelper, :type => :helper do
   let(:person) {FactoryGirl.build(:person)}
   let(:consumer_role) {FactoryGirl.build(:consumer_role)}
   before :each do
