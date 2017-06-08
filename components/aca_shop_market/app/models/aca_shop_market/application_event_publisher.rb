@@ -1,7 +1,8 @@
 class ApplicationEventPublisher
 
-  def initialize(event)
-    @event = event
+  def initialize(event, options = {})
+    @event    = event
+    @options  = options
   end
 
   def save
