@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+
+  mount AcaShopMarket::Engine, at: "/aca_shop_market"
+
   require 'resque/server'
   mount Resque::Server, at: '/jobs'
   devise_for :users, :controllers => { :registrations => "users/registrations", :sessions => 'users/sessions' }

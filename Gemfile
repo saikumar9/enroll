@@ -1,8 +1,11 @@
 source 'https://rubygems.org'
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.3'
+
+# Mount Enroll App component engines
+gem "aca_shop_market", path: "components/aca_shop_market"
+
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
