@@ -41,14 +41,6 @@ Rails.application.routes.draw do
       get :find_sep, on: :collection
     end
 
-    resources :scheduled_events do
-      collection do
-        get 'current_events'
-        get 'delete_current_event'
-        get 'list'
-      end
-    end
-
     resources :hbx_profiles do
       root 'hbx_profiles#show'
 
@@ -88,7 +80,6 @@ Rails.application.routes.draw do
         get :add_sep_form
         get :hide_form
         get :show_sep_history
-        get :calender_index
       end
 
       member do
