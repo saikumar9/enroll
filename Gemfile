@@ -5,6 +5,7 @@ gem 'rails', '4.2.3'
 
 # Mount Enroll App component engines
 gem "aca_shop_market", path: "components/aca_shop_market"
+gem "aca_shop_report", path: "components/aca_shop_report"
 
 
 # Use SCSS for stylesheets
