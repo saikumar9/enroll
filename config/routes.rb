@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
   mount AcaShopMarket::Engine, at: "/aca_shop_market"
+  mount AcaShopReport::Engine, at: "/aca_shop_report"
 
   require 'resque/server'
   mount Resque::Server, at: '/jobs'
