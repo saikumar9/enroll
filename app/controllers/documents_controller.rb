@@ -145,7 +145,7 @@ class DocumentsController < ApplicationController
   end
 
   def create
-    @documnet = Document.create(:title=>"Doc1",:creator=>params[:document][:creator],:publisher=>"dchl",:type=>"text",:format=>"application/octet-stream",:source=>params[:file],:language=>"en",:rights=>"public",:date=>DateTime.now)
+    @document = Document.create(:title=>"Doc1",:creator=>params[:document][:creator],:publisher=>"dchl",:type=>"text",:format=>"application/octet-stream",:source=>params[:file],:language=>"en",:rights=>"public",:date=>DateTime.now)
     redirect_to :back
   end
 
