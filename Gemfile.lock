@@ -73,6 +73,14 @@ PATH
       slim (= 3.0.8)
 
 PATH
+  remote: components/transport_gateway
+  specs:
+    transport_gateway (0.0.1)
+      mongoid (~> 5.0.1)
+      rails (~> 4.2.3)
+      slim (= 3.0.8)
+
+PATH
   remote: project_gems/effective_datatables-2.6.14
   specs:
     effective_datatables (2.6.14)
@@ -737,6 +745,7 @@ DEPENDENCIES
   sprockets (~> 2.12.3)
   symmetric-encryption (~> 3.6.0)
   therubyracer
+  transport_gateway!
   turbolinks
   uglifier (>= 1.3.0)
   unicorn (~> 4.8.3)
