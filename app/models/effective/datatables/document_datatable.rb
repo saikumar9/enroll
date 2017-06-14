@@ -11,7 +11,7 @@ module Effective
         end
         table_column :status, :proc => Proc.new { |row| '<i class="fa fa-file-text-o" style="margin-right:20px;"></i> status' }, :filter => false, :sortable => false
         table_column :employer, :proc => Proc.new { |row| link_to row.creator,"" }, :filter => false, :sortable => false
-        table_column :doc_type, :proc => Proc.new { |row| link_to "Employer Attentation","", "data-toggle" => "modal", 'data-target' => "#employeeModal_#{row.id}" }, :filter => false, :sortable => false
+        table_column :doc_type, :proc => Proc.new { |row| link_to "Employer Attestation","", "data-toggle" => "modal", 'data-target' => "#employeeModal_#{row.id}" }, :filter => false, :sortable => false
         table_column :effective_date, :proc => Proc.new { |row| row.date }, :filter => false, :sortable => false
         table_column :submitted_date, :proc => Proc.new { |row| row.created_at }, :filter => false, :sortable => false
       end
