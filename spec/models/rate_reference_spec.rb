@@ -37,14 +37,14 @@ RSpec.describe RateReference, type: :model do
       RateReference.destroy_all
     end
 
-    describe "::find_rating_region" do
+    describe "::find_rating_area" do
       context "with a valid search param" do
         let!(:first_county_region) { create(:rate_reference, county_name: "County", zip_code: "10010") }
         let!(:same_county_second_region) { create(:rate_reference, county_name: "County", zip_code: "10020") }
 
         it "returns the rate reference area" do
-          expect(subject.find_rating_region(zip_code: '10010', county_name: 'County')).to match_array([first_county_region])
-          expect(subject.find_rating_region(zip_code: '10020', county_name: 'County')).to match_array([same_county_second_region])
+          expect(subject.find_rating_area(zip_code: '10010', county_name: 'County')).to match_array([first_county_region])
+          expect(subject.find_rating_area(zip_code: '10020', county_name: 'County')).to match_array([same_county_second_region])
         end
       end
 
