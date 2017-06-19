@@ -21,9 +21,16 @@ Gem::Specification.new do |s|
   s.add_dependency "mongoid", "~> 5.0.1"
   s.add_dependency 'net-sftp', '~> 2.1', '>= 2.1.2'
 
+  s.add_development_dependency "byebug"
+  s.add_development_dependency "pry"
+  s.add_development_dependency "pry-remote"
+  s.add_development_dependency "pry-rails"
+  s.add_development_dependency "pry-byebug"
   s.add_development_dependency "rspec-rails" 
   s.add_development_dependency 'shoulda-matchers'
   s.add_development_dependency 'database_cleaner'
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'factory_girl_rails'
+
+  s.add_development_dependency 'webmock'
 end
