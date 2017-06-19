@@ -30,13 +30,8 @@ $.ajax({
   });
 })
 
-$(document).on('click', '.name_search_only', function() {
-  $('#help_list').addClass('hide')
-  $('#help_search').removeClass('hide')
-  $('#help_type').html(this.id)
-  $('#back_to_help').removeClass('hide')
-})
-$(document).on('click', '[data-target="#help_with_plan_shopping"]',function(){$('.help_reset').addClass("hide"); $('#help_list').removeClass("hide"); $('#back_to_help').addClass("hide") })
+SignUpHelp.setupNameSearchClick(".name_search_only");
+SignUpHelp.setupHelpPlanShoppingClick('[data-target="#help_with_plan_shopping"]');
 
 $(document).on('click', '#back_to_help', function(){
   $('.help_reset').addClass("hide");
