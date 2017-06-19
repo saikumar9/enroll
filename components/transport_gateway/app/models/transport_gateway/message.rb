@@ -7,7 +7,7 @@ module TransportGateway
 
     def initialize(from, to, body, envelope_header = {}, options = {})
       @from = from
-      @to   = URI.parse(to)
+      @to   = to_uri(to)
       @body = body
 
       # Canonical Vocabulary "EnvelopeHeaderType" attributes
@@ -16,7 +16,11 @@ module TransportGateway
       parse_options(options) unless options.empty?
     end
 
-    private 
+  private 
+
+    def to_uri(value)
+      value.is_a?(URI) ? value : URI.parse(value.to_s)
+    end
 
     def parse_envelope_header(envelope_header)
       @hbx_id                         = envelope_header[:hbx_id] || nil
