@@ -12,11 +12,29 @@
 # the additional setup, and require it from the spec files that actually need
 # it.
 #
+
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
+
+  config.before(:each) do
+    stub_request(:put, /www.example.com/).
+      to_return(status: 200, body: "http stubbed response", headers: {})
+
+    stub_request(:post, /sftp.example.com/).
+      to_return(status: 200, body: "sftp stubbed response", headers: {})
+
+    # stub_request(:post, /www.example.com/).
+    #   with(headers: {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
+    #   to_return(status: 200, body: "stubbed response", headers: {})
+
+    # stub_request(:post, /sftp.example.com/).
+    #   with(headers: {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
+    #   to_return(status: 200, body: "stubbed response", headers: {})
+  end
+
   config.expect_with :rspec do |expectations|
     # This option will default to `true` in RSpec 4. It makes the `description`
     # and `failure_message` of custom matchers include text for helper methods

@@ -1,6 +1,5 @@
 module TransportGateway
   class TransportGateway
-    include Mongoid::Document
 
     def initialize
       load_adapters
@@ -17,11 +16,18 @@ module TransportGateway
       klass_name.constantize.new
     end
 
+    def adapters
+      @adapters
+    end
+
   private
     def load_adapters
       adapter_dir = File.dirname(__FILE__)
       pattern = File.join(adapter_dir, 'adapter', '*.rb')
-      Dir.glob(pattern).each {|file| require file }
+      Dir.glob(pattern).each do |file|
+        require file 
+        # @adapters << 
+      end
     end
 
   end
