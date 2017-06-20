@@ -83,6 +83,7 @@ class Exchanges::HbxProfilesController < ApplicationController
     @next_60_day = @next_30_day.next_month
     @next_90_day = @next_60_day.next_month
 
+
     @datatable = Effective::Datatables::EmployerDatatable.new
 
     respond_to do |format|

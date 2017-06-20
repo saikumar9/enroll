@@ -4,6 +4,7 @@ module Effective
     class EmployerDatatable < Effective::MongoidDatatable
       datatable do
 
+
         bulk_actions_column do
            bulk_action 'Generate Invoice', generate_invoice_exchanges_hbx_profiles_path, data: { confirm: 'Generate Invoices?', no_turbolink: true }
            bulk_action 'Mark Binder Paid', binder_paid_exchanges_hbx_profiles_path, data: {  confirm: 'Mark Binder Paid?', no_turbolink: true }
@@ -107,6 +108,7 @@ module Effective
       end
 
       def nested_filter_definition
+
         @next_30_day = TimeKeeper.date_of_record.next_month.beginning_of_month
         @next_60_day = @next_30_day.next_month
         @next_90_day = @next_60_day.next_month
