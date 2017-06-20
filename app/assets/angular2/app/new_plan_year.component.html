@@ -2,6 +2,7 @@
 	<div class="col-xs-12 planyear-add-tab">
 		<div id="choose-coverage">
 			<h1>Add Plan Year</h1>
+
 			<h3>When would you like your coverage to start?</h3>
 			<h4> (in the next 90 days) <i class="fa fa-question-circle" data-toggle="tooltip" title="Employers can begin shopping for coverage on {{site_short_name}} up to 3 months prior to the desired coverage effective date."></i></h4>
 			<div class="row">
@@ -20,6 +21,30 @@
 				</div>
 			</div>
 
+			<h3>Select your open enrollment dates<i class="fa fa-question-circle" data-toggle="tooltip" title="Employers offering coverage through {{ site_short_name }} for the first time must have an open enrollment period of no less than 14 days. Employers renewing their {{ site_short_name }} coverage must have an open enrollment period of at least 30 days."></i></h3>
+			<div class="row row-form-wrapper no-buffer">
+				<div class="col-md-6 col-sm-6 col-xs-12 form-group form-group-lg no-pd">
+					<input type="hidden" name="plan_year[open_enrollment_start_date]" [(ngModel)]="open_enrollment_start_date" [id]="'open_enrollment_start_date_input_' + componentUUID" />
+					<input [id]="'open_enrollment_start_date_control_' + componentUUID" class="floatlabel form-control" required="true" placeholder="OPEN ENROLLMENT START DATE"/>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 form-group form-group-lg no-pd">
+					<input type="hidden" name="plan_year[open_enrollment_end_date]" [(ngModel)]="open_enrollment_end_date" [id]="'open_enrollment_end_date_input_' + componentUUID" />
+					<input [id]="'open_enrollment_end_date_control_' + componentUUID" class="floatlabel form-control" required="true" placeholder="OPEN ENROLLMENT ENDDATE"/>
+				</div>
+			</div>
+
+			<h3>Add the total number of employees in your workforce</h3>
+			<div class="row row-form-wrapper no-buffer" style="display: block;">
+				<div class="col-md-4 col-sm-4 col-xs-12 form-group form-group-lg no-pd">
+					<input name="plan_year[fte_count]" class="floatlabel form-control" required="true" placeholder="FULL TIME EMPLOYEES" />
+				</div>
+				<div class="col-md-4 col-sm-4 col-xs-12 form-group form-group-lg no-pd">
+					<input name="plan_year[pte_count]" class="floatlabel form-control" required="true" placeholder="PART TIME EMPLOYEES" />
+				</div>
+				<div class="col-md-4 col-sm-4 col-xs-12 form-group form-group-lg no-pd">
+					<input name="plan_year[msp_count]" class="floatlabel form-control" required="true" placeholder="MEDICARE SECOND PAYERS" />
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
