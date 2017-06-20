@@ -190,7 +190,7 @@ $(document).on('page:update', function() {
 			EmployerProfile.validateEditPlanYear();
 		});
 	} else if (window.location.href.indexOf("new") > -1 && window.location.href.indexOf("plan_years") > -1) {
-		EmployerProfile.validatePlanYear();
+//		EmployerProfile.validatePlanYear();
 		$(document).on('change', '.plan-title input, .offerings input.hidden-param.premium-storage-input', function() {
 			EmployerProfile.validatePlanYear();
 		});

@@ -1,4 +1,10 @@
-  <div class="col-xs-12 module" id='plan_year' data-benefit-group-count="<%= @plan_year.benefit_groups.count %>"> <!--onKeyPress="return disableEnterKey(event)"-->
+  <% 
+    data_options = { 
+	  site_short_name: site_short_name,
+	  available_start_dates: PlanYear.calculate_start_on_options
+  }
+  %>
+   <div class="col-xs-12 module" id='plan_year' data-benefit-group-count="<%= @plan_year.benefit_groups.count %>" data-angular2-new-plan-year-form="yes" data-angular2-new-plan-year-options="<%= data_options.to_json %>"> <!--onKeyPress="return disableEnterKey(event)"-->
       <div class="row">
         <div class="col-xs-12 planyear-add-tab">
           <div id="choose-coverage">

@@ -49,6 +49,8 @@
 //= require jquery.steps
 //= require chosen-jquery
 //= require bootstrap-treeview
+//= require angular2_polyfills
+//= require angular2
 //= require_tree .
 
 var disableSelectric = false;
@@ -57,6 +59,9 @@ $(document).on('ready page:load', function () {
   Freebies.fadeElement($("body"));
   Freebies.allFreebies();
   Responsive.setSizeListeners();
+  if ($('[data-angular2-new-plan-year-form]').length > 0) {
+    initPlanYearNewForm();
+  }
 });
 
 function applyMultiLanguageSelect() {
