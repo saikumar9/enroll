@@ -693,24 +693,24 @@
 
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-              <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+              <li class="active"><a href="#"><%=l10n('.link')%><span class="sr-only"><%=l10n('.current')%></span></a></li>
               <li><a href="#"><%=l10n('.link')%></a></li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%=l10n('.dropdown')%><span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a href="#"><%=l10n('.action')%>Action</a></li>
-                  <li><a href="#"><%=l10n('.another_action')%>Another action</a></li>
-                  <li><a href="#"><%=l10n('.something_else_here')%>Something else here</a></li>
+                  <li><a href="#"><%=l10n('.action')%></a></li>
+                  <li><a href="#"><%=l10n('.another_action')%></a></li>
+                  <li><a href="#"><%=l10n('.something_else_here')%></a></li>
                   <li role="separator" class="divider"></li>
-                  <li><a href="#"><%=l10n('.separated_link')%>Separated link</a></li>
+                  <li><a href="#"><%=l10n('.separated_link')%></a></li>
                   <li role="separator" class="divider"></li>
-                  <li><a href="#"><%=l10n('.one_more_separated_link')%>One more separated link</a></li>
+                  <li><a href="#"><%=l10n('.one_more_separated_link')%></a></li>
                 </ul>
               </li>
             </ul>
             <form class="navbar-form navbar-left">
               <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search">
+                <input type="text" class="form-control" placeholder= <%=l10n('.search')%> >
               </div>
               <button type="submit" class="btn btn-default"><%=l10n('.submit')%></button>
             </form>
@@ -1034,7 +1034,7 @@
     <a href="#"><%=l10n('.comments')%> <span class="badge">10</span></a><br>
     <a href="#"><%=l10n('.updates')%> <span class="badge">2</span></a>
 
-    <h3><%=l10n('.badges_on_buttons')%>Badges on Buttons</h3>
+    <h3><%=l10n('.badges_on_buttons')%></h3>
     <button type="button" class="btn btn-primary"><%=l10n('.primary')%> <span class="badge">7</span></button><br>
     <button type="button" class="btn btn-success"><%=l10n('.success')%> <span class="badge">3</span></button><br>
     <button type="button" class="btn btn-danger"><%=l10n('.danger')%> <span class="badge">5</span></button><br>
