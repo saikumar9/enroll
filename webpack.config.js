@@ -35,7 +35,7 @@ module.exports = {
 			$: 'jquery',
 			jquery: 'jquery'
 		}),
-		new UglifyJSPlugin({mangle: false})
+		new UglifyJSPlugin({mangle: false, comments: false})
 	],
 	externals: {
 		jquery: 'jQuery'
