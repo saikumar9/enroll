@@ -9,7 +9,7 @@
 				<div class="col-md-12 col-sm-12 col-xs-12">
 					<div class="row row-form-wrapper no-buffer">
 						<div class="col-md-6 col-sm-6 col-xs-12 form-group form-group-lg no-pd">
-							<select name="plan_year[start_on]" class="no-selectric" [(ngModel)]="plan_year_start_on">
+							<select name="plan_year[start_on]" class="no-selectric form-control" [(ngModel)]="plan_year_start_on">
 								<option value="" [selected]="plan_year_start_on == ''">Select Start On</option>
 								<option *ngFor="let available_start of available_start_dates" [value]="available_start[1]" [selected]="plan_year_start_on == available_start[1]">{{available_start[0]}}</option>
 							</select>
@@ -24,25 +24,78 @@
 			<h3>Select your open enrollment dates<i class="fa fa-question-circle" data-toggle="tooltip" title="Employers offering coverage through {{ site_short_name }} for the first time must have an open enrollment period of no less than 14 days. Employers renewing their {{ site_short_name }} coverage must have an open enrollment period of at least 30 days."></i></h3>
 			<div class="row row-form-wrapper no-buffer">
 				<div class="col-md-6 col-sm-6 col-xs-12 form-group form-group-lg no-pd">
-					<input type="hidden" name="plan_year[open_enrollment_start_date]" [(ngModel)]="open_enrollment_start_date" [id]="'open_enrollment_start_date_input_' + componentUUID" />
-					<input [id]="'open_enrollment_start_date_control_' + componentUUID" class="floatlabel form-control" required="true" placeholder="OPEN ENROLLMENT START DATE"/>
+					<input type="hidden" name="plan_year[open_enrollment_start_date]" [id]="'open_enrollment_start_date_input_' + componentUUID" [value]="open_enrollment_start_date" #oeStartDateInput/>
+					<input [id]="'open_enrollment_start_date_control_' + componentUUID" class="floatlabel form-control" required="true" placeholder="OPEN ENROLLMENT START DATE" />
 				</div>
 				<div class="col-md-6 col-sm-6 col-xs-12 form-group form-group-lg no-pd">
-					<input type="hidden" name="plan_year[open_enrollment_end_date]" [(ngModel)]="open_enrollment_end_date" [id]="'open_enrollment_end_date_input_' + componentUUID" />
-					<input [id]="'open_enrollment_end_date_control_' + componentUUID" class="floatlabel form-control" required="true" placeholder="OPEN ENROLLMENT ENDDATE"/>
+					<input type="hidden" name="plan_year[open_enrollment_end_date]" [value]="open_enrollment_end_date" [id]="'open_enrollment_end_date_input_' + componentUUID" #oeEndDateInput/>
+					<input [id]="'open_enrollment_end_date_control_' + componentUUID" class="floatlabel form-control" required="true" placeholder="OPEN ENROLLMENT ENDDATE" />
 				</div>
 			</div>
 
 			<h3>Add the total number of employees in your workforce</h3>
 			<div class="row row-form-wrapper no-buffer" style="display: block;">
 				<div class="col-md-4 col-sm-4 col-xs-12 form-group form-group-lg no-pd">
-					<input name="plan_year[fte_count]" class="floatlabel form-control" required="true" placeholder="FULL TIME EMPLOYEES" />
+					<input name="plan_year[fte_count]" class="floatlabel form-control" [(ngModel)]="ftes" required="true" placeholder="FULL TIME EMPLOYEES" />
 				</div>
 				<div class="col-md-4 col-sm-4 col-xs-12 form-group form-group-lg no-pd">
-					<input name="plan_year[pte_count]" class="floatlabel form-control" required="true" placeholder="PART TIME EMPLOYEES" />
+					<input name="plan_year[pte_count]" class="floatlabel form-control" [(ngModel)]="ptes" required="true" placeholder="PART TIME EMPLOYEES" />
 				</div>
 				<div class="col-md-4 col-sm-4 col-xs-12 form-group form-group-lg no-pd">
-					<input name="plan_year[msp_count]" class="floatlabel form-control" required="true" placeholder="MEDICARE SECOND PAYERS" />
+					<input name="plan_year[msp_count]" class="floatlabel form-control" [(ngModel)]="msps" required="true" placeholder="MEDICARE SECOND PAYERS" />
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row" *ngIf="displayDeadlines()">
+	<div class="col-xs-12 planyear-add-tab">
+		<div class="col-xs-12 recommend">
+			<div class="row">
+				<div class="col-xs-6 panel">
+					<div class="col-xs-9">
+						<div class="panel-heading row">
+							<h3>Your Application Deadline</h3>
+						</div>
+						<div class="panel-body row">
+							<p>
+							Based on the dates you entered, the latest you can submit this application is:
+							</p>
+						</div>
+					</div>
+					<div class="col-xs-3">
+						<span class="icon-calendar-large icon-calendar-large-dims">
+							<h3 class="day">
+								15
+							</h3>
+							<span class="month">
+								May
+							</span>
+						</span>
+					</div>
+				</div>
+				<div class="col-xs-6 panel">
+					<div class="col-xs-9">
+						<div class="panel-heading row">
+							<h3>Payment Deadline</h3>
+						</div>
+						<div class="panel-body row">
+							<p>
+							Your first payment to {{ site_short_name }} is due no later than:
+							</p>
+						</div>
+					</div>
+					<div class="col-xs-3">
+						<span class="icon-calendar-large icon-calendar-large-dims">
+							<h3 class="day">
+								15
+							</h3>
+							<span class="month">
+								May
+							</span>
+						</span>
+					</div>
 				</div>
 			</div>
 		</div>
