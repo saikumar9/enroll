@@ -1,7 +1,8 @@
   <% 
     data_options = { 
 	  site_short_name: site_short_name,
-	  available_start_dates: PlanYear.calculate_start_on_options
+	  available_start_dates: PlanYear.calculate_start_on_options,
+	  employer_id: @employer_profile.id
   }
   %>
    <div class="col-xs-12 module" id='plan_year' data-benefit-group-count="<%= @plan_year.benefit_groups.count %>" data-angular2-new-plan-year-form="yes" data-angular2-new-plan-year-options="<%= data_options.to_json %>"> <!--onKeyPress="return disableEnterKey(event)"-->

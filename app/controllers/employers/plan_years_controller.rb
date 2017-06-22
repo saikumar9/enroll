@@ -4,6 +4,21 @@ class Employers::PlanYearsController < ApplicationController
   before_action :updateable?, only: [:new, :edit, :create, :update, :revert, :publish, :force_publish, :make_default_benefit_group]
   layout "two_column"
 
+  def offered_carriers
+    @carriers = CarrierProfile.carriers_for(@employer_profile)
+    respond_to do |format|
+      format.json do
+        records = @carriers.map do |car_p|
+          {
+            "_id" => car_p.id,
+            "legal_name" => car_p.legal_name
+          }
+        end
+        render :json => records
+      end
+    end
+  end
+
   def new
     @plan_year = build_plan_year
     @carriers_cache = CarrierProfile.all.inject({}){|carrier_hash, carrier_profile| carrier_hash[carrier_profile.id] = carrier_profile.legal_name; carrier_hash;}

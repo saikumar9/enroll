@@ -67,7 +67,7 @@ class CarrierProfile
 
     def carriers_for(employer_profile)
       servicing_hios_ids = employer_profile.service_areas.collect { |service_area| service_area.issuer_hios_id }.uniq
-      where(issuer_hios_id: servicing_hios_ids)
+      Organization.where("carrier_profile.issuer_hios_ids" => {"$in" => servicing_hios_ids}).map(&:carrier_profile).to_a
     end
 
     def first

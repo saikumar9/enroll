@@ -268,6 +268,9 @@ Rails.application.routes.draw do
         get 'generate_sic_tree'
       end
       resources :plan_years do
+        collection do
+          get 'offered_carriers'
+        end
         get 'reference_plans'
         get 'dental_reference_plans'
         get 'generate_dental_carriers_and_plans'
@@ -284,7 +287,6 @@ Rails.application.routes.draw do
         get 'calc_offered_plan_contributions', on: :collection
         get 'employee_costs', on: :collection
         get 'reference_plan_summary', on: :collection
-
       end
 
       resources :broker_agency, only: [:index, :show, :create] do

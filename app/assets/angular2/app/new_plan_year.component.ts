@@ -1,6 +1,7 @@
 import { ViewChild, Component, ElementRef, Input } from '@angular/core';
 import { BenefitPackage } from './benefit_package';
 import { NewPlanYearOptions } from './new_plan_year_options';
+import { ServiceAreaOfferingsService } from './service_area_offerings_service';
 import { DatePipe } from '@angular/common';
 import * as Moment from "moment";
 import { UUID } from 'angular2-uuid';
@@ -8,7 +9,8 @@ import * as $ from 'jquery';
 
 @Component({
 	selector: "[data-angular2-new-plan-year-form]",
-	templateUrl: "./new_plan_year.component.html"
+	templateUrl: "./new_plan_year.component.html",
+	providers: [ServiceAreaOfferingsService]
 })
 export class NewPlanYearComponent {
 	employer_profile_id : string = "";
@@ -19,7 +21,9 @@ export class NewPlanYearComponent {
 	@ViewChild("oeEndDateInput") oeEndDateInput : ElementRef;
 	available_start_dates : string[][] = [];
 	site_short_name : string = "";
+	show_benefit_groups : boolean = false;
 	componentUUID : UUID;
+	employer_id : string = "";
 
 	ftes : number | null;
 	ptes : number | null;
@@ -27,7 +31,7 @@ export class NewPlanYearComponent {
 
 	benefit_packages : BenefitPackage[] = [];
 
-	constructor(private elementRef: ElementRef) {
+	constructor(private elementRef: ElementRef, private serviceAreaOptionsService : ServiceAreaOfferingsService) {
           this.componentUUID = UUID.UUID();
 	}
 
@@ -35,12 +39,15 @@ export class NewPlanYearComponent {
 		var new_options : NewPlanYearOptions = JSON.parse(this.elementRef.nativeElement.getAttribute("data-angular2-new-plan-year-options"));
 		this.available_start_dates = new_options.available_start_dates;
 		this.site_short_name = new_options.site_short_name;
+		this.employer_id = new_options.employer_id;
+		if (!this.show_benefit_groups) {
 		$(this.oeStartDateInput.nativeElement).on("input", (evt) => {
                    this.open_enrollment_start_date = evt.target.value;
 		});
 		$(this.oeEndDateInput.nativeElement).on("input", (evt) => {
                    this.open_enrollment_end_date = evt.target.value;
 		});
+		}
 	}
 
 	setCalendars(base_element_name : string, val: string) {
@@ -73,8 +80,17 @@ export class NewPlanYearComponent {
 		return date.format("YYYY-MM-DD"); 
 	}
 
+        planYearCompleted() { 
+		return(this.displayDeadlines());
+	}
+
         displayDeadlines() : boolean {
 		var allSupplied = (this.plan_year_start_on != "") && (this.open_enrollment_start_date != "") && (this.open_enrollment_end_date != "");
 		return allSupplied;
+	}
+
+        showBenefitGroups() {
+		this.show_benefit_groups = true;
+		this.benefit_packages = [new BenefitPackage(this.serviceAreaOptionsService, this.employer_id)];
 	}
 }
