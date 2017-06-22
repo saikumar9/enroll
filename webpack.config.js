@@ -3,6 +3,7 @@ const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const mainPath = path.resolve(__dirname, 'app/assets/angular2');
 const webpack = require('webpack');
 const { CheckerPlugin } = require('awesome-typescript-loader');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
 	entry: { 
@@ -15,7 +16,6 @@ module.exports = {
 	},
 	module: {
 		rules: [
-		{ test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/, loader: 'url-loader?limit=100000' },
 		{ test: /\.css$/, loaders: ['raw-loader'], include: [mainPath] },
 		{ test: /\.ts$/,
 			loaders: ['awesome-typescript-loader?configFileName=./app/assets/angular2/tsconfig.json', 'angular2-template-loader'],
@@ -34,7 +34,8 @@ module.exports = {
 			jQuery: 'jquery',
 			$: 'jquery',
 			jquery: 'jquery'
-		})
+		}),
+		new UglifyJSPlugin({mangle: false})
 	],
 	externals: {
 		jquery: 'jQuery'

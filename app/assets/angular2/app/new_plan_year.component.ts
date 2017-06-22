@@ -42,10 +42,10 @@ export class NewPlanYearComponent {
 		this.employer_id = new_options.employer_id;
 		if (!this.show_benefit_groups) {
 		$(this.oeStartDateInput.nativeElement).on("input", (evt) => {
-                   this.open_enrollment_start_date = evt.target.value;
+			this.open_enrollment_start_date = (<HTMLInputElement>evt.target).value;
 		});
 		$(this.oeEndDateInput.nativeElement).on("input", (evt) => {
-                   this.open_enrollment_end_date = evt.target.value;
+			this.open_enrollment_end_date = (<HTMLInputElement>evt.target).value;
 		});
 		}
 	}
