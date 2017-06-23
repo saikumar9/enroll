@@ -11,8 +11,7 @@ import * as $ from 'jquery';
 @Component({
 	selector: "[data-angular2-new-plan-year-form]",
 	templateUrl: "./new_plan_year.component.html",
-	providers: [ServiceAreaOfferingsService],
-	directives: [BenefitPackageComponent]
+	providers: [ServiceAreaOfferingsService]
 })
 export class NewPlanYearComponent {
 	employer_profile_id : string = "";
@@ -55,14 +54,14 @@ export class NewPlanYearComponent {
 	setCalendars(base_element_name : string, val: string) {
 		var hidden_element_id = base_element_name + "_input_" + this.componentUUID;
 		var control_element_id = base_element_name + "_control_" + this.componentUUID;
-		eval("$(\"#" + control_element_id + "\").datepicker({\n\
-                  altField: \"#" + hidden_element_id + "\",\
-                  altFormat: \"yy-mm-dd\",\
-		  defaultDate: \"" + val + "\",\
-			onSelect: function() {\
-				$(\"#" + hidden_element_id + "\").trigger(\"input\");\
-			}\
-		});");
+		eval(`$("#${control_element_id}").datepicker({
+		  altField: \"#${hidden_element_id}\",
+                  altFormat: \"yy-mm-dd\",
+		  defaultDate: \"${val}\",
+			onSelect: function() {
+				$(\"#${hidden_element_id}\").trigger(\"input\");
+			}
+		});`);
 	}
 
 	ngAfterContentChecked() {
