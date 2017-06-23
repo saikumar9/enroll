@@ -1,6 +1,6 @@
 {
-  "name" : "enroll_angular2_incremental",
-  "version" : "1.0.0",
+  "name": "enroll_angular2_incremental",
+  "version": "1.0.0",
   "repository": {},
   "dependencies": {
     "@angular/common": "^4.0.0",
@@ -26,6 +26,7 @@
     "codelyzer": "~2.0.0",
     "moment": "^2.18.1",
     "ng2-cookies": "^1.0.12",
+    "ngc-webpack": "^3.0.0",
     "ngx-bootstrap": "^1.7.1",
     "reflect-metadata": "^0.1.10",
     "ts-node": "~2.0.0",

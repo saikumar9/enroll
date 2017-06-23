@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "./dist/",
+    "outDir" : "dist-aot",
     "baseUrl" : "",
     "sourceMap": true,
     "declaration": false,
@@ -16,9 +16,9 @@
       "dom"
     ]
   },
-  "awesomeTypescriptLoaderOptions": {
-	  "forkChecker": true,
-	  "useWebpackText": true
-  },
-  "include" : [  "./**/*" ]
+  "include" : [  "./app/**/*", "./incremental.prod.ts", "./polyfills.ts"],
+  "angularCompilerOptions": {
+	  "genDir": "aot",
+	  "skipMetadataEmit" : true
+  }
 }
