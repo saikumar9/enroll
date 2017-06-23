@@ -1,9 +1,9 @@
+import './polyfills';
 import { enableProdMode } from '@angular/core';
 import { platformBrowser }    from '@angular/platform-browser';
 
 import { AddressModuleNgFactory } from './aot/app/address.module.ngfactory';
 import { NewPlanYearModuleNgFactory } from './aot/app/new_plan_year.module.ngfactory';
-import './polyfills';
 
 export function initAngularAddressFields() {
   platformBrowser().bootstrapModuleFactory(AddressModuleNgFactory);

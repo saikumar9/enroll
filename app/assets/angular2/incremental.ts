@@ -1,9 +1,9 @@
+import './polyfills';
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AddressModule } from './app/address.module';
 import { NewPlanYearModule } from './app/new_plan_year.module';
-import './polyfills';
 
 export function initAngularAddressFields() {
   platformBrowserDynamic().bootstrapModule(AddressModule);
