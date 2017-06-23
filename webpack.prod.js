@@ -16,6 +16,16 @@ module.exports = {
 	},
 	module: {
 		rules: [
+		{
+			test: /\.js$/,
+			exclude: /node_modules/,
+			loader: 'babel-loader',
+			options: { 
+				presets: [ 
+					[ 'es2015', { modules: false } ] 
+				] 
+			}
+		},
 		{ test: /\.css$/, loaders: ['raw-loader'], include: [mainPath] },
 		{ test: /\.html$/, loader: 'raw-loader', include: [mainPath] }
 		]
@@ -35,7 +45,6 @@ module.exports = {
 			$: 'jquery',
 			jquery: 'jquery'
 		}),
-		new UglifyJSPlugin({mangle: false, comments: false}),
 		new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/)
 	],
 	externals: {
