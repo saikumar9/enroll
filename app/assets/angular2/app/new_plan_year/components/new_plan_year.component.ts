@@ -29,6 +29,7 @@ export class NewPlanYearComponent {
 	ptes : number | null;
 	msps : number | null;
 
+	benefit_package_index : number = 0;
 	benefit_packages : BenefitPackage[] = [];
 
 	constructor(private elementRef: ElementRef, private serviceAreaOptionsService : ServiceAreaOfferingsService) {
@@ -91,6 +92,7 @@ export class NewPlanYearComponent {
 
         showBenefitGroups() {
 		this.show_benefit_groups = true;
-		this.benefit_packages = [new BenefitPackage(this.serviceAreaOptionsService, this.employer_id)];
+		this.benefit_packages = [new BenefitPackage(this.serviceAreaOptionsService, this.employer_id, 0)];
+		this.benefit_package_index = this.benefit_package_index + 1;
 	}
 }

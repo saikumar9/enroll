@@ -15,7 +15,15 @@ export class BenefitPackage {
 	composite_tier_contributions : CompositeTierContribution[] = [];
 	offered_carriers : OfferedCarrier[] = [];
 
-	constructor(private saService : ServiceAreaOfferingsService, private employer_profile_id : string) {
+	constructor(private saService : ServiceAreaOfferingsService, private employer_profile_id : string, private index : number) {
+	}
+
+	fieldNamePrefix() {
+		return(`plan_year[benefit_groups_attributes][${this.index}]`); 
+	}
+
+	fieldIdPrefix() {
+		return(`plan_year_benefit_groups_attributes__${this.index}_`); 
 	}
 
 	selectCarriers() {

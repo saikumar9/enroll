@@ -5,20 +5,20 @@
 			<div class="row row-form-wrapper no-buffer plan-title">
 				<div class="col-xs-12 form-group form-group-lg">
 					<label class="title">NAME YOUR BENEFIT PACKAGE</label>
-					<input class="form-control" required="true" name="benefit_groups_attributes[][title]" [(ngModel)]="bg.title"/>
+					<input class="form-control" required="true" [name]="titleFieldName()" [(ngModel)]="bg.title"/>
 				</div>
 			</div>
 			<div class="row row-form-wrapper no-buffer description">
 				<div class="col-xs-12 form-group form-group-lg">
 					<label class="title">DESCRIPTION</label>
-					<input class="form-control" name="benefit_groups_attributes[][description]" [(ngModel)]="bg.description"/>
+					<input class="form-control" [name]="descriptionFieldName()" [(ngModel)]="bg.description"/>
 				</div>
 			</div>
 			<div class="row row-form-wrapper no-buffer">
 				<div class="col-xs-12 form-group form-group-lg">
 					<!-- Offset :  -->
 					<label class="title">WHEN SHOULD NEWLY HIRED EMPLOYEES START THEIR COVERAGE? <!--<i class="fa fa-chevron-down"></i>--></label>
-					<select class="no-selectric form-control" name="benefit_groups_attributes[][effective_on_offset]" required="true" [(ngModel)]="bg.effective_on_offset">
+					<select class="no-selectric form-control" [name]="effectiveOnFieldName()" required="true" [(ngModel)]="bg.effective_on_offset">
 						<option value="0">First of the month following or coinciding with date of hire</option>
 						<option value="30">First of the month following 30 days</option>
 						<option value="60">First of the month following 60 days</option>
@@ -44,20 +44,20 @@
 			<div class="col-xs-12">
 				<ul class="nav nav-tabs row">
 					<li role="presentation" class="col-xs-4">
-						<label>
-						<input type="radio" value="single_carrier" [(ngModel)]="bg.plan_option_kind" name="benefit_groups_attributes[][plan_option_kind]" (change)="bg.selectCarriers()">
+						<label [for]="planOptionKindRadioIdFor('single_carrier')">
+						<input type="radio" value="single_carrier" [(ngModel)]="bg.plan_option_kind" [name]="planOptionKindRadioName()" (change)="bg.selectCarriers()" [id]="planOptionKindRadioIdFor('single_carrier')">
 						By carrier
 						</label>
 					</li>
 					<li role="presentation" class="col-xs-4">
-						<label>
-						<input type="radio" value="metal_level" [(ngModel)]="bg.plan_option_kind" name="benefit_groups_attributes[][plan_option_kind]">
+						<label [for]="planOptionKindRadioIdFor('metal_level')">
+						<input type="radio" value="metal_level" [(ngModel)]="bg.plan_option_kind" [name]="planOptionKindRadioName()" [id]="planOptionKindRadioIdFor('metal_level')">
 						By metal level 
 						</label>
 					</li>
 					<li role="presentation" class="col-xs-4">
-						<label>
-						<input type="radio" value="sole_source" [(ngModel)]="bg.plan_option_kind" name="benefit_groups_attributes[][plan_option_kind]">
+						<label [for]="planOptionKindRadioIdFor('sole_source')">
+						<input type="radio" value="sole_source" [(ngModel)]="bg.plan_option_kind" [name]="planOptionKindRadioName()" [id]="planOptionKindRadioIdFor('sole_source')"> 
 						Sole source
 						</label>
 					</li>

@@ -8,4 +8,22 @@ import { BenefitPackage } from '../models/benefit_package';
 })
 export class BenefitPackageComponent {
 	@Input() bg : BenefitPackage;
+
+	titleFieldName() {
+		return(`${this.bg.fieldNamePrefix()}[title]`);
+	}
+	descriptionFieldName() {
+		return(`${this.bg.fieldNamePrefix()}[description]`);
+	}
+	effectiveOnFieldName() {
+		return(`${this.bg.fieldNamePrefix()}[effective_on_offset]`);
+	}
+
+	planOptionKindRadioName() {
+		return(`${this.bg.fieldIdPrefix()}[plan_option_kind]`);
+	}
+
+	planOptionKindRadioIdFor(selection: string) {
+		return(`${this.bg.fieldIdPrefix()}_plan_option_kind_${selection}`);
+	}
 }
