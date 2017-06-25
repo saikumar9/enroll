@@ -3,7 +3,7 @@ import { enableProdMode } from '@angular/core';
 import { platformBrowser }    from '@angular/platform-browser';
 
 import { AddressModuleNgFactory } from './aot/app/address.module.ngfactory';
-import { NewPlanYearModuleNgFactory } from './aot/app/new_plan_year.module.ngfactory';
+import { NewPlanYearModuleNgFactory } from './aot/app/new_plan_year/new_plan_year.module.ngfactory';
 
 export function initAngularAddressFields() {
   platformBrowser().bootstrapModuleFactory(AddressModuleNgFactory);
