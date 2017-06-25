@@ -20,5 +20,5 @@
 	  "forkChecker": true,
 	  "useWebpackText": true
   },
-  "include" : [  "./**/*" ]
+  "include" : [  "./app/**/*", "./incremental.ts", "./polyfills.ts"]
 }

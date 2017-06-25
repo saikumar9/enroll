@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
-import { OfferedCarrier } from './offered_carrier';
+import { OfferedCarrier } from '../models/offered_carrier';
 import 'rxjs/add/operator/map'
 
 @Injectable()

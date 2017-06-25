@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { NewPlanYearComponent } from './new_plan_year.component';
-import { BenefitPackageComponent } from './benefit_package.component';
+import { NewPlanYearComponent } from './components/new_plan_year.component';
+import { BenefitPackageComponent } from './components/benefit_package.component';
 
 @NgModule({
 declarations: [

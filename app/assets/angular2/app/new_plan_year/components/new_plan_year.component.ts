@@ -1,8 +1,7 @@
 import { ViewChild, Component, ElementRef, Input } from '@angular/core';
-import { BenefitPackage } from './benefit_package';
-import { BenefitPackageComponent } from './benefit_package.component';
-import { NewPlanYearOptions } from './new_plan_year_options';
-import { ServiceAreaOfferingsService } from './service_area_offerings_service';
+import { BenefitPackage } from '../models/benefit_package';
+import { NewPlanYearOptions } from '../models/new_plan_year_options';
+import { ServiceAreaOfferingsService } from '../services/service_area_offerings_service';
 import { DatePipe } from '@angular/common';
 import * as Moment from "moment";
 import { UUID } from 'angular2-uuid';
@@ -10,7 +9,7 @@ import * as $ from 'jquery';
 
 @Component({
 	selector: "[data-angular2-new-plan-year-form]",
-	templateUrl: "./new_plan_year.component.html",
+	templateUrl: "../templates/new_plan_year.component.html",
 	providers: [ServiceAreaOfferingsService]
 })
 export class NewPlanYearComponent {

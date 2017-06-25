@@ -1,6 +1,6 @@
 import { RelationshipBenefit } from "./relationship_benefit";
 import { CompositeTierContribution } from "./composite_tier_contribution";
-import { ServiceAreaOfferingsService } from './service_area_offerings_service';
+import { ServiceAreaOfferingsService } from '../services/service_area_offerings_service';
 import { OfferedCarrier } from './offered_carrier';
 
 export class BenefitPackage {
