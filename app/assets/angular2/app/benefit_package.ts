@@ -8,6 +8,7 @@ export class BenefitPackage {
 	description : string = "";
 	effective_on_offset : number = 0; 
 	plan_option_kind : string = "";
+	metal_level_for_elected_plan : string;
 
         relationship_benefits : RelationshipBenefit[] = [];
         dental_relationship_benefits : RelationshipBenefit[] = [];
@@ -23,6 +24,7 @@ export class BenefitPackage {
 				ocs => this.offered_carriers = ocs
 			);
 		}
+		return true;
 	}
 
 	showCarrierSelection() {
