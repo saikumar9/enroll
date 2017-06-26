@@ -2,7 +2,6 @@ import { ViewChild, Component, ElementRef, Input } from '@angular/core';
 import { BenefitPackage } from '../models/benefit_package';
 import { NewPlanYearOptions } from '../models/new_plan_year_options';
 import { ServiceAreaOfferingsService } from '../services/service_area_offerings_service';
-import { DatePipe } from '@angular/common';
 import * as Moment from "moment";
 import { UUID } from 'angular2-uuid';
 import * as $ from 'jquery';
@@ -42,9 +41,6 @@ export class NewPlanYearComponent {
 		this.site_short_name = new_options.site_short_name;
 		this.employer_id = new_options.employer_id;
 		if (!this.show_benefit_groups) {
-		$(this.oeStartDateInput.nativeElement).on("input", (evt) => {
-			this.open_enrollment_start_date = (<HTMLInputElement>evt.target).value;
-		});
 		$(this.oeEndDateInput.nativeElement).on("input", (evt) => {
 			this.open_enrollment_end_date = (<HTMLInputElement>evt.target).value;
 		});
@@ -65,7 +61,6 @@ export class NewPlanYearComponent {
 	}
 
 	ngAfterContentChecked() {
-		this.setCalendars("open_enrollment_start_date", this.open_enrollment_start_date);
 		this.setCalendars("open_enrollment_end_date", this.open_enrollment_end_date);
 	}
 

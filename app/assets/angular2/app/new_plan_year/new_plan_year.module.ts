@@ -5,11 +5,13 @@ import { HttpModule } from '@angular/http';
 
 import { NewPlanYearComponent } from './components/new_plan_year.component';
 import { BenefitPackageComponent } from './components/benefit_package.component';
+import { JqueryDatePickerComponent } from './components/jquery_date_picker.component';
 
 @NgModule({
 declarations: [
 	NewPlanYearComponent,
-	BenefitPackageComponent
+	BenefitPackageComponent,
+	JqueryDatePickerComponent
 ],
 imports: [
 BrowserModule,

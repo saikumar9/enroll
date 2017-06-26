@@ -24,8 +24,7 @@
 			<h3>Select your open enrollment dates<i class="fa fa-question-circle" data-toggle="tooltip" title="Employers offering coverage through {{ site_short_name }} for the first time must have an open enrollment period of no less than 14 days. Employers renewing their {{ site_short_name }} coverage must have an open enrollment period of at least 30 days."></i></h3>
 			<div class="row row-form-wrapper no-buffer">
 				<div class="col-md-6 col-sm-6 col-xs-12 form-group form-group-lg no-pd">
-					<input type="hidden" name="plan_year[open_enrollment_start_date]" [id]="'open_enrollment_start_date_input_' + componentUUID" [value]="open_enrollment_start_date" #oeStartDateInput/>
-					<input [id]="'open_enrollment_start_date_control_' + componentUUID" class="floatlabel form-control" required="true" placeholder="OPEN ENROLLMENT START DATE" />
+					<jquery-date-picker name="plan_year[open_enrollment_start_date]" [(value)]="open_enrollment_start_date" required="true" placeholder="OPEN ENROLLMENT START DATE" classNames="floatlabel form-control" > </jquery-date-picker>
 				</div>
 				<div class="col-md-6 col-sm-6 col-xs-12 form-group form-group-lg no-pd">
 					<input type="hidden" name="plan_year[open_enrollment_end_date]" [value]="open_enrollment_end_date" [id]="'open_enrollment_end_date_input_' + componentUUID" #oeEndDateInput/>
