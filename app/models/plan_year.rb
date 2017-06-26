@@ -105,6 +105,8 @@ class PlanYear
     )
   }
 
+  scope :non_canceled, -> { not_in(aasm_state: ['canceled, renewing_canceled']) }
+
   after_update :update_employee_benefit_packages
 
   def update_employee_benefit_packages
@@ -118,6 +120,18 @@ class PlanYear
         end
       end
     end
+  end
+
+  def ensure_benefit_group_is_valid
+    self.benefit_groups.each do |bg|
+      if bg.sole_source?
+        if bg.composite_tier_contributions.empty?
+          bg.build_composite_tier_contributions
+        end
+        bg.estimate_composite_rates
+      end
+    end
+    self.save!
   end
 
   def filter_active_enrollments_by_date(date)
@@ -1023,6 +1037,17 @@ class PlanYear
 
   def service_area
     recorded_service_area.blank? ? employer_profile.service_area : recorded_service_area
+  end
+
+  def products_offered_in_service_area
+    return(true) unless constrain_service_areas?
+    return(true) if employer_profile.nil?
+    return(true) if start_on.blank?
+    if employer_profile.service_areas_available_on(start_on).empty?
+      errors.add(:start_on, "No products are available in your area at this time.")
+      return(false)
+    end
+    true
   end
 
   private

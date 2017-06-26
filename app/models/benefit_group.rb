@@ -353,6 +353,11 @@ class BenefitGroup
 
   def monthly_employer_contribution_amount(plan = reference_plan)
     return 0 if targeted_census_employees.count > 100
+
+    if self.sole_source? && self.composite_tier_contributions.empty?
+      build_composite_tier_contributions
+      estimate_composite_rates
+    end
     targeted_census_employees.active.collect do |ce|
       if plan_option_kind == 'sole_source'
         pcd = CompositeRatedPlanCostDecorator.new(plan, self, ce.composite_rating_tier)
@@ -418,6 +423,8 @@ class BenefitGroup
   end
 
   def elected_plans_by_option_kind
+    @profile_and_service_area_pairs = CarrierProfile.carrier_profile_service_area_pairs_for(employer_profile)
+
     case plan_option_kind
     when "sole_source"
       Plan.where(id: reference_plan_id).first
@@ -427,9 +434,9 @@ class BenefitGroup
       if carrier_for_elected_plan.blank?
         @carrier_for_elected_plan = reference_plan.carrier_profile_id if reference_plan.present?
       end
-      Plan.valid_shop_health_plans_for_service_area("carrier", carrier_for_elected_plan, start_on.year, employer_profile.service_area_ids)
+      Plan.valid_shop_health_plans_for_service_area("carrier", carrier_for_elected_plan, start_on.year, @profile_and_service_area_pairs.select { |pair| pair.first == carrier_for_elected_plan || @carrier_for_elected_plan })
     when "metal_level"
-      Plan.valid_shop_health_plans_for_service_area("metal_level", metal_level_for_elected_plan, start_on.year, employer_profile.service_area_ids)
+      Plan.valid_shop_health_plans_for_service_area("metal_level", metal_level_for_elected_plan, start_on.year, @profile_and_service_area_pairs)
     end
   end
 
@@ -619,12 +626,13 @@ class BenefitGroup
 
   def build_estimated_composite_rates
     return(nil) unless sole_source?
-    rate_calc = CompositeRatingBaseRatesCalculator.new(self, self.elected_plans.first || reference_plan)
+    rate_calc = CompositeRatingBaseRatesCalculator.new(self, self.elected_plans.try(:first) || reference_plan)
     rate_calc.build_estimated_premiums
   end
+
   def estimate_composite_rates
     return(nil) unless sole_source?
-    rate_calc = CompositeRatingBaseRatesCalculator.new(self, self.elected_plans.first || reference_plan)
+    rate_calc = CompositeRatingBaseRatesCalculator.new(self, self.elected_plans.try(:first) || reference_plan)
     rate_calc.assign_estimated_premiums
   end
 
