@@ -645,6 +645,10 @@ class BenefitGroup
     rate_calc.assign_final_premiums
   end
 
+  def visible_composite_tier_contributions
+    composite_tier_contributions.where(composite_rating_tier: { "$in" => CompositeRatingTier::VISIBLE_NAMES})
+  end
+
   private
 
   def set_congress_defaults
