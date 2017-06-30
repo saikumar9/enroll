@@ -16,7 +16,11 @@ Rails.application.routes.draw do
   end
 
   resources :users do
-    post :unlock, :on => :member
+    member do
+      post :unlock
+      get :lockable
+      get :confirm_lock
+    end
   end
 
   resources :saml, only: [] do
@@ -92,7 +96,7 @@ Rails.application.routes.draw do
         get :add_sep_form
         get :hide_form
         get :show_sep_history
-        get :calender_index
+        get :calendar_index
         get :user_account_index
       end
 

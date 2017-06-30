@@ -11,6 +11,14 @@ namespace :load_rating_factors do
       'CompositeRatingTierFactorSet': { page: 3, max_integer_factor_key: nil }
     }
     RATING_FACTOR_DEFAULT = 1.0
+
+    COMPOSITE_TIER_TRANSLATIONS = {
+      'Employee': 'employee_only',
+      'Employee + Spouse': 'employee_and_spouse',
+      'Employee + Dependent(s)': 'employee_and_one_or_more_dependents',
+      'Family': 'family'
+    }.with_indifferent_access
+
     begin
       file_path = File.join(File.dirname(__FILE__),'../..', 'xls_templates', args[:file_name])
       xlsx = Roo::Spreadsheet.open(file_path)
@@ -32,7 +40,19 @@ namespace :load_rating_factors do
                                 ).tap do |factor_set|                 ## initialized factor set, now iterate through the column
                                   (ROW_DATA_BEGINS_ON..sheet.last_row).each do |i|
                                     factor_key = sheet.cell(i,1)
+                                    if is_composite_rating_tier?(rating_factor_class)
+                                      factor_key = COMPOSITE_TIER_TRANSLATIONS[factor_key.to_s]
+                                    end
                                     factor_value = sheet.cell(i,carrier_column) || 1.0
+
+                                    if is_group_size_rating_tier?(rating_factor_class)
+                                      factor_key = factor_key.to_i
+                                    end
+
+                                    if is_participation_rate_rating_tier?(rating_factor_class)
+                                      factor_key = (factor_key * 100).to_i
+                                    end
+
                                     factor_set.rating_factor_entries.new(
                                                                           factor_key: factor_key,
                                                                           factor_value: factor_value
@@ -50,5 +70,17 @@ namespace :load_rating_factors do
     rescue => e
       puts e.inspect
     end
+  end
+
+  def is_group_size_rating_tier?(rating_factor_class)
+    'EmployerGroupSizeRatingFactorSet'.eql? rating_factor_class.to_s
+  end
+
+  def is_composite_rating_tier?(rating_factor_class)
+    'CompositeRatingTierFactorSet'.eql? rating_factor_class.to_s
+  end
+
+  def is_participation_rate_rating_tier?(rating_factor_class)
+    'EmployerParticipationRateRatingFactorSet'.eql? rating_factor_class.to_s
   end
 end

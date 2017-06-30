@@ -8,20 +8,25 @@ module Effective
           bulk_action 'Delete', delete_documents_employers_employer_profile_path, data: {  confirm: 'Are you sure?', no_turbolink: true }
         end
 
-        table_column :status, :proc => Proc.new { |row| row.aasm_state }, :filter => false, :sortable => false
-        table_column :name, :label => 'Doc Name', :proc => Proc.new { |row|
+        table_column :status, :proc => Proc.new { |row| 
           icon = ""
-          if row.reason_for_rejection.present?
-           icon = " <span class='glyphicon glyphicon-exclamation-sign text-danger' aria-hidden='true' title='#{row.reason_for_rejection}'></span>"
+
+          if row.accepted?
+            icon = "<span class='glyphicon glyphicon-ok text-success' aria-hidden='true' title='Approved'></span> "
+          elsif row.reason_for_rejection.present?
+            icon = "<span class='glyphicon glyphicon-exclamation-sign text-danger' aria-hidden='true' title='#{row.reason_for_rejection}'></span> "
           end
 
-          link_to raw('<i class="fa fa-file-text-o pull-left" style="margin-right:20px;"></i>') + row.title + raw(icon), "", 'target' => "iframe_#{row.id}", 'data-target' => "#employeeModal_#{row.id}", "data-toggle" => "modal", 'class' => 'pull-left'
+          raw(icon) + row.aasm_state.humanize 
+        }, :filter => false, :sortable => false
+        table_column :name, :label => 'Doc Name', :proc => Proc.new { |row|
+          link_to raw('<i class="fa fa-file-text-o pull-left"></i> ') + row.title, "", 'target' => "iframe_#{row.id}", 'data-target' => "#employeeModal_#{row.id}", "data-toggle" => "modal", 'class' => 'pull-left'
         }, :filter => false, :sortable => false
         table_column :type, :label => 'Doc Type',:proc => Proc.new { |row|
            'Employer Attestation'
         }, :filter => false, :sortable => false
         table_column :size, :proc => Proc.new { |row| number_to_human_size(row.size, precision: 2) }, :filter => false, :sortable => false
-        table_column :date, :label => 'Submitted At', :proc => Proc.new { |row| row.created_at.strftime('%m/%d/%Y %I:%M%p') }, :filter => false, :sortable => false
+        table_column :date, :label => 'Submitted At', :proc => Proc.new { |row| TimeKeeper.local_time(row.created_at).strftime('%m/%d/%Y %I:%M%p') }, :filter => false, :sortable => false
       end
 
       def generate_invoice_link_type(row)

@@ -337,10 +337,6 @@ class BenefitGroup
     ]
   end
 
-  def dependent_composite_tier_contributions
-    self.composite_tier_contributions.where(:composite_rating_tier.nin => CompositeRatingTier::VISIBLE_NAMES)
-  end
-
   def self.find(id)
     ::Caches::RequestScopedCache.lookup(:employer_calculation_cache_for_benefit_groups, id) do
       organizations = Organization.unscoped.where({"employer_profile.plan_years.benefit_groups._id" => id })
@@ -410,7 +406,13 @@ class BenefitGroup
   end
 
   def employee_cost_for_plan(ce, plan = reference_plan)
-    pcd = @is_congress ? decorated_plan(plan, ce) : PlanCostDecorator.new(plan, ce, self, reference_plan)
+    pcd = if @is_congress
+      decorated_plan(plan, ce)
+    elsif(plan_option_kind == 'sole_source')
+      CompositeRatedPlanCostDecorator.new(reference_plan, self, ce.composite_rating_tier)
+    else
+      PlanCostDecorator.new(plan, ce, self, reference_plan)
+    end
     pcd.total_employee_cost
   end
 
@@ -434,9 +436,10 @@ class BenefitGroup
       if carrier_for_elected_plan.blank?
         @carrier_for_elected_plan = reference_plan.carrier_profile_id if reference_plan.present?
       end
-      Plan.valid_shop_health_plans_for_service_area("carrier", carrier_for_elected_plan, start_on.year, @profile_and_service_area_pairs.select { |pair| pair.first == carrier_for_elected_plan || @carrier_for_elected_plan })
+      carrier_profile_id = reference_plan.carrier_profile_id
+      Plan.valid_shop_health_plans_for_service_area("carrier", carrier_for_elected_plan, start_on.year, @profile_and_service_area_pairs.select { |pair| pair.first == carrier_profile_id }).to_a
     when "metal_level"
-      Plan.valid_shop_health_plans_for_service_area("metal_level", metal_level_for_elected_plan, start_on.year, @profile_and_service_area_pairs)
+      Plan.valid_shop_health_plans_for_service_area("carrier", carrier_for_elected_plan, start_on.year, @profile_and_service_area_pairs).and(:metal_level => reference_plan.metal_level).to_a
     end
   end
 
@@ -529,14 +532,18 @@ class BenefitGroup
 
   def lookup_cached_cprf_for(carrier_id)
     year = plan_year.start_on.year
+    EmployerParticipationRateRatingFactorSet.value_for(carrier_id, year, participation_rate * 100.0)
+  end
+
+  def participation_rate
+    total_employees = targeted_census_employees.count
+    return(0.0) if total_employees < 1
     waived_and_active_count = if plan_year.estimate_group_size?
                                 targeted_census_employees.select { |ce| ce.expected_to_enroll_or_valid_waive? }.length
                               else
                                 all_active_and_waived_health_enrollments.length
                               end
-    total_employees = targeted_census_employees.count
-    part_rate = waived_and_active_count/(total_employees * 1.0)
-    EmployerParticipationRateRatingFactorSet.value_for(carrier_id, year, part_rate)
+    waived_and_active_count/(total_employees * 1.0)
   end
 
   # Provide the group size factor for this benefit group.
@@ -661,7 +668,12 @@ class BenefitGroup
     return unless family_tier.present?
 
     contribution = family_tier.first.employer_contribution_percent
-    dependent_composite_tier_contributions.each do |tier|
+    estimated_tier_premium = family_tier.first.estimated_tier_premium
+
+    (CompositeRatingTier::NAMES - CompositeRatingTier::VISIBLE_NAMES).each do |crt|
+      tier = self.composite_tier_contributions.find_or_initialize_by(
+        composite_rating_tier: crt
+      )
       tier.employer_contribution_percent = contribution
     end
   end
