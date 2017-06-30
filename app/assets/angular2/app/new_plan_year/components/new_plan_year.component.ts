@@ -16,8 +16,6 @@ export class NewPlanYearComponent {
 	plan_year_start_on : string = "";
 	open_enrollment_start_date : string = "";
 	open_enrollment_end_date: string = "";
-	@ViewChild("oeStartDateInput") oeStartDateInput : ElementRef;
-	@ViewChild("oeEndDateInput") oeEndDateInput : ElementRef;
 	available_start_dates : string[][] = [];
 	site_short_name : string = "";
 	show_benefit_groups : boolean = false;
@@ -40,33 +38,8 @@ export class NewPlanYearComponent {
 		this.available_start_dates = new_options.available_start_dates;
 		this.site_short_name = new_options.site_short_name;
 		this.employer_id = new_options.employer_id;
-		if (!this.show_benefit_groups) {
-		$(this.oeEndDateInput.nativeElement).on("input", (evt) => {
-			this.open_enrollment_end_date = (<HTMLInputElement>evt.target).value;
-		});
-		}
 	}
 
-	setCalendars(base_element_name : string, val: string) {
-		var hidden_element_id = base_element_name + "_input_" + this.componentUUID;
-		var control_element_id = base_element_name + "_control_" + this.componentUUID;
-		eval(`$("#${control_element_id}").datepicker({
-		  altField: \"#${hidden_element_id}\",
-                  altFormat: \"yy-mm-dd\",
-		  defaultDate: \"${val}\",
-			onSelect: function() {
-				$(\"#${hidden_element_id}\").trigger(\"input\");
-			}
-		});`);
-	}
-
-	ngAfterContentChecked() {
-		this.setCalendars("open_enrollment_end_date", this.open_enrollment_end_date);
-	}
-
-        changeOEStartDate(event: any) {
-		alert(event);
-        }
 
 	planYearEndOnValue() {
 		if (this.plan_year_start_on == "") {

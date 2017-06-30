@@ -13,7 +13,7 @@ export class JqueryDatePickerComponent {
 	@Input() name : string = "";
 	@Input() required : boolean = false;
 	@ViewChild("hiddenDateControlInput") hiddenDateControlInput: ElementRef;
-	@Input() placeHolder : string = "";
+	@Input() placeholder : string = "";
         @Output() valueChange = new EventEmitter();
 	componentUUID : UUID;
 
@@ -22,6 +22,10 @@ export class JqueryDatePickerComponent {
 	}
 
 	ngOnInit() {
+		$(this.hiddenDateControlInput.nativeElement).on("input", (evt) => {
+			this.value = (<HTMLInputElement>evt.target).value;
+                        this.valueChange.emit(this.value);
+		});
 		$(this.hiddenDateControlInput.nativeElement).on("input", (evt) => {
 			this.value = (<HTMLInputElement>evt.target).value;
                         this.valueChange.emit(this.value);

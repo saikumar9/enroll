@@ -27,8 +27,7 @@
 					<jquery-date-picker name="plan_year[open_enrollment_start_date]" [(value)]="open_enrollment_start_date" required="true" placeholder="OPEN ENROLLMENT START DATE" classNames="floatlabel form-control" > </jquery-date-picker>
 				</div>
 				<div class="col-md-6 col-sm-6 col-xs-12 form-group form-group-lg no-pd">
-					<input type="hidden" name="plan_year[open_enrollment_end_date]" [value]="open_enrollment_end_date" [id]="'open_enrollment_end_date_input_' + componentUUID" #oeEndDateInput/>
-					<input [id]="'open_enrollment_end_date_control_' + componentUUID" class="floatlabel form-control" required="true" placeholder="OPEN ENROLLMENT ENDDATE" />
+					<jquery-date-picker name="plan_year[open_enrollment_end_date]" [(value)]="open_enrollment_end_date" required="true" placeholder="OPEN ENROLLMENT END DATE" classNames="floatlabel form-control" > </jquery-date-picker>
 				</div>
 			</div>
 
