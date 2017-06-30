@@ -20,7 +20,7 @@ export class BenefitPackageComponent {
 	}
 
 	planOptionKindRadioName() {
-		return(`${this.bg.fieldIdPrefix()}[plan_option_kind]`);
+		return(`${this.bg.fieldNamePrefix()}[plan_option_kind]`);
 	}
 
 	planOptionKindRadioIdFor(selection: string) {

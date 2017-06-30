@@ -2,13 +2,14 @@ import { RelationshipBenefit } from "./relationship_benefit";
 import { CompositeTierContribution } from "./composite_tier_contribution";
 import { ServiceAreaOfferingsService } from '../services/service_area_offerings_service';
 import { OfferedCarrier } from './offered_carrier';
+import { EventEmitter } from "@angular/core";
 
 export class BenefitPackage {
 	title: string = "";
 	description : string = "";
 	effective_on_offset : number = 0; 
 	plan_option_kind : string = "";
-	metal_level_for_elected_plan : string;
+	metal_level_for_elected_plan : string = "";
 
         relationship_benefits : RelationshipBenefit[] = [];
         dental_relationship_benefits : RelationshipBenefit[] = [];

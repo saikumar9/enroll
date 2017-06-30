@@ -45,19 +45,19 @@
 				<ul class="nav nav-tabs row">
 					<li role="presentation" class="col-xs-4">
 						<label [for]="planOptionKindRadioIdFor('single_carrier')">
-						<input type="radio" value="single_carrier" [(ngModel)]="bg.plan_option_kind" [name]="planOptionKindRadioName()" (change)="bg.selectCarriers()" [id]="planOptionKindRadioIdFor('single_carrier')">
+							<input type="radio" [(ngModel)]="bg.plan_option_kind" (change)="bg.selectCarriers()" [id]="planOptionKindRadioIdFor('single_carrier')" value="single_carrier" [attr.name]="planOptionKindRadioName()">
 						By carrier
 						</label>
 					</li>
 					<li role="presentation" class="col-xs-4">
 						<label [for]="planOptionKindRadioIdFor('metal_level')">
-						<input type="radio" value="metal_level" [(ngModel)]="bg.plan_option_kind" [name]="planOptionKindRadioName()" [id]="planOptionKindRadioIdFor('metal_level')">
+							<input type="radio" value="metal_level" [(ngModel)]="bg.plan_option_kind" [attr.name]="planOptionKindRadioName()" [id]="planOptionKindRadioIdFor('metal_level')"/>
 						By metal level 
 						</label>
 					</li>
 					<li role="presentation" class="col-xs-4">
 						<label [for]="planOptionKindRadioIdFor('sole_source')">
-						<input type="radio" value="sole_source" [(ngModel)]="bg.plan_option_kind" [name]="planOptionKindRadioName()" [id]="planOptionKindRadioIdFor('sole_source')"> 
+						<input type="radio" value="sole_source" [attr.name]="planOptionKindRadioName()" [id]="planOptionKindRadioIdFor('sole_source')" [(ngModel)]="bg.plan_option_kind" (change)="bg.selectCarriers()" /> 
 						Sole source
 						</label>
 					</li>
