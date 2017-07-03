@@ -640,11 +640,7 @@ module ApplicationHelper
   end
 
   def load_captcha_widget?
-<<<<<<< HEAD
     return false if Rails.env.test?
     true
-=======
-    Rails.env.test? ? false : true
->>>>>>> 8cffde3d3... Revert "Revert "16403: Admin Action: Lock/Unlock""
   end
 end
