@@ -103,7 +103,11 @@ class ApplicationController < ActionController::Base
     end
 
     def set_locale
-      I18n.locale = (request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first.presence || 'en').to_sym
+      if request.env['HTTP_ACCEPT_LANGUAGE']
+        I18n.locale = (request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first.presence || 'en').to_sym
+      else
+        I18n.locale = 'en'
+      end
 
       # TODO: (Clinton De Young) - I have set the locale to be set by the browser for convenience.  We will
       # need to add this into the appropriate place below after we have finished testing everything.
