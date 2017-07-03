@@ -16,11 +16,7 @@ Rails.application.routes.draw do
   end
 
   resources :users do
-    member do
-      post :unlock
-      get :lockable
-      get :confirm_lock
-    end
+    post :unlock, :on => :member
   end
 
   resources :saml, only: [] do
@@ -255,7 +251,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :employer_attestations do
+    resources :employer_attestations do 
        get 'authorized_download'
        get 'verify_attestation'
     end
