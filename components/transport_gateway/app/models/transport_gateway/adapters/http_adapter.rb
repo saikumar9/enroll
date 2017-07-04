@@ -32,9 +32,6 @@ module TransportGateway
       when File
         request.set_content_type('text/plain')
         request.body_stream = content
-      # when content == IoStream
-      #   request.set_content_type('text/plain')
-      #   request.body_stream = content
       when nil
         request.body = nil
       else
