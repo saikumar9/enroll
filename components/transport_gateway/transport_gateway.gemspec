@@ -16,17 +16,18 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
 
-  s.add_dependency "rails", "~> 4.2.3"
-  s.add_dependency "slim", "3.0.8" 
-  s.add_dependency "mongoid", "~> 5.0.1"
+  s.add_dependency 'rails', '~> 4.2.3'
+  s.add_dependency 'slim', '3.0.8' 
+  s.add_dependency 'mongoid', '~> 5.0.1'
   s.add_dependency 'net-sftp', '~> 2.1', '>= 2.1.2'
+  s.add_dependency 'symmetric-encryption', '~> 3.9.1'
 
-  s.add_development_dependency "byebug"
-  s.add_development_dependency "pry"
-  s.add_development_dependency "pry-remote"
-  s.add_development_dependency "pry-rails"
-  s.add_development_dependency "pry-byebug"
-  s.add_development_dependency "rspec-rails" 
+  s.add_development_dependency 'byebug'
+  s.add_development_dependency 'pry'
+  s.add_development_dependency 'pry-remote'
+  s.add_development_dependency 'pry-rails'
+  s.add_development_dependency 'pry-byebug'
+  s.add_development_dependency 'rspec-rails' 
   s.add_development_dependency 'shoulda-matchers'
   s.add_development_dependency 'database_cleaner'
   s.add_development_dependency 'capybara'

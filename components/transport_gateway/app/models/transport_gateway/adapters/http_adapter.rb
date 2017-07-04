@@ -1,38 +1,53 @@
+require 'openssl'
 require 'net/http'
-require 'uri'
 
 module TransportGateway
   class Adapters::HttpAdapter
 
-    def initialize(message = nil)
-      send_message(message) unless message.blank?
-    end
-
     def send_message(message)
-      end_point = message.to.scheme + message.to.host + message.to.path
+      resource    = message.to
+      body        = message.body
+      put_request = request_for(resource, body)
 
-      # request = Net::HTTP::Put.new(message.body)
-      request = Net::HTTP::Put.new(end_point)
-
-      # request = Net::HTTP::GenricRequest.new
-      # request.body_stream = message.body
-
-      # if message.body.is_a?(String)
-      # elsif message.body.is_a?(Hash)
-      #   request.body = multipart_data
-      #   request.content_type = 'multipart/form-data'
-      # else
-      #   request.body = multipart_data
-      #   request.content_type = 'multipart/form-data'
-      # end
-
-      # request.set_form_data('from' => '2005-01-01', 'to' => '2005-03-31')
-      # upload file
-      response = Net::HTTP.start(message.to.host) do |http|
-        http.request(request)
+      http_site(resource) do |http, uri|
+        http.request(put_request)
       end
-
-      response
     end
+
+  private
+
+    def request_for(uri, body)
+      request = Net::HTTP::Put.new(uri.path)
+      request.basic_auth(uri.user, uri.password) unless uri.userinfo.blank?
+
+      request_body_for(request, body)
+    end
+
+    def request_body_for(request, content)
+
+      case content
+      when String
+        request.set_content_type('text/plain')
+        request.body = content
+      when File
+        request.set_content_type('text/plain')
+        request.body_stream = content
+      # when content == IoStream
+      #   request.set_content_type('text/plain')
+      #   request.body_stream = content
+      when nil
+        request.body = nil
+      else
+        request.body = content
+      end
+      request
+    end
+
+    def http_site(uri)
+      Net::HTTP.start(uri.host, uri.port) do |http|
+        yield(http, uri)
+      end
+    end
+
   end
 end
