@@ -2,32 +2,66 @@ require 'rails_helper'
 
 module TransportGateway
   RSpec.describe Adapters::SftpAdapter, type: :model do
-    let(:host)              { "sftp://sftp.example.com/" }
-    let(:user)              { "foo" }
-    let(:password)          { "bar" }
-    let(:remote_file_path)  { "path/to/folder" }
-    let(:local_file1_path)  { File.join(File.expand_path("../../../support", __FILE__), "test_files", "binary_mhc_logo.png") }
-    let(:local_file2_path)  { File.join(File.expand_path("../../../support", __FILE__), "test_files", "text_file.txt") }
-    let(:adapter)           { Adapters::SftpAdapter.new }
+    let(:adapter)       { Adapters::SftpAdapter.new }
 
-    let(:remote_file_path)  { "sftp://foo:bar@sftp.example.com/path/to/folder" }
+    let(:source_host)   { "localhost"}
+    let(:source_folder) { File.join(File.expand_path("../../../..", __FILE__), "test_files") }
+    let(:source_file)   { "text_file.txt" }
+    let(:source_path)   { File.join(source_folder, source_file) }
+    let(:from)          { URI::FTP.build({ host: source_host, path: source_path }) } 
 
-    context "send a single file synchronous to SFTP server" do
-      let(:remote_file_path)  { "path/to/remote/folder" }
-      let(:message)   { Message.new(file_path, to, binary_file) }
-      let!(:response) { adapter.send_message(message) }
+    context "Upload files to SFTP server" do
+      let(:target_host)   { "ftp.example.com" }
+      let(:target_folder) { "/path/to/target/folder" }
+      let(:target_path)   { File.join(target_folder, source_file) }
 
-      it "should upload a file to the server" do
-        expect(WebMock).to have_requested(:upload, url).once
+      context "and target server Username/Password is nil" do
+        let(:to)        { URI::FTP.build({ host: target_host, path: target_path }) } 
+        let(:message)   { Message.new(from, to, nil) }
+
+        it "should raise an error" do
+          expect{ Adapters::SftpAdapter.new.send_message(message) }.to raise_error(ArgumentError) 
+        end
       end
 
-      it "should post return a success result" do
-        expect(response).to be_kind_of Net::HTTPSuccess
+      context "and target server Username/Password is invalid" do
+        let(:target_user)       { "foo" }
+        let(:expired_password)  { "expired_password" }
+        let(:userinfo)          { target_user + ':' + expired_password }
+        let(:to)        { URI::FTP.build({ host: target_host, path: target_path, userinfo: userinfo }) }
+
+        it "should fail to authenticate"
+
+        context "and target Username/Password is valid" do
+          let(:target_user)       { "foo" }
+          let(:target_password)   { "super_secret" }
+          let(:userinfo)          { target_user + ':' + target_password }
+          let(:to)        { URI::FTP.build({ host: target_host, path: target_path, userinfo: userinfo }) }
+
+          it "should authenticate"
+
+          context "and target path isn't found" do
+            it "should create target path"
+
+            it "should upload the file"
+          end
+
+          context "and target path is found" do
+            let(:message)     { Message.new(from, to, nil) }
+
+            it "should upload the file" do
+              adapter.send_message(message)
+              
+              # Mock the FTP server
+            end
+          end
+
+        end
       end
+
     end
 
     context "send a list of files to SFTP server" do
-      let()
       let(:message1)  { Message.new() }
       let(:message2)  { Message.new() }
       let(:messages)  { [message1, message2] }

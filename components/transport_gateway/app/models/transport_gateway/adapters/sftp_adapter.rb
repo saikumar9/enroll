@@ -4,44 +4,30 @@ require 'net/sftp'
 module TransportGateway
   class Adapters::SftpAdapter
 
-    def initialize
-      @user = ""
-      @password = ""
-    end
-
-
     def send_message(message)
-      host              = message.to.host
-      # port              = message.to.port || 22
-      local_file_path   = message.from.path
-      remote_file_path  = message.to.path
+      source    = message.from
+      target    = message.to
 
-      if message.to.userinfo.present?
-        parse_credentials(message.to.userinfo)
+      if target.userinfo.present?
+        user      = target.user
+        password  = target.password
       else
-        # This should check keystore based on host content
+        raise ArgumentError.new("Target server username/password not provided")
       end
 
-binding.pry
-      # response = Net::SFTP.new(host, port).start { |http| http.request(req) }
-      response = Net::SFTP.start(host, @user, password: @password) do |sftp|
-        sftp.upload!(local_file_path, remote_file_path) do |event, uploader, *args|
+      Net::SFTP.start(target.host, user, password: password) do |sftp|
+        find_or_create_target_folder_for(sftp, target.path) unless sftp.directory?(File.dirname(target.path))
+
+        sftp.upload!(source.path, target.path) do |event, uploader, *args|
           send(event, uploader, *args) if respond_to?(event, true)
         end
       end
-      response
     end
-
 
     # 
     def send_messages(messages)
-
       handle1 = sftp.open!("/path/to/file1")
       handle2 = sftp.open!("/path/to/file2")
-
-      messages.each_with_object([]).with_index do |(message, memo), index|
-        request[index]
-      end
 
       r1 = sftp.read(handle1, 0, 1024)
       r2 = sftp.read(handle2, 0, 1024)
@@ -54,10 +40,11 @@ binding.pry
 
  private
 
-  def parse_credentials(string)
-    @user      = string.split(':').first
-    @password  = string.split(':').last
+  def find_or_create_target_folder_for(sftp, path)
+    folder = File.dirname(path)
+    sftp..mkdir!(folder, :permissions => 0777)
   end
+
 
   # open session and block until connection is initialized
   def open_session(ssh)

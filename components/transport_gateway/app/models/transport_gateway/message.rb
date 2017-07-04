@@ -5,7 +5,7 @@ module TransportGateway
 
     attr_accessor :from, :to, :body
 
-    def initialize(from, to, body, envelope_header = {}, options = {})
+    def initialize(from, to, body = nil, envelope_header = {}, options = {})
       # SFTP: (File) local file path
       # String
       # Certificate File

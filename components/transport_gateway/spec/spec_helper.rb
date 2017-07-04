@@ -33,17 +33,6 @@ RSpec.configure do |config|
   config.before(:each) do
     stub_request(:put, /www.example.com/).
       to_return(status: 200, body: "http stubbed response", headers: {})
-
-    stub_request(:post, /sftp.example.com/).
-      to_return(status: 200, body: "sftp stubbed response", headers: {})
-
-    # stub_request(:post, /www.example.com/).
-    #   with(headers: {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
-    #   to_return(status: 200, body: "stubbed response", headers: {})
-
-    # stub_request(:post, /sftp.example.com/).
-    #   with(headers: {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
-    #   to_return(status: 200, body: "stubbed response", headers: {})
   end
 
   config.expect_with :rspec do |expectations|
