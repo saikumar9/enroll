@@ -5,10 +5,6 @@ module TransportGateway
   RSpec.describe Adapters::HttpAdapter, type: :model do
     let(:adapter)     { Adapters::HttpAdapter.new }
 
-    # File.open('/tmp/response_body.txt', 'w') { |f| f.puts 'abc' }0
-      # stub_request(:any, "www.example.com").
-      #   to_return(body: File.new('/tmp/response_body.txt'), status: 200)
-
     context "Post content to HTTP server resource" do
       let(:from)        { "foo@bar.com" }
       let(:host)        { "www.example.com"}
@@ -18,7 +14,7 @@ module TransportGateway
 
       context "and the endpoint is available" do
         let(:to)        { URI::HTTP.build({ host: host, path: path }) } 
-        let(:message)   { Message.new(from, to, text_string) }
+        let(:message)   { Message.new(from: from, to: to, body: text_string) }
 
         it "the URL should return a HTTP success status" do
           response = adapter.send_message(message)
@@ -26,7 +22,7 @@ module TransportGateway
         end
 
         context "and Put request with text body is sent without credentials" do
-          let(:message)     { Message.new(from, to, text_string) }
+          let(:message)     { Message.new(from: from, to: to, body: text_string) }
 
           it "should post text string payload to the server" do
             adapter.send_message(message)
@@ -41,7 +37,7 @@ module TransportGateway
           let(:password)      { "secret_password" }
           let(:userinfo)      { user + ':' + password }
           let(:to)            { URI::HTTP.build({ host: host, path: path, userinfo: userinfo }) } 
-          let(:message)       { Message.new(from, to, text_string) }
+          let(:message)       { Message.new(from: from, to: to, body: text_string) }
 
           it "should post text string payload to the server with credentials in header" do
             adapter.send_message(message)
@@ -57,7 +53,7 @@ module TransportGateway
           let(:file_handle) { File.new(file_name) }
           let(:file_data)   { File.read(file_name) }
           let(:to)          { URI::HTTP.build({ host: host, path: path }) } 
-          let(:message)     { Message.new(from, to, file_handle) }
+          let(:message)     { Message.new(from: from, to: to, body: file_handle) }
 
           it "should post file content payload to the server" do
             adapter.send_message(message)

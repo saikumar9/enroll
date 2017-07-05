@@ -5,6 +5,9 @@ module TransportGateway
   class Adapters::SftpAdapter
 
     def send_message(message)
+      raise ArgumentError.new "source file not provided" unless message.from.present?
+      raise ArgumentError.new "target file not provided" unless message.to.present?
+
       source    = message.from
       target    = message.to
 
@@ -12,7 +15,7 @@ module TransportGateway
         user      = target.user
         password  = target.password
       else
-        raise ArgumentError.new("Target server username/password not provided")
+        raise ArgumentError.new("target server username:password not provided")
       end
 
       Net::SFTP.start(target.host, user, password: password) do |sftp|
