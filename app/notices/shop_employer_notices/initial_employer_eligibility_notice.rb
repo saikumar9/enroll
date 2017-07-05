@@ -9,6 +9,7 @@ class ShopEmployerNotices::InitialEmployerEligibilityNotice < ShopEmployerNotice
     non_discrimination_attachment
     upload_and_send_secure_message
     send_generic_notice_alert
+    non_discrimination_attachment
   end
 
   def append_data

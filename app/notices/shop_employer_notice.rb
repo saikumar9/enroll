@@ -40,11 +40,9 @@ class ShopEmployerNotice < Notice
   def append_hbe
     notice.hbe = PdfTemplates::Hbe.new({
       url: "www.dhs.dc.gov",
-      phone: "1-888-813-9220",
+      phone: "(855) 532-5465",
       fax: "(855) 532-5465",
       email: "#{Settings.contact_center.email_address}",
-      tty: "#{Settings.contact_center.tty}",
-      ma_email: "#{Settings.contact_center.ma_email}",
       address: PdfTemplates::NoticeAddress.new({
         street_1: "100 K ST NE",
         street_2: "Suite 100",
