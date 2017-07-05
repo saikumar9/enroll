@@ -5,29 +5,25 @@ module TransportGateway
 
     attr_accessor :from, :to, :body
 
-    def initialize(from, to, body = nil, envelope_header = {}, options = {})
-      # SFTP: (File) local file path
-      # String
-      # Certificate File
-      @from = from
-
-      # SFTP: URI#userinfo simple credentials
-      @to   = to_uri(to)
-      @body = body
-
-      # Canonical Vocabulary "EnvelopeHeaderType" attributes
-      parse_envelope_header(envelope_header) unless envelope_header.empty?
-
+    def initialize(**options)
       parse_options(options) unless options.empty?
+
+      # Target must be a URI
+      @to = to_uri(options[:to])
     end
 
   private 
 
     def to_uri(value)
+      return if value.nil?
       value.is_a?(URI) ? value : URI.parse(value.to_s)
     end
 
     def parse_envelope_header(envelope_header)
+      @from
+      @to 
+      @body
+      
       @hbx_id                         = envelope_header[:hbx_id] || nil
       @submitted_timestamp            = envelope_header[:submitted_timestamp] || nil
       @authorization                  = envelope_header[:authorization] || nil

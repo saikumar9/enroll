@@ -9,18 +9,61 @@ module TransportGateway
     let(:source_file)   { "text_file.txt" }
     let(:source_path)   { File.join(source_folder, source_file) }
     let(:from)          { URI::FTP.build({ host: source_host, path: source_path }) } 
+    let(:body)          { nil }
 
     context "Upload files to SFTP server" do
       let(:target_host)   { "ftp.example.com" }
       let(:target_folder) { "/path/to/target/folder" }
       let(:target_path)   { File.join(target_folder, source_file) }
 
-      context "and target server Username/Password is nil" do
+      context ".new" do
+        let(:userinfo)  { "foo:bar" }
+        let(:from)      { URI::FTP.build({ host: source_host, path: source_path }) } 
+        let(:to)        { URI::FTP.build({ host: target_host, path: target_path, userinfo: userinfo }) }
+        let(:body)      { nil }
+
+        let(:valid_params) do
+          {
+            from: from,
+            to: to,
+            body: body
+          }
+        end
+
+        context "with no arguments" do
+          let(:params)  {{}}
+          let(:message) { Message.new(**params)}
+
+          it "should raise an Argument error" do
+            expect{ Adapters::SftpAdapter.new.send_message(message) }.to raise_error(ArgumentError, /source file not provided/) 
+          end
+        end
+
+        context "with no source file (message.from)" do
+          let(:params)  { valid_params.except(:from) }
+          let(:message) { Message.new(**params)}
+
+          it "should raise an Argument error" do
+            expect{ Adapters::SftpAdapter.new.send_message(message) }.to raise_error(ArgumentError, /source file not provided/) 
+          end
+        end
+
+        context "with no target file (message.to)" do
+          let(:params)  { valid_params.except(:to) }
+          let(:message) { Message.new(**params)}
+
+          it "should raise an Argument error" do
+            expect{ Adapters::SftpAdapter.new.send_message(message) }.to raise_error(ArgumentError, /target file not provided/) 
+          end
+        end
+      end
+
+      context "and target server username:password is nil" do
         let(:to)        { URI::FTP.build({ host: target_host, path: target_path }) } 
-        let(:message)   { Message.new(from, to, nil) }
+        let(:message)   { Message.new(from: from, to: to) }
 
         it "should raise an error" do
-          expect{ Adapters::SftpAdapter.new.send_message(message) }.to raise_error(ArgumentError) 
+          expect{ Adapters::SftpAdapter.new.send_message(message) }.to raise_error(ArgumentError, /target server username:password not provided/ ) 
         end
       end
 
@@ -47,11 +90,11 @@ module TransportGateway
           end
 
           context "and target path is found" do
-            let(:message)     { Message.new(from, to, nil) }
+            let(:message)     { Message.new(from: from, to: to) }
 
             it "should upload the file" do
-              adapter.send_message(message)
-              
+              # adapter.send_message(message)
+
               # Mock the FTP server
             end
           end
