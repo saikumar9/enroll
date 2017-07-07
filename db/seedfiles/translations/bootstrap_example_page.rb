@@ -78,5 +78,5 @@ BOOTSTRAP_EXAMPLE_TRANSLATIONS = {
   "en.uis.bootstrap3_examples.index.wells" => "Wells",
   "en.uis.bootstrap3_examples.index.with_controls" => "With controls",
   "en.uis.bootstrap3_examples.index.with_indicators" => "With indicators",
-  "en.uis.bootstrap3_examples.index.with_captions" => "With captions"
+  "en.uis.bootstrap3_examples.index.with_captions" => "With captions",
 }
