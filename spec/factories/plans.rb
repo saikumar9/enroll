@@ -13,8 +13,33 @@ FactoryGirl.define do
     carrier_profile     { FactoryGirl.create(:carrier_profile)  } #{ BSON::ObjectId.from_time(DateTime.now) }
     minimum_age         19
     maximum_age         66
+    deductible          "$500"
+    family_deductible   "$500 per person | $1000 per group"
 
     # association :premium_tables, strategy: :build
+    #
+    trait :with_rating_factors do
+      after :create do |plan, evaluator|
+        active_year = plan.active_year
+        carrier_id = plan.carrier_profile_id
+        SicCodeRatingFactorSet.create!({
+          :carrier_profile_id => carrier_id,
+          :active_year => active_year,
+          :default_factor_value => 1.0
+        })
+        EmployerGroupSizeRatingFactorSet.create!({
+          :carrier_profile_id => carrier_id,
+          :active_year => active_year,
+          :default_factor_value => 1.0,
+          :max_integer_factor_key => 1
+        })
+        EmployerParticipationRateRatingFactorSet.create!({
+          :carrier_profile_id => carrier_id,
+          :active_year => active_year,
+          :default_factor_value => 1.0
+        })
+      end
+    end
 
     trait :with_dental_coverage do
       coverage_kind "dental"
@@ -30,7 +55,15 @@ FactoryGirl.define do
       after(:create) do |plan, evaluator|
         start_on = Date.new(plan.active_year,1,1)
         end_on = start_on + 1.year - 1.day
-        create_list(:premium_table, evaluator.premium_tables_count, plan: plan, start_on: start_on, end_on: end_on)
+
+        unless Settings.aca.rating_areas.empty?
+          plan.service_area_id = CarrierServiceArea.for_issuer(plan.carrier_profile.issuer_hios_ids).first.service_area_id
+          plan.save!
+          rating_area = RatingArea.first.try(:rating_area) || FactoryGirl.create(:rating_area, rating_area: Settings.aca.rating_areas.first).rating_area
+          create_list(:premium_table, evaluator.premium_tables_count, plan: plan, start_on: start_on, end_on: end_on, rating_area: rating_area)
+        else
+          create_list(:premium_table, evaluator.premium_tables_count, plan: plan, start_on: start_on, end_on: end_on)
+        end
       end
     end
 
@@ -77,11 +110,11 @@ FactoryGirl.define do
     end
 
     trait :this_year do
-      active_year TimeKeeper.datetime_of_record.year
+      active_year Time.now.year
     end
 
     trait :next_year do
-      active_year TimeKeeper.datetime_of_record.year
+      active_year Time.now.year
     end
 
     trait :premiums_for_2015 do

@@ -120,14 +120,18 @@ RSpec.describe Organization, dbclean: :after_each do
 
   describe "class method", dbclean: :after_each do
     let(:organization1) {FactoryGirl.create(:organization, legal_name: "Acme Inc")}
-    let(:carrier_profile_1) {FactoryGirl.create(:carrier_profile, organization: organization1)}
+    let!(:carrier_profile_1) {FactoryGirl.create(:carrier_profile, organization: organization1, issuer_hios_ids: ['11111'])}
     let(:organization2) {FactoryGirl.create(:organization, legal_name: "Turner Inc")}
-    let(:carrier_profile_2) {FactoryGirl.create(:carrier_profile, organization: organization2)}
+    let!(:carrier_profile_2) {FactoryGirl.create(:carrier_profile, organization: organization2, issuer_hios_ids: ['22222'])}
+    let(:single_choice_organization) {FactoryGirl.create(:organization, legal_name: "Restricted Options")}
+    let!(:sole_source_participater) { create(:carrier_profile, organization: single_choice_organization, offers_sole_source: true) }
+
+    let!(:carrier_one_service_area) { create(:carrier_service_area, service_area_zipcode: '10001', issuer_hios_id: carrier_profile_1.issuer_hios_ids.first) }
+    let(:address) { double(zip: '10001', county: 'County', state: Settings.aca.state_abbreviation) }
+    let(:office_location) { double(address: address)}
 
     before :each do
       allow(Plan).to receive(:valid_shop_health_plans).and_return(true)
-      carrier_profile_1
-      carrier_profile_2
       Rails.cache.clear
     end
 
@@ -137,17 +141,31 @@ RSpec.describe Organization, dbclean: :after_each do
         carrier_names = {}
         carrier_names[carrier_profile_1.id.to_s] = carrier_profile_1.legal_name
         carrier_names[carrier_profile_2.id.to_s] = carrier_profile_2.legal_name
-        expect(Organization.valid_carrier_names).to eq carrier_names
+        carrier_names[sole_source_participater.id.to_s] = sole_source_participater.legal_name
+        expect(Organization.valid_carrier_names).to match_array carrier_names
       end
 
       it "valid_carrier_names_for_options" do
-        carriers = [[carrier_profile_1.legal_name, carrier_profile_1.id.to_s], [carrier_profile_2.legal_name, carrier_profile_2.id.to_s]]
-        expect(Organization.valid_carrier_names_for_options).to eq carriers
+        carriers = [[carrier_profile_1.legal_name, carrier_profile_1.id.to_s], [carrier_profile_2.legal_name, carrier_profile_2.id.to_s],[sole_source_participater.legal_name, sole_source_participater.id.to_s]]
+        expect(Organization.valid_carrier_names_for_options).to match_array carriers
+      end
+
+      it "valid_carrier_names_for_options passes arguments and filters to sole source only" do
+        carriers = [[sole_source_participater.legal_name, sole_source_participater.id.to_s]]
+        expect(Organization.valid_carrier_names_for_options(sole_source_only: true)).to match_array carriers
+      end
+
+      it "can filter out by service area" do
+        carrier_names = {}
+        carrier_names[carrier_profile_1.id.to_s] = carrier_profile_1.legal_name
+        carrier_names[sole_source_participater.id.to_s] = sole_source_participater.legal_name
+
+        expect(Organization.valid_carrier_names(primary_office_location: office_location)).to match_array carrier_names
       end
     end
 
     context "binder_paid" do
-      let(:address)  { Address.new(kind: "primary", address_1: "609 H St", city: "Washington", state: "DC", zip: "20002") }
+      let(:address)  { Address.new(kind: "primary", address_1: "609 H St", city: "Washington", state: "DC", zip: "20002", county: "County") }
       let(:phone  )  { Phone.new(kind: "main", area_code: "202", number: "555-9999") }
       let(:office_location) { OfficeLocation.new(
           is_primary: true,
@@ -165,7 +183,8 @@ RSpec.describe Organization, dbclean: :after_each do
       let(:valid_params) do
         {
           organization: organization,
-          entity_kind: "partnership"
+          entity_kind: "partnership",
+          sic_code: '1111'
         }
       end
       let(:renewing_plan_year)    { FactoryGirl.build(:plan_year, start_on: TimeKeeper.date_of_record.next_month.beginning_of_month - 1.year, end_on: TimeKeeper.date_of_record.end_of_month, aasm_state: 'renewing_enrolling') }
@@ -238,13 +257,13 @@ RSpec.describe Organization, dbclean: :after_each do
         let(:organization3)  {FactoryGirl.create(:organization, fein: "034267123")}
 
         it 'should match employers with active broker agency_profile' do
-          organization3.create_employer_profile(entity_kind: "partnership", broker_agency_profile: broker_agency_profile);
+          organization3.create_employer_profile(entity_kind: "partnership", broker_agency_profile: broker_agency_profile, sic_code: '1111');
           employers = Organization.by_broker_agency_profile(broker_agency_profile.id)
           expect(employers.size).to eq(1)
         end
 
         it 'broker agency_profile match does not count unless active account' do
-          employer = organization3.create_employer_profile(entity_kind: "partnership", broker_agency_profile: broker_agency_profile);
+          employer = organization3.create_employer_profile(entity_kind: "partnership", broker_agency_profile: broker_agency_profile, sic_code: '1111');
           employers = Organization.by_broker_agency_profile(broker_agency_profile.id)
           expect(employers.size).to eq(1)
           employer = Organization.find(employer.organization.id).employer_profile

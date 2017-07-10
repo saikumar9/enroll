@@ -7,6 +7,11 @@
       <div class="col-xs-8">
         <h1 class="darkblue"><%= l10n("insured.group_selection.new.choose_coverage_for_your_household") %></h1>
         <h4><%= l10n("insured.group_selection.new.select_who_needs_coverage") %></h4>
+        <div style="font-size :24px">
+        <%if @effective_on_date.present? %>
+          <%= l10n("insured.group_selection.new.effective_date") %>: <span style="color: red;"><%= @effective_on_date %></span>
+        <%end%>
+        </div>
         <h3><%= l10n("insured.group_selection.new.who_needs_coverage") %></h3>
           <%= hidden_field_tag(:person_id, @person.id) %>
           <%= hidden_field_tag(:employee_role_id, @employee_role.id) if @employee_role %>
@@ -31,7 +36,7 @@
             </div>
           <% end %>
 
-          <% if can_shop_individual?(@person) %>
+          <% if can_shop_individual?(@person) && !can_shop_resident?(@person) %>
             <div id="ivl-coverage-household" class="<%= 'dn' if can_shop_shop?(@person) && @market_kind != 'individual' %>">
               <div class="module group-selection-table">
                 <div class="table-responsive table-border health">
@@ -67,9 +72,9 @@
               </div>
             </div>
           <% elsif can_shop_shop?(@person) %>
-             <%= hidden_field_tag 'market_kind', 'shop' %>
-          <% elsif can_shop_individual?(@person) %>
-             <%= hidden_field_tag 'market_kind', 'individual' %>
+	           <%= hidden_field_tag 'market_kind', 'shop' %>
+	        <% elsif can_shop_individual?(@person) && !can_shop_resident?(@person) %>
+	           <%= hidden_field_tag 'market_kind', 'individual' %>
           <% elsif can_shop_resident?(@person) %>
              <%= hidden_field_tag 'market_kind', 'coverall' %>
           <% else %>
@@ -144,8 +149,9 @@
             <%= submit_tag l10n('shop_for_new_plan'), class: 'btn btn-primary  btn-lg'+ pundit_class(Family, :updateable?) %>
             <% if @hbx_enrollment.present? && @hbx_enrollment.may_terminate_coverage? %>
               <%= submit_tag l10n('keep_existing_plan'), class: 'btn btn-primary  btn-lg' + pundit_class(Family, :updateable?) if show_keep_existing_plan(@shop_for_plans, @hbx_enrollment, @new_effective_on) %>
+
               <%= link_to l10n('select_plan_to_terminate'), terminate_selection_insured_group_selections_path(person_id: @person.id, change_plan: @change_plan),
-              class: ('btn btn-primary btn-lg' + pundit_class(Family, :updateable?)) if @hbx_enrollment.may_terminate_coverage? and @hbx_enrollment.effective_on <= TimeKeeper.date_of_record %>
+              class: ('btn btn-primary' + pundit_class(Family, :updateable?)) if @hbx_enrollment.may_terminate_coverage? and @hbx_enrollment.effective_on <= TimeKeeper.date_of_record %>
             <% end %>
           <% else %>
             <!--<h3>Select a plan</h3>-->

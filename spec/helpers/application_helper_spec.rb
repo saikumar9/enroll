@@ -2,6 +2,24 @@ require "rails_helper"
 
 RSpec.describe ApplicationHelper, :type => :helper do
 
+  describe "#deductible_display" do
+    let(:hbx_enrollment) {double(hbx_enrollment_members: [double, double])}
+    let(:plan) { double("Plan", deductible: "$500", family_deductible: "$500 per person | $1000 per group",) }
+
+    before :each do
+      assign(:hbx_enrollment, hbx_enrollment)
+    end
+
+    it "should return family deductible if hbx_enrollment_members count > 1" do
+      expect(helper.deductible_display(hbx_enrollment, plan)).to eq plan.family_deductible.split("|").last.squish
+    end
+
+    it "should return individual deductible if hbx_enrollment_members count <= 1" do
+      allow(hbx_enrollment).to receive(:hbx_enrollment_members).and_return([double])
+      expect(helper.deductible_display(hbx_enrollment, plan)).to eq plan.deductible
+    end
+  end
+
   describe "#dob_in_words" do
     it "returns date of birth in words for < 1 year" do
       expect(helper.dob_in_words(0, "20/06/2015".to_date)).to eq time_ago_in_words("20/06/2015".to_date)
@@ -11,21 +29,21 @@ RSpec.describe ApplicationHelper, :type => :helper do
   end
 
   describe "#display_carrier_logo" do
-    let(:plan){ Maybe.new(FactoryGirl.build(:plan)) }
     let(:carrier_profile){ FactoryGirl.build(:carrier_profile, legal_name: "Kaiser")}
-    let(:plan_1){ Maybe.new(FactoryGirl.build(:plan, hios_id: "89789DC0010006-01", carrier_profile: carrier_profile)) }
+    let(:plan){ FactoryGirl.build(:plan, carrier_profile: carrier_profile) }
 
-    it "should return uhic logo" do
-      expect(helper.display_carrier_logo(plan)).to eq "<img width=\"50\" src=\"/assets/logo/carrier/uhic.jpg\" alt=\"Uhic\" />"
+    before do
+      allow(plan).to receive(:carrier_profile).and_return(carrier_profile)
+      allow(carrier_profile).to receive_message_chain(:legal_name, :extract_value).and_return('kaiser')
+    end
+    it "should return the named logo" do
+      expect(helper.display_carrier_logo(plan)).to eq "<img width=\"50\" src=\"/images/logo/carrier/kaiser.jpg\" alt=\"Kaiser\" />"
     end
 
-    it "should return non united logo" do
-      expect(helper.display_carrier_logo(plan_1)).to eq "<img width=\"50\" src=\"/assets/logo/carrier/kaiser.jpg\" alt=\"Kaiser\" />"
-    end
   end
 
   describe "#format_time_display" do
-    let(:timestamp){ TimeKeeper.datetime_of_record.utc }
+    let(:timestamp){ Time.now.utc }
     it "should display the time in proper format" do
       expect(helper.format_time_display(timestamp)).to eq timestamp.in_time_zone('Eastern Time (US & Canada)')
     end
@@ -36,7 +54,7 @@ RSpec.describe ApplicationHelper, :type => :helper do
   end
 
   describe "#group_xml_transmitted_message" do
-    let(:employer_profile_1){ double("EmployerProfile", xml_transmitted_timestamp: TimeKeeper.datetime_of_record.utc, legal_name: "example1 llc.") }
+    let(:employer_profile_1){ double("EmployerProfile", xml_transmitted_timestamp: Time.now.utc, legal_name: "example1 llc.") }
     let(:employer_profile_2){ double("EmployerProfile", xml_transmitted_timestamp: nil, legal_name: "example2 llc.") }
 
     it "should display re-submit message if xml is being transmitted again" do
@@ -133,13 +151,14 @@ RSpec.describe ApplicationHelper, :type => :helper do
     context "consumer_portal" do
       it "should return correct options for consumer portal" do
         expect(helper.relationship_options(dependent, "consumer_role_id")).to match(/Domestic Partner/mi)
-        expect(helper.relationship_options(dependent, "consumer_role_id")).to match(/other tax dependent/mi)
+        expect(helper.relationship_options(dependent, "consumer_role_id")).to match(/Spouse/mi)
+        expect(helper.relationship_options(dependent, "consumer_role_id")).not_to match(/other tax dependent/mi)
       end
     end
 
     context "employee portal" do
       it "should not match options that are in consumer portal" do
-        expect(helper.relationship_options(dependent, "")).not_to match(/Domestic Partner/mi)
+        expect(helper.relationship_options(dependent, "")).to match(/Domestic Partner/mi)
         expect(helper.relationship_options(dependent, "")).not_to match(/other tax dependent/mi)
       end
     end
@@ -346,5 +365,27 @@ end
         end
        end
     it_behaves_like "IVL market status", Settings.aca.market_kinds.include?("individual")
+  end
+
+  describe "#is_new_paper_application?" do
+    let(:person_id) { double }
+    let(:admin_user) { FactoryGirl.create(:user, :hbx_staff)}
+    let(:user) { FactoryGirl.create(:user)}
+    let(:person) { FactoryGirl.create(:person, user: user)}
+    before do
+      allow(admin_user).to receive(:person_id).and_return person_id
+    end
+
+    it "should return true when current user is admin & doing new paper application" do
+      expect(helper.is_new_paper_application?(admin_user, "paper")).to eq true
+    end
+
+    it "should return false when the current user is not an admin & working on new paper application" do
+      expect(helper.is_new_paper_application?(user, "paper")).to eq nil
+    end
+
+    it "should return false when the current user is an admin & not working on new paper application" do
+      expect(helper.is_new_paper_application?(admin_user, "")).to eq false
+    end
   end
 end

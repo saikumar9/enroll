@@ -40,20 +40,30 @@
         <table class="table gn-10">
           <thead>
           <tr>
+<<<<<<< HEAD
             <th><%= l10n("type").to_s.upcase %></th>
             <th><%= l10n("level").to_s.upcase %></th>
             <th><%= l10n("network").to_s.upcase %></th>
-            <th><%= l10n("deductible").to_s.upcase %></th>
+            <th>
+              <% if @hbx_enrollment.hbx_enrollment_members.size > 1 %>
+                <%= l10n("family_deductible").to_s.upcase %>
+              <% else %>
+                <%= l10n("deductible").to_s.upcase %>
+              <% end %>
+            </th>
           </tr>
           </thead>
           <tbody>
           <tr>
             <td><%= plan.plan_type ? plan.plan_type.upcase : "" %></td>
-
-            <% plan_level = plan.metal_level.humanize %>
-            <td><span class="<%= plan_level.downcase %>-icon"><%= plan_level != 'Dental' ? plan_level : display_dental_metal_level(plan).humanize %></span></td>
-            <td><%= plan.nationwide ? l10n("nationwide") : l10n("DC-Metro") %></td>
-            <td><%= plan.family_deductible %></td>
+            <td>
+              <% plan_level = plan.metal_level.humanize %>
+              <span class="<%= plan_level.downcase %>-icon">
+                <%= plan_level != 'Dental' ? plan_level : display_dental_metal_level(plan).humanize %>
+              </span>
+            </td>
+            <td><%= plan.nationwide ? l10n("nationwide") : plan.service_area_id  %></td>
+            <td><%= deductible_display(@hbx_enrollment, plan) %></td>
           </tr>
           </tbody>
         </table>

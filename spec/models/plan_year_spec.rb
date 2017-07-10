@@ -7,6 +7,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
   it { should validate_presence_of :open_enrollment_end_on }
 
   let!(:employer_profile)               { FactoryGirl.create(:employer_profile) }
+  let!(:rating_area)                    { FactoryGirl.create(:rating_area)  }
   let(:valid_plan_year_start_on)        { TimeKeeper.date_of_record.end_of_month + 1.day + 1.month }
   let(:valid_plan_year_end_on)          { valid_plan_year_start_on + 1.year - 1.day }
   let(:valid_open_enrollment_start_on)  { valid_plan_year_start_on.prev_month }
@@ -333,10 +334,10 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
   context ".publish" do
 
     let(:employer_profile) { FactoryGirl.create(:employer_profile) }
-    let(:calender_year) { TimeKeeper.date_of_record.year }
-    let(:plan_year_start_on) { Date.new(calender_year, 6, 1) }
-    let(:open_enrollment_start_on) { Date.new(calender_year, 4, 1) }
-    let(:open_enrollment_end_on) { Date.new(calender_year, 5, 13) }
+    let(:calendar_year) { TimeKeeper.date_of_record.year }
+    let(:plan_year_start_on) { Date.new(calendar_year, 6, 1) }
+    let(:open_enrollment_start_on) { Date.new(calendar_year, 4, 1) }
+    let(:open_enrollment_end_on) { Date.new(calendar_year, 5, 13) }
     let(:plan_year) {
       py = FactoryGirl.create(:plan_year,
         start_on: plan_year_start_on,
@@ -355,7 +356,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
 
 
     before do
-      TimeKeeper.set_date_of_record_unprotected!(Date.new(calender_year, 5, 1))
+      TimeKeeper.set_date_of_record_unprotected!(Date.new(calendar_year, 5, 1))
     end
 
     after :all do
@@ -410,6 +411,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
 
     before do
       plan_year_with_benefit_group.update_attributes(:aasm_state => 'renewing_draft')
+      employer_profile.update_attributes(sic_code: '3211')
     end
 
     after :all do
@@ -439,12 +441,22 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
       it "and plan year should be in publish pending state" do
         expect(plan_year_with_benefit_group.aasm_state).to eq "renewing_draft"
       end
+
+      it 'plan year in draft state will update the plan year sic code' do
+        employer_profile.update_attributes!(sic_code: '3229')
+        expect(plan_year_with_benefit_group.sic_code).to eq '3229'
+      end
     end
 
     context "and plan year is published before publish due date" do
       before do
         TimeKeeper.set_date_of_record_unprotected!(plan_year_with_benefit_group.due_date_for_publish.beginning_of_day)
         plan_year_with_benefit_group.publish!
+      end
+
+      it 'plan year in enrolling state will not update plan year sic code' do
+        employer_profile.update_attributes!(sic_code: '3229')
+        expect(plan_year_with_benefit_group.sic_code).to eq '3211'
       end
 
       it "application should be valid" do
@@ -454,6 +466,55 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
       it "and plan year should be in publish state" do
         expect(plan_year_with_benefit_group.aasm_state).to eq "renewing_enrolling"
       end
+    end
+  end
+
+  context 'should return correct benefit group assignments for an employee' do
+    let!(:employer_profile) { FactoryGirl.create(:employer_profile) }
+    let(:plan_year_start_on) { TimeKeeper.date_of_record.end_of_month + 1.day }
+    let(:plan_year_end_on) { TimeKeeper.date_of_record.end_of_month + 1.year }
+    let(:open_enrollment_start_on) { TimeKeeper.date_of_record.beginning_of_month }
+    let(:open_enrollment_end_on) { open_enrollment_start_on + 12.days }
+    let(:effective_date)         { plan_year_start_on }
+    let!(:census_employee) { FactoryGirl.create(:census_employee,
+                                                  employer_profile: employer_profile
+                            ) }
+    let!(:plan_year)                     { py = FactoryGirl.create(:plan_year,
+                                                      start_on: plan_year_start_on,
+                                                      end_on: plan_year_end_on,
+                                                      open_enrollment_start_on: open_enrollment_start_on,
+                                                      open_enrollment_end_on: open_enrollment_end_on,
+                                                      employer_profile: employer_profile,
+                                                      aasm_state: 'renewing_enrolled'
+                                                    )
+
+                                                    blue = FactoryGirl.build(:benefit_group, title: "blue collar", plan_year: py)
+                                                    py.benefit_groups = [blue]
+                                                    py.save(:validate => false)
+                                                    py
+                                                  }
+    let!(:benefit_group_assignment) {
+      BenefitGroupAssignment.create({
+        census_employee: census_employee,
+        benefit_group: plan_year.benefit_groups.first,
+        start_on: plan_year_start_on
+      })
+    }
+
+    let!(:renewal_benefit_group_assignment) {
+      BenefitGroupAssignment.create({
+        census_employee: census_employee,
+        benefit_group: plan_year.benefit_groups.first,
+        start_on: plan_year_start_on
+      })
+    }
+    it 'should return renewing benefit group assignment' do
+      expect(plan_year.enrolled_bga_for_ce(census_employee)).to eq renewal_benefit_group_assignment
+    end
+
+    it 'should retrun active benefit_group_assignment' do
+      plan_year.update_attributes(:'aasm_state' => 'active')
+      expect(plan_year.enrolled_bga_for_ce(census_employee)).to eq census_employee.benefit_group_assignments.first
     end
   end
 
@@ -575,7 +636,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
 
         it "and should provide relevent warning message" do
           expect(workflow_plan_year_with_benefit_group.application_eligibility_warnings[:primary_office_location].present?).to be_truthy
-          expect(workflow_plan_year_with_benefit_group.application_eligibility_warnings[:primary_office_location]).to match(/Primary office must be located/)
+          expect(workflow_plan_year_with_benefit_group.application_eligibility_warnings[:primary_office_location]).to match(/Has its principal business address in/)
         end
       end
 
@@ -591,7 +652,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
 
         it "and should provide relevent warning message" do
           expect(workflow_plan_year_with_benefit_group.application_eligibility_warnings[:fte_count].present?).to be_truthy
-          expect(workflow_plan_year_with_benefit_group.application_eligibility_warnings[:fte_count]).to match(/Number of full time equivalents/)
+          expect(workflow_plan_year_with_benefit_group.application_eligibility_warnings[:fte_count]).to match(/fewer full time equivalent employees/)
         end
 
         it "and plan year should be in publish pending state" do
@@ -710,7 +771,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
         it "should record state transition and timestamp" do
           expect(workflow_plan_year_with_benefit_group.latest_workflow_state_transition.from_state).to eq "draft"
           expect(workflow_plan_year_with_benefit_group.latest_workflow_state_transition.to_state).to eq "publish_pending"
-          expect(workflow_plan_year_with_benefit_group.latest_workflow_state_transition.transition_at.utc).to be_within(1.second).of(TimeKeeper.datetime_of_record)
+          expect(workflow_plan_year_with_benefit_group.latest_workflow_state_transition.transition_at.utc).to be_within(1.second).of(DateTime.now)
         end
 
         context "and the applicant chooses to cancel application submission" do
@@ -1250,7 +1311,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
     end
   end
 
-  context "and a published plan year application is reset to unpublished state", :dbclean => :after_all do
+  context "and a published plan year application is reset to unpublished state", :dbclean => :after_each do
     let(:coverage_effective_date)   { TimeKeeper.date_of_record.end_of_month + 1.day }
     let(:renewal_health_plan)       { FactoryGirl.create(:plan, :with_premium_tables,
                                                           coverage_kind: "health",
@@ -1638,6 +1699,9 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
         ce.benefit_group_assignments.each{|bg| bg.delete }
         FactoryGirl.create(:benefit_group_assignment, census_employee: ce, benefit_group: white_collar_benefit_group)
       end
+      allow(PlanCostDecorator).to receive(:multiple_market_rating_areas?).and_return(false)
+      allow(SicCodeRatingFactorSet).to receive(:where).and_return([double(lookup: 1.0)])
+      allow(EmployerGroupSizeRatingFactorSet).to receive(:where).and_return([double(lookup: 1.0)])
     end
 
     it "should have an estimated monthly max cost" do
@@ -1896,11 +1960,11 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
 
   context '.adjust_open_enrollment_date' do
     let(:employer_profile)          { FactoryGirl.create(:employer_profile) }
-    let(:calender_year) { TimeKeeper.date_of_record.year }
-    let(:plan_year_start_on) { Date.new(calender_year, 4, 1) }
-    let(:plan_year_end_on) { Date.new(calender_year + 1, 3, 31) }
-    let(:open_enrollment_start_on) { Date.new(calender_year, 2, 3) }
-    let(:open_enrollment_end_on) { Date.new(calender_year, 3, 13) }
+    let(:calendar_year) { TimeKeeper.date_of_record.year }
+    let(:plan_year_start_on) { Date.new(calendar_year, 4, 1) }
+    let(:plan_year_end_on) { Date.new(calendar_year + 1, 3, 31) }
+    let(:open_enrollment_start_on) { Date.new(calendar_year, 2, 3) }
+    let(:open_enrollment_end_on) { Date.new(calendar_year, 3, 13) }
     let!(:plan_year)                               { py = FactoryGirl.create(:plan_year,
                                                       start_on: plan_year_start_on,
                                                       end_on: plan_year_end_on,
@@ -1937,11 +2001,11 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
 
     context 'when .is_renewal?' do
       let(:employer_profile) { FactoryGirl.create(:employer_profile) }
-      let(:calender_year) { TimeKeeper.date_of_record.year }
-      let(:plan_year_start_on) { Date.new(calender_year, 4, 1) }
-      let(:plan_year_end_on) { Date.new(calender_year + 1, 3, 31) }
-      let(:open_enrollment_start_on) { Date.new(calender_year, 2, 1) }
-      let(:open_enrollment_end_on) { Date.new(calender_year, 3, 13) }
+      let(:calendar_year) { TimeKeeper.date_of_record.year }
+      let(:plan_year_start_on) { Date.new(calendar_year, 4, 1) }
+      let(:plan_year_end_on) { Date.new(calendar_year + 1, 3, 31) }
+      let(:open_enrollment_start_on) { Date.new(calendar_year, 2, 1) }
+      let(:open_enrollment_end_on) { Date.new(calendar_year, 3, 13) }
       let!(:plan_year) { FactoryGirl.create(:plan_year,
                                               start_on: plan_year_start_on,
                                               end_on: plan_year_end_on,
@@ -1993,7 +2057,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
       context "enrolling" do
         before do
           refresh_mailbox
-          plan_year.open_enrollment_end_on = Date.new(calender_year, 3, 10)
+          plan_year.open_enrollment_end_on = Date.new(calendar_year, 3, 10)
           plan_year.aasm_state = "draft"
           plan_year.publish!
           TimeKeeper.set_date_of_record_unprotected!(open_enrollment_start_on + 5.days)
@@ -2028,6 +2092,10 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
     let(:valid_open_enrollment_start_on)  { valid_plan_year_start_on.prev_month }
     let(:valid_open_enrollment_end_on)    { valid_open_enrollment_start_on + 9.days }
 
+    before :each do
+      allow(EmployerProfile).to receive(:enforce_employer_attestation?).and_return(false)
+    end
+
     let(:valid_params) do
       {
         employer_profile: employer_profile,
@@ -2041,6 +2109,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
     let(:workflow_plan_year_with_benefit_group) do
       py = PlanYear.new(**valid_params)
       py.aasm_state = "active"
+      py.is_conversion = true
       py.employer_profile = employer_profile
       py.benefit_groups = [benefit_group]
       py.save
@@ -2049,12 +2118,14 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
 
     context "this should trigger a state transition" do
       it "should change its aasm state" do
+        workflow_plan_year_with_benefit_group.update(is_conversion: true)
         expect(workflow_plan_year_with_benefit_group.aasm_state).to eq "active"
         workflow_plan_year_with_benefit_group.conversion_expire!
         expect(workflow_plan_year_with_benefit_group.aasm_state).to eq "conversion_expired"
       end
 
       it "should not change its aasm state" do
+        workflow_plan_year_with_benefit_group.update(is_conversion: true)
         workflow_plan_year_with_benefit_group.aasm_state = "enrolled"
         workflow_plan_year_with_benefit_group.save
         expect { workflow_plan_year_with_benefit_group.conversion_expire!}.to raise_error(AASM::InvalidTransition)
@@ -2063,6 +2134,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
 
       it "should not trigger a state transitioin" do
         workflow_plan_year_with_benefit_group.employer_profile.registered_on = TimeKeeper.date_of_record + 45.days
+        workflow_plan_year_with_benefit_group.is_conversion = false
         workflow_plan_year_with_benefit_group.save
         expect(workflow_plan_year_with_benefit_group.aasm_state).to eq "active"
         expect { workflow_plan_year_with_benefit_group.conversion_expire!}.to raise_error(AASM::InvalidTransition)
@@ -2087,16 +2159,6 @@ describe PlanYear, "which has the concept of export eligibility" do
       end
     end
   end
-
-  EXPORTABLE_STATES.each do |astate|
-    describe "in #{astate} state" do
-      let(:export_state) { astate}
-      it "is not eligible for export" do
-        expect(subject.eligible_for_export?).to eq true
-      end
-    end
-  end
-
 
   describe PlanYear, "state machine transitions -- unhappy path" do
 
@@ -2127,8 +2189,9 @@ describe PlanYear, "which has the concept of export eligibility" do
 
       let!(:owner) { FactoryGirl.create(:census_employee, :owner, hired_on: (TimeKeeper.date_of_record - 2.years), employer_profile_id: employer_profile.id) }
       let!(:non_owner) { FactoryGirl.create_list(:census_employee, 2, hired_on: (TimeKeeper.date_of_record - 2.years), employer_profile_id: employer_profile.id) }
-        
+
       before do
+        allow(EmployerProfile).to receive(:enforce_employer_attestation?).and_return(false)
         TimeKeeper.set_date_of_record_unprotected!(valid_open_enrollment_start_on)
         plan_year.publish!
       end
@@ -2150,7 +2213,7 @@ describe PlanYear, "which has the concept of export eligibility" do
         end
 
         it "should transition application to ineligible state" do
-          expect(plan_year.application_ineligible?).to be_truthy 
+          expect(plan_year.application_ineligible?).to be_truthy
         end
 
         it "should transition employer to applicant state" do
@@ -2190,10 +2253,31 @@ describe PlanYear, "filter_active_enrollments_by_date" do
     result = plan_year.filter_active_enrollments_by_date(plan_year.start_on)
     expect(result.map(&:plan_id)).to eq [dental_enrollment.plan.id, health_enrollment.plan.id]
   end
+
+  context "termination date of enrollment is prior to the billing date" do
+
+    before do
+      health_enrollment.update_attributes(terminated_on: plan_year.end_on - 3.months)
+    end
+
+    it 'should not return health enrollment' do
+      result = plan_year.filter_active_enrollments_by_date(plan_year.end_on - 1.months)
+      expect(result.map(&:plan_id).include?(health_enrollment.plan.id)).to eq false
+    end
+
+    it 'should return only dental_enrollment' do
+      result = plan_year.filter_active_enrollments_by_date(plan_year.end_on - 1.months)
+      expect(result.map(&:plan_id)).to eq [dental_enrollment.plan.id]
+    end
+  end
 end
 
 #11021
 describe PlanYear, "plan year schedule changes" do
+
+  before :each do
+    allow(EmployerProfile).to receive(:enforce_employer_attestation?).and_return(false)
+  end
 
   context "initial employer plan year" do
 
@@ -2280,7 +2364,6 @@ describe PlanYear, "plan year schedule changes" do
     context 'on force publish date' do
 
       before do
-        allow_any_instance_of(PlanYear).to receive(:trigger_renewal_notice).and_return(true)
         TimeKeeper.set_date_of_record_unprotected!(Date.new(2016, 10, Settings.aca.shop_market.renewal_application.force_publish_day_of_month))
       end
 
@@ -2293,5 +2376,50 @@ describe PlanYear, "plan year schedule changes" do
         expect(renewing_plan_year.valid?).to be_truthy
       end
     end
+  end
+end
+
+
+describe PlanYear, '.update_employee_benefit_packages', type: :model, dbclean: :after_all do
+  let(:start_on) { TimeKeeper.date_of_record.beginning_of_month }
+  let!(:employer_profile) { create(:employer_with_planyear, plan_year_state: 'active', start_on: start_on)}
+  let(:benefit_group) { employer_profile.published_plan_year.benefit_groups.first}
+  let!(:census_employee){
+    employee = FactoryGirl.create :census_employee, employer_profile: employer_profile
+    employee.add_benefit_group_assignment benefit_group, benefit_group.start_on
+    employee
+  }
+
+  context 'when plan year begin date changed' do
+    let(:modified_start_on) { TimeKeeper.date_of_record.next_month.beginning_of_month }
+    let(:modified_end_on) { TimeKeeper.date_of_record.next_month.beginning_of_month }
+
+    it "should update benefit group assignment dates" do
+      expect(census_employee.active_benefit_group_assignment.start_on).to eq start_on
+
+      plan_year = employer_profile.active_plan_year
+      plan_year.start_on = modified_start_on
+      plan_year.end_on = modified_end_on
+      plan_year.save
+      census_employee.reload
+
+      expect(census_employee.active_benefit_group_assignment.start_on).to eq modified_start_on
+    end
+  end
+end
+
+describe PlanYear, "given a recored rating area value" do
+  Settings.aca.rating_areas.each do |mra|
+    it "is valid for a rating_area of #{mra}" do
+      subject.recorded_rating_area = mra
+      subject.valid?
+      expect(subject.errors.keys).not_to include(:recorded_rating_area)
+    end
+  end
+
+  it "is invalid for a made up rating_area" do
+    subject.recorded_rating_area = "LDJFKLDJKLEFJLKDJSFKLDF"
+    subject.valid?
+    expect(subject.errors.keys).to include(:recorded_rating_area)
   end
 end

@@ -36,6 +36,7 @@ class V2GroupXmlGenerator
     views = Rails::Application::Configuration.new(Rails.root).paths["app/views"]
     views_helper = ActionView::Base.new views
     views_helper.class.send(:include, EventsHelper)
+    views_helper.class.send(:include, Config::AcaHelper)
 
     organizations_hash = {} # key is carrier name, value is the return object of remove_other_carrier_nodes()
 
@@ -45,12 +46,12 @@ class V2GroupXmlGenerator
 # 3 using remove_other_carrier_nodes, remove the carrier plans of carriers other then 'carrier'
 # create a hash with key as carrier and value as array [organization_xml, carrier, plan year end date, plan year start date]
 # 4 if carrier-switch then generate xml for each of the dropped carrier and add to hash.
-    @feins.each do |fein|
+    @feins.uniq.each do |fein|
 
       begin
         employer_profile = Organization.where(:fein => fein.gsub("-", "")).first.employer_profile
 
-        benefit_groups = employer_profile.plan_years.select(&:eligible_for_export?).select do |py|
+        benefit_groups = employer_profile.plan_years.select{|plan_year| !(PlanYear::INELIGIBLE_FOR_EXPORT_STATES.include? plan_year.aasm_state)}.select do |py|
           py.start_on == Date.parse(@plan_year[:start_date])
         end.flat_map(&:benefit_groups)
 
@@ -65,7 +66,7 @@ class V2GroupXmlGenerator
 
         cv_xml = nil
         carrier_profiles.each do |carrier|
-          cv_xml = views_helper.render file: File.join(Rails.root, "/app/views/events/v2/employers/updated.xml.haml"), :locals => {employer: employer_profile}
+          cv_xml = views_helper.render file: File.join(Rails.root, "/app/views/events/v2/employers/updated.xml.haml"), :locals => {employer: employer_profile, manual_gen: true}
 
           organizations_hash[carrier.legal_name] = [] if organizations_hash[carrier.legal_name].nil?
 

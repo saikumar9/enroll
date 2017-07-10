@@ -18,7 +18,9 @@
           <th><%= l10n("hbx_id")%></th>
           <th><%= l10n("family")%></th>
           <th><%= l10n("registered?")%></th>
-          <th><%= l10n("consumer?")%></th>
+          <% if individual_market_is_enabled? %>
+            <th><%= l10n("consumer?")%></th>
+          <%end%>
           <th><%= l10n("employee?")%></th>
         </tr>
         </thead>
@@ -54,7 +56,9 @@
             { data: 'hbx_id'},
             { data: 'family_count'},
             { data: 'registered'},
+            <% if individual_market_is_enabled? %>
             { data: 'consumer'},
+            <%end%>
             { data: 'employee'}
       ],
 'dom': "<'row'" +

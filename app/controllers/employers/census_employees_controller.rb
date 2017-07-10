@@ -1,6 +1,6 @@
 class Employers::CensusEmployeesController < ApplicationController
   before_action :find_employer
-  before_action :find_census_employee, only: [:edit, :update, :show, :delink, :terminate, :rehire, :benefit_group, :cobra ,:cobra_reinstate]
+  before_action :find_census_employee, only: [:edit, :update, :show, :delink, :terminate, :rehire, :benefit_group, :cobra ,:cobra_reinstate, :confirm_effective_date]
   before_action :updateable?, except: [:edit, :show, :benefit_group]
 
   def new
@@ -116,17 +116,14 @@ class Employers::CensusEmployeesController < ApplicationController
     authorize EmployerProfile, :updateable?
     status = params[:status]
     termination_date = params["termination_date"]
+
     if termination_date.present?
       termination_date = DateTime.strptime(termination_date, '%m/%d/%Y').try(:to_date)
-    else
-      termination_date = ""
+      if termination_date >= (TimeKeeper.date_of_record - 60.days)
+        @fa = @census_employee.terminate_employment(termination_date) && @census_employee.save
+      end
     end
-    last_day_of_work = termination_date
-    if termination_date.present? && termination_date >= (TimeKeeper.date_of_record - 60.days)
-      @fa = @census_employee.terminate_employment(last_day_of_work) && @census_employee.save
 
-    else
-    end
     respond_to do |format|
       format.js {
         if termination_date.present? && @fa
@@ -204,6 +201,11 @@ class Employers::CensusEmployeesController < ApplicationController
     end
   end
 
+  def confirm_effective_date
+    confirmation_type = params[:type]
+    render "#{confirmation_type}_effective_date"
+  end
+
   def cobra_reinstate
     if @census_employee.reinstate_eligibility!
       flash[:notice] = "Successfully update Census Employee."
@@ -252,6 +254,20 @@ class Employers::CensusEmployeesController < ApplicationController
 
   def benefit_group
     @census_employee.benefit_group_assignments.build unless @census_employee.benefit_group_assignments.present?
+  end
+
+  def change_expected_selection
+    if params[:ids]
+      begin
+        census_employees = CensusEmployee.find(params[:ids])
+        census_employees.each do |census_employee|
+          census_employee.update_attributes(:expected_selection=>params[:expected_selection].downcase)
+        end
+        render json: { status: 200, message: 'successfully submitted the selected Employees participation status' }
+      rescue => e
+        render json: { status: 500, message: 'An error occured while submitting employees participation status' }
+      end
+    end
   end
 
   private

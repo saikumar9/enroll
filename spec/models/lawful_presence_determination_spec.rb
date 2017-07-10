@@ -1,6 +1,6 @@
 require 'rails_helper'
-require 'aasm/rspec'
 
+if ExchangeTestingConfigurationHelper.individual_market_is_enabled?
 describe LawfulPresenceDetermination do
   let(:consumer_role) {
     FactoryGirl.create(:consumer_role_object)
@@ -21,7 +21,7 @@ describe LawfulPresenceDetermination do
       consumer_role.coverage_purchased!("args")
     end
     it "should have the ssa response document" do
-      consumer_role.lawful_presence_determination.ssa_responses << EventResponse.new({received_at: TimeKeeper.datetime_of_record, body: payload})
+      consumer_role.lawful_presence_determination.ssa_responses << EventResponse.new({received_at: Time.now, body: payload})
       consumer_role.person.save!
       found_person = Person.find(person_id)
       ssa_response = found_person.consumer_role.lawful_presence_determination.ssa_responses.first
@@ -46,7 +46,7 @@ describe LawfulPresenceDetermination do
       consumer_role.coverage_purchased!("args")
     end
     it "should have the vlp response document" do
-      consumer_role.lawful_presence_determination.vlp_responses << EventResponse.new({received_at: TimeKeeper.datetime_of_record, body: payload})
+      consumer_role.lawful_presence_determination.vlp_responses << EventResponse.new({received_at: Time.now, body: payload})
       consumer_role.person.save!
       found_person = Person.find(person_id)
       vlp_response = found_person.consumer_role.lawful_presence_determination.vlp_responses.first
@@ -118,4 +118,5 @@ describe LawfulPresenceDetermination do
       end
     end
   end
+end
 end

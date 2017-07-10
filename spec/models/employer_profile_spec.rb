@@ -3,6 +3,7 @@ require 'rails_helper'
 describe EmployerProfile, dbclean: :after_each do
 
   let(:entity_kind)     { "partnership" }
+  let!(:rating_area) { FactoryGirl.create(:rating_area)  }
   let(:bad_entity_kind) { "fraternity" }
   let(:entity_kind_error_message) { "#{bad_entity_kind} is not a valid business entity kind" }
 
@@ -11,6 +12,7 @@ describe EmployerProfile, dbclean: :after_each do
                                 address_1: "609 H St",
                                 city: "Washington",
                                 state: Settings.aca.state_abbreviation,
+                                county: "ACounty",
                                 zip: "20002") }
   let(:phone  )  { Phone.new(kind: "main", area_code: "202", number: "555-9999") }
   let(:email  )  { Email.new(kind: "work", address: "info@sailaway.org") }
@@ -33,9 +35,16 @@ describe EmployerProfile, dbclean: :after_each do
   let(:valid_params) do
     {
       organization: organization,
-      entity_kind: entity_kind
+      entity_kind: entity_kind,
+      sic_code: '1111'
     }
   end
+
+  before :each do
+    allow(EmployerProfile).to receive(:enforce_employer_attestation?).and_return(false)
+  end
+
+  let!(:rating_area) { create(:rating_area, county_name: address.county, zip_code: address.zip)}
 
   after :all do
     TimeKeeper.set_date_of_record_unprotected!(Date.today)
@@ -263,6 +272,25 @@ describe EmployerProfile, dbclean: :after_each do
 
    end
 
+   context ".find_earliest_start_on_date_among_published_plans" do
+    let(:active_plan_year)    { FactoryGirl.build(:plan_year, start_on: TimeKeeper.date_of_record.next_month.beginning_of_month - 1.year, end_on: TimeKeeper.date_of_record.end_of_month, aasm_state: 'published') }
+    let(:employer_profile)    { EmployerProfile.new(**valid_params, plan_years: [active_plan_year, renewing_plan_year]) }
+    let(:renewing_plan_year)   {
+      FactoryGirl.build(:plan_year,
+        open_enrollment_start_on: TimeKeeper.date_of_record + 1.day,
+        open_enrollment_end_on: TimeKeeper.date_of_record + 10.days,
+        start_on: TimeKeeper.date_of_record.next_month.end_of_month + 1.day,
+        end_on: TimeKeeper.date_of_record.next_month.end_of_month + 1.year,
+        aasm_state: 'renewing_published')
+    }
+    context 'when any type of plans are present' do
+      let(:employer_profile)     { EmployerProfile.new(**valid_params, plan_years: [renewing_plan_year, active_plan_year]) }
+      it "should return earliest start_on date among plans" do
+        expect(employer_profile.earliest_plan_year_start_on_date).to eq [active_plan_year.start_on, renewing_plan_year.start_on].min
+      end
+    end
+  end
+
   context ".billing_plan_year" do
     let(:active_plan_year)    { FactoryGirl.build(:plan_year, start_on: TimeKeeper.date_of_record.next_month.beginning_of_month - 1.year, end_on: TimeKeeper.date_of_record.end_of_month, aasm_state: 'published') }
     let(:employer_profile)    { EmployerProfile.new(**valid_params, plan_years: [active_plan_year, renewing_plan_year]) }
@@ -365,9 +393,9 @@ end
 describe EmployerProfile, "given multiple existing employer profiles", :dbclean => :after_all do
   before(:all) do
     home_office = FactoryGirl.build(:office_location, :primary)
-    @er0 = EmployerProfile.new(entity_kind: "partnership")
-    @er1 =  EmployerProfile.new(entity_kind: "partnership")
-    @er2 = EmployerProfile.new(entity_kind: "partnership")
+    @er0 = EmployerProfile.new(entity_kind: "partnership", sic_code: '1111')
+    @er1 =  EmployerProfile.new(entity_kind: "partnership", sic_code: '1111')
+    @er2 = EmployerProfile.new(entity_kind: "partnership", sic_code: '1111')
     @er0.create_organization(legal_name: "huey",  fein: "687654321", office_locations: [home_office])
     @er1.create_organization(legal_name: "dewey", fein: "587654321", office_locations: [home_office])
     @er2.create_organization(legal_name: "louie", fein: "487654321", office_locations: [home_office])
@@ -463,9 +491,9 @@ describe EmployerProfile, "Class methods", dbclean: :after_each do
     let(:organization4)  {FactoryGirl.create(:organization, fein: "027636010")}
     let(:organization5)  {FactoryGirl.create(:organization, fein: "076747654")}
 
-    def er3; organization3.create_employer_profile(entity_kind: "partnership", broker_agency_profile: broker_agency_profile); end
-    def er4; organization4.create_employer_profile(entity_kind: "partnership", broker_agency_profile: broker_agency_profile); end
-    def er5; organization5.create_employer_profile(entity_kind: "partnership"); end
+    def er3; organization3.create_employer_profile(entity_kind: "partnership", broker_agency_profile: broker_agency_profile, sic_code: '1111'); end
+    def er4; organization4.create_employer_profile(entity_kind: "partnership", broker_agency_profile: broker_agency_profile, sic_code: '1111'); end
+    def er5; organization5.create_employer_profile(entity_kind: "partnership", sic_code: '1111'); end
     before { broker_agency_profile; er3; er4; er5 }
 
     it 'returns employers represented by the specified broker agency' do
@@ -484,7 +512,7 @@ describe EmployerProfile, "Class methods", dbclean: :after_each do
     end
 
     it 'shows one employer moving to another broker agency' do
-      employer =  organization5.create_employer_profile(entity_kind: "partnership");
+      employer =  organization5.create_employer_profile(entity_kind: "partnership", sic_code: '1111');
       employer.hire_broker_agency(broker_agency_profile7)
       employer.save
       employers_with_broker7 = EmployerProfile.find_by_broker_agency_profile(broker_agency_profile7)
@@ -629,15 +657,15 @@ describe EmployerProfile, "Class methods", dbclean: :after_each do
   describe ".find_all_by_person" do
     let(:black_and_decker) do
       org = FactoryGirl.create(:organization, legal_name: "Black and Decker, Inc.", dba: "Black Decker")
-      er = org.create_employer_profile(entity_kind: "c_corporation")
+      er = org.create_employer_profile(entity_kind: "c_corporation", sic_code: '1111')
     end
     let(:atari) do
       org = FactoryGirl.create(:organization, legal_name: "Atari Corporation", dba: "Atari Games")
-      er = org.create_employer_profile(entity_kind: "s_corporation")
+      er = org.create_employer_profile(entity_kind: "s_corporation", sic_code: '1111')
     end
     let(:google) do
       org = FactoryGirl.create(:organization, legal_name: "Google Inc.", dba: "Google")
-      er = org.create_employer_profile(entity_kind: "partnership")
+      er = org.create_employer_profile(entity_kind: "partnership", sic_code: '1111')
     end
     def bob_params; {first_name: "Uncle", last_name: "Bob", ssn: "999441111", dob: 35.years.ago.to_date}; end
     let!(:black_and_decker_bob) do
@@ -738,16 +766,12 @@ end
 
 describe EmployerProfile, "roster size" do
   let(:employer_profile) {FactoryGirl.create(:employer_profile)}
-  let(:census_employee1) {FactoryGirl.create(:census_employee, employer_profile_id: employer_profile.id, aasm_state: 'eligible')}
-  let(:census_employee2) {FactoryGirl.create(:census_employee, employer_profile_id: employer_profile.id).update(aasm_state: 'employee_role_linked')}
-  let(:census_employee3) {FactoryGirl.create(:census_employee, employer_profile_id: employer_profile.id).update(aasm_state: 'employment_terminated')}
-  let(:census_employee4) {FactoryGirl.create(:census_employee, employer_profile_id: employer_profile.id).update(aasm_state: 'rehired')}
+  let!(:census_employee1) {FactoryGirl.create(:census_employee, employer_profile_id: employer_profile.id, aasm_state: 'eligible')}
+  let!(:census_employee2) {FactoryGirl.create(:census_employee, employer_profile_id: employer_profile.id).update(aasm_state: 'employee_role_linked')}
+  let!(:census_employee3) {FactoryGirl.create(:census_employee, employer_profile_id: employer_profile.id).update(aasm_state: 'employment_terminated')}
+  let!(:census_employee4) {FactoryGirl.create(:census_employee, employer_profile_id: employer_profile.id).update(aasm_state: 'rehired')}
 
   it "should got 2" do
-    census_employee1
-    census_employee2
-    census_employee3
-    census_employee4
     expect(employer_profile.roster_size).to eq 2
   end
 end
@@ -796,39 +820,39 @@ describe EmployerProfile, "Renewal Queries" do
     org
   }
 
-  let(:calender_year) { TimeKeeper.date_of_record.year }
+  let(:calendar_year) { TimeKeeper.date_of_record.year }
 
   before do
     TimeKeeper.set_date_of_record_unprotected!(Date.today+1.month) if TimeKeeper.date_of_record.month == 1
 
     plan_years = organization1.employer_profile.plan_years.to_a
     plan_years.first.update_attributes({ aasm_state: :renewing_published,
-      :start_on => Date.new(calender_year, 5, 1), :end_on => Date.new(calender_year+1, 4, 30),
-      :open_enrollment_start_on => Date.new(calender_year, 4, 1), :open_enrollment_end_on => Date.new(calender_year, 4, 13)
+      :start_on => Date.new(calendar_year, 5, 1), :end_on => Date.new(calendar_year+1, 4, 30),
+      :open_enrollment_start_on => Date.new(calendar_year, 4, 1), :open_enrollment_end_on => Date.new(calendar_year, 4, 13)
       })
     plan_years.last.update_attributes({ aasm_state: :active,
-      :start_on => Date.new(calender_year - 1, 5, 1), :end_on => Date.new(calender_year, 4, 30),
-      :open_enrollment_start_on => Date.new(calender_year-1, 4, 1), :open_enrollment_end_on => Date.new(calender_year-1, 4, 10)
+      :start_on => Date.new(calendar_year - 1, 5, 1), :end_on => Date.new(calendar_year, 4, 30),
+      :open_enrollment_start_on => Date.new(calendar_year-1, 4, 1), :open_enrollment_end_on => Date.new(calendar_year-1, 4, 10)
       })
 
     organization2.employer_profile.plan_years.first.update_attributes({ aasm_state: :published,
-      :start_on => Date.new(calender_year, 5, 1), :end_on => Date.new(calender_year+1, 4, 30),
-      :open_enrollment_start_on => Date.new(calender_year, 4, 1), :open_enrollment_end_on => Date.new(calender_year, 4, 10)
+      :start_on => Date.new(calendar_year, 5, 1), :end_on => Date.new(calendar_year+1, 4, 30),
+      :open_enrollment_start_on => Date.new(calendar_year, 4, 1), :open_enrollment_end_on => Date.new(calendar_year, 4, 10)
       })
 
     plan_years = organization3.employer_profile.plan_years.to_a
     plan_years.first.update_attributes({ aasm_state: :renewing_draft,
-      :start_on => Date.new(calender_year, 5, 1), :end_on => Date.new(calender_year+1, 4, 30),
-      :open_enrollment_start_on => Date.new(calender_year, 4, 1), :open_enrollment_end_on => Date.new(calender_year, 4, 13)
+      :start_on => Date.new(calendar_year, 5, 1), :end_on => Date.new(calendar_year+1, 4, 30),
+      :open_enrollment_start_on => Date.new(calendar_year, 4, 1), :open_enrollment_end_on => Date.new(calendar_year, 4, 13)
       })
     plan_years.last.update_attributes({ aasm_state: :active,
-      :start_on => Date.new(calender_year - 1, 5, 1), :end_on => Date.new(calender_year, 4, 30),
-      :open_enrollment_start_on => Date.new(calender_year-1, 4, 1), :open_enrollment_end_on => Date.new(calender_year-1, 4, 10)
+      :start_on => Date.new(calendar_year - 1, 5, 1), :end_on => Date.new(calendar_year, 4, 30),
+      :open_enrollment_start_on => Date.new(calendar_year-1, 4, 1), :open_enrollment_end_on => Date.new(calendar_year-1, 4, 10)
       })
 
     organization4.employer_profile.plan_years.first.update_attributes({ aasm_state: :draft,
-      :start_on => Date.new(calender_year, 5, 1), :end_on => Date.new(calender_year+1, 4, 30),
-      :open_enrollment_start_on => Date.new(calender_year, 4, 1), :open_enrollment_end_on => Date.new(calender_year, 4, 10)
+      :start_on => Date.new(calendar_year, 5, 1), :end_on => Date.new(calendar_year+1, 4, 30),
+      :open_enrollment_start_on => Date.new(calendar_year, 4, 1), :open_enrollment_end_on => Date.new(calendar_year, 4, 10)
       })
   end
 
@@ -838,36 +862,36 @@ describe EmployerProfile, "Renewal Queries" do
 
   context '.organizations_for_open_enrollment_begin', dbclean: :after_each do
     it 'should return organizations elgible for open enrollment' do
-      expect(EmployerProfile.organizations_for_open_enrollment_begin(Date.new(calender_year, 4, 1)).to_a).to eq [organization1, organization2]
+      expect(EmployerProfile.organizations_for_open_enrollment_begin(Date.new(calendar_year, 4, 1)).to_a).to eq [organization1, organization2]
     end
   end
 
   context '.organizations_for_open_enrollment_end', dbclean: :after_each do
     it 'should return organizations for whom open enrollment ended' do
-      expect(EmployerProfile.organizations_for_open_enrollment_end(Date.new(calender_year, 4, 10)).to_a).to be_blank
-      expect(EmployerProfile.organizations_for_open_enrollment_end(Date.new(calender_year, 4, 11)).to_a).to eq [organization2]
-      expect(EmployerProfile.organizations_for_open_enrollment_end(Date.new(calender_year, 4, 14)).to_a).to eq [organization1, organization2]
+      expect(EmployerProfile.organizations_for_open_enrollment_end(Date.new(calendar_year, 4, 10)).to_a).to be_blank
+      expect(EmployerProfile.organizations_for_open_enrollment_end(Date.new(calendar_year, 4, 11)).to_a).to eq [organization2]
+      expect(EmployerProfile.organizations_for_open_enrollment_end(Date.new(calendar_year, 4, 14)).to_a).to eq [organization1, organization2]
     end
   end
 
   context '.organizations_for_plan_year_begin', dbclean: :after_each do
     it 'should return organizations eligible to begin plan year' do
-      expect(EmployerProfile.organizations_for_plan_year_begin(Date.new(calender_year, 4, 30)).to_a).to be_blank
-      expect(EmployerProfile.organizations_for_plan_year_begin(Date.new(calender_year, 5, 1)).to_a).to eq [organization1, organization2]
+      expect(EmployerProfile.organizations_for_plan_year_begin(Date.new(calendar_year, 4, 30)).to_a).to be_blank
+      expect(EmployerProfile.organizations_for_plan_year_begin(Date.new(calendar_year, 5, 1)).to_a).to eq [organization1, organization2]
     end
   end
 
   context '.organizations_for_plan_year_end', dbclean: :after_each do
     it 'should return organizations for whom plan year ended' do
-      expect(EmployerProfile.organizations_for_plan_year_end(Date.new(calender_year+1, 4, 30)).to_a).to eq [organization1, organization3]
-      expect(EmployerProfile.organizations_for_plan_year_end(Date.new(calender_year+1, 5, 1)).to_a).to eq [organization1, organization2, organization3]
+      expect(EmployerProfile.organizations_for_plan_year_end(Date.new(calendar_year+1, 4, 30)).to_a).to eq [organization1, organization3]
+      expect(EmployerProfile.organizations_for_plan_year_end(Date.new(calendar_year+1, 5, 1)).to_a).to eq [organization1, organization2, organization3]
     end
   end
 
   context '.organizations_eligible_for_renewal', dbclean: :after_each do
     it 'should return organizations for renewal' do
       months_prior = Settings.aca.shop_market.renewal_application.earliest_start_prior_to_effective_on.months * -1
-      expect(EmployerProfile.organizations_eligible_for_renewal(Date.new(calender_year+1, 2, 1)).to_a).to eq [organization2]
+      expect(EmployerProfile.organizations_eligible_for_renewal(Date.new(calendar_year+1, 2, 1)).to_a).to eq [organization2]
     end
   end
 end
@@ -876,6 +900,10 @@ describe EmployerProfile, "For General Agency", dbclean: :after_each do
   let(:employer_profile) { FactoryGirl.create(:employer_profile) }
   let(:general_agency_profile) { FactoryGirl.create(:general_agency_profile) }
   let(:broker_role) { FactoryGirl.create(:broker_role) }
+
+  before :each do
+    allow(EmployerProfile).to receive(:enforce_employer_attestation?).and_return(false)
+  end
 
   context "active_general_agency_account" do
     it "should get active general_agency_account" do
@@ -985,6 +1013,65 @@ describe EmployerProfile, "For General Agency", dbclean: :after_each do
         FactoryGirl.create(:general_agency_account, employer_profile: employer_profile, aasm_state: 'active')
         employer_profile.fire_general_agency!
         employer_profile.save
+      end
+    end
+  end
+
+  describe "is_attestation_eligible? check before publish plan" do
+    context "is_attestation_eligible" do
+      let(:employer_profile) { FactoryGirl.create(:employer_profile_no_attestation) }
+      it "should return false" do
+        allow(employer_profile).to receive(:enforce_employer_attestation?).and_return(true)
+
+        expect(employer_profile.is_attestation_eligible?).to eq(false)
+      end
+
+    end
+  end
+
+end
+
+describe EmployerProfile, ".is_converting?", dbclean: :after_each do
+
+  let(:start_date) { TimeKeeper.date_of_record.next_month.beginning_of_month }
+  let(:source) { 'conversion' }
+  let(:plan_year_status) { 'renewing_enrolling' }
+
+  let(:renewing_employer) {
+    FactoryGirl.create(:employer_with_renewing_planyear, start_on: start_date, renewal_plan_year_state: plan_year_status, profile_source: source, registered_on: start_date - 3.months, is_conversion: true)
+  }
+
+  describe "conversion employer" do
+
+    context "when under converting period" do
+      it "should return true" do
+        expect(renewing_employer.is_converting?).to be_truthy
+      end
+    end
+
+    context "when under next renewal cycle" do
+      let(:start_date) { TimeKeeper.date_of_record.next_month.beginning_of_month.prev_year }
+      let(:plan_year_status) { 'active' }
+
+      before do
+        plan_year_renewal_factory = Factories::PlanYearRenewalFactory.new
+        plan_year_renewal_factory.employer_profile = renewing_employer
+        plan_year_renewal_factory.is_congress = false
+        plan_year_renewal_factory.renew
+      end
+
+      it "should return false" do
+        expect(renewing_employer.is_converting?).to be_falsey
+      end
+    end
+  end
+
+  describe "non conversion employer" do
+    let(:source) { 'self_serve' }
+
+    context "under renewal cycle" do
+      it "should always return false" do
+        expect(renewing_employer.is_converting?).to be_falsey
       end
     end
   end

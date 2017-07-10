@@ -4,7 +4,6 @@ module Effective
     class EmployerDatatable < Effective::MongoidDatatable
       datatable do
 
-
         bulk_actions_column do
            bulk_action 'Generate Invoice', generate_invoice_exchanges_hbx_profiles_path, data: { confirm: 'Generate Invoices?', no_turbolink: true }
            bulk_action 'Mark Binder Paid', binder_paid_exchanges_hbx_profiles_path, data: {  confirm: 'Mark Binder Paid?', no_turbolink: true }
@@ -17,6 +16,7 @@ module Effective
           }, :sortable => false, :filter => false
         #table_column :hbx_id, :label => 'HBX ID', :proc => Proc.new { |row| truncate(row.id.to_s, length: 8, omission: '' ) }, :sortable => false, :filter => false
         table_column :fein, :label => 'FEIN', :proc => Proc.new { |row| row.fein }, :sortable => false, :filter => false
+        table_column :hbx_id, :label => 'HBX ID', :proc => Proc.new { |row| row.hbx_id }, :sortable => false, :filter => false
         table_column :eligibility, :proc => Proc.new { |row| eligibility_criteria(@employer_profile) }, :filter => false
         table_column :broker, :proc => Proc.new { |row|
             @employer_profile.try(:active_broker_agency_legal_name).try(:titleize) #if row.employer_profile.broker_agency_profile.present?
@@ -31,23 +31,21 @@ module Effective
           @latest_plan_year.try(:aasm_state).try(:titleize)}, :filter => false
         table_column :effective_date, :proc => Proc.new { |row|
           @latest_plan_year.try(:start_on)
-          }, :filter => false
+          }, :filter => false, :sortable => true
         table_column :invoiced?, :proc => Proc.new { |row| boolean_to_glyph(row.current_month_invoice.present?)}, :filter => false
-        table_column :participation, :proc => Proc.new { |row| @latest_plan_year.try(:employee_participation_percent_based_on_summary)}, :filter => false
+        table_column :participation, :proc => Proc.new { |row| @latest_plan_year.try(:employee_participation_percent)}, :filter => false
         table_column :enrolled_waived, :label => 'Enrolled/Waived', :proc => Proc.new { |row|
-
-          enrolled = @latest_plan_year.try(:enrolled_summary)
-          waived = @latest_plan_year.try(:waived_summary)
-          enrolled.to_s + "/" + waived.to_s
+          [@latest_plan_year.try(:enrolled_summary), @latest_plan_year.try(:waived_summary)].compact.join("/")
           }, :filter => false, :sortable => false
         table_column :xml_submitted, :label => 'XML Submitted', :proc => Proc.new {|row| format_time_display(@employer_profile.xml_transmitted_timestamp)}, :filter => false, :sortable => false
         table_column :actions, :width => '50px', :proc => Proc.new { |row|
           dropdown = [
            # Link Structure: ['Link Name', link_path(:params), 'link_type'], link_type can be 'ajax', 'static', or 'disabled'
            ['Transmit XML', transmit_group_xml_exchanges_hbx_profile_path(row.employer_profile), @employer_profile.is_transmit_xml_button_disabled? ? 'disabled' : 'static'],
-           ['Generate Invoice', generate_invoice_exchanges_hbx_profiles_path(ids: [row]), generate_invoice_link_type(row)]
+           ['Generate Invoice', generate_invoice_exchanges_hbx_profiles_path(ids: [row]), generate_invoice_link_type(row)],
+           ['Attestation', edit_employers_employer_attestation_path(id: row.employer_profile.id, employer_actions_id: "employer_actions_#{@employer_profile.id}"), 'ajax'],
           ]
-          render partial: 'datatables/shared/dropdown', locals: {dropdowns: dropdown, row_actions_id: "family_actions_#{row.id.to_s}"}, formats: :html
+          render partial: 'datatables/shared/dropdown', locals: {dropdowns: dropdown, row_actions_id: "employer_actions_#{@employer_profile.id}"}, formats: :html
         }, :filter => false, :sortable => false
 
       end
@@ -60,12 +58,12 @@ module Effective
         return @employer_collection if defined? @employer_collection
         employers = Organization.all_employer_profiles
         if attributes[:employers].present? && !['all'].include?(attributes[:employers])
-          employers = employers.send(attributes[:employers]) if ['employer_profiles_applicants','employer_profiles_enrolling','employer_profiles_enrolled'].include?(attributes[:employers])
+          employers = employers.send(attributes[:employers]) if ['employer_profiles_applicants','employer_profiles_enrolling','employer_profiles_enrolled', 'employer_attestations'].include?(attributes[:employers])
           employers = employers.send(attributes[:enrolling]) if attributes[:enrolling].present?
           employers = employers.send(attributes[:enrolling_initial]) if attributes[:enrolling_initial].present?
           employers = employers.send(attributes[:enrolling_renewing]) if attributes[:enrolling_renewing].present?
-
           employers = employers.send(attributes[:enrolled]) if attributes[:enrolled].present?
+          employers = employers.send(attributes[:attestations]) if attributes[:attestations].present?
 
           if attributes[:upcoming_dates].present?
               if date = Date.strptime(attributes[:upcoming_dates], "%m/%d/%Y")
@@ -85,12 +83,7 @@ module Effective
       end
 
       def global_search_method
-        val = params[:search][:value]
-        if val.match(/\d{9}/)
-          :datatable_search_fein
-        else
-          :datatable_search
-        end
+        :datatable_search
       end
 
       def search_column(collection, table_column, search_term, sql_column)
@@ -112,7 +105,6 @@ module Effective
       end
 
       def nested_filter_definition
-
         @next_30_day = TimeKeeper.date_of_record.next_month.beginning_of_month
         @next_60_day = @next_30_day.next_month
         @next_90_day = @next_60_day.next_month
@@ -150,12 +142,21 @@ module Effective
             {scope: 'employer_profiles_renewing', label: 'Renewing / Converting', subfilter: :enrolling_renewing},
             {scope: 'employer_profiles_enrolling', label: 'Upcoming Dates', subfilter: :upcoming_dates},
           ],
+         attestations:
+          [
+            {scope: 'employer_attestations', label: 'All'},
+            {scope: 'employer_attestations_submitted', label: 'Submited'},
+            {scope: 'employer_attestations_pending', label: 'Pending'},
+            {scope: 'employer_attestations_approved', label: 'Approved'},
+            # {scope: 'employer_attestations_denied', label: 'Denied'},
+          ],  
         employers:
          [
            {scope:'all', label: 'All'},
            {scope:'employer_profiles_applicants', label: 'Applicants'},
            {scope:'employer_profiles_enrolling', label: 'Enrolling', subfilter: :enrolling},
            {scope:'employer_profiles_enrolled', label: 'Enrolled', subfilter: :enrolled},
+           {scope:'employer_attestations', label: 'Employer Attestations', subfilter: :attestations},
          ],
         top_scope: :employers
         }

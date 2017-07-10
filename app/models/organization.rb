@@ -168,9 +168,16 @@ class Organization
         }
       })
   }
-  scope :datatable_search, ->(query) { where(legal_name: Regexp.new(Regexp.escape(query), true)) }
-  scope :datatable_search_fein, ->(query) { where(fein: Regexp.new(Regexp.escape(query), true)) }
-  scope :datatable_search_employer_profile_source, ->(query) { where("employer_profile.profile_source" => query) }
+
+  scope :employer_attestations, -> { where(:"employer_profile.employer_attestation.aasm_state".in => ['submitted', 'pending', 'approved', 'denied']) }
+  scope :employer_attestations_submitted, -> { where(:"employer_profile.employer_attestation.aasm_state" => 'submitted') }
+  scope :employer_attestations_pending, -> { where(:"employer_profile.employer_attestation.aasm_state" => 'pending') }
+  scope :employer_attestations_approved, -> { where(:"employer_profile.employer_attestation.aasm_state" => 'approved') }
+  scope :employer_attestations_denied, -> { where(:"employer_profile.employer_attestation.aasm_state" => 'denied') }
+
+  scope :employer_profiles_with_attestation_document, -> { exists(:"employer_profile.employer_attestation.employer_attestation_documents" => true) }
+
+  scope :datatable_search, ->(query) { self.where({"$or" => ([{"legal_name" => Regexp.compile(Regexp.escape(query), true)}, {"fein" => Regexp.compile(Regexp.escape(query), true)}, {"hbx_id" => Regexp.compile(Regexp.escape(query), true)}])}) }
 
   def self.generate_fein
     loop do
@@ -223,9 +230,21 @@ class Organization
     all_employers_by_plan_year_start_on_and_valid_plan_year_statuses(date)
   end
 
-  def self.valid_carrier_names
-    Rails.cache.fetch("carrier-names-at-#{TimeKeeper.date_of_record.year}", expires_in: 2.hour) do
+  def self.valid_carrier_names(filters = { sole_source_only: false, primary_office_location: nil })
+    cache_string = "carrier-names-at-#{TimeKeeper.date_of_record.year}"
+    if (filters[:primary_office_location].present?)
+      office_location = filters[:primary_office_location]
+      cache_string = "#{office_location.address.zip}-#{office_location.address.county}-carrier-names-at-#{TimeKeeper.date_of_record.year}"
+    end
+
+    Rails.cache.fetch(cache_string, expires_in: 2.hour) do
       Organization.exists(carrier_profile: true).inject({}) do |carrier_names, org|
+        unless (filters[:primary_office_location].nil?)
+          next carrier_names unless CarrierServiceArea.valid_for?(office_location: office_location, carrier_profile: org.carrier_profile)
+        end
+        if (filters[:sole_source_only]) ## Only sole source carriers requested
+          next carrier_names unless org.carrier_profile.offers_sole_source?  # skip carrier unless it is a sole source provider
+        end
         carrier_names[org.carrier_profile.id.to_s] = org.carrier_profile.legal_name if Plan.valid_shop_health_plans("carrier", org.carrier_profile.id).present?
         carrier_names
       end
@@ -255,8 +274,8 @@ class Organization
     Organization.valid_dental_carrier_names.invert.to_a
   end
 
-  def self.valid_carrier_names_for_options
-    Organization.valid_carrier_names.invert.to_a
+  def self.valid_carrier_names_for_options(**args)
+    Organization.valid_carrier_names(args).invert.to_a
   end
 
   def self.upload_invoice(file_path,file_name)
@@ -282,12 +301,13 @@ class Organization
 
   def self.upload_invoice_to_print_vendor(file_path,file_name)
     org = by_invoice_filename(file_path) rescue nil
-    return if !org.employer_profile.is_conversion?
-    bucket_name= Settings.paper_notice
-    begin
-      doc_uri = Aws::S3Storage.save(file_path,bucket_name,file_name)
-    rescue Exception => e
-      puts "Unable to upload invoices to paper notices bucket"
+    if org.employer_profile.is_converting?
+      bucket_name= Settings.paper_notice
+      begin
+        doc_uri = Aws::S3Storage.save(file_path,bucket_name,file_name)
+      rescue Exception => e
+        puts "Unable to upload invoices to paper notices bucket"
+      end
     end
   end
 
@@ -430,8 +450,5 @@ class Organization
       brokers.select{ |broker| agency_ids.include?(broker.broker_role.broker_agency_profile_id) }
     end
 
-    def broker_agency_profile_by_fein(fein)
-      where(fein: fein).map(&:broker_agency_profile).compact
-    end
   end
 end

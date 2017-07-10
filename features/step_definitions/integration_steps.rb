@@ -22,6 +22,7 @@ def people
       legal_name: "Acme Inc.",
       dba: "Acme Inc.",
       fein: "764141112",
+      sic_code: "0111",
       mlegal_name: "Cogswell Cogs, Inc",
       mdba: "Cogswell Cogs, Inc",
       mfein: "211141467"
@@ -81,6 +82,7 @@ def people
       legal_name: "Acmega LLC",
       dba: "Acmega LLC",
       fein: "890112233",
+      sic_code: "0111",
       email: 'johb.wood@example.com',
       password: 'aA1!aA1!aA1!'
     },
@@ -118,6 +120,7 @@ def people
       legal_name: "Legal LLC",
       dba: "Legal LLC",
       fein: "890000223",
+      sic_code: "0111",
       email: 'tim.wood@example.com',
       password: 'aA1!aA1!aA1!'
     },
@@ -184,7 +187,8 @@ def default_office_location
   address2: "Suite 200",
   city: "AnyCity",
   state: Settings.aca.state_abbreviation,
-  zip: "20001",
+  zip: "01001",
+  county: 'Hampden',
   phone_area_code: "202",
   phone_number: "1110000",
   phone_extension: "1111"
@@ -207,7 +211,7 @@ end
 Given(/^Hbx Admin exists$/) do
   p_staff=Permission.create(name: 'hbx_staff', modify_family: true, modify_employer: true, revert_application: true, list_enrollments: true,
       send_broker_agency_message: true, approve_broker: true, approve_ga: true,
-      modify_admin_tabs: true, view_admin_tabs: true, can_update_ssn: true)
+      modify_admin_tabs: true, view_admin_tabs: true, can_update_ssn: true, can_lock_unlock: true)
   person = people['Hbx Admin']
   hbx_profile = FactoryGirl.create :hbx_profile
   user = FactoryGirl.create :user, :with_family, :hbx_staff, email: person[:email], password: person[:password], password_confirmation: person[:password]
@@ -215,8 +219,8 @@ Given(/^Hbx Admin exists$/) do
   #Hackity Hack need both years reference plans b/c of Plan.valid_shop_dental_plans and Plan.by_active_year(params[:start_on]).shop_market.health_coverage.by_carrier_profile(@carrier_profile).and(hios_id: /-01/)
   year = (Date.today + 2.months).year
   year = (Date.today + 2.months).year
-  plan = FactoryGirl.create :plan, :with_premium_tables, active_year: year, market: 'shop', coverage_kind: 'health', deductible: 4000
-  plan2 = FactoryGirl.create :plan, :with_premium_tables, active_year: (year - 1), market: 'shop', coverage_kind: 'health', deductible: 4000, carrier_profile_id: plan.carrier_profile_id
+  plan = FactoryGirl.create :plan, :with_premium_tables, :with_rating_factors, active_year: year, market: 'shop', coverage_kind: 'health', deductible: 4000
+  plan2 = FactoryGirl.create :plan, :with_premium_tables, :with_rating_factors, active_year: (year - 1), market: 'shop', coverage_kind: 'health', deductible: 4000, carrier_profile_id: plan.carrier_profile_id
 end
 
 Given(/^a Hbx admin with read and write permissions and broker agencies$/) do
@@ -260,6 +264,7 @@ end
 
 Given(/^Employer for (.*) exists with a published health plan year$/) do |named_person|
   person = people[named_person]
+  FactoryGirl.create(:rating_area, zip_code: "01002", county_name: "Franklin", rating_area: Settings.aca.rating_areas.first)
   organization = FactoryGirl.create :organization, legal_name: person[:legal_name], dba: person[:dba], fein: person[:fein]
   employer_profile = FactoryGirl.create :employer_profile, organization: organization
   owner = FactoryGirl.create :census_employee, :owner, employer_profile: employer_profile
@@ -268,9 +273,19 @@ Given(/^Employer for (.*) exists with a published health plan year$/) do |named_
     last_name: person[:last_name],
     ssn: person[:ssn],
     dob: person[:dob_date]
-
   plan_year = FactoryGirl.create :plan_year, employer_profile: employer_profile, fte_count: 2, aasm_state: :published
   benefit_group = FactoryGirl.create :benefit_group, plan_year: plan_year
+  carrier_profile = benefit_group.reference_plan.carrier_profile
+  sic_factors = SicCodeRatingFactorSet.new(active_year: 2017, default_factor_value: 1.0, carrier_profile: carrier_profile).tap do |factor_set|
+    factor_set.rating_factor_entries.new(factor_key: employer_profile.sic_code, factor_value: 1.0)
+  end
+  sic_factors.save!
+  group_size_factors = EmployerGroupSizeRatingFactorSet.new(active_year: 2017, default_factor_value: 1.0, max_integer_factor_key: 5, carrier_profile: carrier_profile).tap do |factor_set|
+    [0..5].each do |size|
+      factor_set.rating_factor_entries.new(factor_key: size, factor_value: 1.0)
+    end
+  end
+  group_size_factors.save!
   employee.add_benefit_group_assignment benefit_group, benefit_group.start_on
   FactoryGirl.create(:qualifying_life_event_kind, market_kind: "shop")
   Caches::PlanDetails.load_record_cache!
@@ -278,6 +293,7 @@ end
 
 Given(/^Employer for (.*) exists with a published plan year offering health and dental$/) do |named_person|
   person = people[named_person]
+  FactoryGirl.create(:rating_area, zip_code: "01002", county_name: "Franklin", rating_area: Settings.aca.rating_areas.first)
   organization = FactoryGirl.create :organization, legal_name: person[:legal_name], dba: person[:dba], fein: person[:fein]
   employer_profile = FactoryGirl.create :employer_profile, organization: organization
   owner = FactoryGirl.create :census_employee, :owner, employer_profile: employer_profile
@@ -289,12 +305,24 @@ Given(/^Employer for (.*) exists with a published plan year offering health and 
 
   plan_year = FactoryGirl.create :plan_year, employer_profile: employer_profile, fte_count: 2, aasm_state: :published
   benefit_group = FactoryGirl.create :benefit_group, :with_valid_dental, plan_year: plan_year
+  carrier_profile = benefit_group.reference_plan.carrier_profile
+  sic_factors = SicCodeRatingFactorSet.new(active_year: 2017, default_factor_value: 1.0, carrier_profile: carrier_profile).tap do |factor_set|
+    factor_set.rating_factor_entries.new(factor_key: employer_profile.sic_code, factor_value: 1.0)
+  end
+  sic_factors.save!
+  group_size_factors = EmployerGroupSizeRatingFactorSet.new(active_year: 2017, default_factor_value: 1.0, max_integer_factor_key: 5, carrier_profile: carrier_profile).tap do |factor_set|
+    [0..5].each do |size|
+      factor_set.rating_factor_entries.new(factor_key: size, factor_value: 1.0)
+    end
+  end
+  group_size_factors.save!
   employee.add_benefit_group_assignment benefit_group, benefit_group.start_on
   Caches::PlanDetails.load_record_cache!
 end
 
 Given(/(.*) Employer for (.*) exists with active and renewing plan year/) do |kind, named_person|
   person = people[named_person]
+  FactoryGirl.create(:rating_area, zip_code: "01002", county_name: "Franklin", rating_area: Settings.aca.rating_areas.first)
   organization = FactoryGirl.create :organization, legal_name: person[:legal_name], dba: person[:dba], fein: person[:fein]
   employer_profile = FactoryGirl.create :employer_profile, organization: organization, profile_source: (kind.downcase == 'conversion' ? kind.downcase : 'self_serve'), registered_on: TimeKeeper.date_of_record
   owner = FactoryGirl.create :census_employee, :owner, employer_profile: employer_profile
@@ -312,13 +340,31 @@ Given(/(.*) Employer for (.*) exists with active and renewing plan year/) do |ki
   renewal_plan = FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: (start_on + 3.months).year, hios_id: "11111111122302-01", csr_variant_id: "01")
   plan = FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: (start_on + 3.months - 1.year).year, hios_id: "11111111122302-01", csr_variant_id: "01", renewal_plan_id: renewal_plan.id)
 
-  plan_year = FactoryGirl.create :plan_year, employer_profile: employer_profile, start_on: start_on - 1.year, end_on: end_on - 1.year, open_enrollment_start_on: open_enrollment_start_on - 1.year, open_enrollment_end_on: open_enrollment_end_on - 1.year - 3.days, fte_count: 2, aasm_state: :published
+  [renewal_plan, plan].each do |plan|
+    sic_factors = SicCodeRatingFactorSet.new(active_year: 2017, default_factor_value: 1.0, carrier_profile: plan.carrier_profile).tap do |factor_set|
+      factor_set.rating_factor_entries.new(factor_key: employer_profile.sic_code, factor_value: 1.0)
+    end
+    sic_factors.save!
+
+    group_size_factors = EmployerGroupSizeRatingFactorSet.new(active_year: 2017, default_factor_value: 1.0, max_integer_factor_key: 5, carrier_profile: plan.carrier_profile).tap do |factor_set|
+      [0..5].each do |size|
+        factor_set.rating_factor_entries.new(factor_key: size, factor_value: 1.0)
+      end
+    end
+    group_size_factors.save!
+  end
+
+
+  plan_year = FactoryGirl.create :plan_year, employer_profile: employer_profile, start_on: start_on - 1.year, end_on: end_on - 1.year,
+    open_enrollment_start_on: open_enrollment_start_on - 1.year, open_enrollment_end_on: open_enrollment_end_on - 1.year - 3.days,
+    fte_count: 2, aasm_state: :published, is_conversion: (kind.downcase == 'conversion' ? true : false)
+
   benefit_group = FactoryGirl.create :benefit_group, plan_year: plan_year, reference_plan_id: plan.id
   employee.add_benefit_group_assignment benefit_group, benefit_group.start_on
 
-  plan_year = FactoryGirl.create :plan_year, employer_profile: employer_profile, start_on: start_on, end_on: end_on, open_enrollment_start_on: open_enrollment_start_on, open_enrollment_end_on: open_enrollment_end_on, fte_count: 2, aasm_state: :renewing_draft
-  benefit_group = FactoryGirl.create :benefit_group, plan_year: plan_year, reference_plan_id: renewal_plan.id
-  employee.add_renew_benefit_group_assignment benefit_group
+  renewal_plan_year = FactoryGirl.create :plan_year, employer_profile: employer_profile, start_on: start_on, end_on: end_on, open_enrollment_start_on: open_enrollment_start_on, open_enrollment_end_on: open_enrollment_end_on, fte_count: 2, aasm_state: :renewing_draft
+  renewal_benefit_group = FactoryGirl.create :benefit_group, plan_year: renewal_plan_year, reference_plan_id: renewal_plan.id
+  employee.add_renew_benefit_group_assignment renewal_benefit_group
 
   employee_role = FactoryGirl.create(:employee_role, employer_profile: organization.employer_profile)
   employee.update_attributes(employee_role_id: employee_role.id)
@@ -330,6 +376,7 @@ end
 
 Given(/(.*) Employer for (.*) exists with active and expired plan year/) do |kind, named_person|
   person = people[named_person]
+  FactoryGirl.create(:rating_area, zip_code: "01002", county_name: "Franklin", rating_area: Settings.aca.rating_areas.first)
   organization = FactoryGirl.create :organization, :with_expired_and_active_plan_years, legal_name: person[:legal_name], dba: person[:dba], fein: person[:fein]
   organization.employer_profile.update_attributes(profile_source: (kind.downcase == 'conversion' ? kind.downcase : 'self_serve'), registered_on: TimeKeeper.date_of_record)
   owner = FactoryGirl.create :census_employee, :owner, employer_profile: organization.employer_profile
@@ -351,6 +398,7 @@ end
 
 Given(/(.*) Employer for (.*) exists with active and renewing enrolling plan year/) do |kind, named_person|
   person = people[named_person]
+  FactoryGirl.create(:rating_area, zip_code: "01002", county_name: "Franklin", rating_area: Settings.aca.rating_areas.first)
   organization = FactoryGirl.create :organization, :with_active_and_renewal_plan_years, legal_name: person[:legal_name], dba: person[:dba], fein: person[:fein]
   organization.employer_profile.update_attributes(profile_source: (kind.downcase == 'conversion' ? kind.downcase : 'self_serve'), registered_on: TimeKeeper.date_of_record)
   owner = FactoryGirl.create :census_employee, :owner, employer_profile: organization.employer_profile
@@ -370,8 +418,9 @@ Given(/(.*) Employer for (.*) exists with active and renewing enrolling plan yea
   Caches::PlanDetails.load_record_cache!
 end
 
-When(/^.+ enters? office location for (.+)$/) do |location|
+When(/(^.+) enters? office location for (.+)$/) do |role, location|
   location = eval(location) if location.class == String
+  RatingArea.where(zip_code: "01001").first || FactoryGirl.create(:rating_area, zip_code: "01001", county_name: "Hampden", rating_area: Settings.aca.rating_areas.first)
   fill_in 'organization[office_locations_attributes][0][address_attributes][address_1]', :with => location[:address1]
   fill_in 'organization[office_locations_attributes][0][address_attributes][address_2]', :with => location[:address2]
   fill_in 'organization[office_locations_attributes][0][address_attributes][city]', :with => location[:city]
@@ -380,6 +429,10 @@ When(/^.+ enters? office location for (.+)$/) do |location|
   find(:xpath, "//div[contains(@class, 'selectric-scroll')]/ul/li[contains(text(), '#{location[:state]}')]").click
 
   fill_in 'organization[office_locations_attributes][0][address_attributes][zip]', :with => location[:zip]
+  if role.include? 'Employer'
+    wait_for_ajax
+    select "#{location[:county]}", :from => "organization[office_locations_attributes][0][address_attributes][county]"
+  end
   fill_in 'organization[office_locations_attributes][0][phone_attributes][area_code]', :with => location[:phone_area_code]
   fill_in 'organization[office_locations_attributes][0][phone_attributes][number]', :with => location[:phone_number]
   fill_in 'organization[office_locations_attributes][0][phone_attributes][extension]', :with => location[:phone_extension]
@@ -408,7 +461,7 @@ When(/^(.+) creates? a new employer profile with (.+)$/) do |named_person, prima
   fill_in 'organization[legal_name]', :with => employer[:legal_name]
   fill_in 'organization[dba]', :with => employer[:dba]
   fill_in 'organization[fein]', :with => employer[:fein]
-
+  select_from_chosen '0111', from: 'Select Industry Code'
 
   find('.selectric-interaction-choice-control-organization-entity-kind').click
   find(:xpath, "//div[@class='selectric-scroll']/ul/li[contains(text(), 'C Corporation')]").click
@@ -449,7 +502,7 @@ Then(/^.+ creates (.+) as a roster employee$/) do |named_person|
   fill_in 'census_employee[ssn]', :with => person[:ssn]
 
   find('label[for=census_employee_gender_male]').click
-  fill_in 'jq_datepicker_ignore_census_employee[hired_on]', with: (TimeKeeper.datetime_of_record - 1.week).strftime('%m/%d/%Y')
+  fill_in 'jq_datepicker_ignore_census_employee[hired_on]', with: (Time.now - 1.week).strftime('%m/%d/%Y')
   find(:xpath, '//label[input[@name="census_employee[is_business_owner]"]]').click
 
   fill_in 'census_employee[address_attributes][address_1]', :with => '1026 Potomac'
@@ -477,6 +530,7 @@ When(/^.* visit the Employer portal$/) do
 end
 
 Then(/^(?:.+) should see a successful sign up message$/) do
+  FactoryGirl.create(:sic_code, sic_code: "0111")
   expect(page).to have_content("Welcome to #{Settings.site.short_name}. Your account has been created.")
   screenshot("employer_sign_up_welcome")
 end
@@ -524,7 +578,7 @@ end
 
 When(/^(.*) creates an HBX account$/) do |named_person|
   screenshot("start")
-  click_button 'Create account'
+  find(".btn[value='Create account']").click
 
   person = people[named_person]
 
@@ -581,6 +635,14 @@ When(/^.+ accepts? the matched employer$/) do
   find_by_id('btn-continue').click
 end
 
+Then(/^Employee (.+) should see coverage effective date/) do |named_person|
+  employer_profile = EmployerProfile.find_by_fein(people[named_person][:fein])
+  census_employee = CensusEmployee.where(:first_name => /#{people[named_person][:first_name]}/i, :last_name => /#{people[named_person][:last_name]}/i).first
+
+  find('p', text: employer_profile.legal_name)
+  find('.coverage_effective_date', text: census_employee.earliest_eligible_date.strftime("%m/%d/%Y"))
+end
+
 When(/^.+ completes? the matched employee form for (.*)$/) do |named_person|
 
   # Sometimes bombs due to overlapping modal
@@ -593,9 +655,9 @@ When(/^.+ completes? the matched employee form for (.*)$/) do |named_person|
   screenshot("during modal")
   # find('.interaction-click-control-close').click
   screenshot("after modal")
-
   expect(page).to have_css('input.interaction-field-control-person-phones-attributes-0-full-phone-number')
   wait_for_ajax(3,2)
+
   #find("#person_addresses_attributes_0_address_1", :wait => 10).click
   # find("#person_addresses_attributes_0_address_1").trigger('click')
   # find("#person_addresses_attributes_0_address_2").trigger('click')
@@ -718,7 +780,12 @@ end
 
 And (/(.*) should see the plans from the (.*) plan year$/) do |named_person, plan_year_state|
   employer_profile = CensusEmployee.where(first_name: people[named_person][:first_name]).first.employee_role.employer_profile
-  expect(page).to have_content "#{employer_profile.plan_years.where(aasm_state: plan_year_state ).first.benefit_groups.first.reference_plan.name}"
+  # cannot select a SEP date from expired plan year on 31st.
+  if TimeKeeper.date_of_record.day != 31 || plan_year_state != "expired"
+    expect(page).to have_content "#{employer_profile.plan_years.where(aasm_state: plan_year_state ).first.benefit_groups.first.reference_plan.name}"
+  else
+    expect(page).to have_content "#{employer_profile.plan_years.where(:aasm_state.ne => plan_year_state ).first.benefit_groups.first.reference_plan.name}"
+  end
 end
 
 When(/^.+ selects? a plan on the plan shopping page$/) do
@@ -808,6 +875,13 @@ When(/^.+ should see a published success message without employee$/) do
 end
 
 When(/^.+ clicks? on the add employee button$/) do
+  evaluate_script(<<-JSCODE)
+  $('.interaction-click-control-add-employee')[0].click()
+  JSCODE
+  wait_for_ajax
+end
+
+When(/^.+ clicks? to add the first employee$/) do
   find('.interaction-click-control-add-new-employee', :wait => 10).click
 end
 
@@ -903,6 +977,14 @@ And(/I should not see any plan which premium is 0/) do
   end
 end
 
+And(/^.+ clicks on the link of New Employee Paper Application$/) do
+  find('.new_employee_paper_application').click
+end
+
+Then (/HBX admin start new employee enrollment/) do
+  expect(page).to have_content("Personal Information")
+end
+
 Then(/Devops can verify session logs/) do
   log_entries = `tail -n 15 log/test.log`.split("\n")
   #log with a logged out session
@@ -916,4 +998,16 @@ Then(/Devops can verify session logs/) do
   expect(log_entries.first).to match(/#{logged_on_session.session_id}/)
   #user was a consumer
   expect(user.person.consumer_role).not_to be nil
+end
+
+Given(/^a Hbx admin with read and write permissions and employers$/) do
+  p_staff=FactoryGirl.create :permission, :hbx_update_ssn
+  person = people['Hbx AdminEnrollments']
+  hbx_profile = FactoryGirl.create :hbx_profile
+  user = FactoryGirl.create :user, :with_family, :hbx_staff, email: person[:email], password: person[:password], password_confirmation: person[:password]
+  FactoryGirl.create :hbx_staff_role, person: user.person, hbx_profile: hbx_profile, permission_id: p_staff.id
+  org1 = FactoryGirl.create(:organization, legal_name: 'Acme Agency', hbx_id: "123456")
+  employer_profile = FactoryGirl.create :employer_profile, organization: org1
+  org2 = FactoryGirl.create(:organization, legal_name: 'Chase & Assoc', hbx_id: "67890")
+  employer_profile = FactoryGirl.create :employer_profile, organization: org2
 end
