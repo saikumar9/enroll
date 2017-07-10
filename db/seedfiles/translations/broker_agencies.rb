@@ -168,7 +168,6 @@ BROKER_AGENCIES_TRANSLATIONS = {
 	"en.broker_agencies.quotes.download_it_now" => "Download it now.",
 	"en.save_changes" => "Save Changes",
 	"en.back_to_quotes" => "Back to Quotes",
-	"en.home" => "Home",
 	"en.add_family" => "Add Family",
 	"en.create_quote" => "Create Quote",
 	"en.add_employee" => "Add Employee",
