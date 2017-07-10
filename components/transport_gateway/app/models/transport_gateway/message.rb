@@ -9,6 +9,7 @@ module TransportGateway
     #  @to 
     #  @body
 
+    ## ACApi attributes
     #  @hbx_id
     #  @submitted_timestamp
     #  @authorization

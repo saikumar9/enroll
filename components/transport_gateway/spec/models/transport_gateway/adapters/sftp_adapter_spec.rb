@@ -16,7 +16,7 @@ module TransportGateway
       let(:target_folder) { "/path/to/target/folder" }
       let(:target_path)   { File.join(target_folder, source_file) }
 
-      context ".new" do
+      context "#send_message" do
         let(:userinfo)  { "foo:bar" }
         let(:from)      { URI::FTP.build({ host: source_host, path: source_path }) } 
         let(:to)        { URI::FTP.build({ host: target_host, path: target_path, userinfo: userinfo }) }
