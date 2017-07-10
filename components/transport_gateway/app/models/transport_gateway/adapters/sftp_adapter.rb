@@ -4,24 +4,25 @@ require 'net/sftp'
 module TransportGateway
   class Adapters::SftpAdapter
 
+    attr_accessor :user
+    attr_writer   :password
+
     def send_message(message)
       raise ArgumentError.new "source file not provided" unless message.from.present?
       raise ArgumentError.new "target file not provided" unless message.to.present?
 
-      source    = message.from
-      target    = message.to
+      source = message.from
+      target_uri = message.to
 
-      if target.userinfo.present?
-        user      = target.user
-        password  = target.password
-      else
+      parse_credentials(target_uri)
+      if @user.blank? || @password.blank?
         raise ArgumentError.new("target server username:password not provided")
       end
 
-      Net::SFTP.start(target.host, user, password: password) do |sftp|
-        find_or_create_target_folder_for(sftp, target.path) unless sftp.directory?(File.dirname(target.path))
+      Net::SFTP.start(target_uri.host, @user, password: @password) do |sftp|
+        find_or_create_target_folder_for(sftp, target_uri.path) unless sftp.directory?(File.dirname(target_uri.path))
 
-        sftp.upload!(source.path, target.path) do |event, uploader, *args|
+        sftp.upload!(source.path, target_uri.path) do |event, uploader, *args|
           send(event, uploader, *args) if respond_to?(event, true)
         end
       end
@@ -42,6 +43,11 @@ module TransportGateway
     end
 
  private
+
+  def parse_credentials(uri)
+    @user     ||= uri.user
+    @password ||= uri.password
+  end
 
   def find_or_create_target_folder_for(sftp, path)
     folder = File.dirname(path)
