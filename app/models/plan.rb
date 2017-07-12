@@ -17,6 +17,7 @@ class Plan
   field :coverage_kind, type: String
   field :carrier_profile_id, type: BSON::ObjectId
   field :metal_level, type: String
+  field :service_area_id, type: String
 
   field :hios_id, type: String
   field :hios_base_id, type: String
@@ -173,7 +174,7 @@ class Plan
   scope :by_plan_type,          ->(plan_type) { where(plan_type: plan_type) }
   scope :by_dental_level_for_bqt,       ->(dental_level) { where(:dental_level.in => dental_level) }
   scope :by_plan_type_for_bqt,          ->(plan_type) { where(:plan_type.in => plan_type) }
-
+  scope :for_service_areas,             ->(service_areas) { where(service_area_id: { "$in" => service_areas }) }
 
   # Marketplace
   scope :shop_market,           ->{ where(market: "shop") }
@@ -290,6 +291,22 @@ class Plan
   # Carriers: use class method (which may be chained)
   def self.find_by_carrier_profile(carrier_profile)
     where(carrier_profile_id: carrier_profile._id)
+  end
+
+  def self.for_service_areas_and_carriers(service_area_carrier_pairs, active_year, metal_level = nil, coverage_kind = 'health')
+    plan_criteria_set = service_area_carrier_pairs.map do |sap|
+    	criteria = {
+    		:carrier_profile_id => sap.first,
+    		:service_area_id => sap.last,
+    		:active_year => active_year,
+        :coverage_kind => coverage_kind
+    	}
+      if metal_level.present?
+        criteria.merge(metal_level: metal_level)
+      end
+      criteria
+    end
+    self.where("$or" => plan_criteria_set)
   end
 
   def metal_level=(new_metal_level)
@@ -442,6 +459,10 @@ class Plan
       Rails.cache.fetch("plans-#{Plan.count}-for-#{key.to_s}-at-#{year_of_plans}-ofkind-health", expires_in: 5.hour) do
         Plan.public_send("valid_shop_by_#{type}_and_year", key.to_s, year_of_plans).where({coverage_kind: "health"}).to_a
       end
+    end
+
+    def valid_shop_health_plans_for_service_area(type="carrier", key=nil, year_of_plans=TimeKeeper.date_of_record.year, carrier_service_area_pairs=[])
+      Plan.for_service_areas_and_carriers(carrier_service_area_pairs, year_of_plans)
     end
 
     def valid_for_carrier(active_year)

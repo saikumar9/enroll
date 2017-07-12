@@ -24,6 +24,7 @@ def people_for_cobra
       legal_name: "BestLife",
       dba: "BestLife",
       fein: "050000000",
+      sic_code: "1111",
       ssn: "197810118",
       email: "jack@dc.gov",
       password: 'aA1!aA1!aA1!'
@@ -122,7 +123,7 @@ end
 Then(/^fill the form with hired date as future date$/) do
   person = people_for_cobra['Jack Employee']
   # Census Employee
-  fill_in 'census_employee[first_name]', with: person[:first_name]
+  fill_in 'census_employee[first_name]', with: person[:first_name], :wait => 10
   fill_in 'census_employee[last_name]', with: person[:last_name]
   find(:xpath, "//p[contains(., 'NONE')]").click
   find(:xpath, "//li[contains(., 'Jr.')]").click
@@ -153,9 +154,12 @@ Then(/^fill the form with hired date as future date$/) do
 end
 
 And(/^.+ should see census employee created success message for (.*)$/) do |named_person|
+  wait_for_ajax
   person = people_for_cobra[named_person]
   expect(page).to have_content('Census Employee is successfully created.')
   screenshot("employer_census_new_family_success_message")
+  find_by_id('Tab:by_cobra').click
+
   expect(page).to have_content(person[:first_name])
   expect(page).to have_content(person[:last_name])
 end
@@ -164,20 +168,22 @@ Then(/employer should see the message Your employee was successfully added to yo
   expect(page).to have_content('Your employee was successfully added to your roster')
   person = people_for_cobra['Jack Employee']
   expect(page).to have_content(person[:first_name])
-  expect(page).to have_content(person[:last_name])  
+  expect(page).to have_content(person[:last_name])
   expect(page).to have_content((TimeKeeper.date_of_record + 1.days).to_s)
 end
 
 And(/^.+ should see the status of cobra_eligible$/) do
-  expect(page).to have_content('Cobra Eligible')
+  expect(page).to have_content('Cobra eligible')
 end
 
 And(/^.+ should see the status of Cobra Linked$/) do
-  expect(page).to have_content('Cobra Linked')
+  find("div[data-key=active]", :wait => 3).click
+  wait_for_ajax
+  expect(page).to have_content('Cobra linked')
 end
 
 And(/^.+ should see the status of Employee Role Linked$/) do
-  expect(page).to have_content('Employee Role Linked')
+  expect(page).to have_content('Employee role linked')
 end
 
 And(/^.+ should see the status of eligible$/) do
@@ -211,7 +217,7 @@ When(/^(.*) login in for (.*)$/) do |named_person, role|
   email_address = person[:email]
   password = person[:password]
 
-  #click_link "Sign In Existing Account"
+  click_link "Sign In Existing Account"
   expect(page).to have_content('Sign In')
 
   fill_in "user[login]", with: email_address
@@ -236,8 +242,10 @@ Then(/Set Date back to two months ago/) do
 end
 
 When(/^.+ terminate one employee$/) do
-  element = all('.census-employees-table tr.top').detect{|ele| ele.all('a', :text => 'Employee Jr.').present?}  
-  element.find('i.fa-trash-o').click
+  element = all('tr').detect { |ele| ele.all('a', :text => 'Employee Jr.').present? }
+  element.find(".dropdown-toggle", :text => "Actions").click
+  wait_for_ajax
+  element.find('a', :text => "Terminate").click
   find('input.date-picker').set((TimeKeeper.date_of_record - 1.days).to_s)
   find('.employees-section').click
   click_link 'Terminate Employee'
@@ -248,21 +256,37 @@ Then(/^.+ should see terminate successful msg$/) do
   expect(page).to have_content('Successfully terminated Census Employee.')
 end
 
+When(/^.+ click terminated employee filter$/) do
+  find('div[data-key=terminated]').click
+  wait_for_ajax(4)
+end
+
 When(/^.+ click all employee filter$/) do
-  find('.filter').click
-  find('input#family_all').trigger('click')
+  find('div[data-key=all]').click
+  wait_for_ajax(4)
 end
 
 Then(/^.+ should see the status of Employment terminated$/) do
-  expect(page).to have_content('Employment Terminated')
+  expect(find("td", :text => "Employment terminated", :wait => 3)).not_to be_nil
 end
 
 When(/^.+ cobra one employee$/) do
-  element = all('.census-employees-table tr.top').detect{|ele| ele.all('a', :text => 'Employee Jr.').present?}
-  element.find('a.show_cobra_confirm').click
-
-  employee_id = element.find('a', :text => 'Employee Jr.')[:href].match(/^.*\/census_employees\/(\w+).*/i)[1]
-  find("tr.cobra_confirm_#{employee_id}").find('a.cobra_confirm_submit').click
+  table = find("table.effective-datatable")
+  rows = table.all("tr")
+  waited_time = 0
+  while((rows.count > 2) || (waited_time < 5)) do
+    sleep 1
+    table = find("table.effective-datatable")
+    rows = table.all("tr")
+    waited_time = waited_time + 1
+  end
+  element = all('tr').detect { |ele| ele.all('a', :text => 'Employee Jr.').present? }
+  element.find(".dropdown-toggle", :text => "Actions", :wait => 3).click
+  wait_for_ajax
+  element.find('a', :text => "Initiate Cobra", :wait => 3).click
+  wait_for_ajax
+#   find('input.date-picker').set((TimeKeeper.date_of_record.next_month.beginning_of_month).to_s)
+  find('a.cobra_confirm', :text => /Initiate Cobra/i, :wait => 3).trigger('click')
 end
 
 Then(/^.+ should see cobra successful msg/) do
@@ -270,7 +294,7 @@ Then(/^.+ should see cobra successful msg/) do
 end
 
 And(/^.+ should only see the status of Cobra Linked$/) do
-  expect(page).to have_content('Cobra Linked')
+  expect(page).to have_content('Cobra linked')
   expect(page).not_to have_content('Employee Role Linked')
   expect(page).not_to have_content('Employment Terminated')
 end
@@ -312,20 +336,23 @@ And(/^.+ should be able to enter plan year, benefits, relationship benefits for 
   find('.interaction-choice-control-plan-year-start-on').click
   find('li.interaction-choice-control-plan-year-start-on-1').click
 
-  fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][0][premium_pct]", :with => 50
-  fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][1][premium_pct]", :with => 50
-  fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][2][premium_pct]", :with => 50
-  fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][3][premium_pct]", :with => 50
-
   find(:xpath, '//li/label[@for="plan_year_benefit_groups_attributes_0_plan_option_kind_single_carrier"]').click
   wait_for_ajax
   find('.carriers-tab a').click
   wait_for_ajax
   find('.reference-plans label').click
   wait_for_ajax
+  fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][0][premium_pct]", :with => 50
+  fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][1][premium_pct]", :with => 50
+  fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][2][premium_pct]", :with => 50
+  fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][3][premium_pct]", :with => 50
+  wait_for_ajax
   find('.interaction-click-control-create-plan-year').trigger('click')
 end
 
 And(/clicks on the Add New Employee button/) do
-  find('.interaction-click-control-add-new-employee').click
+  execute_script(<<-JSCODE)
+    $('.interaction-click-control-add-employee')[0].click()
+  JSCODE
+  wait_for_ajax(3,2)
 end

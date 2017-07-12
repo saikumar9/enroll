@@ -7,6 +7,7 @@ class EmployerProfile
   include Acapi::Notifiers
   extend Acapi::Notifiers
   include StateTransitionPublisher
+  include ScheduledEventService
   include Config::AcaModelConcern
 
   embedded_in :organization
@@ -14,6 +15,10 @@ class EmployerProfile
 
   BINDER_PREMIUM_PAID_EVENT_NAME = "acapi.info.events.employer.binder_premium_paid"
   EMPLOYER_PROFILE_UPDATED_EVENT_NAME = "acapi.info.events.employer.updated"
+  INITIAL_APPLICATION_ELIGIBLE_EVENT_TAG="benefit_coverage_initial_application_eligible"
+  INITIAL_EMPLOYER_TRANSMIT_EVENT="acapi.info.events.employer.benefit_coverage_initial_application_eligible"
+  RENEWAL_APPLICATION_ELIGIBLE_EVENT_TAG="benefit_coverage_renewal_application_eligible"
+  RENEWAL_EMPLOYER_TRANSMIT_EVENT="acapi.info.events.employer.benefit_coverage_renewal_application_eligible"
 
   ACTIVE_STATES   = ["applicant", "registered", "eligible", "binder_paid", "enrolled"]
   INACTIVE_STATES = ["suspended", "ineligible"]
@@ -56,6 +61,7 @@ class EmployerProfile
 
   embeds_one  :inbox, as: :recipient, cascade_callbacks: true
   embeds_one  :employer_profile_account
+  embeds_one  :employer_attestation
   embeds_many :plan_years, cascade_callbacks: true, validate: true
   embeds_many :broker_agency_accounts, cascade_callbacks: true, validate: true
   embeds_many :general_agency_accounts, cascade_callbacks: true, validate: true
@@ -529,6 +535,16 @@ class EmployerProfile
       })
     end
 
+    def initial_employer_reminder_to_publish(start_on)
+      Organization.where(:"employee_profile.plan_years" =>
+      { :$elemMatch => {
+        :start_on => start_on,
+        :aasm_state => "draft"
+      }
+    })
+    end
+  
+
     def organizations_eligible_for_renewal(new_date)
       months_prior_to_effective = Settings.aca.shop_market.renewal_application.earliest_start_prior_to_effective_on.months * -1
 
@@ -588,9 +604,42 @@ class EmployerProfile
         if new_date.day == Settings.aca.shop_market.renewal_application.force_publish_day_of_month
           organizations_for_force_publish(new_date).each do |organization|
             plan_year = organization.employer_profile.plan_years.where(:aasm_state => 'renewing_draft').first
-            plan_year.force_publish!
+            plan_year.force.publish!
           end
         end
+
+        #initial employer reminder notices to publish plan year.
+        start_on = (new_date+2.months).beginning_of_month
+        start_on_1 = (new_date+1.month).beginning_of_month
+        if new_date+2.days == start_on.last_month
+          initial_employer_reminder_to_publish(start_on).each do|organization|
+            begin
+              organization.employer_profile.trigger_notices("initial_employer_reminder_to_publish_plan_year")
+            rescue Exception => e
+              puts "Unable to send first reminder notice to publish plan year to #{organization.legal_name} due to following error {e}"
+            end
+          end
+        elsif new_date+1.days == start_on.last_month
+          initial_employer_reminder_to_publish(start_on).each do |organization|
+            begin
+              organization.employer_profile.trigger_notices("initial_employer_reminder_to_publish_plan_year")
+            rescue Exception => e
+              puts "Unable to send second reminder notice to publish plan year to #{organization.legal_name} due to following errors {e}"
+            end
+          end
+        else 
+          plan_year_due_date = Date.new(start_on_1.prev_month.year, start_on_1.prev_month.month, Settings.aca.initial_application.publish_due_date_of_month)
+          if (start_on +2.days == plan_year_due_date)
+            initial_employer_reminder_to_publish(start_on_1).each do |organization|
+              begin
+                organization.employee_profile.trigger_notices("initial_employer_reminder_to_publish_plan_year")
+              rescue Exception => e
+                puts "Unable to send final reminder notice to publish plan year to #{organization.legal_name} due to following errors {e}"
+              end
+            end
+          end
+        end     
+
       end
 
       # Employer activities that take place monthly - on first of month
@@ -676,7 +725,7 @@ class EmployerProfile
     state :applicant, initial: true
     state :registered                 # Employer has submitted valid application
     state :eligible                   # Employer has completed enrollment and is eligible for coverage
-    state :binder_paid, :after_enter => [:notify_binder_paid,:notify_initial_binder_paid]
+    state :binder_paid, :after_enter => [:notify_binder_paid,:notify_initial_binder_paid,:transmit_new_employer_if_immediate]
     state :enrolled                   # Employer has completed eligible enrollment, paid the binder payment and plan year has begun
   # state :lapsed                     # Employer benefit coverage has reached end of term without renewal
   state :suspended                  # Employer's benefit coverage has lapsed due to non-payment
@@ -824,6 +873,20 @@ class EmployerProfile
     notify("acapi.info.events.employer.benefit_coverage_initial_binder_paid", {employer_id: self.hbx_id, event_name: "benefit_coverage_initial_binder_paid"})
   end
 
+  def transmit_new_employer_if_immediate
+    if transmit_employers_immediately?
+      transmit_initial_eligible_event
+    end
+  end
+
+  def transmit_initial_eligible_event
+    notify(INITIAL_EMPLOYER_TRANSMIT_EVENT, {employer_id: self.hbx_id, event_name: INITIAL_APPLICATION_ELIGIBLE_EVENT_TAG}) 
+  end
+
+  def transmit_renewal_eligible_event
+    notify(RENEWAL_EMPLOYER_TRANSMIT_EVENT, {employer_id: self.hbx_id, event_name: RENEWAL_APPLICATION_ELIGIBLE_EVENT_TAG}) 
+  end
+
   def notify_broker_added
     changed_fields = broker_agency_accounts.map(&:changed_attributes).map(&:keys).flatten.compact.uniq
     if changed_fields.present? &&  changed_fields.include?("start_on")
@@ -861,10 +924,75 @@ class EmployerProfile
       return nil
     end
     primary_office_location = organization.primary_office_location
-    RateReference.rating_area_for(primary_office_location)
+    RatingArea.rating_area_for(primary_office_location.address)
   end
 
-private
+  def service_areas
+    if use_simple_employer_calculation_model?
+      return nil
+    end
+    primary_office_location = organization.primary_office_location
+    CarrierServiceArea.service_areas_for(office_location: primary_office_location)
+  end
+
+  def service_areas_available_on(date)
+    if use_simple_employer_calculation_model?
+      return nil
+    end
+    primary_office_location = organization.primary_office_location
+    CarrierServiceArea.service_areas_available_on(primary_office_location.address, date.year)
+  end
+
+  def service_area_ids
+    if use_simple_employer_calculation_model?
+      return nil
+    end
+    service_areas.collect { |service_area| service_area.service_area_id }.uniq
+  end
+
+  def upload_document(file_path,file_name,subject,size)
+    #doc_uri = Aws::S3Storage.save(file_path,'id-verification')
+    #file = File.open(file_path, "r:ISO-8859-1")
+
+    tmp_file = "#{Rails.root}/tmp/#{file_name}"
+    id = 0
+    while File.exists?(tmp_file) do
+      tmp_file = "#{Rails.root}/tmp/#{id}_#{file_name}"
+      id += 1
+    end
+    # Save to temp file
+    File.open(tmp_file, 'wb') do |f|
+      f.write File.open(file_path).read
+    end
+    if(file_path)
+      document = self.documents.new
+      document.identifier = tmp_file
+      document.format = 'application/pdf'
+      document.subject = subject
+      document.title =file_name
+      document.creator = self.legal_name
+      document.publisher = "test"
+      document.type = "EmployeeProfile"
+      document.format = 'pdf',
+      document.source = 'test'
+      document.language = 'English'
+      #document.size =  size
+      document.date = Date.today
+      document.save!
+
+      #self.documents << document
+      logger.debug "associated file #{file_path} with the Employer Profile"
+      return document
+    end
+  end
+
+  def is_attestation_eligible?
+    return true unless enforce_employer_attestation?
+    employer_attestation.present? && employer_attestation.is_eligible?
+  end
+  
+  private
+  
   def has_ineligible_period_expired?
     ineligible? and (latest_workflow_state_transition.transition_at.to_date + 90.days <= TimeKeeper.date_of_record)
   end
@@ -892,7 +1020,7 @@ private
   def initialize_account
     if employer_profile_account.blank?
       self.build_employer_profile_account
-      employer_profile_account.next_premium_due_on = (published_plan_year.start_on.last_month) + (Settings.aca.shop_market.binder_payment_due_on).days
+      employer_profile_account.next_premium_due_on = (published_plan_year.start_on.last_month) + (EmployerProfile.shop_market_binder_payment_due_on).days
       employer_profile_account.next_premium_amount = 100
       # census_employees.covered
       save

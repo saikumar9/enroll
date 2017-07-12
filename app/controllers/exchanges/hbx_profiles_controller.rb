@@ -83,7 +83,6 @@ class Exchanges::HbxProfilesController < ApplicationController
     @next_60_day = @next_30_day.next_month
     @next_90_day = @next_60_day.next_month
 
-
     @datatable = Effective::Datatables::EmployerDatatable.new
 
     respond_to do |format|
@@ -200,6 +199,10 @@ def employer_poc
     @selector = params[:scopes][:selector] if params[:scopes].present?
     @datatable = Effective::Datatables::FamilyDataTable.new(params[:scopes])
     #render '/exchanges/hbx_profiles/family_index_datatable'
+  end
+
+  def user_account_index
+    @datatable = Effective::Datatables::UserAccountDatatable.new
   end
 
   def hide_form
@@ -343,7 +346,10 @@ def employer_poc
   end
 
   def verification_index
-    @families = Family.by_enrollment_individual_market.where(:'households.hbx_enrollments.aasm_state' => "enrolled_contingent").page(params[:page]).per(15)
+    #@families = Family.by_enrollment_individual_market.where(:'households.hbx_enrollments.aasm_state' => "enrolled_contingent").page(params[:page]).per(15)
+    # @datatable = Effective::Datatables::DocumentDatatable.new
+    @documents = [] # Organization.all_employer_profiles.employer_profiles_with_attestation_document
+
     respond_to do |format|
       format.html { render partial: "index_verification" }
       format.js {}

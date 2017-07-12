@@ -20,6 +20,14 @@ Rails.application.routes.draw do
     resources :orphans, only: [:index, :show, :destroy]
   end
 
+  resources :users do
+    member do
+      post :unlock
+      get :lockable
+      get :confirm_lock
+    end
+  end
+
   resources :saml, only: [] do
     collection do
       post :login
@@ -44,6 +52,14 @@ Rails.application.routes.draw do
       get :resume_resident_enrollment, on: :collection
       get :ridp_bypass, on: :collection
       get :find_sep, on: :collection
+    end
+
+    resources :scheduled_events do
+      collection do
+        get 'current_events'
+        get 'delete_current_event'
+        get 'list'
+      end
     end
 
     resources :hbx_profiles do
@@ -85,6 +101,8 @@ Rails.application.routes.draw do
         get :add_sep_form
         get :hide_form
         get :show_sep_history
+        get :calendar_index
+        get :user_account_index
       end
 
       member do
@@ -241,6 +259,11 @@ Rails.application.routes.draw do
         post 'match'
       end
     end
+
+    resources :employer_attestations do 
+       get 'authorized_download'
+       get 'verify_attestation'
+    end
     resources :inboxes, only: [:new, :create, :show, :destroy]
     resources :employer_profiles do
       get 'new'
@@ -251,9 +274,16 @@ Rails.application.routes.draw do
       get 'export_census_employees'
       get 'bulk_employee_upload_form'
       post 'bulk_employee_upload'
+
       member do
         get "download_invoice"
+        get 'new_document'
+        post 'download_documents'
+        post 'delete_documents'
+        post 'upload_document'
+
       end
+
       collection do
         get 'welcome'
         get 'search'
@@ -294,6 +324,10 @@ Rails.application.routes.draw do
         get :terminate
         get :rehire
         get :cobra
+        collection do
+          get :confirm_effective_date
+          post :change_expected_selection
+        end
         get :cobra_reinstate
         get :benefit_group, on: :member
       end
@@ -496,8 +530,9 @@ Rails.application.routes.draw do
   get "document/download/:bucket/:key" => "documents#download", as: :document_download
   get "document/authorized_download/:model/:model_id/:relation/:relation_id" => "documents#authorized_download", as: :authorized_document_download
 
-
-  resources :documents, only: [:update, :destroy, :update] do
+  resources :documents, only: [ :new, :create, :destroy, :update] do
+      get :document_reader,on: :member
+      get :autocomplete_organization_legal_name, :on => :collection
     collection do
       put :change_person_aasm_state
       get :show_docs
@@ -506,6 +541,12 @@ Rails.application.routes.draw do
       put :enrollment_docs_state
       put :extend_due_date
       get :fed_hub_request
+      post 'download_documents'
+      post 'delete_documents'
+    end
+
+    member do
+      get :download_employer_document
     end
   end
 

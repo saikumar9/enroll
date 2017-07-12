@@ -62,6 +62,10 @@ class BenefitGroup
 
   delegate :employer_profile, to: :plan_year, allow_nil: true
 
+  embeds_many :composite_tier_contributions, cascade_callbacks: true
+  accepts_nested_attributes_for :composite_tier_contributions, reject_if: :all_blank, allow_destroy: true
+
+
   embeds_many :relationship_benefits, cascade_callbacks: true
   accepts_nested_attributes_for :relationship_benefits, reject_if: :all_blank, allow_destroy: true
 
@@ -106,7 +110,7 @@ class BenefitGroup
   validate :check_employer_contribution_for_employee
   validate :check_offered_for_employee
 
-  before_save :set_congress_defaults
+  before_save :set_congress_defaults, :update_dependent_composite_tiers
   before_destroy :delete_benefit_group_assignments_and_enrollments
 
   # def plan_option_kind=(new_plan_option_kind)
@@ -299,6 +303,12 @@ class BenefitGroup
     end
   end
 
+  def build_composite_tier_contributions
+    self.composite_tier_contributions = CompositeRatingTier::NAMES.map do |rating_tier|
+      self.composite_tier_contributions.build(composite_rating_tier: rating_tier)
+    end
+  end
+
   def build_dental_relationship_benefits
     self.dental_relationship_benefits = PERSONAL_RELATIONSHIP_KINDS.map do |relationship|
        self.dental_relationship_benefits.build(relationship: relationship, offered: true)
@@ -339,11 +349,20 @@ class BenefitGroup
 
   def monthly_employer_contribution_amount(plan = reference_plan)
     return 0 if targeted_census_employees.count > 100
+
+    if self.sole_source? && self.composite_tier_contributions.empty?
+      build_composite_tier_contributions
+      estimate_composite_rates
+    end
     targeted_census_employees.active.collect do |ce|
-      if plan.coverage_kind == 'dental'
-        pcd = PlanCostDecorator.new(plan, ce, self, dental_reference_plan)
+      if plan_option_kind == 'sole_source'
+        pcd = CompositeRatedPlanCostDecorator.new(plan, self, ce.composite_rating_tier)
       else
-        pcd = PlanCostDecorator.new(plan, ce, self, reference_plan)
+        if plan.coverage_kind == 'dental'
+          pcd = PlanCostDecorator.new(plan, ce, self, dental_reference_plan)
+        else
+          pcd = PlanCostDecorator.new(plan, ce, self, reference_plan)
+        end
       end
       pcd.total_employer_contribution
     end.sum
@@ -352,10 +371,14 @@ class BenefitGroup
   def monthly_min_employee_cost(coverage_kind = nil)
     return 0 if targeted_census_employees.count > 100
     targeted_census_employees.active.collect do |ce|
-      if coverage_kind == 'dental'
-        pcd = PlanCostDecorator.new(dental_reference_plan, ce, self, dental_reference_plan)
+      if plan_option_kind == 'sole_source'
+        pcd = CompositeRatedPlanCostDecorator.new(reference_plan, self, ce.composite_rating_tier)
       else
-        pcd = PlanCostDecorator.new(reference_plan, ce, self, reference_plan)
+        if coverage_kind == 'dental'
+          pcd = PlanCostDecorator.new(dental_reference_plan, ce, self, dental_reference_plan)
+        else
+          pcd = PlanCostDecorator.new(reference_plan, ce, self, reference_plan)
+        end
       end
       pcd.total_employee_cost
     end.min
@@ -364,10 +387,14 @@ class BenefitGroup
   def monthly_max_employee_cost(coverage_kind = nil)
     return 0 if targeted_census_employees.count > 100
     targeted_census_employees.active.collect do |ce|
-      if coverage_kind == 'dental'
-        pcd = PlanCostDecorator.new(dental_reference_plan, ce, self, dental_reference_plan)
+      if plan_option_kind == 'sole_source'
+        pcd = CompositeRatedPlanCostDecorator.new(reference_plan, self, ce.composite_rating_tier)
       else
-        pcd = PlanCostDecorator.new(reference_plan, ce, self, reference_plan)
+        if coverage_kind == 'dental'
+          pcd = PlanCostDecorator.new(dental_reference_plan, ce, self, dental_reference_plan)
+        else
+          pcd = PlanCostDecorator.new(reference_plan, ce, self, reference_plan)
+        end
       end
       pcd.total_employee_cost
     end.max
@@ -379,7 +406,13 @@ class BenefitGroup
   end
 
   def employee_cost_for_plan(ce, plan = reference_plan)
-    pcd = @is_congress ? decorated_plan(plan, ce) : PlanCostDecorator.new(plan, ce, self, reference_plan)
+    pcd = if @is_congress
+      decorated_plan(plan, ce)
+    elsif(plan_option_kind == 'sole_source')
+      CompositeRatedPlanCostDecorator.new(reference_plan, self, ce.composite_rating_tier)
+    else
+      PlanCostDecorator.new(plan, ce, self, reference_plan)
+    end
     pcd.total_employee_cost
   end
 
@@ -392,6 +425,8 @@ class BenefitGroup
   end
 
   def elected_plans_by_option_kind
+    @profile_and_service_area_pairs = CarrierProfile.carrier_profile_service_area_pairs_for(employer_profile)
+
     case plan_option_kind
     when "sole_source"
       Plan.where(id: reference_plan_id).first
@@ -401,9 +436,10 @@ class BenefitGroup
       if carrier_for_elected_plan.blank?
         @carrier_for_elected_plan = reference_plan.carrier_profile_id if reference_plan.present?
       end
-      Plan.valid_shop_health_plans("carrier", carrier_for_elected_plan, start_on.year)
+      carrier_profile_id = reference_plan.carrier_profile_id
+      Plan.valid_shop_health_plans_for_service_area("carrier", carrier_for_elected_plan, start_on.year, @profile_and_service_area_pairs.select { |pair| pair.first == carrier_profile_id }).to_a
     when "metal_level"
-      Plan.valid_shop_health_plans("metal_level", metal_level_for_elected_plan, start_on.year)
+      Plan.valid_shop_health_plans_for_service_area("carrier", carrier_for_elected_plan, start_on.year, @profile_and_service_area_pairs).and(:metal_level => reference_plan.metal_level).to_a
     end
   end
 
@@ -496,14 +532,18 @@ class BenefitGroup
 
   def lookup_cached_cprf_for(carrier_id)
     year = plan_year.start_on.year
+    EmployerParticipationRateRatingFactorSet.value_for(carrier_id, year, participation_rate * 100.0)
+  end
+
+  def participation_rate
+    total_employees = targeted_census_employees.count
+    return(0.0) if total_employees < 1
     waived_and_active_count = if plan_year.estimate_group_size?
-                                census_employees.select { |ce| ce.expected_to_enroll? }.length
+                                targeted_census_employees.select { |ce| ce.expected_to_enroll_or_valid_waive? }.length
                               else
                                 all_active_and_waived_health_enrollments.length
-                              end 
-    total_employees = census_employees.count
-    part_rate = waived_and_active_count/(total_employees * 1.0)
-    EmployerParticipationRateRatingFactorSet.value_for(carrier_id, year, part_rate)
+                              end
+    waived_and_active_count/(total_employees * 1.0)
   end
 
   # Provide the group size factor for this benefit group.
@@ -557,18 +597,18 @@ class BenefitGroup
   # year status
   def group_size_count
     if plan_year.estimate_group_size?
-      census_employees.select { |ce| ce.expected_to_enroll? }.length
+      targeted_census_employees.select { |ce| ce.expected_to_enroll? }.length
     else
       all_active_health_enrollments.length
-    end 
+    end
   end
 
   def composite_rating_enrollment_objects
     if plan_year.estimate_group_size?
-      census_employees.select { |ce| ce.expected_to_enroll? }
+      targeted_census_employees.select { |ce| ce.expected_to_enroll? }
     else
       all_active_health_enrollments
-    end 
+    end
   end
 
   def all_active_and_waived_health_enrollments
@@ -591,9 +631,15 @@ class BenefitGroup
     plan_option_kind == "sole_source"
   end
 
+  def build_estimated_composite_rates
+    return(nil) unless sole_source?
+    rate_calc = CompositeRatingBaseRatesCalculator.new(self, self.elected_plans.try(:first) || reference_plan)
+    rate_calc.build_estimated_premiums
+  end
+
   def estimate_composite_rates
     return(nil) unless sole_source?
-    rate_calc = CompositeRatingBaseRatesCalculator.new(self, self.elected_plans.first)
+    rate_calc = CompositeRatingBaseRatesCalculator.new(self, self.elected_plans.try(:first) || reference_plan)
     rate_calc.assign_estimated_premiums
   end
 
@@ -615,6 +661,21 @@ class BenefitGroup
     self.employee_max_amt = 480.29 if employee_max_amt == 0
     self.first_dependent_max_amt = 1030.88 if first_dependent_max_amt == 0
     self.over_one_dependents_max_amt = 1094.64 if over_one_dependents_max_amt == 0
+  end
+
+  def update_dependent_composite_tiers
+    family_tier = self.composite_tier_contributions.where(composite_rating_tier: 'family')
+    return unless family_tier.present?
+
+    contribution = family_tier.first.employer_contribution_percent
+    estimated_tier_premium = family_tier.first.estimated_tier_premium
+
+    (CompositeRatingTier::NAMES - CompositeRatingTier::VISIBLE_NAMES).each do |crt|
+      tier = self.composite_tier_contributions.find_or_initialize_by(
+        composite_rating_tier: crt
+      )
+      tier.employer_contribution_percent = contribution
+    end
   end
 
   def dollars_to_cents(amount_in_dollars)
@@ -678,7 +739,9 @@ class BenefitGroup
     if start_on.month == 1 && start_on.day == 1
     else
       if relationship_benefits.present? && (relationship_benefits.find_by(relationship: "employee").try(:premium_pct) || 0) < Settings.aca.shop_market.employer_contribution_percent_minimum
-        self.errors.add(:relationship_benefits, "Employer contribution must be ≥ 50% for employee")
+        unless self.sole_source?
+          self.errors.add(:relationship_benefits, "Employer contribution must be ≥ 50% for employee")
+        end
       end
     end
   end

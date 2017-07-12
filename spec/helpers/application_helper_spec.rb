@@ -29,17 +29,17 @@ RSpec.describe ApplicationHelper, :type => :helper do
   end
 
   describe "#display_carrier_logo" do
-    let(:plan){ Maybe.new(FactoryGirl.build(:plan)) }
     let(:carrier_profile){ FactoryGirl.build(:carrier_profile, legal_name: "Kaiser")}
-    let(:plan_1){ Maybe.new(FactoryGirl.build(:plan, hios_id: "89789DC0010006-01", carrier_profile: carrier_profile)) }
+    let(:plan){ FactoryGirl.build(:plan, carrier_profile: carrier_profile) }
 
-    it "should return uhic logo" do
-      expect(helper.display_carrier_logo(plan)).to eq "<img width=\"50\" src=\"/assets/logo/carrier/uhic.jpg\" alt=\"Uhic\" />"
+    before do
+      allow(plan).to receive(:carrier_profile).and_return(carrier_profile)
+      allow(carrier_profile).to receive_message_chain(:legal_name, :extract_value).and_return('kaiser')
+    end
+    it "should return the named logo" do
+      expect(helper.display_carrier_logo(plan)).to eq "<img width=\"50\" src=\"/images/logo/carrier/kaiser.jpg\" alt=\"Kaiser\" />"
     end
 
-    it "should return non united logo" do
-      expect(helper.display_carrier_logo(plan_1)).to eq "<img width=\"50\" src=\"/assets/logo/carrier/kaiser.jpg\" alt=\"Kaiser\" />"
-    end
   end
 
   describe "#format_time_display" do
@@ -366,7 +366,7 @@ end
        end
     it_behaves_like "IVL market status", Settings.aca.market_kinds.include?("individual")
   end
-  
+
   describe "#is_new_paper_application?" do
     let(:person_id) { double }
     let(:admin_user) { FactoryGirl.create(:user, :hbx_staff)}

@@ -61,8 +61,8 @@ RSpec.describe Employers::EmployerProfilesController do
     let(:person) { double("person")}
     let(:zip_code) { '21208' }
     before do
-      RateReference.destroy_all
-      FactoryGirl.create(:rate_reference, county_name: "Baltimore", zip_code:"21208")
+      RatingArea.destroy_all
+      FactoryGirl.create(:rating_area, county_name: "Baltimore", zip_code:"21208")
       sign_in(user)
       get :counties_for_zip_code, { zip_code: zip_code }
     end
@@ -121,6 +121,7 @@ RSpec.describe Employers::EmployerProfilesController do
       allow(policy).to receive(:is_broker_for_employer?).and_return(false)
       allow(policy).to receive(:authorize_show).and_return(true)
       allow(user).to receive(:last_portal_visited=).and_return("true")
+      allow(user).to receive(:get_announcements_by_roles_and_portal).and_return []
       employer_profile.plan_years = [plan_year]
       sign_in(user)
     end
@@ -185,6 +186,7 @@ RSpec.describe Employers::EmployerProfilesController do
       census_employee = FactoryGirl.create(:census_employee, employer_profile: employer_profile)
 
       xhr :get,:show_profile, {employer_profile_id: employer_profile.id.to_s, tab: 'employees'}
+      expect(assigns(:datatable)).not_to eq nil
       expect(assigns(:census_employees).count).to eq 1
       expect(assigns(:census_employees)).to eq [census_employee]
     end
@@ -753,4 +755,57 @@ RSpec.describe Employers::EmployerProfilesController do
    end
 
   end
+
+  describe "GET new Document" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:employer_profile) { FactoryGirl.create(:employer_profile) }
+    it "should load upload Page" do
+      sign_in(user)
+      xhr :get, :new_document, id: employer_profile
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+
+  describe "POST Upload Document" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:employer_profile) { FactoryGirl.create(:employer_profile) }
+    #let(:params) { { id: employer_profile.id, file:'test/JavaScript.pdf', subject: 'JavaScript.pdf' } }
+
+    let(:subject){"Employee Attestation"}
+    let(:file) { double }
+    let(:temp_file) { double }
+    let(:file_path) { Rails.root+'test/JavaScript.pdf' }
+
+    before(:each) do
+      @controller = Employers::EmployerProfilesController.new
+      #allow(file).to receive(:original_filename).and_return("some-filename")
+      allow(file).to receive(:tempfile).and_return(temp_file)
+      allow(temp_file).to receive(:path)
+      allow(@controller).to receive(:file_path).and_return(file_path)
+      allow(@controller).to receive(:file_name).and_return("sample-filename")
+      #allow(@controller).to receive(:file_content_type).and_return("application/pdf")
+    end
+
+    context "upload document" do
+      it "redirects to document list page" do
+        sign_in user
+        post :upload_document, {:id => employer_profile.id, :file => file, :subject=> subject}
+        expect(response).to have_http_status(:redirect)
+      end
+    end
+  end
+
+  describe "Delete Document" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:employer_profile) { FactoryGirl.create(:employer_profile) }
+
+    it "should delete documents" do
+      sign_in(user)
+      xhr :get, :delete_documents, id: employer_profile.id, ids:[1]
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+
 end
