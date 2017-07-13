@@ -36,7 +36,7 @@
       <td>
         <ul style="list-style: circle solid;">
         <li>
-          <strong>Employee Enrollments</strong> <br><br><strong>Employers should review their roster to ensure that it includes all eligible employees and ensure that any employees who are also owners (owner’s spouses) are identified as owners on their roster. </strong>For your group to receive coverage through the Small Business Marketplace, you must have at least one non-owner employee enrolled in a health plan at the end of each annual employee open enrollment period. <br>
+          <strong>Employee Enrollments</strong> <br><br><strong><i>Employers should review their roster to ensure that it includes all eligible employees and ensure that any employees who are also owners (owner’s spouses) are identified as owners on their roster.</i> </strong>For your group to receive coverage through the Small Business Marketplace, you must have at least one non-owner employee enrolled in a health plan at the end of each annual employee open enrollment period. <br>
         </li>
         </ul>
       </td>
@@ -70,7 +70,7 @@
       <td>
         <ul style="list-style: circle solid;">
         <li>
-          <strong>Dental Coverage through the Health Connector</strong> <br><br>It is optional to offer dental coverage to your employees.  <br> <br>
+          <strong>Dental Coverage through the Health Connector</strong> <br>It is optional to offer dental coverage to your employees.  <br> <br>
         </li>
         </ul>
       </td>
@@ -85,7 +85,7 @@
 
   <%= render partial: 'notices/shared/paragraph', :locals => { content: "Please contact your broker for further assistance. You can also contact #{Settings.site.short_name} with any questions:"} %>
 <%= render partial: 'notices/shared/unordered_list', :locals => { listings:
-                                                                   ["By calling #{Settings.contact_center.ma_phone_number}.",
+                                                                   ["By calling #{Settings.contact_center.ma_phone_number}",
                                                                     "TTY: #{Settings.contact_center.tty}",
                                                                     "Online at <a href='#{Settings.site.ma_website}''>#{Settings.site.ma_website}</a>"] } %>
 
@@ -96,4 +96,4 @@
 <% end %>
 
 <%= render partial: 'notices/shared/paragraph', :locals =>
-  { content: "This notice is being provided in accordance with 45 CFR 155.715(f)."} %>
+  { content: "This notice is being provided in accordance with 45 CFR 155.725."} %>
