@@ -28,7 +28,8 @@ Feature: COBRA basic
     When Employer clicks on the add employee button
     Then Employer should see a form to enter information about employee, address and dependents details for Jack Employee
     And Employer should see census employee created success message for Jack Employee
-    And Employer should see the status of eligible
+    When Employer click active employee filter
+    Then Employer should see the status of eligible
     Then Employer logs out
 
     When Jack Cobra visits the employee portal
@@ -74,7 +75,7 @@ Feature: COBRA basic
     And Employer should see the status of Employee Role Linked
     When Jack Doe terminate one employee
     Then Employer should see terminate successful msg
-    When Employer click all employee filter
+    When Employer click terminated employee filter
     Then Employer should see the status of Employment terminated
     When Employer cobra one employee
     Then Employer should see cobra successful msg

@@ -535,6 +535,16 @@ class EmployerProfile
       })
     end
 
+    def initial_employer_reminder_to_publish(start_on)
+      Organization.where(:"employee_profile.plan_years" =>
+      { :$elemMatch => {
+        :start_on => start_on,
+        :aasm_state => "draft"
+      }
+    })
+    end
+  
+
     def organizations_eligible_for_renewal(new_date)
       months_prior_to_effective = Settings.aca.shop_market.renewal_application.earliest_start_prior_to_effective_on.months * -1
 
@@ -591,12 +601,24 @@ class EmployerProfile
           employer_enroll_factory.end
         end
 
-        if new_date.day == EmployerProfile.shop_market_renewal_application_force_publish_day_of_month
+        if new_date.day == Settings.aca.shop_market.renewal_application.force_publish_day_of_month
           organizations_for_force_publish(new_date).each do |organization|
             plan_year = organization.employer_profile.plan_years.where(:aasm_state => 'renewing_draft').first
-            plan_year.force_publish!
+            plan_year.force.publish!
           end
         end
+
+        #initial employer reminder notices to publish plan year.
+        start_on = (new_date+2.months).beginning_of_month
+        if new_date.next_day == start_on.last_month
+          initial_employer_reminder_to_publish(start_on).each do |organization|
+            begin
+              organization.employer_profile.trigger_notices("initial_employer_final_reminder_to_publish_plan_year")
+            rescue Exception => e
+              puts "Unable to send second reminder notice to publish plan year to #{organization.legal_name} due to following errors {e}"
+            end
+          end
+        end     
       end
 
       # Employer activities that take place monthly - on first of month
