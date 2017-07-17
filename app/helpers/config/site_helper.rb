@@ -35,8 +35,12 @@ module Config::SiteHelper
     Settings.site.broker_quoting_enabled
   end
 
-  def ma_website
-    Settings.site.ma_website
+  def site_main_web_address
+    Settings.site.main_web_address
+  end
+
+  def site_main_web_link
+    link_to site_main_web_address, site_main_web_address
   end
 
 end
