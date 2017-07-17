@@ -23,12 +23,12 @@ site:
 contact_center:
   name: "Health Connector's Customer Care Center"
   alt_name: "Health Connector Customer Service"
-  phone_number: "1-855-532-5465"
+  phone_number: "1-888-813-9220"
   fax: "1-617-933-3099"
   ma_phone_number: "1-888-813-9220"
-  tty_number: "1-855-532-5465"
-  alt_phone_number: "1-855-532-LINK"
-  email_address: "info@mhc.hbxshop.org"
+  tty_number: "1-888-813-9220"
+  alt_phone_number: "1-888-813-9220"
+  email_address: "smallbusiness@mahealthconnector.org"
   tty: "711"
 
   appeals: "connector-appeals@state.ma.us" 
