@@ -4,15 +4,16 @@ site:
   home_url: "https://enroll.mhc.hbxshop.org"
   help_url: "https://mhc.hbxshop.org/help"
   faqs_url: "https://mhc.hbxshop.org/faqs"
-  ma_website: "www.MAhealthconnector.org"
+  ma_website: "www.mahealthconnector.org"
   short_name: "Health Connector"
   byline: "The Right Place for the Right Plan"
   long_name: "Massachusetts Health Connector"
   copyright_period_start: "2017"
   header_message: "The Right Place for the Right Plan"
-  logo_file_name: "logo.png"
+  logo_file_name: "gme_logo_cmyk.svg"
   s3_prefix: "mhc"
-  broker_quoting_enabled: false
+
+  broker_quoting_enabled: false   # deprecate
 
   social_media:
     facebook_url: ""
@@ -27,7 +28,7 @@ contact_center:
   ma_phone_number: "1-888-813-9220"
   tty_number: "1-855-532-5465"
   alt_phone_number: "1-855-532-LINK"
-  email_address: "info@example.com"
+  email_address: "info@mhc.hbxshop.org"
   tty: "711"
 
   appeals: "connector-appeals@state.ma.us" 
@@ -52,6 +53,7 @@ aca:
   state_name: "Massachusetts"
   state_abbreviation: "MA"
   market_kinds: ["shop"]
+  
   nationwide_markets: false
   general_agency_enabled: false
   dental_market_enabled: false
