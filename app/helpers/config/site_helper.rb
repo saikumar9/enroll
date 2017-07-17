@@ -34,4 +34,9 @@ module Config::SiteHelper
   def site_broker_quoting_enabled?
     Settings.site.broker_quoting_enabled
   end
+
+  def ma_website
+    Settings.site.ma_website
+  end
+
 end
