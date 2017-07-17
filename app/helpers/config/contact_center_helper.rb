@@ -38,4 +38,12 @@ module Config::ContactCenterHelper
   def contact_center_tty_number
     Settings.contact_center.tty_number
   end
+
+  def ma_phone_number
+    Settings.contact_center.ma_phone_number
+  end
+
+  def tty_ma
+    Settings.contact_center.tty
+  end
 end
