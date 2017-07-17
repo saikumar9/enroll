@@ -1,0 +1,107 @@
+.navbar {
+  margin-bottom: 0;
+  background-color: $primary-button-text;
+  border-bottom: solid 3px $primary-blue;
+  .navbar-header {
+    .navbar-brand {
+      border-right: solid 1px #d7d7d7;
+      min-height: 70px;
+      img {
+        max-height: 40px;
+      }
+    }
+  }
+  .navbar-collapse {
+    .header-text {
+      color: $primary-gray;
+      font-size: 14px;
+      text-transform: uppercase;
+      font-weight: $primary-bold;
+    }
+    .navbar-nav:first-of-type {
+      a.portal {
+        text-align: center;
+        vertical-align: middle;
+        line-height: 70px;
+        padding: 23px 15px;
+        font-weight: 600;
+        color: $primary-black;
+        &:hover {
+          background-color: $background-hover;
+          text-decoration: none;
+        }
+      }
+    }
+    .navbar-right {
+      li:last-of-type {
+        text-align: right;
+      }
+      a.call-customer-service {
+        span:first-of-type {}
+        span:last-of-type {
+          .fa {
+            color: $primary-blue;
+          }
+          strong {
+            line-height: 0;
+            font-size: 16px;
+            color: $primary-black;
+          }
+        }
+      }
+      .my-portal-links {
+        min-height: 70px;
+        padding: 15px 15px;
+        display: block;
+        border-left: solid 1px #d7d7d7;
+        .users-name {
+          color: $primary-black;
+        }
+      }
+    }
+  }
+}
+
+
+
+.label-info {
+  background-color: #007bc4;
+}
+.label-info[href]:hover,
+.label-info[href]:focus {
+  background-color: #007bc4;
+}
+
+.label-danger {
+  background-color: #e72b2d;
+}
+.label-danger[href]:hover,
+.label-danger[href]:focus {
+  background-color: #e72b2d;
+}
+
+.label-success {
+  background-color: $primary-green;
+}
+.label-success[href]:hover,
+.label-success[href]:focus {
+  background-color: $primary-green;
+}
+
+
+.popover-title {
+  padding: 8px 14px;
+  margin: 0;
+  font-size: 14px;
+  background-color: #f7f7f7;
+  border-bottom: 1px solid #ebebeb;
+  border-radius: 5px 5px 0 0;
+  color: $primary-black;
+}
+.manual {
+  + .tooltip {
+    .tooltip-inner {
+      white-space: nowrap;
+    }
+  }
+}
