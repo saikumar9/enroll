@@ -23,6 +23,10 @@ module Config::ContactCenterHelper
     Settings.contact_center.phone_number
   end
 
+  def contact_center_fax_number
+    Settings.contact_center.fax
+  end
+
   def contact_center_postal_code
     Settings.contact_center.mailing_address.zip
   end
@@ -37,13 +41,5 @@ module Config::ContactCenterHelper
 
   def contact_center_tty_number
     Settings.contact_center.tty_number
-  end
-
-  def ma_phone_number
-    Settings.contact_center.ma_phone_number
-  end
-
-  def tty_ma
-    Settings.contact_center.tty
   end
 end
