@@ -1,3 +1,5 @@
+<div>
+<%= render :partial => "notices/shared/logo" %>
 <table class="total_table address" border="0">
   <tbody>
     <tr class="fssize mar20">
@@ -9,7 +11,7 @@
     </tr>
     <% end %>
     <tr class="fssize1">
-       <td><%= notice.primary_address.street_1 %> <td align="right" style="padding-right: 15px">Notice No. SHOP_M001</td></td>
+       <td><%= notice.primary_address.street_1 %></td>
     </tr>
     <% if notice.primary_address.street_2.present? %>
     <tr class="fssize1">
@@ -21,3 +23,10 @@
     </tr>
   </tbody>
 </table>
+<br><br><br>
+
+<h1 align="center"><strong>THIS IS A COVER PAGE</strong></h1>
+<hr>
+<h2> The enclosed letter has important information about your health insurance, including steps you need to take to get or keep your insurance. </h2> <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<%= render :partial => "notices/shared/footer" %>
+</div>
