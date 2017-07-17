@@ -4,7 +4,7 @@
 
 <%= render partial: 'notices/shared/welcome_header', :locals => {
   contents: [""],
-  heading: "Welcome to The #{site_short_name}!", sub_heading: ''} %>
+  heading: "Welcome to The #{site_short_name}", sub_heading: ''} %>
 <%= render partial: 'notices/shared/date', :locals => {notice: notice} %>
 
 <table class="total_table" border="0">
@@ -74,14 +74,14 @@
 
   <%= render partial: 'notices/shared/paragraph', :locals => { content: "Please contact your broker for further assistance. You can also contact #{site_short_name} with any questions:"} %>
 <%= render partial: 'notices/shared/unordered_list', :locals => { listings:
-                                                                   ["By calling #{site_short_name}",
+                                                                   ["By calling #{ma_phone_number}",
                                                                     "TTY: #{tty_ma}",
                                                                     "Online at <a href='#{ma_website}''>#{ma_website}</a>"] } %>
 
 <% if notice.broker.present? %>
   <%= render partial: 'notices/shared/broker_contact_info', :locals => {broker: notice.broker} %>
 <% else %>
-  <%= render partial: 'notices/shared/paragraph', :locals => { content: "If you do not currently have a broker, you can reach out to one of our many trained experts by clicking on the “Find a Broker” link in your employer account or calling #{contact_center_phone_number} ."} %>
+  <%= render partial: 'notices/shared/paragraph', :locals => { content: "If you do not currently have a broker, you can reach out to one of our many trained experts by clicking on the “Find a Broker” link in your employer account or calling 855-532-5465 ."} %>
 <% end %>
 
 <%= render partial: 'notices/shared/paragraph', :locals =>
