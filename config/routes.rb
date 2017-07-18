@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     end
   end
 
-
+  mount TransportGateway::Engine, at: "/transport_gateway"
   require 'resque/server'
 
   mount Resque::Server, at: '/jobs'
@@ -268,9 +268,10 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :employer_attestations do 
+    resources :employer_attestations do
        get 'authorized_download'
        get 'verify_attestation'
+       #get 'revert_attestation'
     end
     resources :inboxes, only: [:new, :create, :show, :destroy]
     resources :employer_profiles do

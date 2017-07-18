@@ -3,6 +3,29 @@ puts "::: Cleaning ApplicationEventKinds :::"
 ApplicationEventKind.delete_all
 
 shop_notice_triggers = [
+  
+{
+    hbx_id: 'SHOP0',
+    title: 'Welcome Notice to Employer',
+    description: 'ER creates an account in Health',
+    resource_name: 'employer',
+    event_name: 'application_created',
+    notice_triggers: [
+      {
+        name: 'Welcome Notice sent to Employer',
+        notice_template: 'notices/shop_employer_notices/0_welcome_notice_employer',
+        notice_builder: 'ShopEmployerNotices::WelcomeEmployerNotice',
+        mpi_indicator: 'MPI_SHOP0',
+        notice_trigger_element_group: {
+          market_places: ['shop'],
+          primary_recipients: ["employer"],
+          primary_recipient_delivery_method: ["secure_message"],
+          secondary_recipients: []
+        }
+      }
+    ]
+  },
+
   {
     hbx_id: 'SHOP1A',
     title: 'Initial Employer SHOP Application Approval',
@@ -296,6 +319,29 @@ shop_notice_triggers = [
       }
     ]
   },
+
+  {
+    hbx_id: 'SHOP16_B',
+    title: 'Initial Eligible Employee Open Enrollment Period begins',
+    description: 'When Employer application meets minimum participation and non-owner requirements',
+    resource_name: 'employee_role',
+    event_name: 'initial_employee_open_enrollment_begins',
+    notice_triggers: [
+      {
+        name: 'Initial Eligible Employee open enrollment begins',
+        notice_template: 'notices/shop_employee_notices/16b_initial_employee_open_enrollment_begins',
+        notice_builder: 'ShopEmployeeNotices::InitialEmployeeOpenEnrollmentBegin',
+        mpi_indicator: 'MPI_SHOP16_B',
+        notice_trigger_element_group: {
+          market_places: ['shop'],
+          primary_recipients: ["employee"],
+          primary_recipient_delivery_method: ["secure_message"],
+          secondary_recipients: []
+        }
+      }
+    ]
+  },
+
   {
     hbx_id: 'SHOP17',
     title: 'Open Enrollment Completed',
@@ -359,7 +405,31 @@ shop_notice_triggers = [
       }
     ]
   },
+  
+  {
+    hbx_id: 'SHOP28',
+    title: 'Final Reminder to publish Application',
+    description: 'All the initial employers with draft plan years will be notified to publish their plan year 1 day prior to soft deadline of 1st.',
+    resource_name: 'employer',
+    event_name: 'initial_employer_final_reminder_to_publish_plan_year',
+    notice_triggers: [
+      {
+        name: 'Initial Employer Application, Deadline Extended - Reminder to publish',
+        notice_template: 'notices/shop_employer_notices/initial_employer_reminder_to_publish_plan_year',
+        notice_builder: 'ShopEmployerNotices::InitialEmployerReminderToPublishPlanYear',
+        mpi_indicator: 'MPI_SHOP28',
+        notice_trigger_element_group: {
+          market_places: ['shop'],
+          primary_recipients: ["employer"],
+          primary_recipient_delivery_method: ["secure_message"],
+          secondary_recipients: []
+        }
+      }
+    ]
+  },
+  
 ]
+
 
 
 ivl_notice_triggers = [
