@@ -571,7 +571,7 @@ class EmployerProfile
         :'employer_profile.plan_years' => {
           :$elemMatch => {
             :aasm_state => 'termination_pending',
-            :terminate_on.lt => new_date
+            :terminated_on.lt => new_date
           }
         }
       })
