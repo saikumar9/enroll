@@ -1,6 +1,6 @@
 <div class="dropdown pull-right" id="<%= row_actions_id %>">
 	<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdown_for_<%= row_actions_id %>">
-    Actions 
+    Actions
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu" aria-labelledby="dropdown_for_<%= row_actions_id %>">
@@ -26,8 +26,10 @@
   </ul>
 </div>
 
-<script type="text/javascript">
-  $(document).ready(function () {
-      $('.dropdown-toggle').dropdown();
-  });
-</script> 
+<% content_for :additional_scripts do %>
+	<script type="text/javascript">
+	  $(document).ready(function () {
+	      $('.dropdown-toggle').dropdown();
+	  });
+	</script>
+<% end %>

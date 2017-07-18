@@ -14,11 +14,6 @@
 <div class= "effectivedatatable">
   <%= raw render_datatable(@datatable) %>
 </div>
-<script type="text/javascript" charset="utf-8">
-    initializeDataTables();
-    $('.buttons-csv').hide()
-    $('.buttons-excel').hide()
-</script>
 
 <%= paginate @census_employees, param_name: :pagina, remote: true if params[:page].present? %>
 <div class="row">
@@ -31,3 +26,13 @@
     <h4><%= "#{@census_employees.count} out of #{@total_census_employees_quantity}" if @total_census_employees_quantity.present? %></h4>
   </div>
 </div>
+
+<% content_for :additional_scripts do %>
+  <script type="text/javascript" charset="utf-8">
+    $(document).on('ready', function(){
+      initializeDataTables();
+      $('.buttons-csv').hide()
+      $('.buttons-excel').hide()
+    });
+  </script>
+<% end %>

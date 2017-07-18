@@ -123,6 +123,9 @@
     <% end %>
   </div>
 
+</li>
+
+<% content_for :additional_scripts do %>
   <script>
     $(document).ready(function() {
       $('.field_with_errors > *').unwrap();
@@ -132,4 +135,4 @@
       };
     });
   </script>
-</li>
+<% end %>

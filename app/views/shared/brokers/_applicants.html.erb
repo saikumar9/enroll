@@ -43,8 +43,10 @@
 </div>
 </div>
 
-<script>
-$(function() {
-  Freebies.popover();
-});
-</script>
+<% content_for :additional_scripts do %>
+  <script>
+  $(function() {
+    Freebies.popover();
+  });
+  </script>
+<% end %>

@@ -22,8 +22,10 @@
   </p>
 </div>
 
-<script>
-	$(document).on('ready page:load', function () {
-		Freebies.allFreebies();
-	});
-</script>
+<% content_for :additional_scripts do %>
+  <script>
+  	$(document).on('ready page:load', function () {
+  		Freebies.allFreebies();
+  	});
+  </script>
+<% end %>

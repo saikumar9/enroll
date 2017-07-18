@@ -1,11 +1,13 @@
-<script>
-$(document).ready(function(){
-    $(".toggler").click(function(e){
-        e.preventDefault();
-        $('.cat'+$(this).attr('data-prod-cat')).toggle();
+<% content_for :additional_scripts do %>
+  <script>
+    $(document).ready(function(){
+        $(".toggler").click(function(e){
+            e.preventDefault();
+            $('.cat'+$(this).attr('data-prod-cat')).toggle();
+        });
     });
-});
-</script>
+  </script>
+<% end %>
 
 <div id= 'message_form'></div>
 <div id="inbox_provider_form" class="table-responsive">
@@ -44,7 +46,7 @@ $(document).ready(function(){
                 <a href="#" class="toggler" data-prod-cat="<%=ind%>">+ <%= l10n("enrollments") %></a>
               <%else%>
                 <span class="glyphicon glyphicon-unchecked">
-              <%end%> 
+              <%end%>
           </td>
           <td>
                 <%if all_active_enrollment_with_aptc(family).blank?%>
@@ -62,8 +64,7 @@ $(document).ready(function(){
         </tr>
         <%end%>
       <% end %>
-      
+
     </tbody>
   </table>
 </div>
-

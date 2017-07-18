@@ -17,11 +17,13 @@
     <% end %>
   </td>
 </tr>
-<script>
-  function showMessage(url) {
-    $.ajax({type: "GET", url: url, dataType: 'script'});
-  }
-  function deleteMessage(url, e) {
-    $.ajax({type: "DELETE", url: url, dataType: 'script'});
-  }
-</script>
+<% content_for :additional_scripts do %>
+  <script>
+    function showMessage(url) {
+      $.ajax({type: "GET", url: url, dataType: 'script'});
+    }
+    function deleteMessage(url, e) {
+      $.ajax({type: "DELETE", url: url, dataType: 'script'});
+    }
+  </script>
+<% end %>

@@ -85,8 +85,10 @@
       </div>
     </div>
 
-<script type="text/javascript">
-  $(document).on('ready page:load', function () {
-    Register.initialize();
-  });
-</script>
+<% content_for :additional_scripts do %>
+  <script type="text/javascript">
+    $(document).on('ready page:load', function () {
+      Register.initialize();
+    });
+  </script>
+<% end %>

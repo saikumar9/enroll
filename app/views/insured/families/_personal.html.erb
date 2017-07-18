@@ -3,6 +3,8 @@
 <% else %>
 	<%= render 'people/landing_pages/personal' %>
 <% end %>
-<script>
-	Freebies.floatlabels();
-</script>
+<% content_for :additional_scripts do %>
+	<script>
+		Freebies.floatlabels();
+	</script>
+<% end %>

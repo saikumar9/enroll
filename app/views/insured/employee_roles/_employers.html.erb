@@ -27,20 +27,21 @@
     </div>
   </div>
 </div>
+<% content_for :additional_scripts do %>
+  <script>
+    $(".change_personal_info").click(function(){
+      $('.search-btn-row').removeClass('hidden');
+      $('#employer-info').html("");
+      $(".employer_info").html('');
+    });
 
-<script>
-  $(".change_personal_info").click(function(){
-    $('.search-btn-row').removeClass('hidden');
-    $('#employer-info').html("");
-    $(".employer_info").html('');
-  });
-
-  $(".badge").on('click',function(){
-    $('.badge').removeClass('badge-active');
-    $(".person-search-form").removeClass('person-search-form-active');
-    $(this).toggleClass('badge-active');
-    $(this).closest(".person-search-form").addClass('person-search-form-active');
-    url = $(".badge-active").attr("data-url");
-    $('.search_continue').attr("href",url);
-  });
-</script>
+    $(".badge").on('click',function(){
+      $('.badge').removeClass('badge-active');
+      $(".person-search-form").removeClass('person-search-form-active');
+      $(this).toggleClass('badge-active');
+      $(this).closest(".person-search-form").addClass('person-search-form-active');
+      url = $(".badge-active").attr("data-url");
+      $('.search_continue').attr("href",url);
+    });
+  </script>
+<% end %>

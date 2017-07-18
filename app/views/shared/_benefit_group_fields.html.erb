@@ -178,30 +178,31 @@
 	  </div>
   </div>
 </fieldset>
-
-<% if i < 50 %>
-	<script>
-$(document).on('page:update', function() {
-	//validate plan year create for title, referencce plan, and premium Percentage
-	if (window.location.href.indexOf("edit") > -1 && window.location.href.indexOf("plan_years") > -1) {
-		$('.interaction-click-control-save-plan-year').removeClass('disabled');
-		EmployerProfile.validateEditPlanYear();
-		//validate plan year create for title, referencce plan, and premium Percentage
-		$(document).on('change', '.plan-title input, .offerings input.hidden-param.premium-storage-input', function() {
-			EmployerProfile.validateEditPlanYear();
-		});
-		$(document).on('change', '.reference-plan input', function() {
-			EmployerProfile.validateEditPlanYear();
-		});
-	} else if (window.location.href.indexOf("new") > -1 && window.location.href.indexOf("plan_years") > -1) {
-		EmployerProfile.validatePlanYear();
-		$(document).on('change', '.plan-title input, .offerings input.hidden-param.premium-storage-input', function() {
-			EmployerProfile.validatePlanYear();
-		});
-		$(document).on('change', '.reference-plan input', function() {
-			EmployerProfile.validatePlanYear();
-		});
-	} else {}
-});
-	</script>
+<% content_for :additional_scripts do %>
+  <% if i < 50 %>
+  	<script>
+      $(document).on('page:update', function() {
+      	//validate plan year create for title, referencce plan, and premium Percentage
+      	if (window.location.href.indexOf("edit") > -1 && window.location.href.indexOf("plan_years") > -1) {
+      		$('.interaction-click-control-save-plan-year').removeClass('disabled');
+      		EmployerProfile.validateEditPlanYear();
+      		//validate plan year create for title, referencce plan, and premium Percentage
+      		$(document).on('change', '.plan-title input, .offerings input.hidden-param.premium-storage-input', function() {
+      			EmployerProfile.validateEditPlanYear();
+      		});
+      		$(document).on('change', '.reference-plan input', function() {
+      			EmployerProfile.validateEditPlanYear();
+      		});
+      	} else if (window.location.href.indexOf("new") > -1 && window.location.href.indexOf("plan_years") > -1) {
+      		EmployerProfile.validatePlanYear();
+      		$(document).on('change', '.plan-title input, .offerings input.hidden-param.premium-storage-input', function() {
+      			EmployerProfile.validatePlanYear();
+      		});
+      		$(document).on('change', '.reference-plan input', function() {
+      			EmployerProfile.validatePlanYear();
+      		});
+      	} else {}
+      });
+  	</script>
+  <% end %>
 <% end %>

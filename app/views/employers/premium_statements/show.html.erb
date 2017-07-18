@@ -37,25 +37,25 @@
 </div>
 <% end %>
 
-<script>
+<% content_for :additional_scripts do %>
+  <script>
+    $(function() {
+      $('#billing_date_form').bind({
+        'ajax:before': function () {
+          $('#loader').removeClass('hidden');
+        },
+        'ajax:complete': function () {
+          $('#loader').addClass('hidden');
+        }
+      });
 
-$(function() {
-  $('#billing_date_form').bind({
-    'ajax:before': function () {
-      $('#loader').removeClass('hidden');
-    },
-    'ajax:complete': function () {
-      $('#loader').addClass('hidden');
-    }
-  });
+      $('#enrollment_report_dropdown').on('change', function(){
+        $('#billing_date').val($('option:selected', this).val());
+        $("#billing_date_form").submit();
+      });
+    });
 
-  $('#enrollment_report_dropdown').on('change', function(){
-    $('#billing_date').val($('option:selected', this).val());
-    $("#billing_date_form").submit();
-  });
-});
-
-initializeDataTables();
-$("div.custom_level_1").children('div').hide()
-
-</script>
+    initializeDataTables();
+    $("div.custom_level_1").children('div').hide()
+  </script>
+<% end %>

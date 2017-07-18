@@ -24,9 +24,11 @@
   <%= render "sic_help", sicFieldId: 'organization_employer_profile_attributes_sic_code' %>
 </div>
 
-<script>
-  $(function(){
-    Freebies.selectric();
-    $(".chosen-select").chosen({width: "100%"});
-  });
-</script>
+<% content_for :additional_scripts do %>
+  <script>
+    $(function(){
+      Freebies.selectric();
+      $(".chosen-select").chosen({width: "100%"});
+    });
+  </script>
+<% end %>

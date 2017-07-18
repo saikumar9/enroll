@@ -29,7 +29,9 @@
 
 <% if level==1 %>
   </div>
-  <script>
-     DT.filters()
-  </script>
+  <% content_for :additional_scripts do %>
+    <script>
+       DT.filters()
+    </script>
+  <% end %>
 <% end %>

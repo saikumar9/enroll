@@ -129,7 +129,7 @@
         </div>
       </div>
     </div>
-    
+
   <div class="row">
     <div class="col-xs-12">
       <h3>
@@ -180,9 +180,11 @@
 </div>
 <% end %>
 
+<% content_for :additional_scripts do %>
 <script>
   $(document).on('ready page:load', function () {
     // FormHelpers.preventUnload();
     FormHelpers.applyAsterisks();
   });
 </script>
+<% end %>

@@ -62,9 +62,9 @@
                       <span class="n-radio">
                       </span>
                       <% if kind=="shop" %>
-                        <%= l10n("insured.group_selection.new.employee_sponsored_benifits") %>                      
+                        <%= l10n("insured.group_selection.new.employee_sponsored_benifits") %>
                       <% else %>
-                        <%= l10n("insured.group_selection.new.individual_benifits") %>                      
+                        <%= l10n("insured.group_selection.new.individual_benifits") %>
                       <% end %>
                     </label>
                   </div>
@@ -117,7 +117,7 @@
                     <%= radio_button_tag 'coverage_kind', 'dental', false, id: 'coverage_kind_dental', class: 'n-radio' %>
                     <span class="n-radio">
                     </span>
-                    <%= l10n("dental") %>                    
+                    <%= l10n("dental") %>
                   </label>
                 </div>
               </div>
@@ -187,88 +187,90 @@
   </div>
   <%= render :partial => "insured/plan_shoppings/waive_confirmation", :locals => {:enrollment => @hbx_enrollment } if (@hbx_enrollment.present? && (@hbx_enrollment.employee_role.present? || @hbx_enrollment.benefit_group.present?)) %>
 </div>
-<script>
-  $(function(){
-    if ( $("#find_sep_link").length ) {
-      $("#find_sep_link").click(function() {
-      $(this).closest('form').attr('action', '<%= find_sep_insured_families_path %>');
-      $(this).closest('form').attr('method', 'get');
-      $(this).closest('form').submit();
+<% content_for :additional_scripts do %>
+  <script>
+    $(function(){
+      if ( $("#find_sep_link").length ) {
+        $("#find_sep_link").click(function() {
+          $(this).closest('form').attr('action', '<%= find_sep_insured_families_path %>');
+          $(this).closest('form').attr('method', 'get');
+          $(this).closest('form').submit();
+        });
+      }
+    })
+
+
+  function setGroupSelectionHandlers(){
+    $('.group-selection-table .dental input').removeProp('checked');
+
+    if ( $('#market_kind_shop').is(':checked') ) {
+      $("#coverage_kind_health").prop("checked", true);
+      $("#ivl-coverage-household input[type=checkbox]").prop("checked", false);
+    }
+
+  <% if can_shop_both_markets?(@person) %>
+    <% if @market_kind == 'individual' %>
+      $('#market_kind_individual').prop("checked", true);
+      $('#dental-radio-button').show();
+    <% end %>
+
+    $('#market_kind_shop').on('change', function() {
+      <% if @employee_role.census_employee.active_benefit_group.blank? || !@employee_role.census_employee.active_benefit_group.is_offering_dental? %>
+        $('#dental-radio-button').slideUp();
+      <% end %>
+      $('#shop-coverage-household').show();
+      $('#ivl-coverage-household').hide();
+      $('#ivl-coverage-household input').removeProp('checked');
+
+      if ($('#coverage_kind_health').is(':checked')) {
+        $('#shop-coverage-household .health tr').not(".ineligible_row").find('input').prop('checked', 'checked');
+      }
+      if ($('#coverage_kind_dental').is(':checked')) {
+        $('#shop-coverage-household .dental tr').not(".ineligible_row").find('input').prop('checked', 'checked');
+      }
     });
-  }
-})
 
-
-function setGroupSelectionHandlers(){
-  $('.group-selection-table .dental input').removeProp('checked');
-
-  if ( $('#market_kind_shop').is(':checked') ) {
-    $("#coverage_kind_health").prop("checked", true);
-    $("#ivl-coverage-household input[type=checkbox]").prop("checked", false);
-  }
-
-<% if can_shop_both_markets?(@person) %>
-  <% if @market_kind == 'individual' %>
-    $('#market_kind_individual').prop("checked", true);
-    $('#dental-radio-button').show();
+    $('#market_kind_individual').on('change', function() {
+      $('#dental-radio-button').slideDown();
+      $('#ivl-coverage-household').show();
+      $('#shop-coverage-household').hide();
+      $('#shop-coverage-household input').removeProp('checked');
+      $('#ivl-coverage-household tr').not(".ineligible_row").find('input').prop('checked', 'checked');
+    });
   <% end %>
 
-  $('#market_kind_shop').on('change', function() {
-    <% if @employee_role.census_employee.active_benefit_group.blank? || !@employee_role.census_employee.active_benefit_group.is_offering_dental? %>
-      $('#dental-radio-button').slideUp();
-    <% end %>
-    $('#shop-coverage-household').show();
-    $('#ivl-coverage-household').hide();
-    $('#ivl-coverage-household input').removeProp('checked');
+  <% if (can_shop_shop?(@person) || can_shop_both_markets?(@person)) && @employee_role.census_employee.active_benefit_group.present? && @employee_role.census_employee.active_benefit_group.is_offering_dental? %>
 
-    if ($('#coverage_kind_health').is(':checked')) {
+    $('#coverage_kind_health').on('change', function() {
+      $('#shop-coverage-household .health').show();
       $('#shop-coverage-household .health tr').not(".ineligible_row").find('input').prop('checked', 'checked');
-    }
-    if ($('#coverage_kind_dental').is(':checked')) {
-      $('#shop-coverage-household .dental tr').not(".ineligible_row").find('input').prop('checked', 'checked');
-    }
-  });
-
-  $('#market_kind_individual').on('change', function() {
-    $('#dental-radio-button').slideDown();
-    $('#ivl-coverage-household').show();
-    $('#shop-coverage-household').hide();
-    $('#shop-coverage-household input').removeProp('checked');
-    $('#ivl-coverage-household tr').not(".ineligible_row").find('input').prop('checked', 'checked');
-  });
-<% end %>
-
-<% if (can_shop_shop?(@person) || can_shop_both_markets?(@person)) && @employee_role.census_employee.active_benefit_group.present? && @employee_role.census_employee.active_benefit_group.is_offering_dental? %>
-
-  $('#coverage_kind_health').on('change', function() {
-    $('#shop-coverage-household .health').show();
-    $('#shop-coverage-household .health tr').not(".ineligible_row").find('input').prop('checked', 'checked');
-    $('#shop-coverage-household .dental').hide();
-    $('#shop-coverage-household .dental input').removeProp('checked');
-  });
-
-  $('#coverage_kind_dental').on('change', function() {
-    $('#shop-coverage-household .dental').show();
-    $('#shop-coverage-household .dental tr').not(".ineligible_row").find('input').prop('checked', 'checked');
-    $('#shop-coverage-household .health').hide();
-    $('#shop-coverage-household .health input').removeProp('checked');
-  });
-<% end %>
-
-$("input[type='checkbox']").change(function() {
-  if ($("#coverage_kind_health").is(":checked")){
-    if($(this).is(":checked")) {
-      $(this).attr( "checked", true );
-    }else{
-      $(this).removeProp('checked');
+      $('#shop-coverage-household .dental').hide();
       $('#shop-coverage-household .dental input').removeProp('checked');
+    });
+
+    $('#coverage_kind_dental').on('change', function() {
+      $('#shop-coverage-household .dental').show();
+      $('#shop-coverage-household .dental tr').not(".ineligible_row").find('input').prop('checked', 'checked');
+      $('#shop-coverage-household .health').hide();
+      $('#shop-coverage-household .health input').removeProp('checked');
+    });
+  <% end %>
+
+  $("input[type='checkbox']").change(function() {
+    if ($("#coverage_kind_health").is(":checked")){
+      if($(this).is(":checked")) {
+        $(this).attr( "checked", true );
+      }else{
+        $(this).removeProp('checked');
+        $('#shop-coverage-household .dental input').removeProp('checked');
+        }
       }
-    }
-});
-}
+  });
+  }
 
-$(document).ready(function() {
- setGroupSelectionHandlers();
-});
+  $(document).ready(function() {
+   setGroupSelectionHandlers();
+  });
 
-</script>
+  </script>
+<% end %>

@@ -29,11 +29,13 @@
   </div>
 </div>
 
-<script>
-$(function(){
-  $('.orphans-back-link').click(function(){
-    $('#show_orphan_account').hide();
-$('#users_orphans_accounts').show();
-  })
-})
-</script>
+<% content_for :additional_scripts do %>
+  <script>
+    $(function(){
+      $('.orphans-back-link').click(function(){
+        $('#show_orphan_account').hide();
+    $('#users_orphans_accounts').show();
+      })
+    })
+  </script>
+<% end %>

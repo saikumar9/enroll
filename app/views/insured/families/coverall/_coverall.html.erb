@@ -41,10 +41,11 @@
 <div class="collapse" id="docs-verification-faq">
   <%= render partial: "insured/families/verification/documents_verification_list" %>
 </div>
-
-<script>
-  $(document).ready(function() {
-    Freebies.tooltip();
-    Insured.custom_upload_init();
-  });
-</script>
+<% content_for :additional_scripts do %>
+  <script>
+    $(document).ready(function() {
+      Freebies.tooltip();
+      Insured.custom_upload_init();
+    });
+  </script>
+<% end %>

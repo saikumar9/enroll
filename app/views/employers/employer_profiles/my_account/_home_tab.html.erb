@@ -432,8 +432,11 @@
     </div>
   <% end %>
   </div>
-  <script>
-    $(document).on('ready page:load', function () {
-      Freebies.manualTooltip();
-    });
-  </script>
+  <% content_for :additional_scripts do %>
+
+    <script>
+      $(document).on('ready page:load', function () {
+        Freebies.manualTooltip();
+      });
+    </script>
+  <% end %>

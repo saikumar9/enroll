@@ -79,12 +79,14 @@
     </div>
   </div>
 </li>
-<script type="text/javascript" charset="utf-8">
-  $(".date-picker, .date-picker").datepicker({
-      changeMonth: true,
-      changeYear: true,
-      yearRange: (new Date).getFullYear()-110 + ":" + (new Date).getFullYear()
-   });
-   Freebies.floatlabels();
-   $('.house').addClass('employee-info');
-</script>
+<% content_for :additional_scripts do %>
+  <script type="text/javascript" charset="utf-8">
+    $(".date-picker, .date-picker").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        yearRange: (new Date).getFullYear()-110 + ":" + (new Date).getFullYear()
+     });
+     Freebies.floatlabels();
+     $('.house').addClass('employee-info');
+  </script>
+<% end %>
