@@ -71,6 +71,7 @@ class Notice
         content: ApplicationController.new.render_to_string({
           template: header,
           layout: false,
+          locals: {notice: notice}
           }),
         }
     }
