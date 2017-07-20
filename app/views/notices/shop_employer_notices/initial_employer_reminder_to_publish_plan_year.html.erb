@@ -3,7 +3,7 @@
 <%= render partial: "notices/shared/address", :locals => {notice: notice} %>
 <% case notice.notification_type %>
 <% when "initial_employer_final_reminder_to_publish_plan_year" %>
-  <% subject = "Action Required to Complete #{notice.primary_fullname}’s Application for Employer-sponsored Coverage with #{Settings.site.short_name} – Deadline Extended" %>
+  <% subject = "Action Required to Complete #{notice.primary_fullname}’s Application for Employer-sponsored Coverage with #{site_short_name} – Deadline Extended" %>
 <% end %>
 <table class="total_table" border="0">
   <tbody>
