@@ -454,6 +454,52 @@ shop_notice_triggers = [
     #   ]
     # },
 
+   {
+     hbx_id: 'SHOP15',
+     title: 'Employee Plan Selection Confirmation',
+     description: 'Employee selects a plan during annual open enrollement OE is still open and not final confirmation',
+     resource_name: 'employee_role',
+     event_name: 'select_plan_year_during_oe',
+     notice_triggers: [
+       {
+         name: 'Notice to employee after they select a plan during Annual Open Enrollment',
+         notice_template: 'notices/shop_employee_notices/15_employee_select_plan_during_annual_open_enrollment',
+         notice_builder: 'ShopEmployeeNotices::EmployeeSelectPlanDuringOpenEnrollment',
+         mpi_indicator: 'SHOP_M068',
+         notice_trigger_element_group: {
+           market_places: ['shop'],
+           primary_recipients: ["employee"],
+           primary_recipient_delivery_method: ["secure_message"],
+           secondary_recipients: []
+         }
+       }
+     ]
+   },
+
+  {
+    hbx_id: 'SHOP_M015',
+    title: 'Notice of Low Enrollment - Action Needed',
+    description: 'Notifies all the employers who doesnt meet minimum participation requirement',
+    resource_name: 'employer',
+    event_name: 'low_enrollment_notice_for_employer',
+    notice_triggers: [
+      {
+        name: 'Low Enrollment Notice',
+        notice_template: 'notices/shop_employer_notices/low_enrollment_notice_for_employer',
+        notice_builder: 'ShopEmployerNotices::LowEnrollmentNotice',
+        mpi_indicator: 'SHOP_M015',
+        notice_trigger_element_group: {
+          market_places: ['shop'],
+          primary_recipients: ["employer"],
+          primary_recipient_delivery_method: ["secure_message"],
+          secondary_recipients: []
+        }
+      }
+    ]
+  },
+  
+]
+
     # {
     #   hbx_id: 'SHOP28',
     #   title: 'Final Reminder to publish Application',
