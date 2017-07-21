@@ -1,8 +1,9 @@
 class Users::SessionsController < Devise::SessionsController
-  after_filter :log_failed_login, :only => :new
+  #after_filter :log_failed_login, :only => :new
   def create
     self.resource = warden.authenticate!(auth_options)
     set_flash_message(:notice, :signed_in) if is_flashing_format?
+    pp resource
     sign_in(resource_name, resource)
     yield resource if block_given?
     location = after_sign_in_path_for(resource)
@@ -12,15 +13,16 @@ class Users::SessionsController < Devise::SessionsController
 
   private
 
-  def log_failed_login
-    return unless failed_login?
-    attempted_user = User.find_by(email: request.filtered_parameters["user"]["login"])
-    if attempted_user.present?
-      SessionIdHistory.create(session_user_id: attempted_user.id, sign_in_outcome: "Failed")
-    end
-  end
-
-  def failed_login?
-   (options = env["warden.options"]) && options[:action] == "unauthenticated"
-  end
+  # def log_failed_login
+  #   # return true unless failed_login?
+  #   # attempted_user = User.where(email: request.filtered_parameters["user"]["login"])
+  #   # if attempted_user.present?
+  #   #   SessionIdHistory.create(session_user_id: attempted_user.first.id, sign_in_outcome: "Failed")
+  #   # end
+  #   true
+  # end
+  #
+  # def failed_login?
+  #  (options = env["warden.options"]) && options[:action] == "unauthenticated"
+  # end
 end
