@@ -535,6 +535,16 @@ class EmployerProfile
       })
     end
 
+    def initial_employer_reminder_to_publish(start_on)
+      Organization.where(:"employee_profile.plan_years" =>
+      { :$elemMatch => {
+        :start_on => start_on,
+        :aasm_state => "draft"
+      }
+    })
+    end
+  
+
     def organizations_eligible_for_renewal(new_date)
       months_prior_to_effective = Settings.aca.shop_market.renewal_application.earliest_start_prior_to_effective_on.months * -1
 
@@ -553,6 +563,17 @@ class EmployerProfile
           :start_on => new_date.next_month.beginning_of_month,
           :aasm_state => 'renewing_draft'
           }}
+      })
+    end
+
+    def organizations_for_termination(new_date)
+      Organization.where({
+        :'employer_profile.plan_years' => {
+          :$elemMatch => {
+            :aasm_state => 'termination_pending',
+            :terminated_on.lt => new_date
+          }
+        }
       })
     end
 
@@ -591,12 +612,30 @@ class EmployerProfile
           employer_enroll_factory.end
         end
 
-        if new_date.day == EmployerProfile.shop_market_renewal_application_force_publish_day_of_month
+        if new_date.day == Settings.aca.shop_market.renewal_application.force_publish_day_of_month
           organizations_for_force_publish(new_date).each do |organization|
             plan_year = organization.employer_profile.plan_years.where(:aasm_state => 'renewing_draft').first
-            plan_year.force_publish!
+            plan_year.force.publish!
           end
         end
+
+        organizations_for_termination(new_date).each do |organization|
+          employer_profile = organization.employer_profile
+          plan_year = employer_profile.plan_years.where(:aasm_state => 'termination_pending', :terminated_on.lt => new_date).first
+          plan_year.terminate! if plan_year.may_terminate?
+        end
+
+        #initial employer reminder notices to publish plan year.
+        start_on = (new_date+2.months).beginning_of_month
+        if new_date.next_day == start_on.last_month
+          initial_employer_reminder_to_publish(start_on).each do |organization|
+            begin
+              organization.employer_profile.trigger_notices("initial_employer_final_reminder_to_publish_plan_year")
+            rescue Exception => e
+              puts "Unable to send second reminder notice to publish plan year to #{organization.legal_name} due to following errors {e}"
+            end
+          end
+        end     
       end
 
       # Employer activities that take place monthly - on first of month
@@ -947,6 +986,27 @@ class EmployerProfile
     return true unless enforce_employer_attestation?
     employer_attestation.present? && employer_attestation.is_eligible?
   end
+
+  def terminate(termination_date)
+    plan_year = published_plan_year
+    if plan_year.present?
+      if termination_date >= plan_year.start_on
+        plan_year.schedule_termination!(termination_date) if plan_year.may_schedule_termination?
+
+        if termination_date < TimeKeeper.date_of_record
+          plan_year.terminate! if plan_year.may_terminate?
+        end
+      else
+        plan_year.cancel! if plan_year.may_cancel?
+      end
+
+      renewal_plan_year = plan_years.where(:start_on => plan_year.start_on.next_year).first
+      if renewal_plan_year.present?
+        renewal_plan_year.cancel! if renewal_plan_year.may_cancel?
+        renewal_plan_year.cancel_renewal! if renewal_plan_year.may_cancel_renewal?
+      end
+    end
+  end
   
   private
   
@@ -955,15 +1015,15 @@ class EmployerProfile
   end
 
   def cancel_benefit
-    published_plan_year.cancel
+    published_plan_year.cancel if published_plan_year.present?
   end
 
   def suspend_benefit
-    published_plan_year.suspend
+    published_plan_year.suspend if published_plan_year.present?
   end
 
   def terminate_benefit
-    published_plan_year.terminate
+    published_plan_year.terminate if published_plan_year.present?
   end
 
   def record_transition

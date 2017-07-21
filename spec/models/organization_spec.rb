@@ -120,11 +120,11 @@ RSpec.describe Organization, dbclean: :after_each do
 
   describe "class method", dbclean: :after_each do
     let(:organization1) {FactoryGirl.create(:organization, legal_name: "Acme Inc")}
-    let!(:carrier_profile_1) {FactoryGirl.create(:carrier_profile, organization: organization1, issuer_hios_ids: ['11111'])}
+    let!(:carrier_profile_1) {FactoryGirl.create(:carrier_profile, with_service_areas: 0, organization: organization1, issuer_hios_ids: ['11111'])}
     let(:organization2) {FactoryGirl.create(:organization, legal_name: "Turner Inc")}
-    let!(:carrier_profile_2) {FactoryGirl.create(:carrier_profile, organization: organization2, issuer_hios_ids: ['22222'])}
+    let!(:carrier_profile_2) {FactoryGirl.create(:carrier_profile, with_service_areas: 0, organization: organization2, issuer_hios_ids: ['22222'])}
     let(:single_choice_organization) {FactoryGirl.create(:organization, legal_name: "Restricted Options")}
-    let!(:sole_source_participater) { create(:carrier_profile, organization: single_choice_organization, offers_sole_source: true) }
+    let!(:sole_source_participater) { create(:carrier_profile, with_service_areas: 0, organization: single_choice_organization, offers_sole_source: true) }
 
     let!(:carrier_one_service_area) { create(:carrier_service_area, service_area_zipcode: '10001', issuer_hios_id: carrier_profile_1.issuer_hios_ids.first) }
     let(:address) { double(zip: '10001', county: 'County', state: Settings.aca.state_abbreviation) }
@@ -529,6 +529,22 @@ RSpec.describe Organization, dbclean: :after_each do
         organization.fein ="000000001"
         expect(organization.fein_changed?).to eq true
         organization.save
+      end
+    end
+  end
+
+  describe "check employer_attestations scopes" do
+    context "employer attestation documents scope" do
+      it "should return exact scope match records" do
+        ["submitted","approved","pending","denied"].each do |state|
+          FactoryGirl.create(:organization,
+                             employer_profile: FactoryGirl.build(:employer_profile,
+                                                                 employer_attestation:  FactoryGirl.build(:employer_attestation,{aasm_state: state})))
+        end
+        expect(Organization.employer_attestations_submitted[0].employer_profile.employer_attestation.aasm_state).to eq "submitted"
+        expect(Organization.employer_attestations_pending[0].employer_profile.employer_attestation.aasm_state).to eq "pending"
+        expect(Organization.employer_attestations_approved[0].employer_profile.employer_attestation.aasm_state).to eq "approved"
+        expect(Organization.employer_attestations_denied[0].employer_profile.employer_attestation.aasm_state).to eq "denied"
       end
     end
   end
