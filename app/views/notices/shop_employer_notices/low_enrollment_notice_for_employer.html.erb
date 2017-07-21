@@ -1,14 +1,8 @@
+<%= render partial: 'notices/shared/cover', :locals => {notice: notice} %>
 <%= render partial: 'notices/shared/logo' %>
-<%= render partial: 'notices/shared/date' %>
 <%= render partial: "notices/shared/address", :locals => {notice: notice} %>
-
-<table class="total_table" border="0">
-  <tbody>
-    <tr>
-      <td><h3>Action Needed: Notice of Low Enrollment</h3></td>
-    </tr>
-  </tbody>
-</table>
+<br><br><br><br>
+<%= render partial: 'notices/shared/date' %>
 
 <table class="total_table" border="0">
   <tbody>
