@@ -26,4 +26,11 @@ export class BenefitPackageComponent {
 	planOptionKindRadioIdFor(selection: string) {
 		return(`${this.bg.fieldIdPrefix()}_plan_option_kind_${selection}`);
 	}
+
+        selectedHealthPillClassFor(val : string) {
+                if (this.bg.plan_option_kind == val) {
+			return "active";
+		}
+		return "";
+	}
 }

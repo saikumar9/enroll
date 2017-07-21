@@ -49,4 +49,5 @@ export class BenefitPackage {
 		}
 		return(this.plan_option_kind == "metal_level");
 	}
+
 }
