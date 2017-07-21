@@ -679,6 +679,7 @@ class PlanYear
       open_enrollment_latest_start_on       = ("#{prior_month.year}-#{prior_month.month}-#{HbxProfile::ShopOpenEnrollmentBeginDueDayOfMonth}").to_date
       open_enrollment_latest_end_on         = ("#{prior_month.year}-#{prior_month.month}-#{PlanYear.shop_market_open_enrollment_monthly_end_on}").to_date
       binder_payment_due_date               = first_banking_date_prior ("#{prior_month.year}-#{prior_month.month}-#{PlanYear.shop_market_binder_payment_due_on}")
+      advertised_due_date_of_month          = ("#{prior_month.year}-#{prior_month.month}-#{HbxProfile::ShopOpenEnrollmentAdvBeginDueDayOfMonth}").to_date
 
 
       timetable = {
@@ -691,7 +692,8 @@ class PlanYear
         open_enrollment_earliest_start_on: open_enrollment_earliest_start_on,
         open_enrollment_latest_start_on: open_enrollment_latest_start_on,
         open_enrollment_latest_end_on: open_enrollment_latest_end_on,
-        binder_payment_due_date: binder_payment_due_date
+        binder_payment_due_date: binder_payment_due_date,
+        advertised_due_date_of_month: advertised_due_date_of_month
       }
 
       timetable
