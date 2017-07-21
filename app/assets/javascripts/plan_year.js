@@ -1,4 +1,4 @@
-/*
+
 $(document).on("change", "select.elected_plan", function() {
   var target = $(this).parents(".reference-plan-selection-controls");
   $(target).find(".elected-plan-select .hidden_field").hide();
@@ -46,4 +46,4 @@ $(document).on("change", ".elected-plan-select .metal-level", function() {
       data: {kind: 'metal-level', key: txt, target: $(this).parents("fieldset.benefit-group-fields").attr('id'), start_date: $("#plan_year_start_on").val()}
     });
   }
-});*/
+});
