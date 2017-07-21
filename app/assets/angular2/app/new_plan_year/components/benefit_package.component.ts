@@ -2,6 +2,7 @@ import { ViewChild, Component, ElementRef, Input } from '@angular/core';
 
 import { BenefitPackage } from '../models/benefit_package';
 import { OfferedCarrier } from '../models/offered_carrier';
+import { OfferedPlan } from '../models/offered_plan';
 
 @Component({
 	selector: "benefit-package-component",
@@ -41,5 +42,13 @@ export class BenefitPackageComponent {
 
 	showHealthPlanSelection() {
 		return this.bg.showHealthPlanSelection();
+	}
+
+	offeredPlanRadioIdFor(op : OfferedPlan) {
+	  return(`${this.bg.fieldIdPrefix()}_reference_plan_id_${op._id}`);
+	}
+
+	offeredPlanRadioName() {
+          return(`${this.bg.fieldNamePrefix()}[reference_plan_id]`);
 	}
 }

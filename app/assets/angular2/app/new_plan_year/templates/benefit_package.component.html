@@ -66,7 +66,8 @@
 				</div>
 				<div class="row panel" [hidden]="!bg.showCarrierSelection()">
 					<h4>Select your preferred insurance company carrier. Your plan participants will be able to choose any plan offered by the carrier you select. Your costs will be fixed to a specific plan you’ll choose in a minute.</h4>
-							<div *ngFor="let ac of bg.offered_carriers" class="col-xs-12">
+					<div class="col-xs-12">
+							<div *ngFor="let ac of bg.offered_carriers" class="form-group">
 								<label [for]="healthCarrierSelectionRadioIdFor(ac)">
 									<input type="radio"
 		                                                        (change)="bg.selectPlans()"
@@ -76,6 +77,7 @@
 								       	[value]="ac._id" />{{ac.legal_name}}
 								</label>
 							</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -88,7 +90,24 @@
 			<div class="col-xs-12 panel">
 				<div class="row">
 					<div *ngFor="let p of bg.offered_plans" class="col-xs-4">
-						{{p.name}}
+						<div class="row">
+						<label [for]="offeredPlanRadioIdFor(p)">
+							<div class="col-xs-2">	
+							<input type="radio"
+                                                       	      [(ngModel)]="bg.reference_plan_id"
+                                                   	      [attr.name]="offeredPlanRadioName()"
+                                                   	      [attr.id]="offeredPlanRadioIdFor(p)"
+	                                                      [value]="p._id" />
+							</div>
+							<div class="col-xs-10">
+							<ul class="list-unstyled">
+								<li>{{p.name}}</li>
+								<li>{{p.carrier_name}}</li>
+								<li>{{p.metal_level}}</li>
+							</ul>
+							</div>
+						</label>
+						</div>
 					</div>
 				</div>
 			</div>
