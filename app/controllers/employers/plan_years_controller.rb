@@ -21,7 +21,7 @@ class Employers::PlanYearsController < ApplicationController
 
   def offered_plans
     params.permit(:start_on, :plan_option_kind, :carrier_id, :metal_level)
-    start_on = Date.strptime(params[:start_on], "%Y-%m-%d")
+    start_on = Date.strptime(params[:start_on], "%Y-%m-%d").year.to_s
     offering_query = Queries::EmployerPlanOfferings.new(@employer_profile)
     @plans = if params[:plan_option_kind] == "single_carrier"
       @carrier_id = params[:carrier_id]
