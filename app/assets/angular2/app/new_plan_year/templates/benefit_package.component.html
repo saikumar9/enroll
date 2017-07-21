@@ -5,20 +5,20 @@
 			<div class="row row-form-wrapper no-buffer plan-title">
 				<div class="col-xs-12 form-group form-group-lg">
 					<label class="title">NAME YOUR BENEFIT PACKAGE</label>
-					<input class="form-control" required="true" [name]="titleFieldName()" [(ngModel)]="bg.title"/>
+					<input class="form-control" required="true" [attr.name]="titleFieldName()" [(ngModel)]="bg.title"/>
 				</div>
 			</div>
 			<div class="row row-form-wrapper no-buffer description">
 				<div class="col-xs-12 form-group form-group-lg">
 					<label class="title">DESCRIPTION</label>
-					<input class="form-control" [name]="descriptionFieldName()" [(ngModel)]="bg.description"/>
+					<input class="form-control" [attr.name]="descriptionFieldName()" [(ngModel)]="bg.description"/>
 				</div>
 			</div>
 			<div class="row row-form-wrapper no-buffer">
 				<div class="col-xs-12 form-group form-group-lg">
 					<!-- Offset :  -->
 					<label class="title">WHEN SHOULD NEWLY HIRED EMPLOYEES START THEIR COVERAGE? <!--<i class="fa fa-chevron-down"></i>--></label>
-					<select class="no-selectric form-control" [name]="effectiveOnFieldName()" required="true" [(ngModel)]="bg.effective_on_offset">
+					<select class="no-selectric form-control" [attr.name]="effectiveOnFieldName()" required="true" [(ngModel)]="bg.effective_on_offset">
 						<option value="0">First of the month following or coinciding with date of hire</option>
 						<option value="30">First of the month following 30 days</option>
 						<option value="60">First of the month following 60 days</option>

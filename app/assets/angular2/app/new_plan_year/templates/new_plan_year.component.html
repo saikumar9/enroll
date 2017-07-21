@@ -9,13 +9,13 @@
 				<div class="col-md-12 col-sm-12 col-xs-12">
 					<div class="row row-form-wrapper no-buffer">
 						<div class="col-md-6 col-sm-6 col-xs-12 form-group form-group-lg no-pd">
-							<select name="plan_year[start_on]" class="no-selectric form-control" [(ngModel)]="plan_year_start_on">
+							<select attr.name="plan_year[start_on]" class="no-selectric form-control" [(ngModel)]="plan_year_start_on">
 								<option value="" [selected]="plan_year_start_on == ''">Select Start On</option>
 								<option *ngFor="let available_start of available_start_dates" [value]="available_start[1]" [selected]="plan_year_start_on == available_start[1]">{{available_start[0]}}</option>
 							</select>
 						</div>
 						<div class="col-md-6 col-sm-6 col-xs-12 form-group form-group-lg no-pd">
-							<input name="plan_year[end_on]" class="floatlabel form-control interaction-field-control-plan_year-start_on" placeholder="END ON" readonly="true" [value]="planYearEndOnValue()"/>
+							<input attr.name="plan_year[end_on]" class="floatlabel form-control interaction-field-control-plan_year-start_on" placeholder="END ON" readonly="true" [value]="planYearEndOnValue()"/>
 						</div>
 					</div>
 				</div>
