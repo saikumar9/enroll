@@ -15,7 +15,7 @@ shop_notice_triggers = [
         name: 'Welcome Notice sent to Employer',
         notice_template: 'notices/shop_employer_notices/0_welcome_notice_employer',
         notice_builder: 'ShopEmployerNotices::WelcomeEmployerNotice',
-        mpi_indicator: 'MPI_SHOP0',
+        mpi_indicator: 'SHOP_M001',
         notice_trigger_element_group: {
           market_places: ['shop'],
           primary_recipients: ["employer"],
