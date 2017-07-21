@@ -60,7 +60,7 @@ export class NewPlanYearComponent {
 
         showBenefitGroups() {
 		this.show_benefit_groups = true;
-		this.benefit_packages = [new BenefitPackage(this.serviceAreaOptionsService, this.employer_id, 0)];
+		this.benefit_packages = [new BenefitPackage(this.serviceAreaOptionsService, this.employer_id, 0, this.plan_year_start_on)];
 		this.benefit_package_index = this.benefit_package_index + 1;
 	}
 }

@@ -19,6 +19,39 @@ class Employers::PlanYearsController < ApplicationController
     end
   end
 
+  def offered_plans
+    params.permit(:start_on, :plan_option_kind, :carrier_id, :metal_level)
+    start_on = Date.strptime(params[:start_on], "%Y-%m-%d")
+    offering_query = Queries::EmployerPlanOfferings.new(@employer_profile)
+    @plans = if params[:plan_option_kind] == "single_carrier"
+      @carrier_id = params[:carrier_id]
+      @carrier_profile = CarrierProfile.find(params[:carrier_id])
+      offering_query.single_carrier_offered_health_plans(params[:carrier_id],start_on)
+    elsif params[:plan_option_kind] == "metal_level"
+      @metal_level = params[:metal_level]
+      offering_query.metal_level_offered_health_plans(params[:metal_level],start_on)
+    elsif ["single_plan", "sole_source"].include?(params[:plan_option_kind])
+      @carrier_id = params[:carrier_id]
+      @carrier_profile = CarrierProfile.find(params[:carrier_id])
+      offering_query.single_option_offered_health_plans(params[:carrier_id], start_on)
+    end
+
+    @carriers_cache = CarrierProfile.all.inject({}){|carrier_hash, carrier_profile| carrier_hash[carrier_profile.id] = carrier_profile.legal_name; carrier_hash;}
+    respond_to do |format|
+      format.json do
+        records = @plans.map do |plan|
+          {
+            _id: plan._id.to_s,
+            name: plan.name,
+            metal_level: plan.metal_level,
+            carrier_name: @carriers_cache[plan.carrier_profile_id]
+          }
+        end
+        render :json => records
+      end
+    end
+  end
+
   def new
     @plan_year = build_plan_year
     if @employer_profile.service_areas.any?

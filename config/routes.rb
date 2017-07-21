@@ -294,6 +294,7 @@ Rails.application.routes.draw do
       resources :plan_years do
         collection do
           get 'offered_carriers'
+          get 'offered_plans'
         end
         get 'reference_plans'
         get 'dental_reference_plans'
