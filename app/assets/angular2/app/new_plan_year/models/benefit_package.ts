@@ -11,6 +11,7 @@ export class BenefitPackage {
 	effective_on_offset : number = 0; 
 	metal_level_for_elected_plan : string = "";
 	carrier_for_elected_plan : string = "";
+	reference_plan_id : string = "";
 
 	private _plan_option_kind : string = "";
         get plan_option_kind() {
@@ -22,13 +23,14 @@ export class BenefitPackage {
 			this.carrier_for_elected_plan = "";
 			this.offered_carriers = [];
 			this.offered_plans = [];
+			this.reference_plan_id = "";
 		}
 		this._plan_option_kind = newVal;
 	}
 
 
-        relationship_benefits : RelationshipBenefit[] = [];
-        dental_relationship_benefits : RelationshipBenefit[] = [];
+	relationship_benefits : RelationshipBenefit[] = [];
+	dental_relationship_benefits : RelationshipBenefit[] = [];
 	composite_tier_contributions : CompositeTierContribution[] = [];
 	offered_carriers : OfferedCarrier[] = [];
 	offered_plans : OfferedPlan[] = [];
@@ -44,13 +46,15 @@ export class BenefitPackage {
 		return(`plan_year_benefit_groups_attributes__${this.index}_`); 
 	}
 
-	selectCarriers() {
-		if (this.offered_carriers.length < 1) {
-			this.saService.requestServicedCarriers(this.employer_profile_id).subscribe( 
-				ocs => this.offered_carriers = ocs
-			);
+	assignPlanOptionKind(pok: string) {
+		this.plan_option_kind = pok;
+		if (this._plan_option_kind != "metal_level") {
+			if (this.offered_carriers.length < 1) {
+				this.saService.requestServicedCarriers(this.employer_profile_id).subscribe( 
+					ocs => this.offered_carriers = ocs
+				);
+			}
 		}
-		return true;
 	}
 
 	selectPlans() {

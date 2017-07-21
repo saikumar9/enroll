@@ -44,29 +44,15 @@
 			<div class="col-xs-12">
 				<ul class="nav nav-tabs">
 					<li role="presentation" [class]="selectedHealthPillClassFor('single_carrier')">
-						<a>
-						<label [for]="planOptionKindRadioIdFor('single_carrier')">
-							<input type="radio" [(ngModel)]="bg.plan_option_kind" (change)="bg.selectCarriers()" [id]="planOptionKindRadioIdFor('single_carrier')" value="single_carrier" [attr.name]="planOptionKindRadioName()">
-						By carrier
-						</label>
-						</a>
+						<a (click)="bg.assignPlanOptionKind('single_carrier')">By Carrier</a>
 					</li>
 					<li role="presentation" [class]="selectedHealthPillClassFor('metal_level')">
-						<a>
-						<label [for]="planOptionKindRadioIdFor('metal_level')">
-							<input type="radio" value="metal_level" [(ngModel)]="bg.plan_option_kind" [attr.name]="planOptionKindRadioName()" [id]="planOptionKindRadioIdFor('metal_level')"/>
-						By metal level 
-						</label>
-						</a>
+						<a (click)="bg.assignPlanOptionKind('metal_level')">By Metal Level</a>
 					</li>
 					<li role="presentation" [class]="selectedHealthPillClassFor('sole_source')">
-						<a>
-						<label [for]="planOptionKindRadioIdFor('sole_source')">
-						<input type="radio" value="sole_source" [attr.name]="planOptionKindRadioName()" [id]="planOptionKindRadioIdFor('sole_source')" [(ngModel)]="bg.plan_option_kind" (change)="bg.selectCarriers()" /> 
-						Sole source
-						</label>
-						</a>
+						<a (click)="bg.assignPlanOptionKind('sole_source')">Sole Source</a>
 					</li>
+                                        <input type="radio" style="display: none;" name="" [value]="bg.plan_option_kind" [attr.name]="planOptionKindRadioName()"/>
 				</ul>
 				<div class="row panel" [hidden]="!bg.showMetalLevelSelection()">
 					<h4>Select your preferred metal level. Your plan participants will be able to choose any plan by any carrier within the metal level you select. Your costs will be fixed to a specific plan you’ll choose in a minute. Bronze means the plan is expected to pay 60% of expenses for an average population of consumers, Silver 70%, Gold 80% and Platinum 90%.</h4>
@@ -101,7 +87,7 @@
 		<div class="row">
 			<div class="col-xs-12 panel">
 				<div class="row">
-					<div *ngFor="let p of bg.offered_plans" class="col-xs-3">
+					<div *ngFor="let p of bg.offered_plans" class="col-xs-4">
 						{{p.name}}
 					</div>
 				</div>
