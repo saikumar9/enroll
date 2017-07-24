@@ -6,7 +6,6 @@ require 'rspec/rails'
 require 'shoulda/matchers'
 require 'webmock/rspec'
 
-WebMock.disable_net_connect!(allow_localhost: true)
 
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
