@@ -239,7 +239,16 @@
                       <td><%= ct.composite_rating_tier.try(:humanize) %></td>
                       <td id="pct">
                         <strong><%= number_to_percentage ct.employer_contribution_percent.ceil, precision: 0 %></strong>
-                      </td>
+		                  </td>
+		                  <td>
+			                  <strong><%= number_to_currency(ct.employee_contribution) %></strong>
+		                  </td>
+		                  <td>
+                         <strong><%= number_to_currency(ct.employer_contribution) %></strong>
+		                  </td>
+		                  <td>
+			                  <strong><%= number_to_currency(ct.display_premium) %></strong>
+		                  </td>
                     </tr>
                     <% end %>
                     <tr></tr>
