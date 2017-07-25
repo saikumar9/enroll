@@ -203,13 +203,7 @@
                 </td>
                 <td>
                   <p>
-                    <% if bg.plan_option_kind == "single_carrier" %>
-                    All Plans From A Single Carrier
-                    <% elsif bg.plan_option_kind == "metal_level" %>
-                    All Plans From A Given Metal Level
-                    <% elsif bg.plan_option_kind == "single_plan" %>
-                    A Single Plan
-                    <% end %>
+                    <%= selected_benefit_plan(bg.plan_option_kind) %>
                   </p>
                 </td>
               </tr>
@@ -232,9 +226,12 @@
                       <th>Member Type</th>
                       <th>Employer
                         <% if bg.is_offering_dental? %>Health
-                        <% end %>Contribution</th>
+                  			<% end %>Contribution</th>
+            		      <th>Employee</th>
+            		      <th>Employer</th>
+            		      <th>Total</th>
                     </tr>
-                    <% bg.composite_tier_contributions.each_with_index do |ct, i| %>
+                    <% bg.sorted_composite_tier_contributions.each_with_index do |ct, i| %>
                     <tr>
                       <td><%= ct.composite_rating_tier.try(:humanize) %></td>
                       <td id="pct">
