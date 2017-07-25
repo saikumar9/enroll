@@ -8,7 +8,7 @@ class ShopEmployeeNotices::EmployerFakeNotice < ShopEmployeeNotice
   def build
     pdf = CombinePDF.new
     pdf << CombinePDF.load(Rails.root.join('lib/pdf_templates', 'Denial of Initial Employer Application and Request for Clarifying Documentation.pdf'))
-    pdf.save "tmp/prem-fake.pdf"
+    pdf.save "tmp/ActionRequired:DenialOfApplicationToOfferGroupHealthCoverageThroughTheHealthConnector.pdf"
   end
 
 end
