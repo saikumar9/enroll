@@ -28,9 +28,11 @@ class Observers::NoticeObserver < Observers::Observer
     end
   end
 
-private
   def initialize_dependent_models
     build_notice_trigger_element_group if notice_trigger_element_group.nil?
+  end
+
+  def employer_profile_update(observer_event)
   end
 
 end

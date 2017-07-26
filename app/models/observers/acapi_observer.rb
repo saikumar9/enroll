@@ -20,4 +20,7 @@ class Observers::AcapiObserver < Observers::Observer
   end
 
 
+  def employer_profile_update(observer_event)
+  end
+
 end
