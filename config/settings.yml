@@ -4,7 +4,7 @@ site:
   home_url: "https://enroll.mhc.hbxshop.org"
   help_url: "https://mhc.hbxshop.org/help"
   faqs_url: "https://mhc.hbxshop.org/faqs"
-  ma_website: "www.MAhealthconnector.org"
+  main_web_address: "www.MAhealthconnector.org"
   short_name: "Health Connector"
   byline: "The Right Place for the Right Plan"
   long_name: "Massachusetts Health Connector"
@@ -13,6 +13,7 @@ site:
   logo_file_name: "logo.png"
   s3_prefix: "mhc"
   broker_quoting_enabled: false
+  use_default_devise_path: true
 
   social_media:
     facebook_url: ""
@@ -22,14 +23,14 @@ site:
 contact_center:
   name: "Health Connector's Customer Care Center"
   alt_name: "Health Connector Customer Service"
-  phone_number: "1-855-532-5465"
+  phone_number: "1-888-813-9220"
   fax: "1-617-933-3099"
-  ma_phone_number: "1-888-813-9220"
-  tty_number: "1-855-532-5465"
-  alt_phone_number: "1-855-532-LINK"
-  email_address: "info@example.com"
+  tty_number: "711"
+  alt_phone_number: "1-888-813-9220"
+  email_address: "smallbusiness@mahealthconnector.org"
+  small_business_email: "smallbusiness@mahealthconnector.org"
 
-  appeals: "connector-appeals@state.ma.us" 
+  appeals: "connector-appeals@state.ma.us"
 
   mailing_address:
     name: "Massachusetts Health Connector"
@@ -54,6 +55,7 @@ aca:
   nationwide_markets: false
   general_agency_enabled: false
   dental_market_enabled: false
+  sole_source_only_enabled: false
 #
   qle:
     with_in_sixty_days: 60
@@ -92,6 +94,7 @@ aca:
 
     initial_application:
       publish_due_day_of_month: 15
+      advertised_deadline_of_month: 10  
       earliest_start_prior_to_effective_on:
         months: -2
       appeal_period_after_application_denial:
@@ -122,6 +125,7 @@ aca:
 
       minimum_length:
         days: 5
+        adv_days: 10
       maximum_length:
         months: 2
 
