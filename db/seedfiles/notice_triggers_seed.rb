@@ -345,7 +345,7 @@ shop_notice_triggers = [
 
   {
     hbx_id: 'SHOP16_B',
-    title: 'Initial Eligible Employee Open Enrollment Period begins',
+    title: 'Enroll Now: Your Health Plan Open Enrollment Period has Begun',
     description: 'When Employer application meets minimum participation and non-owner requirements',
     resource_name: 'employee_role',
     event_name: 'initial_employee_open_enrollment_begins',
