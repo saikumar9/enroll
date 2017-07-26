@@ -32,7 +32,7 @@ class Observers::NoticeObserver < Observers::Observer
     build_notice_trigger_element_group if notice_trigger_element_group.nil?
   end
 
-  def employer_profile_update(observer_event)
+  def employer_profile_update(observer_event, employer_profile, options={})
   end
 
 end
