@@ -86,6 +86,29 @@ shop_notice_triggers = [
       }
     ]
   },
+
+ {
+    hbx_id: 'SHOP1C',
+    title: 'Action Required: Denial of Application to Offer Group Health Coverage through the Health Connector',
+    description: 'ER application requirements met SHOP participation approved',
+    resource_name: 'employee_role',
+    event_name: 'fake_notice_path',
+    notice_triggers: [
+        {
+            name: 'Employer notice trigger',
+            notice_template: 'notices/shop_employer_notices/1c_application_approval',
+            notice_builder: 'ShopEmployeeNotices::EmployerFakeNotice',
+            mpi_indicator: 'SHOP_M0039',
+            notice_trigger_element_group: {
+                market_places: ['shop'],
+                primary_recipients: ["employee"],
+                primary_recipient_delivery_method: ["secure_message"],
+                secondary_recipients: []
+            }
+        }
+    ]
+ },
+
   {
     hbx_id: 'SHOP2',
     title: 'Approval of Application to Offer Group Health Coverage through the Health Connector',
