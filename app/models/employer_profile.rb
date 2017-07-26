@@ -1,24 +1,16 @@
+require "Observer"
 class EmployerProfile
   include Config::AcaModelConcern
   include Mongoid::Document
   include SetCurrentUser
   include Mongoid::Timestamps
   include AASM
-  include Acapi::Notifiers
-  extend Acapi::Notifiers
-  include StateTransitionPublisher
-  include ScheduledEventService
-  include Config::AcaModelConcern
+  include Observable
+
+  include ScheduledEventService  
 
   embedded_in :organization
   attr_accessor :broker_role_id
-
-  BINDER_PREMIUM_PAID_EVENT_NAME = "acapi.info.events.employer.binder_premium_paid"
-  EMPLOYER_PROFILE_UPDATED_EVENT_NAME = "acapi.info.events.employer.updated"
-  INITIAL_APPLICATION_ELIGIBLE_EVENT_TAG="benefit_coverage_initial_application_eligible"
-  INITIAL_EMPLOYER_TRANSMIT_EVENT="acapi.info.events.employer.benefit_coverage_initial_application_eligible"
-  RENEWAL_APPLICATION_ELIGIBLE_EVENT_TAG="benefit_coverage_renewal_application_eligible"
-  RENEWAL_EMPLOYER_TRANSMIT_EVENT="acapi.info.events.employer.benefit_coverage_renewal_application_eligible"
 
   ACTIVE_STATES   = ["applicant", "registered", "eligible", "binder_paid", "enrolled"]
   INACTIVE_STATES = ["suspended", "ineligible"]
@@ -82,8 +74,9 @@ class EmployerProfile
     inclusion: { in: Organization::ENTITY_KINDS, message: "%{value} is not a valid business entity kind" },
     allow_blank: false
 
-  after_initialize :build_nested_models
-  after_save :save_associated_nested_models
+  # Callback hook guaranteed to be invoked by Mongoid
+  after_initialize  :initialize_instance
+  around_save       :notify_on_save
 
   scope :active,      ->{ any_in(aasm_state: ACTIVE_STATES) }
   scope :inactive,    ->{ any_in(aasm_state: INACTIVE_STATES) }
@@ -92,6 +85,93 @@ class EmployerProfile
   scope :all_with_next_month_effective_date,  ->{ Organization.all_employers_by_plan_year_start_on(TimeKeeper.date_of_record.end_of_month + 1.day) }
 
   alias_method :is_active?, :is_active
+
+  # This method is invoked by after_initialize callback.  In certain scenarios, such as reading from database, 
+  # Mongoid doesn't invoke initialize callback
+  def initialize_instance
+    register_observers
+    build_nested_models
+  end
+
+  # Register observers and set the event notification hook method name 
+  def register_observers
+    add_observer(Observers::EdiObserver.new,      :employer_profile_update)
+    add_observer(Observers::NoticeObserver.new,   :employer_profile_update)
+    add_observer(Observers::AnalyticObserver.new, :employer_profile_update)
+    add_observer(Observers::LedgerObserver.new,   :employer_profile_update)
+    add_observer(Observers::AcapiObserver.new,    :employer_profile_update)
+    add_observer(Observers::LoggerObserver.new,   :employer_profile_update)
+  end
+
+  OBSERVER_EVENTS = [ :create, :fein_change, :state_change, 
+                      :broker_agency_change, :general_agent_change,
+                      :benefit_period_start,
+                      :premium_credit, :premium_reverse,
+                    ]
+
+  def notify_on_save
+    if !persisted?
+      notify_observers(:on_create)
+    else
+      # Check changes and construct event notifications
+      if parent.fein_changed?
+        is_fein_change = true
+        fein_change_options = { old_fein: parent.fein_was }
+      end
+
+      if aasm_state_changed?
+        is_state_change = true
+        state_change_options = { old_state: aasm_state_was }
+      end
+
+      if active_plan_year.present? && active_plan_year.start_on == TimeKeeper.date_of_record
+        is_benefit_period_start = true
+      end
+
+      # TODO: 
+      # is_benefit_application_eligible_change  = false
+      # old_benefit_application_eligible_change = ""
+
+      # is_initial_benefit_application  = is_registered?
+
+      # is_benefit_period_started           = false
+      # old_benefit_period                  = ""
+
+      # is_broker_agency_change            = false 
+      # old_broker_agency               = ""
+
+      # is_general_agent_change            = false
+      # old_general_agent               = ""
+
+      # is_premium_credit                    = false
+      # is_premium_reversed                = false
+
+      # is_address_change                  = false
+      # old_address                     = ""
+
+      # is_contact_change                  = false
+      # old_contact                     = ""
+
+      # is_terminated                   = false
+      # is_hbx_ineligible               = hbx_ineligible?
+
+      # yield persists instance at this point
+      yield
+      # set flag that instance has changed state so Obervers are notified 
+      changed
+
+      OBSERVER_EVENTS.each do |event|
+        event_fired = instance_eval("is_" + event.to_s)
+        event_name = ("on_" + event.to_s).to_sym
+        event_options = instance_eval(event.to_s + "_options") || {}
+
+        if is_defined?(event_fired) && event_fired
+          notify_observers(event_name, self, event_options)
+        end
+      end
+    end
+  end
+
 
   # def self.all_with_next_month_effective_date
     # Organization.all_employers_by_plan_year_start_on(TimeKeeper.date_of_record.end_of_month + 1.day)
@@ -719,13 +799,14 @@ class EmployerProfile
   # Workflow for self service
   aasm do
     state :applicant, initial: true
-    state :registered                 # Employer has submitted valid application
+    state :registered                 # Employer has submitted valid initial application
     state :eligible                   # Employer has completed enrollment and is eligible for coverage
     state :binder_paid, :after_enter => [:notify_binder_paid,:notify_initial_binder_paid,:transmit_new_employer_if_immediate]
     state :enrolled                   # Employer has completed eligible enrollment, paid the binder payment and plan year has begun
   # state :lapsed                     # Employer benefit coverage has reached end of term without renewal
-  state :suspended                  # Employer's benefit coverage has lapsed due to non-payment
+    state :suspended                  # Employer's benefit coverage has lapsed due to non-payment
     state :ineligible                 # Employer is unable to obtain coverage on the HBX per regulation or policy
+    state :hbx_ineligible             # Employer is permenently banned from sponsoring benefits through the HBX (for example, termination twice for non-payment)
 
     event :advance_date do
       transitions from: :ineligible, to: :applicant, :guard => :has_ineligible_period_expired?
@@ -1046,9 +1127,6 @@ class EmployerProfile
 
   def build_nested_models
     build_inbox if inbox.nil?
-  end
-
-  def save_associated_nested_models
   end
 
   def save_inbox
