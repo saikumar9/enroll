@@ -578,7 +578,6 @@ end
 
 When(/^(.*) creates an HBX account$/) do |named_person|
   screenshot("start")
-  find(".btn[value='Create account']").click
 
   person = people[named_person]
 
