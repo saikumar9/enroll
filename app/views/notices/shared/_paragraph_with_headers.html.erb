@@ -11,11 +11,13 @@
         <td><h3 style="color:black;"><%= sub_heading.html_safe %></h3></td>
       </tr>
       <% end %>
+      <% if contents.present? %>
       <% contents.each do |para| %>
       <tr>
         <td class="notice-font"><%= para.html_safe %></td>
       </tr>
       <% end %>
+        <% end %>
     </tbody>
   </table>
 </div>
