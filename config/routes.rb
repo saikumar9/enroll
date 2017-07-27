@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   require 'resque/server'
   mount Resque::Server, at: '/jobs'
-  devise_for :users, :controllers => { :registrations => "users/registrations", :sessions => 'users/sessions', :passwords => 'users/passwords' }
+   devise_for :users, :controllers => { :registrations => "users/registrations", :sessions => 'users/sessions', :passwords => 'users/passwords' }
 
   get 'check_time_until_logout' => 'session_timeout#check_time_until_logout', :constraints => { :only_ajax => true }
   get 'reset_user_clock' => 'session_timeout#reset_user_clock', :constraints => { :only_ajax => true }
@@ -23,9 +23,9 @@ Rails.application.routes.draw do
   resources :users do
     resources :security_question_responses, controller: "users/security_question_responses"
     member do
+      get :reset_password, :lockable, :confirm_lock
+      put :confirm_reset_password
       post :unlock
-      get :lockable
-      get :confirm_lock
     end
   end
 
