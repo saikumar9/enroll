@@ -40,6 +40,10 @@ module Config::AcaHelper
     @offer_sole_source ||= !(Settings.aca.use_simple_employer_calculation_model.to_s == "true")
   end
 
+  def sole_source_only?
+    Settings.aca.sole_source_only_enabled
+  end
+
   def offers_nationwide_plans?
     @offers_nationwide_plans ||= Settings.aca.nationwide_markets
   end
@@ -58,10 +62,6 @@ module Config::AcaHelper
 
   def use_simple_employer_calculation_model?
     @use_simple_employer_calculation_model ||= (Settings.aca.use_simple_employer_calculation_model.to_s.downcase == "true")
-  end
-
-  def site_broker_quoting_enabled?
-   Settings.site.broker_quoting_enabled
   end
 
 end
