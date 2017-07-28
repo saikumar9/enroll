@@ -11,7 +11,7 @@ class ShopEmployerNotices::InitialEmployerDenialNotice < ShopEmployerNotice
   end
 
   def append_data
-    plan_year = employer_profile.plan_years.enrolling.last
+    plan_year = employer_profile.plan_years.first
     plan_year_warnings = []
     if plan_year
       plan_year.application_eligibility_warnings.each do |k, v|
