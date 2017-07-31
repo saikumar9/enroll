@@ -13,7 +13,6 @@
 
 <%= render partial: 'notices/shared/paragraph', :locals =>
   { content: "Thank you for applying to offer group health coverage through the #{site_short_name}.  However, based upon the information you have provided, we are unable to verify your eligibility to offer group health coverage through the #{site_short_name} at this time."} %>
-
 <%= render partial: 'notices/shared/paragraph', :locals =>
   { content: "We have been unable to determine whether your organization meets the #{site_short_name} eligibility criteria <strong><i>#{notice.plan_year.warnings.join(' and ')}</i></strong> as listed below."} %>
 
@@ -47,7 +46,7 @@
               </tr>
             </tbody>
           </table>
-          At the end of the 30-day period, if you are not able to provide documentation supporting your eligibility to offer health coverage through the <%=site_short_name%>, we will notify you that you have been determined to be ineligible for coverage through the <%=site_short_name%> and explain your right to appeal that determination.<br>
+          At the end of the 30-day period, if you are not able to provide documentation supporting your eligibility to offer health coverage through the <%= site_short_name %>, we will notify you that you have been determined to be ineligible for coverage through the <%= site_short_name %> and explain your right to appeal that determination.<br>
           If you are unable to meet eligibility requirements at this time, you can reapply at any time.
         </td>
       </tr>
