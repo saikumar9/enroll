@@ -119,6 +119,10 @@ class BenefitGroup
 
   alias_method :is_congress?, :is_congress
 
+  def sorted_composite_tier_contributions
+    self.composite_tier_contributions.sort{|a,b| a.sort_val <=> b.sort_val}
+  end
+
   def reference_plan=(new_reference_plan)
     raise ArgumentError.new("expected Plan") unless new_reference_plan.is_a? Plan
     self.reference_plan_id = new_reference_plan._id
@@ -532,14 +536,18 @@ class BenefitGroup
 
   def lookup_cached_cprf_for(carrier_id)
     year = plan_year.start_on.year
+    EmployerParticipationRateRatingFactorSet.value_for(carrier_id, year, participation_rate * 100.0)
+  end
+
+  def participation_rate
+    total_employees = targeted_census_employees.count
+    return(0.0) if total_employees < 1
     waived_and_active_count = if plan_year.estimate_group_size?
                                 targeted_census_employees.select { |ce| ce.expected_to_enroll_or_valid_waive? }.length
                               else
                                 all_active_and_waived_health_enrollments.length
                               end
-    total_employees = targeted_census_employees.count
-    part_rate = waived_and_active_count/(total_employees * 1.0)
-    EmployerParticipationRateRatingFactorSet.value_for(carrier_id, year, part_rate)
+    waived_and_active_count/(total_employees * 1.0)
   end
 
   # Provide the group size factor for this benefit group.
@@ -734,9 +742,26 @@ class BenefitGroup
     # all employee contribution < 50% for 1/1 employers
     if start_on.month == 1 && start_on.day == 1
     else
-      if relationship_benefits.present? && (relationship_benefits.find_by(relationship: "employee").try(:premium_pct) || 0) < Settings.aca.shop_market.employer_contribution_percent_minimum
-        unless self.sole_source?
-          self.errors.add(:relationship_benefits, "Employer contribution must be ≥ 50% for employee")
+      if self.sole_source?
+        unless composite_tier_contributions.present?
+          self.errors.add(:composite_rating_tier, "Employer must set contribution percentages")
+        else
+          employee_tier = composite_tier_contributions.find_by(composite_rating_tier: 'employee_only')
+
+          if aca_shop_market_employer_contribution_percent_minimum > (employee_tier.try(:employer_contribution_percent) || 0)
+            self.errors.add(:composite_tier_contributions,
+            "Employer contribution for employee must be ≥ #{aca_shop_market_employer_contribution_percent_minimum}%")
+          else
+            family_tier = composite_tier_contributions.find_by(composite_rating_tier: 'family')
+            if family_tier.offered? &&
+              (family_tier.try(:employer_contribution_percent) || 0) < aca_shop_market_employer_family_contribution_percent_minimum
+                self.errors.add(:composite_tier_contributions, "Employer contribution for family plans must be ≥ #{aca_shop_market_employer_family_contribution_percent_minimum}")
+            end
+          end
+        end
+      else
+        if relationship_benefits.present? && (relationship_benefits.find_by(relationship: "employee").try(:premium_pct) || 0) < aca_shop_market_employer_contribution_percent_minimum
+          self.errors.add(:relationship_benefits, "Employer contribution must be ≥ #{aca_shop_market_employer_contribution_percent_minimum}% for employee")
         end
       end
     end

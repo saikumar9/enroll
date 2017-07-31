@@ -5,6 +5,8 @@ module Config::AcaModelConcern
     delegate :aca_state_name, to: :class
     delegate :aca_state_abbreviation, to: :class
     delegate :aca_shop_market_cobra_enrollment_period_in_months, to: :class
+    delegate :aca_shop_market_employer_family_contribution_percent_minimum, to: :class
+    delegate :aca_shop_market_employer_contribution_percent_minimum, to: :class
     delegate :individual_market_is_enabled?, to: :class
     delegate :general_agency_enabled?, to: :class
     delegate :use_simple_employer_calculation_model?, to: :class
@@ -13,6 +15,8 @@ module Config::AcaModelConcern
     delegate :constrain_service_areas?, to: :class
     delegate :transmit_employers_immediately?, to: :class
     delegate :enforce_employer_attestation?, to: :class
+    delegate :employee_participation_ratio_minimum, to: :class
+    delegate :non_owner_participation_count_minimum, to: :class
   end
 
   class_methods do
@@ -26,6 +30,14 @@ module Config::AcaModelConcern
 
     def aca_state_name
       @@aca_state_name ||= Settings.aca.state_name
+    end
+
+    def aca_shop_market_employer_family_contribution_percent_minimum
+      @@aca_shop_market_employer_family_contribution_percent_minimum ||= Settings.aca.shop_market.employer_family_contribution_percent_minimum
+    end
+
+    def aca_shop_market_employer_contribution_percent_minimum
+      @@aca_shop_market_employer_contribution_percent_minimum ||= Settings.aca.shop_market.employer_contribution_percent_minimum
     end
 
     def individual_market_is_enabled?
@@ -58,6 +70,14 @@ module Config::AcaModelConcern
 
     def enforce_employer_attestation?
       @@enforce_employer_attestation ||= (Settings.aca.enforce_employer_attestation.to_s.downcase == "true")
+    end
+
+    def employee_participation_ratio_minimum
+      @@employee_participation_ratio_minimum ||= Settings.aca.shop_market.employee_participation_ratio_minimum.to_f
+    end
+
+    def non_owner_participation_count_minimum
+      @@non_owner_participation_count_minimum ||= Settings.aca.shop_market.non_owner_participation_count_minimum.to_f
     end
   end
 end

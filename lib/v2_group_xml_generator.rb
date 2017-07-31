@@ -15,9 +15,12 @@ class V2GroupXmlGenerator
 
   XML_NS = "http://openhbx.org/api/terms/1.0"
 
+  # Currently we do not have plans with other carrier profiles for future reference we are adding Abbrivations later we have to update
   CARRIER_ABBREVIATIONS = {
       "CareFirst": "GHMSI", "Aetna": "AHI", "Kaiser": "KFMASI", "United Health Care": "UHIC", "Delta Dental": "DDPA",
-      "Dentegra": "DTGA", "Dominion": "DMND", "Guardian": "GARD", "BestLife": "BLHI", "MetLife": "META"}
+      "Dentegra": "DTGA", "Dominion": "DMND", "Guardian": "GARD", "BestLife": "BLHI", "MetLife": "META", "Health New England, Inc.": "HNE", "Boston Medical Center HealthNet Plan": "BMCHP", "Fallon Community Health Plan, Inc.": "FCHP",
+      "Minuteman Health, Inc.": "MHI", "Altus Dental": "ALT","Blue Cross Blue Shield of MA": "BCBS", "Delta Dental":"DDA", "Guardian-MA": "GUARD", "Harvard Piligrim Health care": "HPHC", "Neighborhood Health Plan": "NHP",
+      "Tufts Health Plan Direct":"THPD", "Tufts Health Plan Premier": "THPP"}
 
   # Inputs
   # 1 Array of FEINS
@@ -36,6 +39,7 @@ class V2GroupXmlGenerator
     views = Rails::Application::Configuration.new(Rails.root).paths["app/views"]
     views_helper = ActionView::Base.new views
     views_helper.class.send(:include, EventsHelper)
+    views_helper.class.send(:include, Config::AcaHelper)
 
     organizations_hash = {} # key is carrier name, value is the return object of remove_other_carrier_nodes()
 
@@ -50,7 +54,7 @@ class V2GroupXmlGenerator
       begin
         employer_profile = Organization.where(:fein => fein.gsub("-", "")).first.employer_profile
 
-        benefit_groups = employer_profile.plan_years.select(&:eligible_for_export?).select do |py|
+        benefit_groups = employer_profile.plan_years.select{|plan_year| !(PlanYear::INELIGIBLE_FOR_EXPORT_STATES.include? plan_year.aasm_state)}.select do |py|
           py.start_on == Date.parse(@plan_year[:start_date])
         end.flat_map(&:benefit_groups)
 
@@ -65,7 +69,7 @@ class V2GroupXmlGenerator
 
         cv_xml = nil
         carrier_profiles.each do |carrier|
-          cv_xml = views_helper.render file: File.join(Rails.root, "/app/views/events/v2/employers/updated.xml.haml"), :locals => {employer: employer_profile}
+          cv_xml = views_helper.render file: File.join(Rails.root, "/app/views/events/v2/employers/updated.xml.haml"), :locals => {employer: employer_profile, manual_gen: true}
 
           organizations_hash[carrier.legal_name] = [] if organizations_hash[carrier.legal_name].nil?
 
