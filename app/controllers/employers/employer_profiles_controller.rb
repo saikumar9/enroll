@@ -13,6 +13,8 @@ class Employers::EmployerProfilesController < Employers::EmployersController
   skip_before_action :verify_authenticity_token, only: [:show], if: :check_origin?
   before_action :updateable?, only: [:create, :update]
 
+  layout "two_column",  except: [:new]
+
   def link_from_quote
     claim_code = params[:claim_code].upcase
     import_roster = params[:import_roster] == "yes" ? true : false
@@ -120,7 +122,7 @@ class Employers::EmployerProfilesController < Employers::EmployersController
       case @tab
       when 'benefits'
         @current_plan_year = @employer_profile.renewing_plan_year || @employer_profile.active_plan_year
-        @current_plan_year.ensure_benefit_group_is_valid if @current_plan_year 
+        @current_plan_year.ensure_benefit_group_is_valid if @current_plan_year
         sort_plan_years(@employer_profile.plan_years)
       when 'documents'
         @datatable = Effective::Datatables::EmployerDocumentDatatable.new({employer_profile_id: params[:id]})
