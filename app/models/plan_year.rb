@@ -479,8 +479,10 @@ class PlanYear
     end
 
     # Maximum company size at time of initial registration on the HBX
-    if fte_count < 1 || fte_count > Settings.aca.shop_market.small_market_employee_count_maximum
-      warnings.merge!({ fte_count: "Has #{Settings.aca.shop_market.small_market_employee_count_maximum} or fewer full time equivalent employees" })
+    if fte_count > Settings.aca.shop_market.small_market_employee_count_maximum
+        warnings.merge!({fte_count: "Has 1-#{Settings.aca.shop_market.small_market_employee_count_maximum} full-time equivalent employees",
+          fte_count1: "Is a small business located in Massachusetts",
+          fte_count2: "Click Cancel if you want to go back and review your application information for accuracy. If the information provided on your application is accurate, you may click Publish Anyways to proceed. If you choose to proceed and the application is determined to be ineligible, you will be notified with the reason for the eligibility determination along with what your options are to appeal this determination." })
     end
 
     # Exclude Jan 1 effective date from certain checks
