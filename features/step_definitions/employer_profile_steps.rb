@@ -107,9 +107,7 @@ When(/(\w+) accesses the Employer Portal/) do |name|
   visit '/'
   portal_class = 'interaction-click-control-employer-portal'
   find("a.#{portal_class}").click
-  unless Settings.site.use_default_devise_path
-    find("a.interaction-click-control-sign-in-existing-account").click
-  end
+  find("a.interaction-click-control-sign-in-existing-account").click
   step "#{name} signs in to portal"
 end
 

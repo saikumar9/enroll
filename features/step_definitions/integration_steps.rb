@@ -218,7 +218,6 @@ Given(/^Hbx Admin exists$/) do
   FactoryGirl.create :hbx_staff_role, person: user.person, hbx_profile: hbx_profile, permission_id: p_staff.id
   #Hackity Hack need both years reference plans b/c of Plan.valid_shop_dental_plans and Plan.by_active_year(params[:start_on]).shop_market.health_coverage.by_carrier_profile(@carrier_profile).and(hios_id: /-01/)
   year = (Date.today + 2.months).year
-  year = (Date.today + 2.months).year
   plan = FactoryGirl.create :plan, :with_premium_tables, :with_rating_factors, active_year: year, market: 'shop', coverage_kind: 'health', deductible: 4000
   plan2 = FactoryGirl.create :plan, :with_premium_tables, :with_rating_factors, active_year: (year - 1), market: 'shop', coverage_kind: 'health', deductible: 4000, carrier_profile_id: plan.carrier_profile_id
 end
@@ -578,11 +577,6 @@ end
 
 When(/^(.*) creates an HBX account$/) do |named_person|
   screenshot("start")
-  if Settings.site.use_default_devise_path
-    click_link "Create account"
-  else
-    find(".btn[value='Create account']").click
-  end
 
   person = people[named_person]
 
