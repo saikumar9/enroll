@@ -1,8 +1,8 @@
 FactoryGirl.define do
   factory :scheduled_event do
-  	type 'holiday'
+  	kind 'holiday'
   	event_name 'Christmas'
-    start_time { Date.new(2017, 1, 1) }
+    start_on { Date.new(2017, 1, 1) }
     one_time true
     offset_rule 3
 
@@ -15,15 +15,15 @@ FactoryGirl.define do
 	  end
 
 	  trait :start_on_friday do
-	    start_time { Date.today.sunday + 5.day }
+	    start_on { Date.today.sunday + 5.day }
 	  end
 
 	  trait :start_on_saturday do
-	    start_time { Date.today.sunday + 6.day }
+	    start_on { Date.today.sunday + 6.day }
 	  end
 
 	  trait :start_on_sunday do
-	    start_time { Date.today.sunday }
+	    start_on { Date.today.sunday }
 	  end
 	end
 end
