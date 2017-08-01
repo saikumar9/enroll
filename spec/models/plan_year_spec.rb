@@ -2184,6 +2184,7 @@ describe PlanYear, "which has the concept of export eligibility" do
           })
 
         py.aasm_state = "draft"
+        py.fte_count = 3
         py.benefit_groups = [benefit_group]
         py.save
         py
