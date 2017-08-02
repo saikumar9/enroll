@@ -2,8 +2,11 @@ class TimeKeeper
   include Config::AcaModelConcern
   include Mongoid::Document
   include Singleton
+  include Observable
+
   include Acapi::Notifiers
   extend Acapi::Notifiers
+
 
   CACHE_KEY = "timekeeper/date_of_record"
 
@@ -70,6 +73,12 @@ class TimeKeeper
     Date.strptime(found_value, "%Y-%m-%d")
   end
 
+  def register_observers
+    add_observer(Observers::EmployerProfileObserver.new, :time_keeper_update)
+  end
+
+  OBSERVER_EVENTS = [ :advance_day ]
+
   def push_date_of_record
     BenefitSponsorship.advance_day(self.date_of_record)
     EmployerProfile.advance_day(self.date_of_record)
@@ -77,6 +86,8 @@ class TimeKeeper
     HbxEnrollment.advance_day(self.date_of_record)
     CensusEmployee.advance_day(self.date_of_record)
     ConsumerRole.advance_day(self.date_of_record)
+
+    notify_observers(:advance_day, self, options: { day: CalendarDay.new(date_of_record) })
   end
 
   def self.with_cache

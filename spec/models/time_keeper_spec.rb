@@ -74,9 +74,23 @@ RSpec.describe TimeKeeper, type: :model do
     end
 
     context "and new date is one day later than current date_of_record" do
-      let!(:hbx_profile) { FactoryGirl.create(:hbx_profile) }
-      it "should advance the date" do
-        expect(TimeKeeper.set_date_of_record(next_day)).to eq next_day
+      let!(:hbx_profile)              { FactoryGirl.create(:hbx_profile) }
+      let(:scheduled_event_name)      { "random_system_event" }
+      let(:scheduled_event)           { ScheduledEvent.create(
+                                            title: "Random event", 
+                                            event_name: scheduled_event_name,
+                                            start_on: TimeKeeper.date_of_record,
+                                          ) 
+                                        }
+      let(:calendar_day)              { CalendarDay.new(TimeKeeper.date_of_record) }
+      let(:time_keeper_event)         { :advance_day }
+
+      it "should notify registered observer with event" do
+        lambda {
+            employer_profile_observer = object_double("Observers::EmployerProfileObserver").as_stubbed_const
+            TimeKeeper.set_date_of_record(next_day)
+            expect(employer_profile_observer).to have_received(:time_keeper_update).with(time_keeper_event, :time_keeper_double, { day: calendar_day })
+          }
       end
 
       it "should send the new date_of_record to registered models"
