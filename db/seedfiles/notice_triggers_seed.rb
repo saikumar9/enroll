@@ -25,6 +25,7 @@ shop_notice_triggers = [
       }
     ]
   },
+
   # {
   #   hbx_id: 'SHOP1A',
   #   title: 'Initial Employer SHOP Application Approval',
@@ -127,6 +128,7 @@ shop_notice_triggers = [
       }
     ]
   },
+
   # {
   #   hbx_id: 'SHOP3A',
   #   title: 'Plan Offerings Finalized',
@@ -362,6 +364,7 @@ shop_notice_triggers = [
       }
     ]
   },
+
   # {
   #   hbx_id: 'SHOP13',
   #   title: 'Open Enrollment Reminder',
@@ -404,12 +407,13 @@ shop_notice_triggers = [
       }
     ]
   },
+
   {
     hbx_id: 'SHOP_M022',
     title: 'Your Invoice for Employer Sponsored Coverage is Now Available',
     description: 'When initial groups first invoice is available in their account, this notice is sent to them to instruct them on how to pay their binder payment.',
     resource_name: 'employer',
-    event_name: 'initial_employer_first_reminder_to_publish_plan_year',
+    event_name: 'initial_employer_ineligibility_notice',
     notice_triggers: [
       {
         name: 'Initial Employer Application - Reminder to publish',
@@ -513,8 +517,6 @@ shop_notice_triggers = [
   ]
 },
 ]
-
-
 
 ivl_notice_triggers = [
   {

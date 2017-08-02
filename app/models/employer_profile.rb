@@ -369,7 +369,7 @@ class EmployerProfile
   end
 
   def is_primary_office_local?
-    organization.primary_office_location.address.state.to_s.downcase == aca_state_abbreviation.to_s.downcase
+    (organization.primary_office_location.address.state.to_s.downcase == aca_state_abbreviation.to_s.downcase)
   end
 
   def build_plan_year_from_quote(quote_claim_code, import_census_employee=false)
@@ -566,6 +566,17 @@ class EmployerProfile
       })
     end
 
+    def organizations_for_termination(new_date)
+      Organization.where({
+        :'employer_profile.plan_years' => {
+          :$elemMatch => {
+            :aasm_state => 'termination_pending',
+            :terminated_on.lt => new_date
+          }
+        }
+      })
+    end
+
     def advance_day(new_date)
       if !Rails.env.test?
         plan_year_renewal_factory = Factories::PlanYearRenewalFactory.new
@@ -608,38 +619,23 @@ class EmployerProfile
           end
         end
 
+        organizations_for_termination(new_date).each do |organization|
+          employer_profile = organization.employer_profile
+          plan_year = employer_profile.plan_years.where(:aasm_state => 'termination_pending', :terminated_on.lt => new_date).first
+          plan_year.terminate! if plan_year.may_terminate?
+        end
+
         #initial employer reminder notices to publish plan year.
         start_on = (new_date+2.months).beginning_of_month
-        start_on_1 = (new_date+1.month).beginning_of_month
-        if new_date+2.days == start_on.last_month
-          initial_employer_reminder_to_publish(start_on).each do|organization|
-            begin
-              organization.employer_profile.trigger_notices("initial_employer_reminder_to_publish_plan_year")
-            rescue Exception => e
-              puts "Unable to send first reminder notice to publish plan year to #{organization.legal_name} due to following error {e}"
-            end
-          end
-        elsif new_date+1.days == start_on.last_month
+        if new_date.next_day == start_on.last_month
           initial_employer_reminder_to_publish(start_on).each do |organization|
             begin
-              organization.employer_profile.trigger_notices("initial_employer_reminder_to_publish_plan_year")
+              organization.employer_profile.trigger_notices("initial_employer_final_reminder_to_publish_plan_year")
             rescue Exception => e
               puts "Unable to send second reminder notice to publish plan year to #{organization.legal_name} due to following errors {e}"
             end
           end
-        else 
-          plan_year_due_date = Date.new(start_on_1.prev_month.year, start_on_1.prev_month.month, Settings.aca.initial_application.publish_due_date_of_month)
-          if (start_on +2.days == plan_year_due_date)
-            initial_employer_reminder_to_publish(start_on_1).each do |organization|
-              begin
-                organization.employee_profile.trigger_notices("initial_employer_reminder_to_publish_plan_year")
-              rescue Exception => e
-                puts "Unable to send final reminder notice to publish plan year to #{organization.legal_name} due to following errors {e}"
-              end
-            end
-          end
         end     
-
       end
 
       # Employer activities that take place monthly - on first of month
@@ -990,6 +986,33 @@ class EmployerProfile
     return true unless enforce_employer_attestation?
     employer_attestation.present? && employer_attestation.is_eligible?
   end
+
+  def validate_and_send_denial_notice
+    if !is_primary_office_local? || !(RatingArea.all.pluck(:zip_code).include? organization.primary_office_location.address.zip)
+      self.trigger_notices('initial_employer_denial')
+    end
+  end
+
+  def terminate(termination_date)
+    plan_year = published_plan_year
+    if plan_year.present?
+      if termination_date >= plan_year.start_on
+        plan_year.schedule_termination!(termination_date) if plan_year.may_schedule_termination?
+
+        if termination_date < TimeKeeper.date_of_record
+          plan_year.terminate! if plan_year.may_terminate?
+        end
+      else
+        plan_year.cancel! if plan_year.may_cancel?
+      end
+
+      renewal_plan_year = plan_years.where(:start_on => plan_year.start_on.next_year).first
+      if renewal_plan_year.present?
+        renewal_plan_year.cancel! if renewal_plan_year.may_cancel?
+        renewal_plan_year.cancel_renewal! if renewal_plan_year.may_cancel_renewal?
+      end
+    end
+  end
   
   private
   
@@ -998,15 +1021,15 @@ class EmployerProfile
   end
 
   def cancel_benefit
-    published_plan_year.cancel
+    published_plan_year.cancel if published_plan_year.present?
   end
 
   def suspend_benefit
-    published_plan_year.suspend
+    published_plan_year.suspend if published_plan_year.present?
   end
 
   def terminate_benefit
-    published_plan_year.terminate
+    published_plan_year.terminate if published_plan_year.present?
   end
 
   def record_transition
