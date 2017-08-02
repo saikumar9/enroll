@@ -81,6 +81,16 @@ class Employers::EmployerAttestationsController < ApplicationController
     end
   end
 
+  def delete_attestation_documents
+    begin
+      @employer_profile.employer_attestation.employer_attestation_documents.where(:id =>params[:employer_attestation_id],:aasm_state => "submitted").destroy_all
+      @employer_profile.employer_attestation.revert! if @employer_profile.employer_attestation.may_revert?
+      redirect_to employers_employer_profile_path(@employer_profile.id, :tab=>'documents')
+    rescue => e
+      render json: { status: 500, message: 'An error occured while deleting the employer attestation' }
+    end
+  end
+
   private
 
   def authorized_to_download?
