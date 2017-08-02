@@ -2,7 +2,6 @@
 <%= hidden_field_tag 'current_sort', @sort_by  %>
 <%= hidden_field_tag 'plan_ids' %>
 <div class="container-fluid">
-<<<<<<< HEAD
   <h3><%= l10n("plan_comparison_chart")%></h3>
   <ul style="padding-left: 18px;">
     <li> <%= l10n("broker_agencies.quotes.rearranged_plans")%> </li>
@@ -37,7 +36,9 @@
         <tr>
           <th><%= l10n("provider_network")%></th>
           <% qhps.each do |qhp|%>
-            <th colspan="2"><%= qhp.plan.nationwide ? "Nationwide" : qhp.plan.service_area_id %></th>
+            <th colspan="2">
+              <%= render partial: "shared/network_data", locals: {plan: qhp.plan} %>
+            </th>
           <% end %>
         </tr>
 

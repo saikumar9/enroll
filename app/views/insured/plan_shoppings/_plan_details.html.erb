@@ -40,7 +40,6 @@
         <table class="table gn-10">
           <thead>
           <tr>
-<<<<<<< HEAD
             <th><%= l10n("type").to_s.upcase %></th>
             <th><%= l10n("level").to_s.upcase %></th>
             <th><%= l10n("network").to_s.upcase %></th>
@@ -54,17 +53,19 @@
           </tr>
           </thead>
           <tbody>
-          <tr>
-            <td><%= plan.plan_type ? plan.plan_type.upcase : "" %></td>
-            <td>
-              <% plan_level = plan.metal_level.humanize %>
-              <span class="<%= plan_level.downcase %>-icon">
-                <%= plan_level != 'Dental' ? plan_level : display_dental_metal_level(plan).humanize %>
-              </span>
-            </td>
-            <td><%= plan.nationwide ? l10n("nationwide") : plan.service_area_id  %></td>
-            <td><%= deductible_display(@hbx_enrollment, plan) %></td>
-          </tr>
+            <tr>
+              <td><%= plan.plan_type ? plan.plan_type.upcase : "" %></td>
+              <td>
+                <% plan_level = plan.metal_level.humanize %>
+                <span class="<%= plan_level.downcase %>-icon">
+                  <%= plan_level != 'Dental' ? plan_level : display_dental_metal_level(plan).humanize %>
+                </span>
+              </td>
+              <td>
+                <%= render partial: "shared/network_data", locals: {plan: plan} %>
+              </td>
+              <td> <%= deductible_display(@hbx_enrollment, plan) %> </td>
+            </tr>
           </tbody>
         </table>
       </div>

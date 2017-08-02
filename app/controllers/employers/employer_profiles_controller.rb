@@ -129,6 +129,8 @@ class Employers::EmployerProfilesController < Employers::EmployersController
         @documents = []
         if @employer_profile.employer_attestation.present?
           @documents = @employer_profile.employer_attestation.employer_attestation_documents
+        else
+          @employer_profile.build_employer_attestation
         end
       when 'employees'
         @current_plan_year = @employer_profile.show_plan_year
@@ -342,9 +344,9 @@ class Employers::EmployerProfilesController < Employers::EmployersController
     @employer_profile = EmployerProfile.find(params[:id])
     begin
       @employer_profile.documents.any_in(:_id =>params[:ids]).destroy_all
-      render json: { status: 200, message: 'Successfully submitted the selected employer(s) for binder paid.' }
+      render json: { status: 200, message: 'Successfully deleted the employer attestation documents' }
     rescue => e
-      render json: { status: 500, message: 'An error occured while submitting employer(s) for binder paid.' }
+      render json: { status: 500, message: 'An error occured while deleting the employer attestation documents' }
     end
   end
 

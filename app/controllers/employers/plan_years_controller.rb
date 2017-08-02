@@ -141,7 +141,16 @@ class Employers::PlanYearsController < ApplicationController
         if benefit_group.composite_tier_contributions.empty?
           benefit_group.build_composite_tier_contributions
         end
-        benefit_group.estimate_composite_rates
+        begin
+          benefit_group.estimate_composite_rates
+        rescue => e
+          flash[:error] = ""
+          benefit_group.errors[:composite_tier_contributions].each do |err|
+            flash[:error] << err
+          end
+          render action: 'new'
+          return
+        end
       end
     end
 
@@ -281,7 +290,6 @@ class Employers::PlanYearsController < ApplicationController
       benefit_group.elected_dental_plans = ax if ax
       benefit_group.build_estimated_composite_rates
     end
-
     if @plan_year.save
       flash[:notice] = "Plan Year successfully saved."
       redirect_to employers_employer_profile_path(@employer_profile, :tab => "benefits")
@@ -480,7 +488,7 @@ class Employers::PlanYearsController < ApplicationController
                                         :id, :relationship, :premium_pct, :employer_max_amt, :offered, :_destroy
                                       ],
                                       :composite_tier_contributions_attributes => [
-                                        :id, :composite_rating_tier, :employer_contribution_percent
+                                        :id, :composite_rating_tier, :employer_contribution_percent, :offered
                                       ]
     ]
     )

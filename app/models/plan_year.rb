@@ -479,7 +479,7 @@ class PlanYear
     end
 
     # Maximum company size at time of initial registration on the HBX
-    if fte_count > Settings.aca.shop_market.small_market_employee_count_maximum
+    if fte_count < 1 || fte_count > Settings.aca.shop_market.small_market_employee_count_maximum
       warnings.merge!({ fte_count: "Has #{Settings.aca.shop_market.small_market_employee_count_maximum} or fewer full time equivalent employees" })
     end
 
@@ -679,6 +679,7 @@ class PlanYear
       open_enrollment_latest_start_on       = ("#{prior_month.year}-#{prior_month.month}-#{HbxProfile::ShopOpenEnrollmentBeginDueDayOfMonth}").to_date
       open_enrollment_latest_end_on         = ("#{prior_month.year}-#{prior_month.month}-#{PlanYear.shop_market_open_enrollment_monthly_end_on}").to_date
       binder_payment_due_date               = first_banking_date_prior ("#{prior_month.year}-#{prior_month.month}-#{PlanYear.shop_market_binder_payment_due_on}")
+      advertised_due_date_of_month          = ("#{prior_month.year}-#{prior_month.month}-#{HbxProfile::ShopOpenEnrollmentAdvBeginDueDayOfMonth}").to_date
 
 
       timetable = {
@@ -691,7 +692,8 @@ class PlanYear
         open_enrollment_earliest_start_on: open_enrollment_earliest_start_on,
         open_enrollment_latest_start_on: open_enrollment_latest_start_on,
         open_enrollment_latest_end_on: open_enrollment_latest_end_on,
-        binder_payment_due_date: binder_payment_due_date
+        binder_payment_due_date: binder_payment_due_date,
+        advertised_due_date_of_month: advertised_due_date_of_month
       }
 
       timetable
@@ -849,7 +851,8 @@ class PlanYear
       transitions from: :enrolled,  to: :active,                  :guard  => :is_event_date_valid?
       transitions from: :published, to: :enrolling,               :guard  => :is_event_date_valid?
       transitions from: :enrolling, to: :enrolled,                :guards => [:is_open_enrollment_closed?, :is_enrollment_valid?]
-      transitions from: :enrolling, to: :application_ineligible,  :guard => :is_open_enrollment_closed?
+      transitions from: :enrolling, to: :application_ineligible,  :guard => :is_open_enrollment_closed?, :after => [:initial_employer_ineligibility_notice, :notify_employee_of_initial_employer_ineligibility] 
+
       # transitions from: :enrolling, to: :canceled,  :guard  => :is_open_enrollment_closed?, :after => :deny_enrollment  # Talk to Dan
 
       transitions from: :active, to: :terminated, :guard => :is_event_date_valid?
@@ -1178,6 +1181,13 @@ class PlanYear
     end
   end
 
+ def notify_employee_of_initial_employer_ineligibility
+    return true if benefit_groups.any?{|bg| bg.is_congress?}
+    self.employer_profile.census_employees.non_terminated.each do |ce|
+    ShopNoticesNotifierJob.perform_later(ce.id.to_s, "notify_employee_of_initial_employer_ineligibility")
+    end
+  end
+
   def initial_employer_approval_notice
     return true if (benefit_groups.any?{|bg| bg.is_congress?} || (fte_count < 1))
     self.employer_profile.trigger_notices("initial_employer_approval")
@@ -1232,6 +1242,11 @@ class PlanYear
     if transmit_employers_immediately? 
       employer_profile.transmit_renewal_eligible_event
     end
+  end
+
+  def initial_employer_ineligibility_notice
+    return true if benefit_groups.any? { |bg| bg.is_congress? }
+    self.employer_profile.trigger_notices("initial_employer_ineligibility_notice")
   end
 
   def record_transition

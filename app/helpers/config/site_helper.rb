@@ -27,6 +27,10 @@ module Config::SiteHelper
     Settings.site.help_url
   end
 
+  def site_faqs_url
+    Settings.site.faqs_url
+  end
+
   def site_short_name
     Settings.site.short_name
   end
@@ -43,4 +47,7 @@ module Config::SiteHelper
     link_to site_main_web_address, site_main_web_address
   end
 
+  def site_uses_default_devise_path?
+    Settings.site.use_default_devise_path
+  end
 end
