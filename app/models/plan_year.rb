@@ -479,8 +479,8 @@ class PlanYear
     end
 
     # Maximum company size at time of initial registration on the HBX
-    if fte_count > Settings.aca.shop_market.small_market_employee_count_maximum
-        warnings.merge!({fte_count: "Has 1-#{Settings.aca.shop_market.small_market_employee_count_maximum} full-time equivalent employees",
+    if fte_count > aca_shop_market_small_market_employee_count_maximum
+        warnings.merge!({fte_count: "Has 1-#{aca_shop_market_small_market_employee_count_maximum} full-time equivalent employees",
           fte_count1: "Is a small business located in Massachusetts",
           fte_count2: "Click Cancel if you want to go back and review your application information for accuracy. If the information provided on your application is accurate, you may click Publish Anyways to proceed. If you choose to proceed and the application is determined to be ineligible, you will be notified with the reason for the eligibility determination along with what your options are to appeal this determination." })
     end
@@ -853,7 +853,7 @@ class PlanYear
       transitions from: :enrolled,  to: :active,                  :guard  => :is_event_date_valid?
       transitions from: :published, to: :enrolling,               :guard  => :is_event_date_valid?
       transitions from: :enrolling, to: :enrolled,                :guards => [:is_open_enrollment_closed?, :is_enrollment_valid?]
-      transitions from: :enrolling, to: :application_ineligible,  :guard => :is_open_enrollment_closed?, :after => [:initial_employer_ineligibility_notice, :notify_employee_of_initial_employer_ineligibility] 
+      transitions from: :enrolling, to: :application_ineligible,  :guard => :is_open_enrollment_closed?, :after => [:initial_employer_ineligibility_notice, :notify_employee_of_initial_employer_ineligibility]
 
       # transitions from: :enrolling, to: :canceled,  :guard  => :is_open_enrollment_closed?, :after => :deny_enrollment  # Talk to Dan
 
@@ -1241,7 +1241,7 @@ class PlanYear
     benefit_groups.each do |bg|
       bg.finalize_composite_rates
     end
-    if transmit_employers_immediately? 
+    if transmit_employers_immediately?
       employer_profile.transmit_renewal_eligible_event
     end
   end
