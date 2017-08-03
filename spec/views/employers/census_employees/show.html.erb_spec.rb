@@ -75,13 +75,13 @@ RSpec.describe "employers/census_employees/show.html.erb" do
   it "should show the address feild of census employee if address not present" do
     allow(census_employee).to receive(:address).and_return([])
     render template: "employers/census_employees/show.html.erb"
-    expect(rendered).to match /Address/
-    expect(rendered).to match /ADDRESS LINE 2/
-    expect(rendered).to match /ADDRESS LINE 1/
-    expect(rendered).to match /CITY/
-    expect(rendered).to match /SELECT STATE/
-    expect(rendered).to match /ZIP/
-    expect(rendered).to match /Add Dependent/
+    expect(view.content_for(:main)).to match /Address/
+    expect(view.content_for(:main)).to match /ADDRESS LINE 2/
+    expect(view.content_for(:main)).to match /ADDRESS LINE 1/
+    expect(view.content_for(:main)).to match /CITY/
+    expect(view.content_for(:main)).to match /SELECT STATE/
+    expect(view.content_for(:main)).to match /ZIP/
+    expect(view.content_for(:main)).to match /Add Dependent/
   end
 
   it "should not show the plan" do
