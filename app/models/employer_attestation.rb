@@ -50,6 +50,10 @@ class EmployerAttestation
     employer_profile.terminate(TimeKeeper.date_of_record.end_of_month)
   end
 
+  def editable?
+    unsubmitted? || submitted? || pending?
+  end
+
   private
 
   def record_transition
