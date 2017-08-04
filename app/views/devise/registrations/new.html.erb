@@ -1,3 +1,8 @@
+  <script type="text/javascript">
+    var site_key = "<%= Rails.application.secrets.recaptcha_site_key %>"
+    setCaptchaSiteKey(site_key);
+  </script>
+  <script type="text/javascript" src="https://www.google.com/recaptcha/api.js?onload=loadCaptchaWidget&render=explicit"></script>
 <div class="container top-pd module" id='signup'>
   <div class="col-md-3 col-sm-2 col-xs-12"></div>
     <div id="registration-form-container" class="col-md-6 col-sm-8 col-xs-12">
@@ -13,7 +18,11 @@
 
           <div class="form-group">
             <%= f.label :email_or_username %>
-            <%= f.text_field :oim_id, class: "form-control", required: true, onblur: "Register.toggleEmail(this)" %>
+            <% if site_curam_enabled? %>
+              <%= f.text_field :oim_id, class: "form-control", required: true, onblur: "Register.toggleEmail(this)" %>
+            <% else %>
+              <%= f.text_field :oim_id, class: "form-control", required: true %>
+            <% end %>
           </div>
           <div class="tooltip_box username_tooltip" style="display: none;">
             <p style="margin-bottom:0;">You can use your email address as your login. Using your email address will make it easier to recover your password if you ever forget it.</p>
@@ -50,16 +59,21 @@
             <br />
             <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control", required: true %>
           </div>
-
-          <div class="email_field form-group <%= 'hidden_field' if (f.object.oim_id.size == 0 || f.object.email.present?) %>">
-            <%= f.label :email %>
-            <em> (Optional)</em>
-            <br/>
-            <%= f.text_field :email, class: "form-control" ,:oninput => "Register.trimEmail(this);" %>
-          </div>
-
+          <% if site_curam_enabled? %>
+            <div class="email_field form-group <%= 'hidden_field' if (f.object.oim_id.size == 0 || f.object.email.present?) %>">
+              <%= f.label :email %>
+              <em> (Optional)</em>
+              <br/>
+              <%= f.text_field :email, class: "form-control" ,:oninput => "Register.trimEmail(this);" %>
+            </div>
+          <% end %>
           <%= f.hidden_field :invitation_id %>
           <br/>
+<<<<<<< HEAD
+=======
+          <div class="recaptcha-error alert-error"><p></p></div>
+          <div class="recaptcha" id="captcha-widget"></div>
+>>>>>>> 797431f91... ref#17597 use curam_enabled? to hide unneeded fields
           <div class="actions text-center">
               <%= f.submit "Create account", class: "btn btn-primary btn-lg" %>
               <br/>
