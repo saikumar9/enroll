@@ -1,7 +1,6 @@
 Feature: Employer Profile
   In order for initial employers to submit application
   Employer Staff should upload attestation document
-
   Background:
     Given shop health plans exist for both last and this year
     When I visit the Employer portal
