@@ -13,6 +13,7 @@ site:
   logo_file_name: "logo.png"
   s3_prefix: "mhc"
   broker_quoting_enabled: false
+  curam_enabled: false
 
   social_media:
     facebook_url: ""
@@ -29,7 +30,7 @@ contact_center:
   alt_phone_number: "1-855-532-LINK"
   email_address: "info@example.com"
 
-  appeals: "connector-appeals@state.ma.us" 
+  appeals: "connector-appeals@state.ma.us"
 
   mailing_address:
     name: "Massachusetts Health Connector"
