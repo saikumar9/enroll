@@ -30,7 +30,7 @@ namespace :import do
               rx_formulary_url = row_info[@headers["rx formulary url"]].strip
               plan.rx_formulary_url =  rx_formulary_url.include?("http") ? rx_formulary_url : "http://#{rx_formulary_url}"
               plan.is_standard_plan = row_info[@headers["standard plan?"]].strip == "Yes" ? true : false
-              plan.network_information = row_info[@headers["network notes"]]
+              # plan.network_information = row_info[@headers["network notes"]]
               plan.save
             end
           end
