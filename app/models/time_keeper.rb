@@ -75,6 +75,7 @@ class TimeKeeper
 
   def register_observers
     add_observer(Observers::EmployerProfileObserver.new, :time_keeper_update)
+    add_observer(Observers::ReportObserver.new, :time_keeper_update)
   end
 
   OBSERVER_EVENTS = [ :advance_day ]

@@ -100,7 +100,7 @@ class EmployerProfile
     add_observer(Observers::AnalyticObserver.new, :employer_profile_update)
     add_observer(Observers::LedgerObserver.new,   :employer_profile_update)
     add_observer(Observers::AcapiObserver.new,    :employer_profile_update)
-    add_observer(Observers::LoggerObserver.new,   :employer_profile_update)
+    add_observer(Observers::LogObserver.new,      :employer_profile_update)
   end
 
   OBSERVER_EVENTS = [ :create, :fein_change, :state_change, 
@@ -160,6 +160,7 @@ class EmployerProfile
       # set flag that instance has changed state so Obervers are notified 
       changed
 
+      # TODO -- encapsulated notify_observers to recover from errors raised by any of the observers
       OBSERVER_EVENTS.each do |event|
         event_fired = instance_eval("is_" + event.to_s)
         event_name = ("on_" + event.to_s).to_sym
