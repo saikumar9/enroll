@@ -175,3 +175,17 @@ Then(/^Employer should see Accepted document$/) do
   wait_for_ajax
   expect(page).to have_content('Accepted')
 end
+
+Then (/^Admin change config setup to time travel$/) do
+  plan_year =  Organization.first.employer_profile.plan_years[0]
+  plan_year.aasm_state = 'active'
+  plan_year.save!
+  visit('/exchanges/hbx_profiles/configuration')
+  fill_in('forms_time_keeper[date_of_record]',:with => (Date.today+2.months).strftime)
+  # fill_in('forms_time_keeper[date_of_record]',:with => '08-05-2017')
+  find('.display-on-mobile',:text =>"Set Current Date").trigger('click')
+end
+
+Then(/^Employer staff should employees coverage status as termination pending$/) do
+  expect(page).to have_content "Termination Pending"
+end

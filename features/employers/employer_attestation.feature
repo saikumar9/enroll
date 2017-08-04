@@ -30,7 +30,6 @@ Feature: Employer Profile
   Scenario: Admin approves the attestation
     Then Employer uploads an attestation document
     Then I click on log out link
-
     Given a Hbx admin with read and write permissions exists
     When Hbx Admin logs on to the Hbx Portal
     When Admin click all employers link
@@ -124,6 +123,10 @@ Feature: Employer Profile
     Then I click on log out link
     Given a Hbx admin with read and write permissions exists
     When Hbx Admin logs on to the Hbx Portal
+    Then Admin change config setup to time travel
+
+    Then I click on log out link
+    When Hbx Admin logs on to the Hbx Portal
     When Admin click all employers link
     When Admin clicks employer attestation filter
     And Admin clicks submitted filter in employer attestation
@@ -147,13 +150,14 @@ Feature: Employer Profile
     And Employer Staff clicks documents tab
     Then Employer Staff should see attestation status Rejected
     When Employer goes to the benefits tab I should see plan year information
-    Then I click on log out link
+    Then Plan Year should be moved to Termination Pending
+    When Employer staff clicks employees tab
+    Then Employer staff should employees coverage status as termination pending
 
   Scenario: Employer Deletes submitted documents
-    Then Employer uploads an attestation document
-    And Employer clicks delete in actions
-    Then Employer should not see submitted document
-    Then I click on log out link
+     Then Employer uploads an attestation document
+     And Employer clicks delete in actions
+     Then Employer should not see submitted document
 
   Scenario: Employer should not be allowed to delete a document which is not in 'submitted' state. i.e, accepted, rejected or info needed
     Then Employer uploads an attestation document
@@ -175,3 +179,4 @@ Feature: Employer Profile
     When Jack Doe logs on to the Employer portal
     Then Employer Staff clicks documents tab
     And Employer should see disabled delete button in actions
+    
