@@ -3,7 +3,7 @@ require 'uri'
 module TransportGateway
   class Message
 
-    attr_accessor :from, :to, :body
+    attr_accessor :from, :to, :body, :credential
 
     #  @from
     #  @to 
