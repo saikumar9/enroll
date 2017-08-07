@@ -96,8 +96,9 @@ Given(/^Sarh is the staff person for an organization with employer profile and b
 end
 
 Then /he should have an option to select paper or electronic notice option/ do
-  expect(page).to have_content("Please indicate preferred method to receive notices (OPTIONAL)")
-  find(:xpath, '//*[@id="new_organization"]/div/div[4]/div/div[4]/div[2]/div/div/div/div[2]/b').click
+  expect(page).to have_content("Please indicate preferred method to receive notices")
+  find(:xpath, '//p[text()="Only Electronic communications"]')
+  #find(:xpath, '//*[@id="new_organization"]/div/div[4]/div/div[4]/div[2]/div/div/div/div[2]/b').click
   expect(page).to have_content("Only Electronic communications")
   expect(page).to have_content("Paper and Electronic communications")
 end

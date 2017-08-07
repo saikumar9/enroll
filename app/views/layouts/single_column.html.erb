@@ -36,6 +36,7 @@
     <%= yield :top_navigation %>
 
     <div class="content <%= controller_name %> content-bottom">
+        <div class="flash_message"><%= flash_messages %></div>
         <%= yield %>
     </div>
 

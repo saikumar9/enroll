@@ -278,7 +278,7 @@ When(/Employee select a qle date based on expired plan year/) do
 end
 
 Then(/Employee should see confirmation and clicks continue/) do
-  expect(page).to have_content "Based on the information you entered, you may be eligible to enroll now but there is limited time"
+  expect(page).to have_content "Based on the information you entered"
   screenshot("valid_qle")
   click_button "Continue"
 end

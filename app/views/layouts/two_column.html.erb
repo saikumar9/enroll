@@ -33,6 +33,7 @@
            <%= yield :left_navigation %>
          </div>
          <div class="col-md-10">
+           <div class="flash_message"><%= flash_messages %></div>
            <%= yield :main %>
            <%= yield %>
          </div>
@@ -41,6 +42,7 @@
      </div>
 
      <%= render 'layouts/application_footer' %>
+     <%= render 'layouts/application_script' %>
 
   </body>
 </html>
