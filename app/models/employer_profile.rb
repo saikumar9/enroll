@@ -545,7 +545,7 @@ class EmployerProfile
       }
     })
     end
-  
+
 
     def organizations_eligible_for_renewal(new_date)
       months_prior_to_effective = Settings.aca.shop_market.renewal_application.earliest_start_prior_to_effective_on.months * -1
@@ -637,7 +637,19 @@ class EmployerProfile
               puts "Unable to send second reminder notice to publish plan year to #{organization.legal_name} due to following errors {e}"
             end
           end
-        end     
+        # from UAT_Release 6093a03a81f96c47deb13e9399daed955940f26b [6093a03a8] needs research
+        # else
+        #   plan_year_due_date = Date.new(start_on_1.prev_month.year, start_on_1.prev_month.month, Settings.aca.shop_market.initial_application.publish_due_day_of_month)
+        #   if (start_on +2.days == plan_year_due_date)
+        #     initial_employer_reminder_to_publish(start_on_1).each do |organization|
+        #       begin
+        #         organization.employee_profile.trigger_notices("initial_employer_reminder_to_publish_plan_year")
+        #       rescue Exception => e
+        #         puts "Unable to send final reminder notice to publish plan year to #{organization.legal_name} due to following errors {e}"
+        #       end
+        #     end
+        #   end
+        end
       end
 
       # Employer activities that take place monthly - on first of month
@@ -878,11 +890,11 @@ class EmployerProfile
   end
 
   def transmit_initial_eligible_event
-    notify(INITIAL_EMPLOYER_TRANSMIT_EVENT, {employer_id: self.hbx_id, event_name: INITIAL_APPLICATION_ELIGIBLE_EVENT_TAG}) 
+    notify(INITIAL_EMPLOYER_TRANSMIT_EVENT, {employer_id: self.hbx_id, event_name: INITIAL_APPLICATION_ELIGIBLE_EVENT_TAG})
   end
 
   def transmit_renewal_eligible_event
-    notify(RENEWAL_EMPLOYER_TRANSMIT_EVENT, {employer_id: self.hbx_id, event_name: RENEWAL_APPLICATION_ELIGIBLE_EVENT_TAG}) 
+    notify(RENEWAL_EMPLOYER_TRANSMIT_EVENT, {employer_id: self.hbx_id, event_name: RENEWAL_APPLICATION_ELIGIBLE_EVENT_TAG})
   end
 
   def notify_broker_added
@@ -1015,9 +1027,9 @@ class EmployerProfile
       end
     end
   end
-  
+
   private
-  
+
   def has_ineligible_period_expired?
     ineligible? and (latest_workflow_state_transition.transition_at.to_date + 90.days <= TimeKeeper.date_of_record)
   end

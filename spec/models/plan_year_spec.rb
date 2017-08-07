@@ -2447,7 +2447,7 @@ describe PlanYear, '.schedule_employee_terminations', type: :model, dbclean: :af
       expect(plan_year.schedule_employee_terminations.first.aasm_state).to eq "coverage_termination_pending"
     end
 
-  end 
+  end
 
   context 'should not terminate inactive enrollment' do
 
@@ -2458,7 +2458,7 @@ describe PlanYear, '.schedule_employee_terminations', type: :model, dbclean: :af
     it "enrollemnt should not be in coverage_termination_pending state" do
       expect(plan_year.schedule_employee_terminations.first.aasm_state).to eq "coverage_canceled"
     end
-  end 
+  end
 end
 
 
@@ -2480,5 +2480,5 @@ describe PlanYear, '.schedule_termination', type: :model, dbclean: :after_all do
       expect(plan_year.hbx_enrollments.first.aasm_state).to eq "coverage_termination_pending"
       expect(plan_year.hbx_enrollments.first.terminated_on).to eq  TimeKeeper.date_of_record.end_of_month
     end
-  end 
+  end
 end

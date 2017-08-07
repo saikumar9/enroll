@@ -91,7 +91,7 @@ class CompositeRatedPlanCostDecorator < SimpleDelegator
       "great_grandchild" => nil,
     }[person_relationship]
   end
-  
+
   def employer_contribution_factor
     @benefit_group.composite_employer_contribution_factor_for(@composite_rating_tier)
   end
