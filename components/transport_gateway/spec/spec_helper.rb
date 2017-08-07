@@ -21,6 +21,7 @@ require 'capybara/rspec'
 require 'factory_girl_rails'
 require 'webmock/rspec'
 require 'pry'
+require 'uri/aws3'
 
 WebMock.disable_net_connect!(allow_localhost: true)
 
@@ -33,6 +34,16 @@ RSpec.configure do |config|
   config.before(:each) do
     stub_request(:put, /www.example.com/).
       to_return(status: 200, body: "http stubbed response", headers: {})
+  end
+
+  config.after(:example, :dbclean => :after_each) do
+    DatabaseCleaner.clean
+  end
+
+  config.around(:example, :dbclean => :around_each) do |example|
+    DatabaseCleaner.clean
+    example.run
+    DatabaseCleaner.clean
   end
 
   config.expect_with :rspec do |expectations|
