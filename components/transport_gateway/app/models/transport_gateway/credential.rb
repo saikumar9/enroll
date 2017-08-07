@@ -2,6 +2,8 @@ module TransportGateway
   class Credential
     include Mongoid::Document
 
+    embedded_in :well_known_endpoint, class_name: "TransportGateway::WellKnownEndpoint"
+
     field :account_name, type: String
     field :private_rsa_key, type: String
     field :pass_phrase, type: String
