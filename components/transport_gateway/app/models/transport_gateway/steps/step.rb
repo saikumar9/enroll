@@ -1,5 +1,12 @@
 module TransportGateway
   class Steps::Step
-    include Mongoid::Document
+
+    def initialize(description)
+      @description = description
+    end
+
+    def execute
+    end
+
   end
 end
