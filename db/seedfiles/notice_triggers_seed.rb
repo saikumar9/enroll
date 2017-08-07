@@ -628,6 +628,28 @@ ivl_notice_triggers = [
         ]
     },
 
+   {
+     hbx_id: 'SHOP45',
+     title: 'You have been Hired as a Broker',
+     description: 'When a broker is hired to a group, a notice is sent to the broker’s broker mail inbox alerting them of the hire.',
+     resource_name: 'broker_role',
+     event_name: 'broker_hired',
+     notice_triggers: [
+       {
+         name: 'Broker Hired',
+         notice_template: 'notices/shop_broker_notices/1_broker_hired.html.erb',
+         notice_builder: 'ShopBrokerNotices::BrokerHired',
+         mpi_indicator: 'SHOP_M045',
+         notice_trigger_element_group: {
+           market_places: ['shop'],
+           primary_recipients: ["broker"],
+           primary_recipient_delivery_method: ["secure_message"],
+           secondary_recipients: []
+          }
+        }
+      ]
+    },
+
     {
         hbx_id: 'IVLR1',
         title: '2017 Health Insurance Coverage and Preliminary Renewal Information',

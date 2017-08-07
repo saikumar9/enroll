@@ -1,0 +1,50 @@
+<%= render partial: 'notices/shared/cover', :locals => {notice: notice} %>
+<%= render partial: 'notices/shared/logo' %>
+<%= render partial: "notices/shared/address", :locals => {notice: notice} %>
+<br><br><br><br><br>
+<%= render partial: 'notices/shared/date', :locals => {notice: notice} %>
+<table class="total_table" border="0">
+  <tbody>
+    <tr>
+      <td class="notice-font"><br>Dear <%= notice.broker.primary_fullname %>,</td>
+    </tr>
+  </tbody>
+</table>
+
+<%= render partial: 'notices/shared/paragraph', :locals =>
+  { content: "Congratulations! You have been selected as the broker for <strong>#{notice.employer_name}</strong> as of #{notice.broker.assignment_date}, with #{notice.broker.organization} as the assigned agency. The primary contact at <strong>#{notice.employer_name}</strong> is #{notice.first_name} #{notice.last_name}."} %>
+
+<%= render partial: 'notices/shared/paragraph', :locals =>
+  { content: "Please remember that as a registered broker with the Health Connector, you are agreeing to the  Commonwealth Health Insurance Connector Authority Brokerage Terms and Conditions when logging into MAHealthconnector.org."} %>
+
+<%= render partial: 'notices/shared/paragraph_with_headers', :locals =>
+  { contents: [""], heading: 'For Questions or Assistance:', sub_heading: ''} %>
+
+<table class="notice_spacing_1" border="0">
+    <tbody>
+      <tr>
+        <td>Please contact your broker for further assistance. You can also contact <%=site_short_name%> with any questions:
+          <table class="total_table" border="0">
+            <tbody>
+              <tr>
+                <td class="mpi_indicator">
+                  <ul style="list-style: circle;">
+                    <li class="notice-font">
+                      By calling <%=contact_center_phone_number%>. TTY: <%=contact_center_tty_number%>
+                    </li>
+                    <li class="notice-font">
+                      By email <%=site_main_web_link%>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+</table>
+
+<% if notice.broker.present? %>
+  <%= render partial: 'notices/shared/broker_contact_info', :locals => {broker: notice.broker} %>
+ <% end %>
