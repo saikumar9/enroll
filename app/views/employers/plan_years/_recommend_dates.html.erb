@@ -48,7 +48,7 @@
 </div>
 <div class="col-xs-3 pull-right">
   <div class="row <%= pundit_class EmployerProfile,:updateable? %>">
-    <a class="btn btn-primary btn-lg btn-block  pull-right interaction-click-control-continue" onclick="$('#choose-coverage').hide();$('.benefits-setup-tab').fadeIn();$('#plan_year_benefit_groups_attributes_0_title').focus();$(window).scrollTop(0);">Continue</a>
+    <a class="btn btn-primary btn-lg btn-block  pull-right interaction-click-control-continue">Continue</a>
   </div>
   <br/><br/><br/>
 </div>
@@ -77,3 +77,15 @@
     </tr>
   </table>
 </div>
+<!--This will validate the open enrollment dates -->
+<script>
+    $(document).on('click', "a.interaction-click-control-continue", function(){
+        if(textbox.value){
+            alert("prem");
+        }
+        $('#choose-coverage').hide();
+        $('.benefits-setup-tab').fadeIn();
+        $('#plan_year_benefit_groups_attributes_0_title').focus();
+        $(window).scrollTop(0);
+    });
+</script>
