@@ -616,32 +616,11 @@ class BenefitGroup
     rating_area  if multiple_market_rating_areas? && !rating_area.blank?
   end
 
-  def export_ctc
+  def export_ctc_calculated
     temp = {}
     result = []
     composite_tier_contributions.map{|ctc| temp[ctc.composite_rating_tier] = ctc.estimated_tier_premium}
-    if temp.has_key?("employee_only")
-      result << temp["employee_only"]
-    else
-      result << 0
-    end
-    if temp.has_key?("employee_and_spouse")
-      result << temp["employee_and_spouse"]
-    else
-      result << 0
-    end
-    if temp.has_key?("employee_and_one_or_more_dependents")
-      result << temp["employee_and_one_or_more_dependents"]
-    else
-      result << 0
-    end
-    if temp.has_key?("family")
-      result << temp["family"]
-    else
-      result << 0
-    end
-    
-    result
+    composite_premium(temp)
 
   end
 
@@ -649,6 +628,10 @@ class BenefitGroup
     temp = {}
     result = []
     composite_tier_contributions.map{|ctc| temp[ctc.composite_rating_tier] = ctc.final_tier_premium}
+    composite_premium(temp)
+  end
+
+  def composite_premium(temp)
     if temp.has_key?("employee_only")
       result << temp["employee_only"]
     else
@@ -671,7 +654,6 @@ class BenefitGroup
     end
     
     result
-
   end
 
   def composite_rating_enrollment_objects
