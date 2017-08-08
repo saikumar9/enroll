@@ -40,7 +40,7 @@ namespace :employers do
                                 employee offered spouce offered domestic_partner offered child_under_26 offered child_26_and_over
                                 offered benefit_group.title benefit_group.plan_option_kind
                                 benefit_group.carrier_for_elected_plan benefit_group.metal_level_for_elected_plan benefit_group.single_plan_type?
-                                benefit_group.reference_plan.name benefit_group.effective_on_kind benefit_group.effective_on_offset group_size_count participation_rate a b c d 1 2 3 4 rate_basis_type
+                                benefit_group.reference_plan.name benefit_group.effective_on_kind benefit_group.effective_on_offset group_size_count participation_rate Employee(Calculated_Premium) Employee-Spouse(Calculated_Premium) Employee-Children(Calculated_Premium) Family(Calculated_Premium) Employee(New_Composite_Premium) Employee-Children(New_Composite_Premium) Employee-Spouse(New_Composite_Premium) Family(New_Composite_Premium) rate_basis_type
                                 plan_year.start_on plan_year.end_on plan_year.open_enrollment_start_on plan_year.open_enrollment_end_on
                                 plan_year.fte_count plan_year.pte_count plan_year.msp_count plan_year.status plan_year.publish_date broker_agency_account.corporate_npn broker_agency_account.legal_name
                                 broker.name broker.npn broker.assigned_on)
