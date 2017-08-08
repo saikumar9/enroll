@@ -608,6 +608,72 @@ class BenefitGroup
     end
   end
 
+  def export_group_size_count
+    group_size_count if !use_simple_employer_calculation_model?
+  end
+
+  def export_rate_basis_type
+    rating_area  if multiple_market_rating_areas? && !rating_area.blank?
+  end
+
+  def export_ctc
+    temp = {}
+    result = []
+    composite_tier_contributions.map{|ctc| temp[ctc.composite_rating_tier] = ctc.estimated_tier_premium}
+    if temp.has_key?("employee_only")
+      result << temp["employee_only"]
+    else
+      result << 0
+    end
+    if temp.has_key?("employee_and_spouse")
+      result << temp["employee_and_spouse"]
+    else
+      result << 0
+    end
+    if temp.has_key?("employee_and_one_or_more_dependents")
+      result << temp["employee_and_one_or_more_dependents"]
+    else
+      result << 0
+    end
+    if temp.has_key?("family")
+      result << temp["family"]
+    else
+      result << 0
+    end
+    
+    result
+
+  end
+
+  def export_ctc_final
+    temp = {}
+    result = []
+    composite_tier_contributions.map{|ctc| temp[ctc.composite_rating_tier] = ctc.final_tier_premium}
+    if temp.has_key?("employee_only")
+      result << temp["employee_only"]
+    else
+      result << 0
+    end
+    if temp.has_key?("employee_and_spouse")
+      result << temp["employee_and_spouse"]
+    else
+      result << 0
+    end
+    if temp.has_key?("employee_and_one_or_more_dependents")
+      result << temp["employee_and_one_or_more_dependents"]
+    else
+      result << 0
+    end
+    if temp.has_key?("family")
+      result << temp["family"]
+    else
+      result << 0
+    end
+    
+    result
+
+  end
+
   def composite_rating_enrollment_objects
     if plan_year.estimate_group_size?
       targeted_census_employees.select { |ce| ce.expected_to_enroll? }
