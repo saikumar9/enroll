@@ -652,7 +652,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
 
         it "and should provide relevent warning message" do
           expect(workflow_plan_year_with_benefit_group.application_eligibility_warnings[:fte_count].present?).to be_truthy
-          expect(workflow_plan_year_with_benefit_group.application_eligibility_warnings[:fte_count]).to match(/fewer full time equivalent employees/)
+          expect(workflow_plan_year_with_benefit_group.application_eligibility_warnings[:fte_count]).to match(/Has 1-50 full-time equivalent employees/)
         end
 
         it "and plan year should be in publish pending state" do
@@ -2364,7 +2364,7 @@ describe PlanYear, "plan year schedule changes" do
       end
     end
 
-    context 'on force publish date' do
+    context 'on Publish Anyways date' do
 
       before do
         TimeKeeper.set_date_of_record_unprotected!(Date.new(2016, 10, Settings.aca.shop_market.renewal_application.force_publish_day_of_month))
