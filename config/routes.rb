@@ -1,13 +1,12 @@
 Rails.application.routes.draw do
 
-  mount Ckeditor::Engine => '/ckeditor'  
+  mount Ckeditor::Engine => '/ckeditor'
   mount TransportGateway::Engine, at: "/transport_gateway"
   mount Notifier::Engine, at: "/notifier" 
   mount RocketJobMissionControl::Engine => 'rocketjob'
 
   require 'resque/server'
   mount Resque::Server, at: '/jobs'
-
 
   devise_for :users, :controllers => { :registrations => "users/registrations", :sessions => 'users/sessions' }
 
