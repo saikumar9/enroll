@@ -28,7 +28,7 @@
   content: "For detailed information on how to complete your application for employer-sponsored coverage, please review our <strong>Employer guide to applying for coverage</strong> in our Business Resource Center."} %>
 <%= render partial: 'notices/shared/unordered_list', locals: {
   previous: "Please note in order to participate in #{site_short_name}, your group must meet the following eligibility requirements:",
-  listings: [["You have submitted documents to show that your group meets residency requirements:", ["Your principal business address is in #{aca_state_name} and you offer coverage to all full-time employees through the #{site_short_name}, OR", "You offer coverage through #{site_short_name} to all full-time employees whose primary worksite is located in Massachusetts and offer coverage to non-Massachusetts based employees through the small group exchange serving their primary worksite(s);"]],
+  listings: [["You have submitted documents to show that your group meets residency requirements:", ["Your principal business address is in #{aca_state_name} and you offer coverage to all full-time employees through the #{site_short_name}, OR", "You offer coverage through #{site_short_name} to all full-time employees whose primary worksite is located in #{aca_state_name} and offer coverage to non-#{aca_state_name} based employees through the small group exchange serving their primary worksite(s);"]],
     "At least seventy-five (75) percent of your eligible employees enroll in your group health coverage or waive due to having other coverage.",
     "At least one non-owner employee enrolls in health coverage."]} %>
 <%= render partial: 'notices/shared/paragraph', :locals => {
