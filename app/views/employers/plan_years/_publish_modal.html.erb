@@ -3,18 +3,36 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title"> Application may be ineligible! </h4>
+        <h4 class="modal-title"><%= plan_year.no_documents_uploaded?? "Document Upload Required to Proceed" : "Application may be ineligible!" %></h4>
       </div>
       <div class="modal-body">
         <p>
-           If you submit this application as is, the small business application may be ineligible for coverage through the <%= Settings.site.short_name %> because it does not meet the eligibility reason(s) identified below:
+
+        <% if plan_year.no_documents_uploaded? %>
+     Before you can complete your application, you will need to submit proof of your eligibility as a Massachusetts small business to shop through the Health Connector. You will need to submit this proof before you are able to publish your plan year. <%= link_to "View our list of documents that can be submitted as proof.", "https://www.mahealthconnector.org/business/business-resource-center/employer-verification-checklist" %>
+          <br>
+          <ul>
+            <li>
+              To upload documentation of your eligibility, go to the Documents option on the left and follow instructions to upload the documentation of your eligibility.
+            </li>
+            <li>
+              Once you have uploaded your <%= link_to 'Documents', employers_employer_profile_path(@employer_profile.id, :tab=>'documents') %> you can return to this page and publish your plan year.
+            </li>
+          </ul>
+
+     <% else %>
+       If you submit this application as is, the small business application may be ineligible for coverage through the <%= Settings.site.short_name %> because it does not meet the eligibility reason(s) identified below:
+       <p><ul class="application-warnings"></ul></p>
+          <% end %>
         </p>
-        <ul class="application-warnings"></ul>
-        <p class= "warning-para" ></p>
+
       </div>
       <div class="modal-footer">
-        <%= link_to 'Publish Anyways', employers_employer_profile_plan_year_force_publish_path(@employer_profile,plan_year), method: :post, :class => 'btn btn-danger' %>
-        <% error_page = plan_year.application_eligibility_warnings[:primary_office_location].present? ? edit_employers_employer_profile_path(@employer_profile, plan_year_id: plan_year.id) : edit_employers_employer_profile_plan_year_path(@employer_profile,plan_year, publish: true) %>
+            <%= link_to 'Go Back', employers_employer_profile_path(@employer_profile.id, :tab=>'benefits'), :class => 'btn btn-default' %>
+        <% unless plan_year.no_documents_uploaded? %>
+                <%= link_to 'Publish Anyways', employers_employer_profile_plan_year_force_publish_path(@employer_profile,plan_year), method: :post, :class => 'btn btn-danger' %>
+        <% end %>
+                  <% error_page = plan_year.application_eligibility_warnings[:primary_office_location].present? ? edit_employers_employer_profile_path(@employer_profile, plan_year_id: plan_year.id) : edit_employers_employer_profile_plan_year_path(@employer_profile,plan_year, publish: true) %>
         <%= link_to 'Cancel', error_page, method: :get, :class => 'btn btn-default' %>
       </div>
     </div>
