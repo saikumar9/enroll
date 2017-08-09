@@ -23,4 +23,7 @@ class Observers::AcapiObserver < Observers::Observer
   def employer_profile_update(observer_event, employer_profile, options={})
   end
 
+  def time_keeper_update(observer_event, employer_profile, options={})
+  end
+
 end

@@ -1,9 +1,10 @@
 class TimeKeeper
-  include Config::AcaModelConcern
   include Mongoid::Document
   include Singleton
   include Observable
 
+  # deprecate
+  include Config::AcaModelConcern
   include Acapi::Notifiers
   extend Acapi::Notifiers
 
@@ -41,6 +42,7 @@ class TimeKeeper
   end
 
   # DO NOT EVER USE OUTSIDE OF TESTS
+  # APPLICATION-WIDE DATE IS CHANGED WITHOUT NOTIFYING OBSERVER MODELS
   def self.set_date_of_record_unprotected!(new_date)
     new_date = new_date.to_date
     if instance.date_of_record != new_date
@@ -74,6 +76,7 @@ class TimeKeeper
   end
 
   def register_observers
+    add_observer(Observers::AcapiObserver.new, :time_keeper_update)
     add_observer(Observers::EmployerProfileObserver.new, :time_keeper_update)
     add_observer(Observers::ReportObserver.new, :time_keeper_update)
   end
@@ -81,6 +84,7 @@ class TimeKeeper
   OBSERVER_EVENTS = [ :advance_day ]
 
   def push_date_of_record
+    DateKeeper.advance_day(self.date_of_record)
     BenefitSponsorship.advance_day(self.date_of_record)
     EmployerProfile.advance_day(self.date_of_record)
     Family.advance_day(self.date_of_record) if individual_market_is_enabled?
