@@ -21,19 +21,18 @@
           </ul>
 
      <% else %>
-       If you submit this application as is, the small business application may be ineligible for coverage through the <%= Settings.site.short_name %> because it does not meet the eligibility reason(s) identified below:
+       As submitted, this application is ineligible for coverage under the <%= site_short_name %> exchange for reasons identified below. Click 'Go Back' to close this modal and correct inaccurate information. If the information provided is accurate, you may click Publish to proceed. However, if you choose to proceed and the eligibility determination is deemed correct by <%= site_short_name %> officials, this organization may not again apply for coverage for 90 days, or until the reason for ineligibility changes, whichever is later.
        <p><ul class="application-warnings"></ul></p>
           <% end %>
         </p>
 
       </div>
       <div class="modal-footer">
-            <%= link_to 'Go Back', employers_employer_profile_path(@employer_profile.id, :tab=>'benefits'), :class => 'btn btn-default' %>
+        <%= link_to 'Go Back', employers_employer_profile_path(@employer_profile.id, :tab=>'benefits'), :class => 'btn btn-default' %>
         <% unless plan_year.no_documents_uploaded? %>
-                <%= link_to 'Publish Anyways', employers_employer_profile_plan_year_force_publish_path(@employer_profile,plan_year), method: :post, :class => 'btn btn-danger' %>
+            <%= link_to 'Force Publish', employers_employer_profile_plan_year_force_publish_path(@employer_profile,plan_year), method: :post, :class => 'btn btn-danger' %>
         <% end %>
-                  <% error_page = plan_year.application_eligibility_warnings[:primary_office_location].present? ? edit_employers_employer_profile_path(@employer_profile, plan_year_id: plan_year.id) : edit_employers_employer_profile_plan_year_path(@employer_profile,plan_year, publish: true) %>
-        <%= link_to 'Cancel', error_page, method: :get, :class => 'btn btn-default' %>
+        <% error_page = plan_year.application_eligibility_warnings[:primary_office_location].present? ? edit_employers_employer_profile_path(@employer_profile, plan_year_id: plan_year.id) : edit_employers_employer_profile_plan_year_path(@employer_profile,plan_year, publish: true) %>
       </div>
     </div>
   </div>
