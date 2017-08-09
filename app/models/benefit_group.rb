@@ -604,7 +604,6 @@ class BenefitGroup
 
   def export_ctc_calculated
     temp = {}
-    result = []
     composite_tier_contributions.map{|ctc| temp[ctc.composite_rating_tier] = ctc.estimated_tier_premium}
     composite_premium(temp)
 
@@ -612,31 +611,31 @@ class BenefitGroup
 
   def export_ctc_final
     temp = {}
-    result = []
     composite_tier_contributions.map{|ctc| temp[ctc.composite_rating_tier] = ctc.final_tier_premium}
     composite_premium(temp)
   end
 
   def composite_premium(temp)
+    result = []
     if temp.has_key?("employee_only")
       result << temp["employee_only"]
     else
-      result << 0
+      result << " "
     end
     if temp.has_key?("employee_and_spouse")
       result << temp["employee_and_spouse"]
     else
-      result << 0
+      result << " "
     end
     if temp.has_key?("employee_and_one_or_more_dependents")
       result << temp["employee_and_one_or_more_dependents"]
     else
-      result << 0
+      result << " "
     end
     if temp.has_key?("family")
       result << temp["family"]
     else
-      result << 0
+      result << " "
     end
     
     result
