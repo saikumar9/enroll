@@ -8,14 +8,15 @@ RSpec.describe ScheduledEvent, kind: :model do
   end
 
   it { is_expected.to validate_presence_of :kind }
-  it { is_expected.to validate_presence_of :event_name }
+  it { is_expected.to validate_presence_of :key }
   it { is_expected.to validate_presence_of :one_time }
   it { is_expected.to validate_presence_of :start_on }
 
   context "convert recurring rules into hash" do
   	let(:event_params) { {
-      kind: 'holiday',
-      event_name: 'Christmas',
+      kind: :holiday,
+      title: "Christmas Day",
+      key: :christmas_day,
       offset_rule: 3,
       recurring_rules: "{\"interval\":1,\"until\":null,\"count\":null,\"validations\":{\"day_of_week\":{},\"day_of_month\":[22]},\"rule_type\":\"IceCube::MonthlyRule\",\"week_start\":0}",
       :start_on => Date.today
@@ -31,8 +32,9 @@ RSpec.describe ScheduledEvent, kind: :model do
   context "set start time to current if entered value is blank" do
   	value = ""
   	let(:event_params) { {
-      kind: 'holiday',
-      event_name: 'Christmas',
+      kind: :holiday,
+      title: "Christmas Day",
+      key: :christmas_day,
       offset_rule: 3,
       recurring_rules: "{\"interval\":1,\"until\":null,\"count\":null,\"validations\":{\"day_of_week\":{},\"day_of_month\":[22]},\"rule_type\":\"IceCube::MonthlyRule\",\"week_start\":0}",
       :start_on => value
@@ -46,8 +48,9 @@ RSpec.describe ScheduledEvent, kind: :model do
   context "set start time value is entered" do
   	value = "05/24/2017"
   	let(:event_params) { {
-      kind: 'holiday',
-      event_name: 'Christmas',
+      kind: :holiday,
+      title: "Christmas Day",
+      key: :christmas_day,
       offset_rule: 3,
       recurring_rules: "{\"interval\":1,\"until\":null,\"count\":null,\"validations\":{\"day_of_week\":{},\"day_of_month\":[22]},\"rule_type\":\"IceCube::MonthlyRule\",\"week_start\":0}",
       :start_on => value
