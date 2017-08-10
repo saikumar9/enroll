@@ -88,7 +88,6 @@
           </div>
         </div>
         <% @current_plan_year.benefit_groups.each do |bg| %>
-
           <div class="module hbx-panel panel panel-default employer-benefit-groups">
             <div class="panel-heading">
               <h3 class="no-buffer"><%= bg.title.capitalize %></h3>
@@ -193,8 +192,8 @@
                 <!--Health Plan Summary: end-->
 
                 <!--Health plan collapsible: start -->
-                  <%= render partial: 'employers/plan_years/benefit_group_summary', locals: { bg: bg } %>
-                <!--Health Contributions: end-->
+                <div id="collapse-health-<%=bg.id%>" style="display:none">
+                 <%= render partial: 'employers/plan_years/benefit_group_summary', locals: { bg: bg } %>
 
                   <!--Health Estimated Cost: start-->
                   <div class="panel benefitgroup col-xs-12 referenceplan home est">
