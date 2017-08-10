@@ -41,7 +41,13 @@ RSpec.describe 'Load Rate Factors Task', :type => :task do
     end
 
     context "it creates EmployerGroupSizeRatingFactorSet correctly" do
-      subject { EmployerGroupSizeRatingFactorSet.all.third }
+      subject do
+        carrier_profile = Organization.where(
+          "carrier_profile.issuer_hios_ids" => '34484'
+        ).first.carrier_profile
+        EmployerGroupSizeRatingFactorSet.where(carrier_profile_id: carrier_profile.id).first
+      end
+
       it_should_behave_like "a rate factor", {    active_year: 2017,
                                                   default_factor_value: 1.0
                                               }
@@ -54,10 +60,10 @@ RSpec.describe 'Load Rate Factors Task', :type => :task do
       end
 
       it "assigns the correct factor key and value" do
-        expect(subject.rating_factor_entries.first.factor_key).to eq('1')
-        expect(subject.rating_factor_entries.first.factor_value).to be(1.101)
-        expect(subject.rating_factor_entries.last.factor_key).to eq('50')
-        expect(subject.rating_factor_entries.last.factor_value).to be(1.070)
+        first_entry = subject.rating_factor_entries.detect { |rfe| rfe.factor_key == '1' }
+        last_entry = subject.rating_factor_entries.detect { |rfe| rfe.factor_key == '50' }
+        expect(first_entry.factor_value).to be(1.101)
+        expect(last_entry.factor_value).to be(1.070)
       end
     end
 
