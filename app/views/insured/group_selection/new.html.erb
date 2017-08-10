@@ -6,7 +6,7 @@
     <%= form_tag(:insured_group_selections, :id => "group-selection-form") do %>
       <div class="col-xs-8">
         <h1>Choose Coverage for your Household</h1>
-        <p class="twenty">Select who needs coverage and the type of coverage needed. When you’re finished, select CONTINUE.</p>
+        <h4>Select who needs coverage and the type of coverage needed. When you’re finished, select CONTINUE.</h4>
         <div style="font-size :24px">
         <%if @effective_on_date.present? %>
           EFFECTIVE DATE: <span style="color: red;"><%= @effective_on_date %></span>
