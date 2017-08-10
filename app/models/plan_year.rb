@@ -472,7 +472,7 @@ class PlanYear
       end
     end
 
-    unless employer_profile.is_primary_office_local?
+    unless employer_profile.is_primary_office_local? || employer_profile.is_zip_outside?
       warnings.merge!({primary_office_location: "Is a small business located in #{Settings.aca.state_name}"})
     end
 
