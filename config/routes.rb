@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
   mount TransportGateway::Engine, at: "/transport_gateway"
+  mount TransportProfiles::Engine, at: "/transport_profiles"
 
 
   require 'resque/server'
