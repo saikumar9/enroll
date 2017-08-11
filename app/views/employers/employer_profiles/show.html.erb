@@ -15,7 +15,7 @@
 <%- elsif @tab == 'brokers' %>
 <%= render partial: "employers/employer_profiles/my_account/broker_agency" %>
 <%- elsif @tab == 'inbox' %>
-  <h1 class="darkblue no-buffer">Messages</h1>
+  <h1 class="no-buffer">Messages</h1>
 <%= render :partial => 'shared/inboxes/messages_list' %>
 <%- elsif @tab == 'documents' %>
 
@@ -23,6 +23,9 @@
 
 <%- elsif @tab == 'billing' %>
   <%= render partial: "employers/employer_profiles/my_account/billing" %>
+  
+<%- elsif @tab == 'accounts' %>
+  <%= render partial: "employers/employer_profiles/my_account/accounts/accounts" %>
 
 <%- elsif @tab == 'families' %>
 <%= render partial:  "employers/employer_profiles/my_account/families" %>

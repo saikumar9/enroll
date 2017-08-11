@@ -1,20 +1,11 @@
 Rails.application.routes.draw do
 
-  namespace :uis do
-    resources :bootstrap3_examples do
-      collection do
-        get :index
-        get :components
-        get :getting_started
-      end
-    end
-  end
-
   mount TransportGateway::Engine, at: "/transport_gateway"
+  mount TransportProfiles::Engine, at: "/transport_profiles"
   require 'resque/server'
 
   mount Resque::Server, at: '/jobs'
-  devise_for :users, :controllers => { :passwords => 'users/passwords', :registrations => "users/registrations", :sessions => 'users/sessions' }
+  devise_for :users, :controllers => { :registrations => "users/registrations", :sessions => 'users/sessions', :passwords => 'users/passwords' }
 
   get 'check_time_until_logout' => 'session_timeout#check_time_until_logout', :constraints => { :only_ajax => true }
   get 'reset_user_clock' => 'session_timeout#reset_user_clock', :constraints => { :only_ajax => true }
@@ -26,9 +17,12 @@ Rails.application.routes.draw do
 
   namespace :users do
     resources :orphans, only: [:index, :show, :destroy]
+    post :challenge, controller: 'security_question_responses', action: 'challenge'
+    post :authenticate, controller: 'security_question_responses', action: 'authenticate'
   end
 
   resources :users do
+    resources :security_question_responses, controller: "users/security_question_responses"
     member do
       get :reset_password, :lockable, :confirm_lock
       put :confirm_reset_password
@@ -140,6 +134,7 @@ Rails.application.routes.draw do
     end
 
     resources :broker_applicants
+    resources :security_questions
 
     # get 'hbx_profiles', to: 'hbx_profiles#welcome'
     # get 'hbx_profiles/:id', to: 'hbx_profiles#show', as: "my_account"
@@ -291,6 +286,7 @@ Rails.application.routes.draw do
         post 'download_documents'
         post 'delete_documents'
         post 'upload_document'
+        get "show_invoice"
       end
 
       collection do

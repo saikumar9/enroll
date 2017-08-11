@@ -153,6 +153,7 @@ describe "shared/_comparison.html.erb" do
     end
 
     it "should not have provider directory url if nationwide = false" do
+      allow(view).to receive(:offers_nationwide_plans?).and_return(true)
       allow(mock_plan).to receive(:nationwide).and_return(false)
       allow(mock_plan).to receive(:service_area_id).and_return('XX-111')
       render "shared/comparison", :qhps => mock_qhps

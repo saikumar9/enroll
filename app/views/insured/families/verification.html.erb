@@ -1,7 +1,7 @@
 <% content_for :navigation do %>
     <%= render 'navigation' %>
 <% end %>
-<h1 class="darkblue no-buffer"><%= l10n("documents") %></h1>
+<h1 class="no-buffer"><%= l10n("documents") %></h1>
 <div class="documents-tab">
   <% if @person && @person.consumer_role %>
       <h4 class="starter"><%= l10n(".verification_information") %></h4>

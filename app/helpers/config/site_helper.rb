@@ -7,6 +7,10 @@ module Config::SiteHelper
     Settings.site.domain_name
   end
 
+  def site_website_name
+    Settings.site.website_name
+  end
+
   def site_find_expert_link
     link_to site_find_expert_url, site_find_expert_url
   end
@@ -17,6 +21,10 @@ module Config::SiteHelper
 
   def site_home_url
     Settings.site.home_url
+  end
+
+  def site_curam_enabled?
+    Settings.site.curam_enabled
   end
 
   def site_home_link
@@ -53,5 +61,9 @@ module Config::SiteHelper
 
   def find_your_doctor_url
     Settings.site.shop_find_your_doctor_url
+  end
+
+  def site_document_verification_checklist_url
+    Settings.site.document_verification_checklist_url
   end
 end

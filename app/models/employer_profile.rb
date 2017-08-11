@@ -269,7 +269,7 @@ class EmployerProfile
   end
 
   def plan_year_drafts
-    plan_years.reduce([]) { |set, py| set << py if py.aasm_state == "draft" }
+    plan_years.reduce([]) { |set, py| set << py if py.aasm_state == "draft"; set }
   end
 
   def is_conversion?
@@ -367,11 +367,18 @@ class EmployerProfile
   end
 
   def renewing_plan_year_drafts
-    plan_years.reduce([]) { |set, py| set << py if py.aasm_state == "renewing_draft" }
+    plan_years.reduce([]) { |set, py| set << py if py.aasm_state == "renewing_draft"; set }
   end
 
   def is_primary_office_local?
     (organization.primary_office_location.address.state.to_s.downcase == aca_state_abbreviation.to_s.downcase)
+  end
+
+  # It will provide whether employer_profile zip code is inside MA or not
+  # @return boolean
+  # if zip_code is inside MA returns true else returns false
+  def is_zip_outside?
+    (RatingArea.all.pluck(:zip_code).include? organization.primary_office_location.address.zip)
   end
 
   def build_plan_year_from_quote(quote_claim_code, import_census_employee=false)
@@ -498,6 +505,16 @@ class EmployerProfile
       CensusEmployee.matchable(person.ssn, person.dob)
     end
 
+    def organizations_for_low_enrollment_notice(new_date)
+      Organization.where(:"employer_profile.plan_years" =>
+        { :$elemMatch => {
+          :"aasm_state".in => ["enrolling", "renewing_enrolling"],
+          :"open_enrollment_end_on" => new_date+2.days
+          }
+      })
+
+    end
+
     def organizations_for_open_enrollment_begin(new_date)
       Organization.where(:"employer_profile.plan_years" =>
           { :$elemMatch => {
@@ -545,7 +562,7 @@ class EmployerProfile
       }
     })
     end
-  
+
 
     def organizations_eligible_for_renewal(new_date)
       months_prior_to_effective = Settings.aca.shop_market.renewal_application.earliest_start_prior_to_effective_on.months * -1
@@ -601,6 +618,19 @@ class EmployerProfile
           open_enrollment_factory.end_open_enrollment
         end
 
+        organizations_for_low_enrollment_notice(new_date).each do |organization|
+          begin
+            plan_year = organization.employer_profile.plan_years.where(:aasm_state.in => ["enrolling", "renewing_enrolling"]).first
+            #exclude congressional employees
+            next if ((plan_year.benefit_groups.any?{|bg| bg.is_congress?}) || (plan_year.effective_date.yday == 1))
+            if plan_year.enrollment_ratio < Settings.aca.shop_market.employee_participation_ratio_minimum
+              organization.employer_profile.trigger_notices("low_enrollment_notice_for_employer")
+            end
+          rescue Exception => e
+            puts "Unable to deliver Low Enrollment Notice to #{organization.legal_name} due to #{e}"
+          end
+        end
+
         employer_enroll_factory = Factories::EmployerEnrollFactory.new
         employer_enroll_factory.date = new_date
 
@@ -637,7 +667,19 @@ class EmployerProfile
               puts "Unable to send second reminder notice to publish plan year to #{organization.legal_name} due to following errors {e}"
             end
           end
-        end     
+        # from UAT_Release 6093a03a81f96c47deb13e9399daed955940f26b [6093a03a8] needs research
+        # else
+        #   plan_year_due_date = Date.new(start_on_1.prev_month.year, start_on_1.prev_month.month, Settings.aca.shop_market.initial_application.publish_due_day_of_month)
+        #   if (start_on +2.days == plan_year_due_date)
+        #     initial_employer_reminder_to_publish(start_on_1).each do |organization|
+        #       begin
+        #         organization.employee_profile.trigger_notices("initial_employer_reminder_to_publish_plan_year")
+        #       rescue Exception => e
+        #         puts "Unable to send final reminder notice to publish plan year to #{organization.legal_name} due to following errors {e}"
+        #       end
+        #     end
+        #   end
+        end
       end
 
       # Employer activities that take place monthly - on first of month
@@ -878,11 +920,11 @@ class EmployerProfile
   end
 
   def transmit_initial_eligible_event
-    notify(INITIAL_EMPLOYER_TRANSMIT_EVENT, {employer_id: self.hbx_id, event_name: INITIAL_APPLICATION_ELIGIBLE_EVENT_TAG}) 
+    notify(INITIAL_EMPLOYER_TRANSMIT_EVENT, {employer_id: self.hbx_id, event_name: INITIAL_APPLICATION_ELIGIBLE_EVENT_TAG})
   end
 
   def transmit_renewal_eligible_event
-    notify(RENEWAL_EMPLOYER_TRANSMIT_EVENT, {employer_id: self.hbx_id, event_name: RENEWAL_APPLICATION_ELIGIBLE_EVENT_TAG}) 
+    notify(RENEWAL_EMPLOYER_TRANSMIT_EVENT, {employer_id: self.hbx_id, event_name: RENEWAL_APPLICATION_ELIGIBLE_EVENT_TAG})
   end
 
   def notify_broker_added
@@ -990,7 +1032,7 @@ class EmployerProfile
   end
 
   def validate_and_send_denial_notice
-    if !is_primary_office_local? || !(RatingArea.all.pluck(:zip_code).include? organization.primary_office_location.address.zip)
+    if !is_primary_office_local? || !(is_zip_outside?)
       self.trigger_notices('initial_employer_denial')
     end
   end
@@ -1015,9 +1057,9 @@ class EmployerProfile
       end
     end
   end
-  
+
   private
-  
+
   def has_ineligible_period_expired?
     ineligible? and (latest_workflow_state_transition.transition_at.to_date + 90.days <= TimeKeeper.date_of_record)
   end

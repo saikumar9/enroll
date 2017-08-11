@@ -20,8 +20,8 @@
     <li <%= menu_tab_class(active_tab, "documents") %>>
       <%= link_to 'Documents', employers_employer_profile_path(@employer_profile.id, :tab=>'documents'), "aria-expanded" => "true" %>
     </li>
-    <li <%= menu_tab_class(active_tab, "billing") %>>
-      <%= link_to 'Billing', employers_employer_profile_path(@employer_profile.id,:tab=>'billing'), "aria-expanded" => "true" %>
+    <li <%= menu_tab_class(active_tab, "accounts") %>>
+      <%= link_to 'Accounts', employers_employer_profile_path(@employer_profile.id,:tab=>'accounts'), "aria-expanded" => "true" %>
     </li>
     <li <%= menu_tab_class(active_tab, "inbox") %>>
       <%= link_to(employers_employer_profile_path(@employer_profile.id, :tab=>'inbox'), class: 'hidden-xs', "aria-expanded" => "true" ) do  %>
@@ -46,7 +46,7 @@
     </div>
     <div class="panel-body">
       <%= link_to employers_employer_profile_path(@employer_profile.id, :tab=>'employees') do %>
-      <div>My Employees: <span><%= @employer_profile.census_employees.active.count %></span></div>
+        <p>Employees: <%= @employer_profile.census_employees.active.count %></p>
       <% end %>
     </div>
   </div>

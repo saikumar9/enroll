@@ -5,8 +5,8 @@
   <div class="row">
     <%= form_tag(:insured_group_selections, :id => "group-selection-form") do %>
       <div class="col-xs-8">
-        <h1 class="darkblue"><%= l10n("insured.group_selection.new.choose_coverage_for_your_household") %></h1>
-        <h4><%= l10n("insured.group_selection.new.select_who_needs_coverage") %></h4>
+        <h1><%= l10n("insured.group_selection.new.choose_coverage_for_your_household") %></h1>
+        <p class="twenty">Select who needs coverage and the type of coverage needed. When you’re finished, select CONTINUE.</p>
         <div style="font-size :24px">
         <%if @effective_on_date.present? %>
           <%= l10n("insured.group_selection.new.effective_date") %>: <span style="color: red;"><%= @effective_on_date %></span>
@@ -62,9 +62,9 @@
                       <span class="n-radio">
                       </span>
                       <% if kind=="shop" %>
-                        <%= l10n("insured.group_selection.new.employee_sponsored_benifits") %>                      
+                        <%= l10n("insured.group_selection.new.employee_sponsored_benifits") %>
                       <% else %>
-                        <%= l10n("insured.group_selection.new.individual_benifits") %>                      
+                        <%= l10n("insured.group_selection.new.individual_benifits") %>
                       <% end %>
                     </label>
                   </div>
@@ -84,7 +84,8 @@
           <% end %>
 
           <% if @employee_role.present? %>
-            <h3><%= l10n("employer") %>: <%= @employee_role.employer_profile.legal_name %></h3>
+            <br>
+            <p class="twenty"><%= l10n("employer") %>: <%= @employee_role.employer_profile.legal_name %></p>
           <% end %>
 
           <% if can_shop_resident?(@person) %>
@@ -117,7 +118,7 @@
                     <%= radio_button_tag 'coverage_kind', 'dental', false, id: 'coverage_kind_dental', class: 'n-radio' %>
                     <span class="n-radio">
                     </span>
-                    <%= l10n("dental") %>                    
+                    <%= l10n("dental") %>
                   </label>
                 </div>
               </div>
