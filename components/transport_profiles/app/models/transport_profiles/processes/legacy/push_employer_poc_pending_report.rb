@@ -1,7 +1,7 @@
 module TransportProfiles
-  class Processes::PushLegacyShopReport < Processes::Process
+  class Processes::Legacy::PushEmployerPocPendingReport < Processes::Process
     def initialize(report_file_name, gateway)
-      super("Distribute system generated employee terminations report", gateway)
+      super("Distribute system generated legacy employer report", gateway)
       @report_file_name = report_file_name
 
       add_step(TransportProfiles::Steps::RouteTo.new(:shop_legacy_report_archive, report_file_name, gateway))
