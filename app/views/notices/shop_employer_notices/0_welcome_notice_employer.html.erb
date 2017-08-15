@@ -59,13 +59,31 @@
       <td>
         <ul style="list-style: circle solid;">
         <li class="notice-font">
-            By calling <%=contact_center_phone_number%><br>
+            <a href= "https://www.MAhealthconnector.org"><%= site_main_web_address %></a>
         </li>
         <li class="notice-font">
-             TTY: <%=contact_center_tty_number%>
+             <a href= "#{site_main_web_address}"><%= site_main_web_address %></a>
         </li>
         <li class="notice-font">
-            Online at  <a href= "#{site_main_web_address}"><%= site_main_web_address %></a>
+            <a href= '#{site_main_web_address}'><%= site_main_web_address %></a>
+        </li>
+        <li class="notice-font">
+            <a href= "#{site_check}"><%= site_main_web_address %></a>
+        </li>
+        <li class="notice-font">
+            <%= link_to "#{site_main_web_address}", "#{site_check}" %>
+        </li>
+        <li class="notice-font">
+            <%= link_to "#{site_main_web_address}", "#{site_main_web_address}" %>
+        </li>
+        <li class="notice-font">
+            <%= link_to "#{site_main_web_address}", "#{site_check}", target: "_blank"%>
+        </li>
+        <li class="notice-font">
+            <%= mail_to "#{small_businesss_email}", "#{small_businesss_email}", target: "_blank"%>
+        </li>
+        <li class="notice-font">
+            <a mail_to= '#{small_businesss_email}'><%= small_businesss_email %></a>
         </li>
         </ul>
       </td>
