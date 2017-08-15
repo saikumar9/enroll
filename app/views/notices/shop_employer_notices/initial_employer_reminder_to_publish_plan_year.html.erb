@@ -17,9 +17,9 @@
 <% when "initial_employer_first_reminder_to_publish_plan_year" %>
   <%= render partial: 'notices/shared/paragraph', :locals => {
   content: "Action is needed to complete your application for employer-sponsored health coverage with the #{site_short_name}. The deadline to complete your application has been extended to #{(notice.plan_year.start_on-1.month).strftime("%m/%d/%Y")}. Please complete your application by this date or you may have to reapply for coverage starting at a later date."} %>
-<% when "initial_employer_second_reminder_to_publish_plan_year."%>
+<% when "initial_employer_second_reminder_to_publish_plan_year"%>
   <%= render partial: 'notices/shared/paragraph', :locals => {
-  content: "Action is needed to complete your application for employer-sponsored health coverage with the #{aca_state_name} #{site_short_name}. The deadline to complete your application has been extended to #{(notice.plan_year.start_on-1.month).strftime("%m/#{Settings.aca.shop_market.initial_application.publish_due_day_of_month}/%Y")}. Please complete your application by this date or you may have to reapply for coverage starting at a later date."} %>
+  content: "Action is needed to complete your application for employer-sponsored health coverage with the #{aca_state_name} #{site_short_name}. The deadline to complete your application has been extended to #{(notice.plan_year.start_on-1.month).strftime("%m/#{Settings.aca.shop_market.initial_application.advertised_deadline_of_month}/%Y")}. Please complete your application by this date or you may have to reapply for coverage starting at a later date."} %>
 <% when "initial_employer_final_reminder_to_publish_plan_year" %>
   <%= render partial: 'notices/shared/paragraph', :locals => {
   content: "Action is needed to complete your application for employer-sponsored health coverage with the #{aca_state_name} #{site_short_name}. To apply for coverage starting on #{notice.plan_year.start_on}, please complete your application before #{(notice.plan_year.start_on-1.month).strftime("%m/#{Settings.aca.shop_market.initial_application.publish_due_day_of_month}/%Y")}."} %>
@@ -107,7 +107,7 @@
             By calling <%=contact_center_phone_number%>  &nbsp;TTY: <%=contact_center_tty_number%><br>
         </li>
         <li class="notice-font">
-            By email: <a mail_to= "#{small_businesss_email}"> <%=small_businesss_email%></a>
+            By email: <%= mail_to "#{small_businesss_email}", "#{small_businesss_email}"%> 
         </li>
         </ul>
       </td>
@@ -116,7 +116,7 @@
 </table>
 
 <%= render partial: 'notices/shared/paragraph', :locals =>
-  { content: "You can also find more information on our website at <a href= ""#{site_main_web_address}"">#{site_website_name}</a>"} %>
+  { content: "You can also find more information on our website at <a href = '#{site_main_web_address_url}'>#{site_website_name}</a>"}%> 
 
 
 <% if notice.broker.present? %>
