@@ -28,6 +28,9 @@ Rails.application.routes.draw do
       get :reset_password, :lockable, :confirm_lock
       put :confirm_reset_password
       post :unlock
+      get :lockable
+      get :confirm_lock
+      get :login_history
     end
   end
 

@@ -855,7 +855,7 @@ class PlanYear
       transitions from: :published, to: :enrolling,               :guard  => :is_event_date_valid?
       transitions from: :enrolling, to: :enrolled,                :guards => [:is_open_enrollment_closed?, :is_enrollment_valid?], :after => :initial_employee_plan_selection_confirmation
       transitions from: :enrolling, to: :application_ineligible,  :guard => :is_open_enrollment_closed?, :after => [:initial_employer_ineligibility_notice, :notify_employee_of_initial_employer_ineligibility]
-      
+
       # transitions from: :enrolling, to: :canceled,  :guard  => :is_open_enrollment_closed?, :after => :deny_enrollment  # Talk to Dan
 
       transitions from: :active, to: :terminated, :guard => :is_event_date_valid?
