@@ -130,6 +130,28 @@ shop_notice_triggers = [
         ]
     },
 
+    {
+    hbx_id: 'SHOP_M008',
+    title: 'Action Needed – Add all Eligible Employees to your Roster',
+    description: 'This notice goes to all the employers with zero employees on roster when published',
+    resource_name: 'employer',
+    event_name: 'zero_employees_on_roster',
+    notice_triggers: [
+      {
+        name: 'Zero Employees on Rotser',
+        notice_template: 'notices/shop_employer_notices/notice_for_employers_with_zero_employees_on_roster',
+        notice_builder: 'ShopEmployerNotices::ZeroEmployeesOnRoster',
+        mpi_indicator: 'SHOP_M008',
+        notice_trigger_element_group: {
+          market_places: ['shop'],
+          primary_recipients: ["employer"],
+          primary_recipient_delivery_method: ["secure_message"],
+          secondary_recipients: []
+        }
+      }
+    ]
+  },
+
     # {
     #   hbx_id: 'SHOP3A',
     #   title: 'Plan Offerings Finalized',
@@ -431,7 +453,6 @@ shop_notice_triggers = [
             }
         ]
     },
-
     # {
     #   hbx_id: 'SHOP27',
     #   title: 'Final Reminder to publish Application',
@@ -476,7 +497,6 @@ shop_notice_triggers = [
     ]
   },
   
-]
 
     # {
     #   hbx_id: 'SHOP28',
@@ -501,6 +521,73 @@ shop_notice_triggers = [
     # },
 
     {
+    hbx_id: 'SHOP27',
+    title: 'Action Required to complete Employer Application',
+    description: 'All the initial employers with draft plan years will be notified to publish their plan year 2 days prior to soft deadline of 1st.',
+    resource_name: 'employer',
+    event_name: 'initial_employer_first_reminder_to_publish_plan_year',
+    notice_triggers: [
+      {
+        name: 'Initial Employer Application - Reminder to publish',
+        notice_template: 'notices/shop_employer_notices/initial_employer_reminder_to_publish_plan_year',
+        notice_builder: 'ShopEmployerNotices::InitialEmployerReminderToPublishPlanYear',
+        mpi_indicator: 'SHOP_M027',
+        notice_trigger_element_group: {
+          market_places: ['shop'],
+          primary_recipients: ["employer"],
+          primary_recipient_delivery_method: ["secure_message"],
+          secondary_recipients: []
+        }
+      }
+    ]
+  },
+  {
+    hbx_id: 'SHOP28',
+    title: 'Final Reminder – Action Required to Complete Employer Application',
+    description: 'All the initial employers with draft plan years will be notified to publish their plan year on 3rd of the month.',
+    resource_name: 'employer',
+    event_name: 'initial_employer_final_reminder_to_publish_plan_year',
+    notice_triggers: [
+      {
+        name: 'Initial Employer Application, Deadline Extended - Reminder to publish',
+        notice_template: 'notices/shop_employer_notices/initial_employer_reminder_to_publish_plan_year',
+        notice_builder: 'ShopEmployerNotices::InitialEmployerReminderToPublishPlanYear',
+        mpi_indicator: 'SHOP_M028',
+        notice_trigger_element_group: {
+          market_places: ['shop'],
+          primary_recipients: ["employer"],
+          primary_recipient_delivery_method: ["secure_message"],
+          secondary_recipients: []
+        }
+      }
+    ]
+  },
+
+  {
+    hbx_id: 'SHOP26',
+    title: 'Action Required to Complete Employer Application – Deadline Extended',
+    description: 'All the initial employers with draft plan years will be notified to publish their plan year 1 day prior to soft deadline of 1st.',
+    resource_name: 'employer',
+    event_name: 'initial_employer_second_reminder_to_publish_plan_year',
+    notice_triggers: [
+      {
+        name: 'Initial Employer Application, Deadline Extended - Reminder to publish',
+        notice_template: 'notices/shop_employer_notices/initial_employer_reminder_to_publish_plan_year',
+        notice_builder: 'ShopEmployerNotices::InitialEmployerReminderToPublishPlanYear',
+        mpi_indicator: 'SHOP_M026',
+        notice_trigger_element_group: {
+          market_places: ['shop'],
+          primary_recipients: ["employer"],
+          primary_recipient_delivery_method: ["secure_message"],
+          secondary_recipients: []
+
+        }
+      }
+    ]
+  },
+
+
+    {
         hbx_id: 'SHOP_M038',
         title: 'Termination of Employer’s Health Coverage Offered through the Massachusetts Health Connector',
         description: 'Notification to employees regarding their Employer’s ineligibility.',
@@ -518,6 +605,28 @@ shop_notice_triggers = [
                     primary_recipient_delivery_method: ["secure_message"],
                     secondary_recipients: []
                 }
+            }
+        ]
+    },
+
+    {
+        hbx_id: 'SHOP45',
+        title: 'You have been Hired as a Broker',
+        description: "When a broker is hired to a group, a notice is sent to the broker's broker mail inbox alerting them of the hire.",
+        resource_name: 'broker_role',
+        event_name: 'broker_hired',
+        notice_triggers: [
+           {
+              name: 'Broker Hired',
+              notice_template: 'notices/shop_broker_notices/broker_hired_notice.html.erb',
+              notice_builder: 'ShopBrokerNotices::BrokerHiredNotice',
+              mpi_indicator: 'SHOP_M045',
+              notice_trigger_element_group: {
+                market_places: ['shop'],
+                primary_recipients: ["broker"],
+                primary_recipient_delivery_method: ["secure_message"],
+                secondary_recipients: []
+              }
             }
         ]
     },
@@ -542,6 +651,27 @@ shop_notice_triggers = [
                 }
             }
         ]
+    },
+    {
+      hbx_id: 'SHOP_M070',
+      title: 'Employee Enrollment Confirmation',
+      description: 'Employee selects a plan during annual open enrollment OE is still close and final confirmation',
+      resource_name: 'employee_role',
+      event_name: 'initial_employee_plan_selection_confirmation',
+      notice_triggers: [
+        {
+            name: 'Notice to employee after they select a plan Annual Open Enrollment',
+            notice_template: 'notices/shop_employee_notices/initial_employee_plan_selection_confirmation',
+            notice_builder: 'ShopEmployeeNotices::InitialEmployeePlanSelectionConfirmation',
+            mpi_indicator: 'SHOP_M070',
+            notice_trigger_element_group: {
+                market_places: ['shop'],
+                primary_recipients: ["employee"],
+                primary_recipient_delivery_method: ["secure_message"],
+                secondary_recipients: []
+            }
+        }
+      ]
     },
 ]
 

@@ -5,15 +5,19 @@ site:
   home_url: "https://enroll.mhc.hbxshop.org"
   help_url: "https://www.mahealthconnector.org/business/help-center"
   faqs_url: "https://www.mahealthconnector.org/business/help-center/faqs"
+  business_resource_center_url: "https://www.mahealthconnector.org/business/business-resource-center"
+  nondiscrimination_notice_url: "https://www.MAhealthconnector.org/site-policies/nondiscrimination-notice"
   main_web_address: "www.MAhealthconnector.org"
   website_name: "MAhealthconnector.org"
   site_check: "https://www.MAhealthconnector.org"
+  main_web_address_url: "https://www.MAhealthconnector.org"
   short_name: "Health Connector"
   byline: "The Right Place for the Right Plan"
   long_name: "Massachusetts Health Connector"
   copyright_period_start: "2017"
   header_message: "The Right Place for the Right Plan"
   logo_file_name: "mhc_logo.svg"
+  make_their_premium_payments_online: "https://www.mahealthconnector.org/business/employers/payment-information"
   s3_prefix: "mhc"
   broker_quoting_enabled: false
   use_default_devise_path: true
@@ -23,6 +27,7 @@ site:
   curam_enabled: false
   document_verification_checklist_url: "https://www.mahealthconnector.org/business/business-resource-center/employer-verification-checklist"
   registration_path: "https://www.mahealthconnector.org/business/create-a-business-account"
+  main_web_address_text: "MAhealthconnector.org"
   social_media:
     facebook_url: ""
 
@@ -33,10 +38,12 @@ contact_center:
   alt_name: "Health Connector Customer Service"
   phone_number: "1-888-813-9220"
   fax: "1-617-933-3099"
+  alt_fax: "617-722-4033"
   tty_number: "711"
   alt_phone_number: "1-888-813-9220"
   email_address: "smallbusiness@mahealthconnector.org"
-  small_business_email: "smallbusiness@mahealthconnector.org"
+  small_business_email: "smallbusiness@MAhealthconnector.org"
+  non_discrimination_email: "Nondiscrimination@state.ma.us"
 
   appeals: "connector-appeals@state.ma.us"
 
@@ -47,6 +54,21 @@ contact_center:
     city: "Philadelphia"
     state: "PA"
     zip_code: "19178-0833"
+
+  non_discrimination:
+    email: "Nondiscrimination@state.ma.us"
+    phone_1: "617-936-1037"
+    phone_2: "1-800-368-1019"
+    phone_3: "800-537-7697"
+    complaint_url: "https://www.hhs.gov/civil-rights/filing-a-complaint"
+
+  appeal_center:
+    name: "Appeals Unit"
+    address_1: "PO Box 960189"
+    address_2:
+    city: "Boston"
+    state: "MA"
+    zip_code: "02196"
 
 notices:
   mailing_address:

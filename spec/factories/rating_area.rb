@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :rating_area do
-    zip_code '10010'
+    zip_code '01001'
     county_name 'Hampstead'
     rating_area Settings.aca.rating_areas.first
     zip_code_in_multiple_counties false

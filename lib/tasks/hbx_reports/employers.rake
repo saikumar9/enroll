@@ -41,8 +41,8 @@ namespace :reports do
         )
 
       processed_count = 0
-      time_stamp = Time.now.strftime("%Y%m%d_%H%M%S")
 
+      time_stamp = Time.now.strftime("%Y%m%d_%H%M%S")
       file_name = File.expand_path("#{Rails.root}/public/employers_#{time_stamp}.csv")
 
       CSV.open(file_name, "w", force_quotes: true) do |csv|
@@ -129,10 +129,10 @@ namespace :reports do
           end
         end
       end
+      pubber = Publishers::Legacy::EmployerReportPublisher.new
+      pubber.publish URI.join("file://", file_name)
 
       puts "For period #{date_range.first} - #{date_range.last}, #{processed_count} employers output to file: #{file_name}"
-      pubber = Publishers::LegacyShopReportPublisher.new
-      pubber.publish URI.join("file://", file_name)
     end
   end
 end

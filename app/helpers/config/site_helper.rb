@@ -11,6 +11,10 @@ module Config::SiteHelper
     Settings.site.website_name
   end
 
+  def site_website_link
+    link_to site_website_name, site_website_name
+  end
+
   def site_find_expert_link
     link_to site_find_expert_url, site_find_expert_url
   end
@@ -35,6 +39,14 @@ module Config::SiteHelper
     Settings.site.help_url
   end
 
+  def site_business_resource_center_url
+    Settings.site.business_resource_center_url
+  end
+
+  def site_nondiscrimination_notice_url
+    Settings.site.nondiscrimination_notice_url
+  end
+
   def site_faqs_url
     Settings.site.faqs_url
   end
@@ -47,6 +59,10 @@ module Config::SiteHelper
     Settings.site.registration_path.present? ? Settings.site.registration_path : new_registration_path(resource_name, :invitation_id => params[:invitation_id])
   end
 
+  def site_long_name
+    Settings.site.long_name
+  end
+
   def site_broker_quoting_enabled?
     Settings.site.broker_quoting_enabled
   end
@@ -55,8 +71,16 @@ module Config::SiteHelper
     Settings.site.main_web_address
   end
 
+  def site_main_web_address_url
+    Settings.site.main_web_address_url
+  end
+
   def site_main_web_link
     link_to site_main_web_address, site_main_web_address
+  end
+
+  def site_make_their_premium_payments_online
+    Settings.site.make_their_premium_payments_online
   end
 
   def site_uses_default_devise_path?
@@ -73,5 +97,9 @@ module Config::SiteHelper
 
   def site_document_verification_checklist_url
     Settings.site.document_verification_checklist_url
+  end
+
+  def site_main_web_address_text
+    Settings.site.main_web_address_text
   end
 end
