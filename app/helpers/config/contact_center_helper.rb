@@ -82,5 +82,33 @@ module Config::ContactCenterHelper
   def non_discrimination_complaint_url
     Settings.contact_center.non_discrimination.complaint_url
   end
+  
+  def contact_center_appeals
+    Settings.contact_center.appeals
+  end
+
+  def contact_center_appeals_link
+    link_to contact_center_appeals,contact_center_appeals
+  end
+
+  def contact_center_appeal_name
+    Settings.contact_center.appeal_center.name
+  end
+
+  def contact_center_appeal_address_one
+    Settings.contact_center.appeal_center.address_1
+  end
+
+  def contact_center_appeal_city
+    Settings.contact_center.appeal_center.city
+  end
+
+  def contact_center_appeal_state
+    Settings.contact_center.appeal_center.state
+  end
+
+  def contact_center_appeal_zip
+    Settings.contact_center.appeal_center.zip_code
+  end
 
 end

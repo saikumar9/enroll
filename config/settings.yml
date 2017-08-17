@@ -23,9 +23,14 @@ site:
   create_routes: ['/insured/employee/privacy','/employers/employer_profiles/new']
   sign_in_routes: ['/families/home']
   shop_find_your_doctor_url: "https://ma.checkbookhealth.org/mashop"
+<<<<<<< HEAD
   curam_enabled: false
   document_verification_checklist_url: "https://www.mahealthconnector.org/business/business-resource-center/employer-verification-checklist"
   registration_path: "https://www.mahealthconnector.org/business/create-a-business-account"
+=======
+  main_web_address_text: "MAhealthconnector.org"
+
+>>>>>>> support-17092
   social_media:
     facebook_url: ""
 
@@ -59,6 +64,14 @@ contact_center:
     phone_2: "1-800-368-1019"
     phone_3: "800-537-7697"
     complaint_url: "https://www.hhs.gov/civil-rights/filing-a-complaint"
+
+  appeal_center:
+    name: "Appeals Unit"
+    address_1: "PO Box 960189"
+    address_2:
+    city: "Boston"
+    state: "MA"
+    zip_code: "02196"
 
 notices:
   mailing_address:
