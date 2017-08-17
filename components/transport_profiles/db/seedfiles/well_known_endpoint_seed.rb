@@ -15,11 +15,11 @@ endpoints = [
     { title: "Carrier SHOP employer group file inbound",   key: :carrier_aca_shop_employer_group_inbound,   site_key: :cca, market_kind: :aca_shop, uri: "sftp://blah.com/folder", credentials: [], },
     { title: "Carrier SHOP employer group file outbound",  key: :carrier_aca_shop_employer_group_outbound,  site_key: :cca, market_kind: :aca_shop, uri: "sftp://blah.com/folder", credentials: [], },
 
-    { title: "SHOP Analytics/Business Intelligence report outbound",  key: :aca_shop_analytics_outbound,  site_key: :cca, market_kind: :aca_shop, uri: "sftp://blah.com/folder", credentials: [], },
+#    { title: "SHOP Analytics/Business Intelligence report outbound",  key: :aca_shop_analytics_outbound,  site_key: :cca, market_kind: :aca_shop, uri: "sftp://blah.com/folder", credentials: [], },
+#    { title: "SHOP Analytics/Business Intelligence report archive", key: :aca_shop_analytics_archive,         site_key: :cca, market_kind: :aca_shop, uri: "aws3://blah.com/folder", credentials: [], },
 
     { title: "SHOP Employer invoice path",                          key: :aca_shop_employer_invoice_path,     site_key: :cca, market_kind: :aca_shop, uri: "aws3://blah.com/folder", credentials: [], },
     { title: "SHOP Employer invoice archive",                       key: :aca_shop_employer_invoice_archive,  site_key: :cca, market_kind: :aca_shop, uri: "aws3://blah.com/folder", credentials: [], },
-    { title: "SHOP Analytics/Business Intelligence report archive", key: :aca_shop_analytics_archive,         site_key: :cca, market_kind: :aca_shop, uri: "aws3://blah.com/folder", credentials: [], },
 
     { title: "Print vendor outbound", key: :print_vendor_outbound, site_key: :cca,    market_kind: :any, uri: "sftp://blah.com/folder", credentials: [], },
     { title: "Print vendor outbound", key: :print_vendor_outbound, site_key: :dchbx,  market_kind: :any, uri: "sftp://blah.com/folder", credentials: [], },
