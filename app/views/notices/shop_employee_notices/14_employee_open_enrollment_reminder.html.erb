@@ -37,25 +37,11 @@
 <%= render partial: 'notices/shared/paragraph_with_headers', :locals =>
     { heading: 'For Questions or Assistance:',
       col_styles: ['margin-bottom: 0px']} %>
-<%= render partial: 'notices/shared/paragraph', :locals =>
-  { content: "Please contact your broker for further assistance. You can also contact the #{site_short_name} with any questions:"} %>
-
-<table class="total_table" border="0">
-  <tbody>
-    <tr>
-      <td>
-        <ul style="list-style: circle solid;">
-        <li class="notice-font">
-            By calling <%=contact_center_phone_number%>   &nbsp; TTY: <%=contact_center_tty_number%><br>
-        </li>
-        <li class="notice-font">
-            By email: <%= mail_to "#{small_businesss_email}", "#{small_businesss_email}"%> 
-        </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<%= render partial: 'notices/shared/unordered_list', locals: {
+   previous: "Please contact your broker for further assistance. You can also contact the #{site_short_name} with any questions:",
+   listings: ["By calling #{contact_center_phone_number}",
+              "By email: <a href='mailto:#{small_businesss_email}'>#{small_businesss_email}</a>"] } %>
+<br>
 
 <% if notice.broker.present? %>
   <%= render partial: 'notices/shared/paragraph', :locals => { content: "Please contact your broker for further assistance. You can also contact #{site_short_name} with any questions:"} %>
