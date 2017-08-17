@@ -7,12 +7,12 @@ RSpec.describe ShopEmployeeNotices::EmployeeOpenEnrollmentReminderNotice, :dbcle
   let(:census_employee) { FactoryGirl.create(:census_employee, employee_role_id: employee_role.id, employer_profile_id: employer_profile.id) }
   let(:start_on) { TimeKeeper.date_of_record.beginning_of_month + 2.month - 1.year}
   let(:application_event){ double("ApplicationEventKind",{
-                            :name =>'Renewal Open Enrollment available for Employee',
-                            :notice_template => 'notices/shop_employee_notices/8b_renewal_open_enrollment_notice_for_employee',
+                            :name =>'Employee Open Enrollment Reminder Notice',
+                            :notice_template => 'notices/shop_employee_notices/14_employee_open_enrollment_reminder',
                             :notice_builder => 'ShopEmployeeNotices::EmployeeOpenEnrollmentReminderNotice',
                             :event_name => 'employee_open_enrollment_reminder',
                             :mpi_indicator => 'SHOP_M014',
-                            :title => "Your Health Plan Open Enrollment Period has Begun"})
+                            :title => "REMINDER: Your Open Enrollment Period Ends Soon"})
                           }
     let(:valid_parmas) {{
         :subject => application_event.title,
