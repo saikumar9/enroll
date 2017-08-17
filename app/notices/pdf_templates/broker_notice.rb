@@ -15,6 +15,8 @@ module PdfTemplates
     attribute :mpi_indicator, String
     attribute :assignment_date, Date
     attribute :hbx_id, String
+    attribute :phone, String
+    attribute :email, String
     attribute :first_name,String
     attribute :last_name, String
 
