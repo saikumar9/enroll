@@ -83,6 +83,13 @@ module Config::SiteHelper
     Settings.site.make_their_premium_payments_online
   end
 
+  def health_care_website
+      Settings.site.health_care_website
+  end
+
+  def health_care_website_url
+      Settings.site.health_care_website_url
+  end
 
   def site_uses_default_devise_path?
     Settings.site.use_default_devise_path
