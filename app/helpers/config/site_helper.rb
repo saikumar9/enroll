@@ -67,6 +67,10 @@ module Config::SiteHelper
     Settings.site.broker_quoting_enabled
   end
 
+  def site_main_web_address_url
+    Settings.site.main_web_address_url
+  end
+
   def site_main_web_address
     Settings.site.main_web_address
   end
