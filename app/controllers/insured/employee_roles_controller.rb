@@ -37,7 +37,6 @@ class Insured::EmployeeRolesController < ApplicationController
         UserMailer.send_employee_ineligibility_notice(current_user.email, first_name).deliver_now unless current_user.email.blank?
       else
         @employment_relationships = Factories::EmploymentRelationshipFactory.build(@employee_candidate, found_census_employees)
-        employee_eligible_notice(found_census_employees)
         respond_to do |format|
           format.html { render 'match' }
         end
@@ -75,6 +74,7 @@ class Insured::EmployeeRolesController < ApplicationController
       @family = @person.primary_family
       build_nested_models
     end
+    employee_eligible_notice(@employee_role.census_employee)
   end
 
   def update
@@ -207,9 +207,9 @@ class Insured::EmployeeRolesController < ApplicationController
     end
   end
 
-  def employee_eligible_notice(found_census_employees)
+  def employee_eligible_notice(census_employees)
     begin
-      ShopNoticesNotifierJob.perform_later(found_census_employees.first.id.to_s, "employee_matches_employer_rooster")
+      ShopNoticesNotifierJob.perform_later(census_employee.id.to_s, "employee_matches_employer_rooster")
     rescue Exception => e
       puts "Unable to send Employee Open Enrollment begin notice to #{found_census_employees.first.full_name}" unless Rails.env.test?
     end
