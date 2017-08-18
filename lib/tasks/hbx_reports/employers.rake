@@ -41,8 +41,8 @@ namespace :reports do
         )
 
       processed_count = 0
-
       time_stamp = Time.now.strftime("%Y%m%d_%H%M%S")
+
       file_name = File.expand_path("#{Rails.root}/public/employers_#{time_stamp}.csv")
 
       CSV.open(file_name, "w", force_quotes: true) do |csv|
