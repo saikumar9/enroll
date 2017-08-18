@@ -739,7 +739,7 @@ shop_notice_triggers = [
     },
     {
         hbx_id: 'SHOP_M029',
-        title: 'CONFIRMATION OF ELECTION TO WAIVE COVERAGE ',
+        title: 'Confirmation Of Election To Waive Coverage',
         description: 'Employee waiver confirmation',
         resource_name: 'employee_role',
         event_name: 'employee_waiver_notice',
