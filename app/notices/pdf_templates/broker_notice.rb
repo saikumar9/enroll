@@ -20,6 +20,7 @@ module PdfTemplates
     attribute :email, String
     attribute :first_name,String
     attribute :last_name, String
+    attribute :termination_date, Date
 
     def shop?
       return true
