@@ -42,7 +42,7 @@ module Aws
         object = get_object(env_bucket_name, key)
         read_object(object)
       rescue Exception => e
-       puts "Error caused due to %s" %[$!.class] unless Rails.env.production?
+       puts "Error caused due to %s" %[$!.class] if Rails.env.development?
        raise "Unable to find S3 bucket with key"
       end
     end
