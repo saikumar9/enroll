@@ -4,17 +4,8 @@ class ShopBrokerAgencyNotice < Notice
   attr_accessor :broker_agency_profile
   attr_accessor :employer_profile
 
-  def initialize(employer_profile, args = {})
-    self.employer_profile = employer_profile
-    self.broker_agency_profile = employer_profile.broker_agency_accounts.unscoped.last.broker_agency_profile
-    args[:recipient] = broker_agency_profile
-    args[:market_kind]= 'shop'
-    args[:notice] = PdfTemplates::BrokerNotice.new
-    args[:to] = broker_agency_profile.primary_broker_role.email_address
-    args[:name] = broker_agency_profile.primary_broker_role.person.full_name
-    args[:recipient_document_store] = broker_agency_profile
-    self.header = "notices/shared/header_with_page_numbers.html.erb"
-    super(args)
+  def initialize(options ={})
+    super
   end
 
   def build
@@ -28,7 +19,6 @@ class ShopBrokerAgencyNotice < Notice
     notice.phone = broker_agency_profile.phone
     append_address(broker_agency_profile.organization.primary_office_location.address)
   end
-
 
   def attach_envelope
     join_pdfs [notice_path, Rails.root.join('lib/pdf_templates', 'ma_envelope_without_address.pdf')]
