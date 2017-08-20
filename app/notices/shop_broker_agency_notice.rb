@@ -10,7 +10,7 @@ class ShopBrokerAgencyNotice < Notice
 
   def build
     notice.mpi_indicator = self.mpi_indicator
-    notice.primary_fullname = broker_agency_profile.primary_broker_role.person.full_name.titleize
+    notice.primary_fullname = broker_agency_profile.legal_name
     notice.employer_name = employer_profile.legal_name.titleize
     notice.employer_first_name = employer_profile.staff_roles.first.first_name.titleize
     notice.employer_last_name = employer_profile.staff_roles.first.last_name.titleize
