@@ -36,6 +36,14 @@ module Config::SiteHelper
     link_to site_home_url, site_home_url
   end
 
+  def site_policies_url
+    Settings.site.policies_url
+  end
+
+  def link_to_site_business_resource_center
+    link_to "Business Resource Center", site_business_resource_center_url
+  end  
+
   def site_help_url
     Settings.site.help_url
   end
