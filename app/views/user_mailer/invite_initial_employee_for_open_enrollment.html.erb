@@ -3,9 +3,8 @@
   <b>Enroll Now: Your Health Plan Open Enrollment Period has Begun </b>
   <br/>
   <br/>
-  <div><% fname = census_employee.full_name %>
-   <% fname.slice! census_employee.last_name %>
-   Dear <%= fname.humanize.titleize %>,</div>
+  <div>
+   Dear <%= census_employee.first_name.humanize.titleize %>,</div>
   <br/>
   <div>
     Good News! <%= census_employee.employer_profile.legal_name %> has chosen to offer of health insurance coverage to its employees through the <%= site_short_name %> and will contribute to your monthly premium to make the cost of coverage more affordable. Your new hire open enrollment period begins on <b><%= census_employee.new_hire_enrollment_period.first.to_date.to_formatted_s %></b>.
@@ -45,9 +44,7 @@
         </tr>
       </tbody>
     </table>
-
     <i>Note</i>: If you have other insurance coverage and do not wish to enroll into the plan(s) offered to you by <b><%= census_employee.employer_profile.legal_name %></b> at this time, you must still apply to “waive” coverage. Instructions for how to waive coverage are included in our <b>Employee guide to waiving coverage</b>, also available in the Business Resource Center.
-
     <h2 style="color: #007bc4;">
       For Questions or Assistance:
     </h2>
