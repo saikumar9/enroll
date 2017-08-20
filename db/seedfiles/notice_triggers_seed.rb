@@ -640,7 +640,7 @@ shop_notice_triggers = [
         notice_triggers: [
            {
               name: 'Broker Hired',
-              notice_template: 'notices/shop_broker_notices/broker_hired_notice.html.erb',
+              notice_template: 'notices/shop_broker_notices/broker_hired_notice',
               notice_builder: 'ShopBrokerNotices::BrokerHiredNotice',
               mpi_indicator: 'SHOP_M045',
               notice_trigger_element_group: {
@@ -665,6 +665,27 @@ shop_notice_triggers = [
               notice_template: 'notices/shop_broker_agency_notices/broker_agency_hired_notice',
               notice_builder: 'ShopBrokerAgencyNotices::BrokerAgencyHiredNotice',
               mpi_indicator: 'SHOP_M044',
+              notice_trigger_element_group: {
+                market_places: ['shop'],
+                primary_recipients: ["broker"],
+                primary_recipient_delivery_method: ["secure_message"],
+                secondary_recipients: []
+              }
+            }
+        ]
+    },
+    {
+        hbx_id: 'SHOP48',
+        title: 'You have been removed as a Broker',
+        description: "When a Broker is fired by an employer, the broker receives this notification letting them know they are no longer the broker for the client.",
+        resource_name: 'broker_role',
+        event_name: 'broker_fired_confirmation_to_broker',
+        notice_triggers: [
+           {
+              name: 'Broker Fired',
+              notice_template: 'notices/shop_broker_notices/broker_fired_notice',
+              notice_builder: 'ShopBrokerNotices::BrokerFiredNotice',
+              mpi_indicator: 'SHOP_M048',
               notice_trigger_element_group: {
                 market_places: ['shop'],
                 primary_recipients: ["broker"],

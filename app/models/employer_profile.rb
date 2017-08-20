@@ -153,7 +153,7 @@ class EmployerProfile
     active_broker_agency_account.save!
     notify_broker_terminated
     broker_agency_fired_confirmation
-
+    broker_fired_confirmation_to_broker
   end
 
   def broker_agency_fired_confirmation
@@ -164,6 +164,14 @@ class EmployerProfile
     end
   end
 
+  def broker_fired_confirmation_to_broker
+    begin
+      trigger_notices('broker_fired_confirmation_to_broker')
+    rescue Exception => e
+      puts "Unable to send broker fired confirmation to broker. Broker's old employer - #{self.legal_name}"
+    end
+  end
+  
   alias_method :broker_agency_profile=, :hire_broker_agency
 
   def broker_agency_profile
@@ -950,6 +958,7 @@ class EmployerProfile
     return nil unless org.any?
     org.first.employer_profile
   end
+
 
   def trigger_notices(event)
     ShopNoticesNotifierJob.perform_later(self.id.to_s, event)
