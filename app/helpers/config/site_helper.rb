@@ -95,6 +95,10 @@ module Config::SiteHelper
       Settings.site.health_care_website_url
   end
 
+  def ivl_login_url
+    Settings.site.ivl_login_url
+  end
+
   def site_uses_default_devise_path?
     Settings.site.use_default_devise_path
   end
