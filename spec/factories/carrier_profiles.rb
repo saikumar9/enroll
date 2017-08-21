@@ -15,6 +15,7 @@ FactoryGirl.define do
           create(:carrier_service_area, issuer_hios_id: hios_id)
         end
       end
+      create(:composite_rating_tier_factor_set, carrier_profile: carrier_profile)
     end
   end
 end
