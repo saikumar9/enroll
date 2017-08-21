@@ -250,14 +250,14 @@ class User
 
   def update_lockable
     if locked_at.nil?
-      self.lock_access!
+      lock_access!
     else
-      self.unlock_access!
+      unlock_access!
     end
   end
 
   def lockable_notice
-    self.locked_at.nil? ? 'unlocked' : 'locked'
+    locked_at.nil? ? 'unlocked' : 'locked'
   end
 
   def has_role?(role_sym)

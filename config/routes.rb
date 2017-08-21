@@ -22,10 +22,13 @@ Rails.application.routes.draw do
 
   resources :users do
     resources :security_question_responses, controller: "users/security_question_responses"
+    post "/security_question_responses/replace", controller: "users/security_question_responses", action: 'replace'
+
     member do
       post :unlock
       get :lockable
       get :confirm_lock
+      post :change_password
     end
   end
 
