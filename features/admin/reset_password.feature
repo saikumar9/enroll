@@ -15,7 +15,7 @@ Feature: Reset password of user
 #    When I click on the confirm button
     Then the reset password email should be sent to the user
 
- # this feature been removed because after clicking resetpassword link user will receive email instructions.  
+ # this feature been removed because after clicking resetpassword link user will receive email instructions.
 #  Scenario: Admin can add user email address to reset password if email does not exist
 #    Given Hbx Admin exists
 #    When Hbx Admin logs on to the Hbx Portal

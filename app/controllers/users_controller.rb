@@ -47,10 +47,19 @@ class UsersController < ApplicationController
     redirect_to personal_insured_families_path
   end
 
+  def edit
+    @user = User.find(params[:id])
+  end
+
+  def update
+    @user = User.find(params[:id])
+    @user.update_attributes(email_update_params)
+  end
+
   private
   helper_method :user
 
-  def reset_password_params
+  def email_update_params
     params.require(:user).permit(:email)
   end
 
