@@ -519,7 +519,8 @@ shop_notice_triggers = [
     #   ]
     # },
 
-    {
+
+   {
     hbx_id: 'SHOP27',
     title: 'Action Required to complete Employer Application',
     description: 'All the initial employers with draft plan years will be notified to publish their plan year 2 days prior to soft deadline of 1st.',
@@ -664,6 +665,27 @@ shop_notice_triggers = [
               notice_builder: 'ShopBrokerAgencyNotices::BrokerAgencyFiredNotice',
               mpi_indicator: 'SHOP_M047',
               notice_trigger_element_group: {
+              market_places: ['shop'],
+              primary_recipients: ["broker"],
+              primary_recipient_delivery_method: ["secure_message"],
+              secondary_recipients: []
+            }
+          }
+      ]
+  },
+  {
+        hbx_id: 'SHOP44',
+        title: 'You have been Hired as a Broker',
+        description: "When a broker is hired to a group, a notice is sent to the broker's broker mail inbox alerting them of the hire.",
+        resource_name: 'broker_role',
+        event_name: 'broker_agency_hired_confirmation',
+        notice_triggers: [
+           {
+              name: 'Broker Agency Hired',
+              notice_template: 'notices/shop_broker_agency_notices/broker_agency_hired_notice',
+              notice_builder: 'ShopBrokerAgencyNotices::BrokerAgencyHiredNotice',
+              mpi_indicator: 'SHOP_M044',
+              notice_trigger_element_group: {
                 market_places: ['shop'],
                 primary_recipients: ["broker"],
                 primary_recipient_delivery_method: ["secure_message"],
@@ -672,29 +694,6 @@ shop_notice_triggers = [
             }
         ]
     },
-
-    {
-        hbx_id: 'SHOP44',
-        title: 'You have been Hired as a Broker',
-        description: "When a broker is hired to a group, a notice is sent to the broker's broker mail inbox alerting them of the hire.",
-        resource_name: 'broker_role',
-        event_name: 'broker_agency_hired_confirmation',
-        notice_triggers: [
-            {
-                name: 'Broker Agency Hired',
-                notice_template: 'notices/shop_broker_agency_notices/broker_agency_hired_notice.html.erb',
-                notice_builder: 'ShopBrokerAgencyNotices::BrokerAgencyHiredNotice',
-                mpi_indicator: 'SHOP_M044',
-                notice_trigger_element_group: {
-                    market_places: ['shop'],
-                    primary_recipients: ["broker"],
-                    primary_recipient_delivery_method: ["secure_message"],
-                    secondary_recipients: []
-                }
-            }
-        ]
-    },
-
     {
         hbx_id: 'SHOP48',
         title: 'You have been removed as a Broker',
@@ -716,7 +715,6 @@ shop_notice_triggers = [
             }
         ]
     },
-
     {
         hbx_id: 'SHOP_M068',
         title: 'Employee Plan Selection Confirmation',
@@ -781,17 +779,17 @@ shop_notice_triggers = [
         ]
     },
     {
-        hbx_id: 'SHOP_M050',
-        title: 'Eligible to Apply for Employer-sponsored Health Insurance',
-        description: 'Employee completes initial application and matches the employee to a SHOP Employer (checks SSN and DOB against roster)',
+        hbx_id: 'SHOP_M029',
+        title: 'Confirmation Of Election To Waive Coverage',
+        description: 'Employee waiver confirmation',
         resource_name: 'employee_role',
-        event_name: 'employee_matches_employer_rooster',
+        event_name: 'employee_waiver_notice',
         notice_triggers: [
             {
-                name: 'Employee must be notified when they successfully match to their employer',
-                notice_template: 'notices/shop_employee_notices/employee_matches_employer_rooster_notification',
-                notice_builder: 'ShopEmployeeNotices::EmployeeMatchesEmployerRoosterNotice',
-                mpi_indicator: 'SHOP_M050',
+                name: 'Notice to employee after they select a plan Annual Open Enrollment',
+                notice_template: 'notices/shop_employee_notices/employee_waiver_confirmation_notification',
+                notice_builder: 'ShopEmployeeNotices::EmployeeWaiverConfirmNotice',
+                mpi_indicator: 'SHOP_M029',
                 notice_trigger_element_group: {
                     market_places: ['shop'],
                     primary_recipients: ["employee"],
@@ -839,6 +837,27 @@ shop_notice_triggers = [
                   primary_recipients: ["employee"],
                   primary_recipient_delivery_method: ["secure_message"],
                   secondary_recipients: []
+                }
+            }
+        ]
+    },
+    {
+        hbx_id: 'SHOP_M050',
+        title: 'Eligible to Apply for Employer-sponsored Health Insurance',
+        description: 'Employee completes initial application and matches the employee to a SHOP Employer (checks SSN and DOB against roster)',
+        resource_name: 'employee_role',
+        event_name: 'employee_matches_employer_rooster',
+        notice_triggers: [
+            {
+                name: 'Employee must be notified when they successfully match to their employer',
+                notice_template: 'notices/shop_employee_notices/employee_matches_employer_rooster_notification',
+                notice_builder: 'ShopEmployeeNotices::EmployeeMatchesEmployerRoosterNotice',
+                mpi_indicator: 'SHOP_M050',
+                notice_trigger_element_group: {
+                    market_places: ['shop'],
+                    primary_recipients: ["employee"],
+                    primary_recipient_delivery_method: ["secure_message"],
+                    secondary_recipients: []
                 }
             }
         ]
