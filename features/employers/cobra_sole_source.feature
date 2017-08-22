@@ -6,8 +6,8 @@ Feature: COBRA basic
     When I visit the Employer portal
     Then Jack Doe create a new account for employer
     Then I should see a successful sign up message
-    And I select the all security question and give the answer
-    When I have submit the security questions
+    And the user provides responses for all security questions
+    When I submit the security question responses
     Then I should click on employer portal
     Then Jack Doe creates a new employer profile with default_office_location
     When I go to the Profile tab
@@ -40,8 +40,8 @@ Feature: COBRA basic
 
     When Jack Cobra visits the employee portal
     When Jack Cobra creates an HBX account
-    And I select the all security question and give the answer
-    When I have submit the security questions
+    And the user provides responses for all security questions
+    When I submit the security question responses
     When Employee goes to register as an employee
     Then Employee should see the employee search page
     When Employee enters the identifying info of Jack Cobra
@@ -59,8 +59,8 @@ Feature: COBRA basic
 
     When Jack Employee visits the employee portal
     When Jack Employee creates an HBX account
-    And I select the all security question and give the answer
-    When I have submit the security questions
+    And the user provides responses for all security questions
+    When I submit the security question responses
     When Employee goes to register as an employee
     Then Employee should see the employee search page
     When Employee enters the identifying info of Jack Employee

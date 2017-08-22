@@ -170,15 +170,7 @@ def click_when_present(element)
 end
 
 def wait_and_confirm_text(text)
-  @browser.element(text: text).wait_until_present
-  expect(@browser.element(text:text).visible?).to be_truthy
-end
-
-def fill_user_registration_form(credentials)
-  @browser.text_field(name: "user[password_confirmation]").wait_until_present
-  @browser.text_field(name: "user[login]").set(credentials[:email])
-  @browser.text_field(name: "user[password]").set(credentials[:password])
-  @browser.text_field(name: "user[password_confirmation]").set(credentials[:password])
+  page.find('a', text: text)
 end
 
 def default_office_location
@@ -683,21 +675,6 @@ Then(/^.+ should see the dependents page$/) do
   screenshot("dependents_page")
 end
 
-When(/^.+ clicks? edit on baby Soren$/) do
-  scroll_then_click(@browser.span(text: "07/03/2014").as(xpath: "./preceding::a[contains(@href, 'edit')]").last)
-end
-
-Then(/^.+ should see the edit dependent form$/) do
-  @browser.button(:text => /Confirm Member/i).wait_until_present
-end
-
-When(/^.+ clicks? delete on baby Soren$/) do
-  scroll_then_click(@browser.form(id: 'edit_dependent').a())
-  @browser.div(id: 'remove_confirm').wait_until_present
-  scroll_then_click(@browser.a(class: /confirm/))
-  @browser.button(text: /Confirm Member/i).wait_while_present
-end
-
 Then(/^.+ should see ((?:(?!the).)+) dependents*$/) do |n|
   expect(page).to have_selector('li.dependent_list', :count => n.to_i)
 end
@@ -879,9 +856,16 @@ When(/^.+ should see a published success message without employee$/) do
 end
 
 When(/^.+ clicks? on the add employee button$/) do
-  evaluate_script(<<-JSCODE)
-  $('.interaction-click-control-add-employee')[0].click()
-  JSCODE
+  sleep(1)
+  if page.all('a.interaction-click-control-add-employee').count > 0
+    evaluate_script(<<-JSCODE)
+    $('.interaction-click-control-add-employee')[0].click()
+    JSCODE
+  else
+    evaluate_script(<<-JSCODE)
+    $('.interaction-click-control-add-new-employee')[0].click()
+    JSCODE
+  end
   wait_for_ajax
 end
 

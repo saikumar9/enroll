@@ -1,3 +1,10 @@
+Given(/Individual Market is enabled/) do
+  allow(Config::AcaHelper).to receive(:individual_market_is_enabled?).and_return(true)
+  allow_any_instance_of(Config::AcaHelper).to receive(:individual_market_is_enabled?).and_return(true)
+
+  allow_any_instance_of(Insured::ConsumerRolesController).to receive(:individual_market_is_enabled?).and_return(true)
+end
+
 When(/^\w+ visits? the Insured portal during open enrollment$/) do
   visit "/"
   click_link 'Consumer/Family Portal'
@@ -118,6 +125,9 @@ end
 
 Then(/^\w+ should see identity verification page and clicks on submit/) do
   expect(page).to have_content('Verify Identity')
+  find(:xpath, '//label[@for="agreement_agree"]').click
+  screenshot("identify_verification")
+  step("user continues")
   find(:xpath, '//label[@for="interactive_verification_questions_attributes_0_response_id_a"]').click
   find(:xpath, '//label[@for="interactive_verification_questions_attributes_1_response_id_c"]').click
   screenshot("identify_verification")
@@ -411,14 +421,10 @@ end
 
 Then(/^(\w+) creates a new account$/) do |person|
   find('.interaction-click-control-create-account').click
-  fill_in 'user[email]', with: (@u.email 'email' + person)
+  fill_in 'user[oim_id]', with: (@u.email 'email' + person)
   fill_in 'user[password]', with: "aA1!aA1!aA1!"
   fill_in 'user[password_confirmation]', with: "aA1!aA1!aA1!"
   click_button 'Create account'
-end
-
-When(/^\w+ clicks continue$/) do
-  find('.interaction-click-control-continue').click
 end
 
 When(/^\w+ selects Company match for (\w+)$/) do |company|
@@ -435,9 +441,10 @@ When(/^\w+ visits the Consumer portal$/i) do
 end
 
 When(/^(\w+) signs in$/) do |person|
-  click_link 'Sign In Existing Account'
+  if page.has_link?('Sign In Existing Account')
+    click_link "Sign In Existing Account"
+  end
   fill_in 'user[login]', with: (@u.find 'email' + person)
-  find('#user_email').set(@u.find 'email' + person)
   fill_in 'user[password]', with: "aA1!aA1!aA1!"
   click_button 'Sign in'
 end
@@ -446,8 +453,11 @@ Given(/^Company Tronics is created with benefits$/) do
   step "I visit the Employer portal"
   step "Tronics creates an HBX account"
   step "Tronics should see a successful sign up message"
+  step "the user provides responses for all security questions"
+  step "I submit the security question responses"
   step "I should click on employer portal"
   step "Tronics creates a new employer profile with default_office_location"
+  step "vertical and horizontal plan choices are offered"
   step "Tronics creates and publishes a plan year"
   step "Tronics should see a published success message without employee"
 end
@@ -460,15 +470,16 @@ Then(/^(\w+) enters person search data$/) do |insured|
   fill_in "jq_datepicker_ignore_person[dob]", with: person[:dob]
   fill_in "person[ssn]", with: person[:ssn]
   find(:xpath, '//label[@for="radio_female"]').click
-  click_button 'CONTINUE'
+  step('user continues')
 end
 
 Then(/^\w+ continues$/) do
-  find('.interaction-click-control-continue').click
-end
-
-Then(/^\w+ continues again$/) do
-  find('.interaction-click-control-continue').click
+  continue_button = all('.interaction-click-control-continue')
+  if continue_button.length > 0
+    continue_button[0].click
+  else
+    page.find('span.btn-primary').click
+  end
 end
 
 Then(/^\w+ enters demographic information$/) do
@@ -477,7 +488,8 @@ Then(/^\w+ enters demographic information$/) do
 end
 
 And(/^\w+ is an Employee$/) do
-  wait_and_confirm_text /Employer/i
+  sleep(1)
+  wait_and_confirm_text /Employee/i
 end
 
 And(/^\w+ is a Consumer$/) do

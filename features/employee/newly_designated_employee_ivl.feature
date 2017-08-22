@@ -10,8 +10,8 @@ Feature: Newly designated employees can purchase coverage only through renewing 
     And Employee has not signed up as an HBX user
     And Soren White visits the employee portal
     When Soren White creates an HBX account
-    And I select the all security question and give the answer
-    When I have submit the security questions
+    And the user provides responses for all security questions
+    When I submit the security question responses
     When Employee goes to register as an employee
     Then Employee should see the employee search page
     When Employee enters the identifying info of Soren White
@@ -25,8 +25,8 @@ Feature: Newly designated employees can purchase coverage only through renewing 
     And Employee has not signed up as an HBX user
     And Soren White visits the employee portal
     When Soren White creates an HBX account
-    And I select the all security question and give the answer
-    When I have submit the security questions
+    And the user provides responses for all security questions
+    When I submit the security question responses
     When Employee goes to register as an employee
     Then Employee should see the employee search page
     When Employee enters the identifying info of Soren White

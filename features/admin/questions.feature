@@ -46,8 +46,8 @@ Feature: Add, Edit and Delete security questions
     Then Jack Doe create a new account for employer
     And I should see a successful sign up message
     And I can see the security modal dialog
-    And I select the all security question and give the answer
-    When I have submit the security questions
+    And the user provides responses for all security questions
+    When I submit the security question responses
     Then I have landed on employer profile page
     And I click on log out link
     And I visit the Employer portal

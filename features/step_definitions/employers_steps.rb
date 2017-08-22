@@ -545,6 +545,7 @@ And /^clicks on terminate employee$/ do
 end
 
 Then /^employer clicks on terminated filter$/ do
+  sleep(2)
   expect(page).to have_content "Select 'Add New Employee' to continue building your roster, or select 'Upload Employee Roster' if you're ready to download or upload the roster template"
   find_by_id('Tab:terminated').click
   wait_for_ajax
@@ -555,6 +556,7 @@ Then /^employer sees termination date column$/ do
 end
 
 And /^employer clicks on terminated employee$/ do
+  sleep(2)
   expect(page).to have_content "Eddie Vedder"
   find(:xpath, '//*[@id="effective_datatable_wrapper"]/div/div/div[3]/div/table/tbody/tr[1]/td[2]/a').click
 end

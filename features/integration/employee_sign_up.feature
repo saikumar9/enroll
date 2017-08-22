@@ -11,8 +11,8 @@ Feature: Employee Sign Up when Employer exists and has a matching roster employe
     Given Employee has not signed up as an HBX user
     And Soren White visits the employee portal
     When Soren White creates an HBX account
-    And I select the all security question and give the answer
-    When I have submit the security questions
+    And the user provides responses for all security questions
+    When I submit the security question responses
     When Employee goes to register as an employee
     Then Employee should see the employee search page
     When Employee enters the identifying info of Soren White
@@ -25,8 +25,8 @@ Feature: Employee Sign Up when Employer exists and has a matching roster employe
     And Employee has not signed up as an HBX user
     And Soren White visits the employee portal
     When Soren White creates an HBX account
-    And I select the all security question and give the answer
-    When I have submit the security questions
+    And the user provides responses for all security questions
+    When I submit the security question responses
     When Employee goes to register as an employee
     Then Employee should see the employee search page
     When Employee enters the identifying info of Soren White

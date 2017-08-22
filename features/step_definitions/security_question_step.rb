@@ -66,14 +66,14 @@ Then(/^I can(not)? see the security modal dialog$/) do |negate|
   end
 end
 
-Then(/^I select the all security question and give the answer$/) do
+And(/^the user provides responses for all security questions$/) do
   (0..2).each do |num|
     page.all('.security-question-select')[num].set("Security Question #{num + 1}")
     page.all('.interaction-field-control-security-question-response-question-answer')[num].set("Answer #{num+1}")
   end
 end
 
-When(/I have submit the security questions$/) do
+When(/I submit the security question responses$/) do
   screenshot("group_selection")
   find('.interaction-click-control-save-responses').click
 end
