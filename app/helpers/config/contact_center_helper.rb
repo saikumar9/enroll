@@ -14,7 +14,7 @@ module Config::ContactCenterHelper
   def contact_center_alt_fax_number
     Settings.contact_center.alt_fax
   end
-  
+
   def contact_center_city
     Settings.contact_center.mailing_address.city
   end
@@ -25,6 +25,10 @@ module Config::ContactCenterHelper
 
   def contact_center_phone_number
     Settings.contact_center.phone_number
+  end
+
+  def contact_center_ivl_phone_number
+    Settings.contact_center.ivl_phone_number
   end
 
   def contact_center_fax_number

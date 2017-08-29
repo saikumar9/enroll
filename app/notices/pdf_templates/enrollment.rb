@@ -12,5 +12,7 @@ module PdfTemplates
     attribute :aptc_amount, String
     attribute :responsible_amount, String
     attribute :plan, PdfTemplates::Plan
+    attribute :dependents, Array[String]
+    attribute :dependent_dob, Date
   end
 end
