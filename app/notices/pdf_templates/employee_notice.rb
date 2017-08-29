@@ -18,6 +18,8 @@ module PdfTemplates
     attribute :enrollment, PdfTemplates::Enrollment
     attribute :email, String
     attribute :plan_year, PdfTemplates::PlanYear
+    attribute :sep, PdfTemplates::SpecialEnrollmentPeriod
+    attribute :qle, PdfTemplates::QualifyingLifeEventKind
 
     def shop?
       return true
