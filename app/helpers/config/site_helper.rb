@@ -43,6 +43,10 @@ module Config::SiteHelper
     Settings.site.nondiscrimination_notice_url
   end
 
+  def site_policies_url
+    Settings.site.policies_url
+  end
+
   def site_faqs_url
     Settings.site.faqs_url
   end
