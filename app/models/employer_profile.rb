@@ -570,7 +570,14 @@ class EmployerProfile
       }
     })
     end
-  
+    
+    def initial_employers_misses_binder_payment_due_date
+      Organization.where(:"employer_profile.plan_years" => 
+        { :$elemMatch => { 
+          :aasm_state => "enrolled"
+          }
+        })
+    end
 
     def organizations_eligible_for_renewal(new_date)
       months_prior_to_effective = Settings.aca.shop_market.renewal_application.earliest_start_prior_to_effective_on.months * -1
@@ -684,6 +691,19 @@ class EmployerProfile
           end
         end     
 
+        #initial employers misses binder payment due date deadline on next day notice
+        binder_next_day = PlanYear.calculate_open_enrollment_date(TimeKeeper.date_of_record.next_month.beginning_of_month)[:binder_payment_due_date].next_day
+        if new_date == binder_next_day
+          initial_employers_misses_binder_payment_due_date.each do |org|
+            if !org.employer_profile.binder_paid?
+                begin
+                  ShopNoticesNotifierJob.perform_later(org.employer_profile.id.to_s, "initial_employer_no_binder_payment_received")
+                rescue Exception => e
+                  (Rails.logger.error {"Unable to deliver Notice to  when missing binder payment due to #{e}"}) unless Rails.env.test?
+                end
+            end
+          end
+        end 
       end
 
       # Employer activities that take place monthly - on first of month
