@@ -202,6 +202,7 @@ class Employers::PlanYearsController < ApplicationController
     else
       @plan_year.benefit_groups[0].reference_plan = @plan
     end
+
     @plan_year.benefit_groups[0].build_estimated_composite_rates if @plan_option_kind == 'sole_source'
 
     @employer_contribution_amount = @plan_year.benefit_groups[0].monthly_employer_contribution_amount(@plan)
