@@ -135,6 +135,14 @@ module Config::SiteHelper
   def mail_non_discrimination_email
     mail_to non_discrimination_email, non_discrimination_email
   end
+    
+  def site_employer_application_deadline_link
+    Settings.site.employer_application_deadline_link
+  end
+
+  def site_website_address
+    link_to site_website_name, site_main_web_address_url
+  end
 
   def site_non_discrimination_complaint_url
     link_to non_discrimination_complaint_url, non_discrimination_complaint_url
