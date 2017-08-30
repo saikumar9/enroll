@@ -520,18 +520,21 @@ $(document).on('click', '.reference-plan input[type=radio] + label', function() 
 
 });
 
+$('body').on('change', '.contribution_handler', function(){
+  if ( $(this).closest('.health').length > 0 ) {
+    var coverage_type = '.health';
+  } else {
+    var coverage_type = '.dental';
+  }
+  var location_id = $(this).parents('.benefit-group-fields').attr('id');
+  calcEmployerContributions($('a#calc_employer_contributions_link').data('href'), location_id, coverage_type);
+  if (window.location.href.indexOf("edit") > -1 && window.location.href.indexOf("plan_years") > -1) {
+    EmployerProfile.validateEditPlanYear();
+  } else {
+    EmployerProfile.validatePlanYear();
+  }
+});
 
-  $('.contribution_handler').each(function() {
-    $(this).change(function(){
-      if ( $(this).closest('.health').length > 0 ) {
-        var coverage_type = '.health';
-      } else {
-        var coverage_type = '.dental';
-      }
-      var location_id = $(this).parents('.benefit-group-fields').attr('id');
-      calcEmployerContributions($('a#calc_employer_contributions_link').data('href'), location_id, coverage_type);
-    });
-  });
 
   $('.contribution_slide_handler').each(function() {
     $(this).on("slideStop", function(slideEvt) {

@@ -98,8 +98,9 @@ var EmployerProfile = ( function( window, undefined ) {
     } else {
       editbgemployeepremiums.each(function() {
         if ($('.composite-offerings').is(':visible')) {
-          if ($('.family').is(':checked')) {
-            editbgfamilypremiums.each(function() {
+          editbgfamilypremiums.each(function() {
+            var family_offered_id = $(this).attr('id').replace('employer_contribution_percent', 'offered');
+            if ($("#"+family_offered_id).is(':checked')) {
               if ( parseInt($(this).val()) >= parseInt(minimumEmployerFamilyContributionPct) ) {
                 editvalidatedbgfamilypremiums = true;
                 editvalidated = true;
@@ -109,10 +110,10 @@ var EmployerProfile = ( function( window, undefined ) {
                 editvalidated = false;
                 return false;
               }
-            });
-          } else {
-            editvalidatedbgfamilypremiums = true;
-          }
+            } else {
+              editvalidatedbgfamilypremiums = true;
+            }
+          });
           editbgemployeeonlypremiums.each(function() {
             if ( parseInt($(this).val()) >= parseInt(minimumEmployerEmployeeContributionPct) ) {
               editvalidatedbgemployeepremiums = true;
@@ -148,14 +149,19 @@ var EmployerProfile = ( function( window, undefined ) {
       editbgemployeepremiums.each(function() {
         if ($('.composite-offerings').is(':visible')) {
           editbgfamilypremiums.each(function() {
-            if ( parseInt($(this).val()) >= parseInt(minimumEmployerFamilyContributionPct) ) {
-              editvalidatedbgfamilypremiums = true;
-              editvalidated = true;
+            var family_offered_id = $(this).attr('id').replace('employer_contribution_percent', 'offered');
+            if ($("#"+family_offered_id).is(':checked')) {
+              if ( parseInt($(this).val()) >= parseInt(minimumEmployerFamilyContributionPct) ) {
+                editvalidatedbgfamilypremiums = true;
+                editvalidated = true;
+              } else {
+                $('.interaction-click-control-save-plan-year').attr('data-original-title', 'Employer premium contribution for Family Health Plans must be at least ' + minimumEmployerFamilyContributionPct + '%');
+                editvalidatedbgfamilypremiums = false;
+                editvalidated = false;
+                return false;
+              }
             } else {
-              $('.interaction-click-control-save-plan-year').attr('data-original-title', 'Employer premium contribution for Family Health Plans must be at least ' + minimumEmployerFamilyContributionPct + '%');
-              editvalidatedbgfamilypremiums = false;
-              editvalidated = false;
-              return false;
+              editvalidatedbgfamilypremiums = true;
             }
           });
           editbgemployeeonlypremiums.each(function() {
