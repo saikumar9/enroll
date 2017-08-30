@@ -1453,6 +1453,12 @@ class HbxEnrollment
     end
   end
 
+  def initial_shop_application_approval
+    if is_shop? && self.census_employee.present?
+      ShopNoticesNotifierJob.perform_later(self.census_employee.id.to_s, "initial_shop_application_approval")
+    end
+  end
+
   private
 
   # NOTE - Mongoid::Timestamps does not generate created_at time stamps.
