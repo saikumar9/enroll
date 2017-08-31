@@ -1208,11 +1208,11 @@ describe EmployerProfile, ".terminate", dbclean: :after_each do
   end
 end
 
-describe EmployerProfile, "initial employers misses binder payment due date", dbclean: :after_each do
+describe EmployerProfile, "initial employers enrolled plan year state", dbclean: :after_each do
   let!(:new_plan_year){ FactoryGirl.build(:plan_year, :aasm_state => "enrolled") }
   let!(:employer_profile){ FactoryGirl.create(:employer_profile, plan_years: [new_plan_year]) }
   it "should return employers" do
-    expect(EmployerProfile.initial_employers_misses_binder_payment_due_date.size).to eq 1
+    expect(EmployerProfile.initial_employers_enrolled_plan_year_state.size).to eq 1
   end
 
 end
