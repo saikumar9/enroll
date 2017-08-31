@@ -59,11 +59,11 @@ class Insured::PlanShoppingsController < ApplicationController
     @enrollment_kind = params[:enrollment_kind].present? ? params[:enrollment_kind] : ''
 
     # send accepted SEP QLE event notice to enrolled employee
-    emp_role_id = @enrollment.employee_role_id.to_s
-    @employee_role = @person.employee_roles.detect { |emp_role| emp_role.id.to_s == emp_role_id }
-
-    sep_qle_request_accept_notice_ee(@employee_role.census_employee.id.to_s, @enrollment)
-
+    if @market_kind == "shop" && @enrollment.employee_role_id.present?
+       emp_role_id = @enrollment.employee_role_id.to_s
+       @employee_role = @person.employee_roles.detect { |emp_role| emp_role.id.to_s == emp_role_id }
+       sep_qle_request_accept_notice_ee(@employee_role.census_employee.id.to_s, @enrollment)
+    end
     send_receipt_emails if @person.emails.first
   end
 
