@@ -7,9 +7,8 @@ namespace :migrations do
   task :terminate_employer_account, [:fein, :end_on, :termination_date, :generate_termination_notice] => :environment do |task, args|
 
     fein = args[:fein]
-    generate_termination_notice = args[:generate_termination_notice] == "true"
-    organizations = Organization.where(fein: fein)
-
+    generate_termination_notice = args[:generate_termination_notice]
+    organizations = Organization.where(fein: fein).all.to_a
     if organizations.size > 1
       puts "found more than 1 for #{legal_name}"
       raise 'more than 1 employer found with given fein'
@@ -20,7 +19,6 @@ namespace :migrations do
     end_on = Date.strptime(args[:end_on], "%m/%d/%Y")
 
     organizations.each do |organization|
-
       # Expire previous year plan years
       organization.employer_profile.plan_years.published.where(:"end_on".lte => TimeKeeper.date_of_record).each do |plan_year|
         enrollments = enrollments_for_plan_year(plan_year)
@@ -35,8 +33,7 @@ namespace :migrations do
         plan_year.expire! if plan_year.may_expire?
       end
       # Terminate current active plan years
-      organization.employer_profile.plan_years.published_plan_years_by_date(TimeKeeper.date_of_record).each do |plan_year|
-
+      organization.employer_profile.plan_years.published_plan_years_by_date(TimeKeeper.date_of_record + 3.month).each do |plan_year|
         enrollments = enrollments_for_plan_year(plan_year)
         if enrollments.any?
           puts "Terminating employees coverage for employer #{organization.legal_name}" unless Rails.env.test?
@@ -53,7 +50,13 @@ namespace :migrations do
         if plan_year.may_terminate?
           plan_year.terminate!
           plan_year.update_attributes!(end_on: end_on, :terminated_on => termination_date)
-          ShopNoticesNotifierJob.perform_later(organization.employer_profile.id.to_s, "group_advance_termination_confirmation") if generate_termination_notice
+          organization.employer_profile.census_employees.active.each do |ce|
+               begin
+                 ShopNoticesNotifierJob.perform(ce.id.to_s, "notify_employee_when_employer_requests_advance_termination") if generate_termination_notice
+               rescue Exception => e
+                 (Rails.logger.error {"Unable to deliver Notices to #{ce.full_name} that initial Employer’s plan year will not be written due to #{e}"}) unless Rails.env.test?
+               end
+          end
         end
       end
 
