@@ -780,6 +780,51 @@ shop_notice_triggers = [
         ]
     },
     {
+        hbx_id: 'SHOP47',
+        title: 'You have been removed as a Broker',
+        description: "When a broker is fired, a notice is sent to the broker's broker mail inbox alerting them of the hire.",
+        resource_name: 'broker_role',
+        event_name: 'broker_agency_fired_confirmation',
+        notice_triggers: [
+           {
+              name: 'Broker Agency Fired',
+              notice_template: 'notices/shop_broker_agency_notices/broker_agency_fired_notice',
+              notice_builder: 'ShopBrokerAgencyNotices::BrokerAgencyFiredNotice',
+              mpi_indicator: 'SHOP_M047',
+              notice_trigger_element_group: {
+                market_places: ['shop'],
+                primary_recipients: ["broker"],
+                primary_recipient_delivery_method: ["secure_message"],
+                secondary_recipients: []
+              }
+            }
+        ]
+    },
+
+    {
+        hbx_id: 'SHOP56',
+        title: 'Approval Of Application To Offer Group Health Coverage',
+        description: 'Manual trigger when a SHOP Tier 2 team member creates a redmine ticket to generate Approval notice',
+        resource_name: 'employer',
+        event_name: 'initial_shop_application_approval',
+        notice_triggers: [
+            {
+                name: 'Notice sent to employer when initial shop application is approved after Request for Clarifying Documentation',
+                notice_template: 'notices/shop_employer_notices/initial_shop_application_approval_notice',
+                notice_builder: 'ShopEmployerNotices::InitialShopApplicationApprovalNotice',
+                mpi_indicator: 'SHOP_M056',
+                notice_trigger_element_group: {
+                    market_places: ['shop'],
+                    primary_recipients: ["employer"],
+                    primary_recipient_delivery_method: ["secure_message"],
+                    secondary_recipients: []
+                }
+            }
+        ]
+    },
+
+
+    {
         hbx_id: 'SHOP_M068',
         title: 'Employee Plan Selection Confirmation',
         description: 'Employee selects a plan during annual open enrollement OE is still open and not final confirmation',
@@ -842,27 +887,7 @@ shop_notice_triggers = [
             }
         ]
     },
-    {
-        hbx_id: 'SHOP_M029',
-        title: 'Confirmation Of Election To Waive Coverage',
-        description: 'Employee waiver confirmation',
-        resource_name: 'employee_role',
-        event_name: 'employee_waiver_notice',
-        notice_triggers: [
-            {
-                name: 'Notice to employee after they select a plan Annual Open Enrollment',
-                notice_template: 'notices/shop_employee_notices/employee_waiver_confirmation_notification',
-                notice_builder: 'ShopEmployeeNotices::EmployeeWaiverConfirmNotice',
-                mpi_indicator: 'SHOP_M029',
-                notice_trigger_element_group: {
-                    market_places: ['shop'],
-                    primary_recipients: ["employee"],
-                    primary_recipient_delivery_method: ["secure_message"],
-                    secondary_recipients: []
-                }
-            }
-        ]
-    },
+
     {
         hbx_id: 'SHOP14',
         title: 'REMINDER: Your Open Enrollment Period Ends Soon',
