@@ -521,7 +521,7 @@ shop_notice_triggers = [
 
 
    {
-    hbx_id: 'SHOP27',
+    hbx_id: 'SHOP26',
     title: 'Action Required to complete Employer Application',
     description: 'All the initial employers with draft plan years will be notified to publish their plan year 2 days prior to soft deadline of 1st.',
     resource_name: 'employer',
@@ -531,7 +531,7 @@ shop_notice_triggers = [
         name: 'Initial Employer Application - Reminder to publish',
         notice_template: 'notices/shop_employer_notices/initial_employer_reminder_to_publish_plan_year',
         notice_builder: 'ShopEmployerNotices::InitialEmployerReminderToPublishPlanYear',
-        mpi_indicator: 'SHOP_M027',
+        mpi_indicator: 'SHOP_M026',
         notice_trigger_element_group: {
           market_places: ['shop'],
           primary_recipients: ["employer"],
@@ -564,7 +564,7 @@ shop_notice_triggers = [
   },
 
   {
-    hbx_id: 'SHOP26',
+    hbx_id: 'SHOP27',
     title: 'Action Required to Complete Employer Application – Deadline Extended',
     description: 'All the initial employers with draft plan years will be notified to publish their plan year 1 day prior to soft deadline of 1st.',
     resource_name: 'employer',
@@ -574,7 +574,7 @@ shop_notice_triggers = [
         name: 'Initial Employer Application, Deadline Extended - Reminder to publish',
         notice_template: 'notices/shop_employer_notices/initial_employer_reminder_to_publish_plan_year',
         notice_builder: 'ShopEmployerNotices::InitialEmployerReminderToPublishPlanYear',
-        mpi_indicator: 'SHOP_M026',
+        mpi_indicator: 'SHOP_M027',
         notice_trigger_element_group: {
           market_places: ['shop'],
           primary_recipients: ["employer"],
