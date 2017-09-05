@@ -9,7 +9,6 @@ module PdfTemplates
     attribute :carrier_name, String
     attribute :warnings, Array[String]
     attribute :binder_payment_due_date, Date
-    attribute :terminated_on, Date
     
   end
 end
