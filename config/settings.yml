@@ -21,6 +21,7 @@ site:
   logo_file_name: "mhc_logo.svg"
   s3_prefix: "mhc"
   broker_quoting_enabled: false
+  broker_enabled: false
   use_default_devise_path: true
   create_routes: ['/insured/employee/privacy','/employers/employer_profiles/new']
   sign_in_routes: ['/families/home']
