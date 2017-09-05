@@ -2630,6 +2630,8 @@ describe HbxEnrollment, dbclean: :after_all do
         expect(hbx_enrollment.aasm_state).to eq 'coverage_termination_pending'
         expect(hbx_enrollment).to receive(:notify_employer_when_employee_terminate_coverage)
         hbx_enrollment.notify_employer_when_employee_terminate_coverage
+        expect(hbx_enrollment).to receive(:notify_employee_confirming_coverage_termination)
+        hbx_enrollment.notify_employee_confirming_coverage_termination
       end
     end
   end
