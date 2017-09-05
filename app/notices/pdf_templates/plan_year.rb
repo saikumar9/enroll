@@ -12,7 +12,6 @@ module PdfTemplates
     attribute :renewing_start_on, Date
     attribute :total_enrolled_count, Integer
     attribute :eligible_to_enroll_count, Integer
-    attribute :terminated_on, Date
     
   end
 end
