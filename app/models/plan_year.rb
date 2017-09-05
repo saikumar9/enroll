@@ -455,6 +455,9 @@ class PlanYear
     errors
   end
 
+  def no_documents_uploaded?
+    employer_profile.employer_attestation.blank? || employer_profile.employer_attestation.unsubmitted?
+  end
 
   # Check plan year application for regulatory compliance
   def application_eligibility_warnings
@@ -470,7 +473,7 @@ class PlanYear
     end
 
     unless employer_profile.is_primary_office_local?
-      warnings.merge!({primary_office_location: "Has its principal business address in the #{Settings.aca.state_name} and offers coverage to all full time employees through #{Settings.site.short_name} or Offers coverage through #{Settings.site.short_name} to all full time employees whose Primary worksite is located in the #{Settings.aca.state_name}"})
+      warnings.merge!({primary_office_location: "Is a small business located in #{Settings.aca.state_name}"})
     end
 
     # Application is in ineligible state from prior enrollment activity
@@ -479,8 +482,8 @@ class PlanYear
     end
 
     # Maximum company size at time of initial registration on the HBX
-    if fte_count > Settings.aca.shop_market.small_market_employee_count_maximum
-      warnings.merge!({ fte_count: "Has #{Settings.aca.shop_market.small_market_employee_count_maximum} or fewer full time equivalent employees" })
+    if fte_count < 1 || fte_count > Settings.aca.shop_market.small_market_employee_count_maximum
+      warnings.merge!({ fte_count: "Has 1 -#{Settings.aca.shop_market.small_market_employee_count_maximum} full time equivalent employees" })
     end
 
     # Exclude Jan 1 effective date from certain checks
@@ -851,7 +854,8 @@ class PlanYear
       transitions from: :enrolled,  to: :active,                  :guard  => :is_event_date_valid?
       transitions from: :published, to: :enrolling,               :guard  => :is_event_date_valid?
       transitions from: :enrolling, to: :enrolled,                :guards => [:is_open_enrollment_closed?, :is_enrollment_valid?]
-      transitions from: :enrolling, to: :application_ineligible,  :guard => :is_open_enrollment_closed?
+      transitions from: :enrolling, to: :application_ineligible,  :guard => :is_open_enrollment_closed?, :after => [:initial_employer_ineligibility_notice, :notify_employee_of_initial_employer_ineligibility]
+
       # transitions from: :enrolling, to: :canceled,  :guard  => :is_open_enrollment_closed?, :after => :deny_enrollment  # Talk to Dan
 
       transitions from: :active, to: :terminated, :guard => :is_event_date_valid?
@@ -870,8 +874,8 @@ class PlanYear
     # Submit plan year application
     event :publish, :after => :record_transition do
       transitions from: :draft, to: :draft,     :guard => :is_application_unpublishable?
-      transitions from: :draft, to: :enrolling, :guard => [:is_application_eligible?, :is_event_date_valid?], :after => [:accept_application, :initial_employer_approval_notice, :zero_employees_on_roster, :record_sic_and_rating_area, :initial_employee_open_enrollment_begins]
-      transitions from: :draft, to: :published, :guard => :is_application_eligible?, :after => [:initial_employer_approval_notice, :zero_employees_on_roster, :record_sic_and_rating_area, :initial_employee_open_enrollment_begins]
+      transitions from: :draft, to: :enrolling, :guard => [:is_application_eligible?, :is_event_date_valid?], :after => [:accept_application, :initial_employer_approval_notice, :zero_employees_on_roster, :record_sic_and_rating_area]
+      transitions from: :draft, to: :published, :guard => :is_application_eligible?, :after => [:initial_employer_approval_notice, :zero_employees_on_roster, :record_sic_and_rating_area]
       transitions from: :draft, to: :publish_pending
 
       transitions from: :renewing_draft, to: :renewing_draft,     :guard => :is_application_unpublishable?
@@ -891,8 +895,8 @@ class PlanYear
       transitions from: :publish_pending, to: :published_invalid
 
       transitions from: :draft, to: :draft,     :guard => :is_application_invalid?
-      transitions from: :draft, to: :enrolling, :guard => [:is_application_eligible?, :is_event_date_valid?], :after => [:accept_application, :zero_employees_on_roster, :record_sic_and_rating_area, :initial_employee_open_enrollment_begins]
-      transitions from: :draft, to: :published, :guard => :is_application_eligible?, :after => [:zero_employees_on_roster, :record_sic_and_rating_area, :initial_employee_open_enrollment_begins]
+      transitions from: :draft, to: :enrolling, :guard => [:is_application_eligible?, :is_event_date_valid?], :after => [:accept_application, :zero_employees_on_roster, :record_sic_and_rating_area]
+      transitions from: :draft, to: :published, :guard => :is_application_eligible?, :after => [:zero_employees_on_roster, :record_sic_and_rating_area]
       transitions from: :draft, to: :publish_pending, :after => :initial_employer_denial_notice
 
       transitions from: :renewing_draft, to: :renewing_draft,     :guard => :is_application_invalid?
@@ -1180,6 +1184,13 @@ class PlanYear
     end
   end
 
+ def notify_employee_of_initial_employer_ineligibility
+    return true if benefit_groups.any?{|bg| bg.is_congress?}
+    self.employer_profile.census_employees.non_terminated.each do |ce|
+    ShopNoticesNotifierJob.perform_later(ce.id.to_s, "notify_employee_of_initial_employer_ineligibility")
+    end
+  end
+
   def initial_employer_approval_notice
     return true if (benefit_groups.any?{|bg| bg.is_congress?} || (fte_count < 1))
     self.employer_profile.trigger_notices("initial_employer_approval")
@@ -1188,17 +1199,6 @@ class PlanYear
   def initial_employer_open_enrollment_begins
     return true if (benefit_groups.any?{|bg| bg.is_congress?})
     self.employer_profile.trigger_notices("initial_eligibile_employer_open_enrollment_begins")
-  end
-
-  def initial_employee_open_enrollment_begins
-    return true if (benefit_groups.any?{|bg| bg.is_congress?})
-    self.employer_profile.census_employees.non_terminated.each do |ce|
-      begin
-        ShopNoticesNotifierJob.perform_later(ce.id.to_s, "initial_employee_open_enrollment_begins")
-      rescue Exception => e
-        puts "Unable to send Employee Open Enrollment begin notice to #{ce.full_name}" unless Rails.env.test?
-      end
-    end
   end
 
   def renewal_group_notice
@@ -1231,9 +1231,14 @@ class PlanYear
     benefit_groups.each do |bg|
       bg.finalize_composite_rates
     end
-    if transmit_employers_immediately? 
+    if transmit_employers_immediately?
       employer_profile.transmit_renewal_eligible_event
     end
+  end
+
+  def initial_employer_ineligibility_notice
+    return true if benefit_groups.any? { |bg| bg.is_congress? }
+    self.employer_profile.trigger_notices("initial_employer_ineligibility_notice")
   end
 
   def record_transition

@@ -6,6 +6,7 @@ gem 'rails', '4.2.3'
 # Mount Enroll App component engines
 gem "transport_gateway",  path: "components/transport_gateway"
 gem "notifier",           path: "components/notifier" 
+gem "transport_profiles",  path: "components/transport_profiles"
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
@@ -56,7 +57,7 @@ gem 'mongo_session_store-rails4', '~> 6.0.0'
 gem 'symmetric-encryption', '~> 3.6.0'
 
 # Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+gem 'bcrypt', '~> 3.1'
 
 gem 'acapi', git: "https://github.com/dchbx/acapi.git", branch: 'development'
 # gem 'acapi', path: "../acapi"

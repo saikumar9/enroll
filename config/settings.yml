@@ -1,20 +1,27 @@
 site:
+  key: :mhc
   subdomain: "mhc"
   domain_name: "hbxshop.org"
   home_url: "https://enroll.mhc.hbxshop.org"
-  help_url: "https://mhc.hbxshop.org/help"
-  faqs_url: "https://mhc.hbxshop.org/faqs"
+  help_url: "https://www.mahealthconnector.org/business/help-center"
+  faqs_url: "https://www.mahealthconnector.org/business/help-center/faqs"
   main_web_address: "www.MAhealthconnector.org"
   short_name: "Health Connector"
   byline: "The Right Place for the Right Plan"
   long_name: "Massachusetts Health Connector"
   copyright_period_start: "2017"
   header_message: "The Right Place for the Right Plan"
-  logo_file_name: "logo.png"
+  logo_file_name: "mhc_logo.svg"
   s3_prefix: "mhc"
   broker_quoting_enabled: false
   use_default_devise_path: true
 
+  create_routes: ['/insured/employee/privacy','/employers/employer_profiles/new']
+  sign_in_routes: ['/families/home']
+  shop_find_your_doctor_url: "https://ma.checkbookhealth.org/mashop"
+  curam_enabled: false
+  document_verification_checklist_url: "https://www.mahealthconnector.org/business/business-resource-center/employer-verification-checklist"
+  registration_path: "https://www.mahealthconnector.org/business/create-a-business-account"
   social_media:
     facebook_url: ""
 
@@ -28,17 +35,17 @@ contact_center:
   tty_number: "711"
   alt_phone_number: "1-888-813-9220"
   email_address: "smallbusiness@mahealthconnector.org"
-  small_business_email: "smallbusiness@mahealthconnector.org"
+  small_business_email: "smallbusiness@MAhealthconnector.org"
 
   appeals: "connector-appeals@state.ma.us"
 
   mailing_address:
-    name: "Massachusetts Health Connector"
-    address_1: "PO Box 44018"
+    name: "Commonwealth Health Insurance"
+    address_1: "PO Box 780833"
     address_2:
-    city: "Washington"
-    state: "DC"
-    zip: "20026"
+    city: "Philadelphia"
+    state: "PA"
+    zip_code: "19178-0833"
 
 notices:
   mailing_address:
@@ -55,7 +62,10 @@ aca:
   nationwide_markets: false
   general_agency_enabled: false
   dental_market_enabled: false
-  sole_source_only_enabled: false
+  minimum_primary_contribution_percentage: 50
+  minimum_family_contribution_percentage: 30
+  plan_options_available: ["sole_source"]
+  ## acceptable options are ["sole_source", "single_carrier", "metal_level", "single_plan"]
 #
   qle:
     with_in_sixty_days: 60
@@ -76,8 +86,10 @@ aca:
         end_on: <%= Date.new(2017,1,31) %>
 
   shop_market:
+    valid_employer_attestation_documents_url: 'https://www.mahealthconnector.org/business/business-resource-center/employer-verification-checklist'
     small_market_employee_count_maximum: 50
     employer_contribution_percent_minimum: 50
+    employer_family_contribution_percent_minimum: 33
     employee_participation_ratio_minimum: <%= 3 / 4.0 %>
     non_owner_participation_count_minimum: 1
     binder_payment_due_on: 23
@@ -94,7 +106,7 @@ aca:
 
     initial_application:
       publish_due_day_of_month: 15
-      advertised_deadline_of_month: 10  
+      advertised_deadline_of_month: 10
       earliest_start_prior_to_effective_on:
         months: -2
       appeal_period_after_application_denial:

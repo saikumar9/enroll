@@ -200,12 +200,16 @@ def non_dc_office_location
   address1: "623a Spalding Ct",
   address2: "Suite 200",
   city: "Falls Church",
-  state: "VA",
+  state: "MA",
   zip: "22045",
   phone_area_code: "202",
   phone_number: "1110000",
   phone_extension: "1111"
   }
+end
+
+Given(/^User has existing security questions/) do
+
 end
 
 Given(/^Hbx Admin exists$/) do
@@ -214,7 +218,7 @@ Given(/^Hbx Admin exists$/) do
       modify_admin_tabs: true, view_admin_tabs: true, can_update_ssn: true, can_lock_unlock: true)
   person = people['Hbx Admin']
   hbx_profile = FactoryGirl.create :hbx_profile
-  user = FactoryGirl.create :user, :with_family, :hbx_staff, email: person[:email], password: person[:password], password_confirmation: person[:password]
+  user = FactoryGirl.create :user, :with_family, :hbx_staff, with_security_questions: false, email: person[:email], password: person[:password], password_confirmation: person[:password]
   FactoryGirl.create :hbx_staff_role, person: user.person, hbx_profile: hbx_profile, permission_id: p_staff.id
   #Hackity Hack need both years reference plans b/c of Plan.valid_shop_dental_plans and Plan.by_active_year(params[:start_on]).shop_market.health_coverage.by_carrier_profile(@carrier_profile).and(hios_id: /-01/)
   year = (Date.today + 2.months).year
@@ -332,13 +336,13 @@ Given(/(.*) Employer for (.*) exists with active and renewing plan year/) do |ki
     ssn: person[:ssn],
     dob: person[:dob_date]
 
-  open_enrollment_start_on = TimeKeeper.date_of_record.end_of_month + 1.day
+  open_enrollment_start_on = TimeKeeper.date_of_record.end_of_month.next_day
   open_enrollment_end_on = open_enrollment_start_on + 12.days
-  start_on = open_enrollment_start_on + 1.months
-  end_on = start_on + 1.year - 1.day
+  start_on = open_enrollment_start_on.next_month
+  end_on = start_on.next_year.prev_day
 
-  renewal_plan = FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: (start_on + 3.months).year, hios_id: "11111111122302-01", csr_variant_id: "01")
-  plan = FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: (start_on + 3.months - 1.year).year, hios_id: "11111111122302-01", csr_variant_id: "01", renewal_plan_id: renewal_plan.id)
+  renewal_plan = FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: start_on.year, hios_id: "11111111122302-01", csr_variant_id: "01")
+  plan = FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: start_on.prev_year.year, hios_id: "11111111122302-01", csr_variant_id: "01", renewal_plan_id: renewal_plan.id)
 
   [renewal_plan, plan].each do |plan|
     sic_factors = SicCodeRatingFactorSet.new(active_year: 2017, default_factor_value: 1.0, carrier_profile: plan.carrier_profile).tap do |factor_set|
@@ -564,6 +568,7 @@ When(/^.+ go(?:es)? to register as an employee$/) do
 end
 
 Then(/^.+ should see the employee search page$/) do
+  wait_for_ajax(5)
   expect(find('.interaction-field-control-person-first-name')).to be_visible
   screenshot("employer_search")
 end
@@ -578,11 +583,6 @@ end
 
 When(/^(.*) creates an HBX account$/) do |named_person|
   screenshot("start")
-  if Settings.site.use_default_devise_path
-    click_link "Create account"
-  else
-    find(".btn[value='Create account']").click
-  end
 
   person = people[named_person]
 

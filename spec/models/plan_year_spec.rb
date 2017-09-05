@@ -636,7 +636,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
 
         it "and should provide relevent warning message" do
           expect(workflow_plan_year_with_benefit_group.application_eligibility_warnings[:primary_office_location].present?).to be_truthy
-          expect(workflow_plan_year_with_benefit_group.application_eligibility_warnings[:primary_office_location]).to match(/Has its principal business address in/)
+          expect(workflow_plan_year_with_benefit_group.application_eligibility_warnings[:primary_office_location]).to match(/Is a small business located in Massachusetts/)
         end
       end
 
@@ -652,7 +652,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
 
         it "and should provide relevent warning message" do
           expect(workflow_plan_year_with_benefit_group.application_eligibility_warnings[:fte_count].present?).to be_truthy
-          expect(workflow_plan_year_with_benefit_group.application_eligibility_warnings[:fte_count]).to match(/fewer full time equivalent employees/)
+          expect(workflow_plan_year_with_benefit_group.application_eligibility_warnings[:fte_count]).to match(/Has 1 -50 full time equivalent employees/)
         end
 
         it "and plan year should be in publish pending state" do
@@ -2184,6 +2184,7 @@ describe PlanYear, "which has the concept of export eligibility" do
           })
 
         py.aasm_state = "draft"
+        py.fte_count = 3
         py.benefit_groups = [benefit_group]
         py.save
         py
@@ -2363,7 +2364,7 @@ describe PlanYear, "plan year schedule changes" do
       end
     end
 
-    context 'on force publish date' do
+    context 'on Publish Anyways date' do
 
       before do
         TimeKeeper.set_date_of_record_unprotected!(Date.new(2016, 10, Settings.aca.shop_market.renewal_application.force_publish_day_of_month))
@@ -2446,7 +2447,7 @@ describe PlanYear, '.schedule_employee_terminations', type: :model, dbclean: :af
       expect(plan_year.schedule_employee_terminations.first.aasm_state).to eq "coverage_termination_pending"
     end
 
-  end 
+  end
 
   context 'should not terminate inactive enrollment' do
 
@@ -2457,7 +2458,7 @@ describe PlanYear, '.schedule_employee_terminations', type: :model, dbclean: :af
     it "enrollemnt should not be in coverage_termination_pending state" do
       expect(plan_year.schedule_employee_terminations.first.aasm_state).to eq "coverage_canceled"
     end
-  end 
+  end
 end
 
 
@@ -2479,5 +2480,5 @@ describe PlanYear, '.schedule_termination', type: :model, dbclean: :after_all do
       expect(plan_year.hbx_enrollments.first.aasm_state).to eq "coverage_termination_pending"
       expect(plan_year.hbx_enrollments.first.terminated_on).to eq  TimeKeeper.date_of_record.end_of_month
     end
-  end 
+  end
 end

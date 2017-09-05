@@ -8,7 +8,7 @@ module Config::ContactCenterHelper
   end
 
   def contact_center_alt_phone_number
-    Settings.contact_center.phone_number
+    Settings.contact_center.alt_phone_number
   end
 
   def contact_center_city
@@ -28,11 +28,15 @@ module Config::ContactCenterHelper
   end
 
   def contact_center_postal_code
-    Settings.contact_center.mailing_address.zip
+    Settings.contact_center.mailing_address.zip_code
   end
 
   def contact_center_name
     Settings.contact_center.name
+  end
+
+  def contact_center_mailing_address_name
+    Settings.contact_center.mailing_address.name
   end
 
   def contact_center_state

@@ -3,12 +3,11 @@ Rails.application.routes.draw do
   mount TransportGateway::Engine, at: "/transport_gateway"
   mount Notifier::Engine, at: "/notifier" 
   mount RocketJobMissionControl::Engine => 'rocketjob'
+  mount TransportProfiles::Engine, at: "/transport_profiles"
 
   require 'resque/server'
-  mount Resque::Server, at: '/jobs'
-
-  devise_for :users, :controllers => { :registrations => "users/registrations", :sessions => 'users/sessions' }
-
+  # mount Resque::Server, at: '/jobs'
+  devise_for :users, :controllers => { :registrations => "users/registrations", :sessions => 'users/sessions', :passwords => 'users/passwords' }
 
   get 'check_time_until_logout' => 'session_timeout#check_time_until_logout', :constraints => { :only_ajax => true }
   get 'reset_user_clock' => 'session_timeout#reset_user_clock', :constraints => { :only_ajax => true }
@@ -23,9 +22,12 @@ Rails.application.routes.draw do
 
   namespace :users do
     resources :orphans, only: [:index, :show, :destroy]
+    post :challenge, controller: 'security_question_responses', action: 'challenge'
+    post :authenticate, controller: 'security_question_responses', action: 'authenticate'
   end
 
   resources :users do
+    resources :security_question_responses, controller: "users/security_question_responses"
     member do
       post :unlock
       get :lockable
@@ -137,6 +139,7 @@ Rails.application.routes.draw do
     end
 
     resources :broker_applicants
+    resources :security_questions
 
     # get 'hbx_profiles', to: 'hbx_profiles#welcome'
     # get 'hbx_profiles/:id', to: 'hbx_profiles#show', as: "my_account"
@@ -265,9 +268,10 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :employer_attestations do 
+    resources :employer_attestations do
        get 'authorized_download'
        get 'verify_attestation'
+       delete 'delete_attestation_documents'
        #get 'revert_attestation'
     end
     resources :inboxes, only: [:new, :create, :show, :destroy]
@@ -287,7 +291,6 @@ Rails.application.routes.draw do
         post 'download_documents'
         post 'delete_documents'
         post 'upload_document'
-
       end
 
       collection do

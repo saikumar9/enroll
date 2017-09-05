@@ -41,6 +41,7 @@ class EmployerProfile
 
 
   field :profile_source, type: String, default: "self_serve"
+  field :contact_method, type: String, default: "Only Electronic communications"
   field :registered_on, type: Date, default: ->{ TimeKeeper.date_of_record }
   field :xml_transmitted_timestamp, type: DateTime
 
@@ -73,6 +74,7 @@ class EmployerProfile
 
   validates_presence_of :entity_kind
   validates_presence_of :sic_code
+  validates_presence_of :contact_method
 
   validates :profile_source,
     inclusion: { in: EmployerProfile::PROFILE_SOURCE_KINDS },
@@ -369,7 +371,14 @@ class EmployerProfile
   end
 
   def is_primary_office_local?
-    organization.primary_office_location.address.state.to_s.downcase == aca_state_abbreviation.to_s.downcase
+    (organization.primary_office_location.address.state.to_s.downcase == aca_state_abbreviation.to_s.downcase)
+  end
+
+  # It will provide whether employer_profile zip code is inside MA or not
+  # @return boolean
+  # if zip_code is inside MA returns true else returns false
+  def is_zip_outside?
+    (RatingArea.all.pluck(:zip_code).include? organization.primary_office_location.address.zip)
   end
 
   def build_plan_year_from_quote(quote_claim_code, import_census_employee=false)
@@ -633,6 +642,17 @@ class EmployerProfile
               organization.employer_profile.trigger_notices("initial_employer_final_reminder_to_publish_plan_year")
             rescue Exception => e
               puts "Unable to send second reminder notice to publish plan year to #{organization.legal_name} due to following errors {e}"
+            end
+          end
+        else 
+          plan_year_due_date = Date.new(start_on_1.prev_month.year, start_on_1.prev_month.month, Settings.aca.shop_market.initial_application.publish_due_day_of_month)
+          if (start_on +2.days == plan_year_due_date)
+            initial_employer_reminder_to_publish(start_on_1).each do |organization|
+              begin
+                organization.employee_profile.trigger_notices("initial_employer_reminder_to_publish_plan_year")
+              rescue Exception => e
+                puts "Unable to send final reminder notice to publish plan year to #{organization.legal_name} due to following errors {e}"
+              end
             end
           end
         end     
@@ -985,6 +1005,12 @@ class EmployerProfile
   def is_attestation_eligible?
     return true unless enforce_employer_attestation?
     employer_attestation.present? && employer_attestation.is_eligible?
+  end
+
+  def validate_and_send_denial_notice
+    if !is_primary_office_local? || !(is_zip_outside?)
+      self.trigger_notices('initial_employer_denial')
+    end
   end
 
   def terminate(termination_date)

@@ -10,7 +10,7 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="#">
-          <%= image_tag 'logo.png' %>
+          <%= image_tag Settings.site.logo_file_name %>
         </a>
       </div>
 
@@ -39,7 +39,7 @@
               <span class="my-portal-links">
                 <%= render partial: "shared/my_portal_links"%>
                 <span>
-                  <a href="https://dchealthlink.com/help" target="_blank" class="header-text">Help</a>
+                  <%= link_to 'Help', site_help_url, target: '_blank', class: 'header-text' %>
                 </span>
                 <span> | </span>
                 <span>
