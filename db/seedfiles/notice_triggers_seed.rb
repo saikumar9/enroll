@@ -933,6 +933,29 @@ shop_notice_triggers = [
             }
         ]
     },
+
+    {
+        hbx_id: 'SHOP_M041',
+        title: 'Notice Confirmation for Group termination due to ER advance request',
+        description: 'Group termination confirmation for advance request',
+        resource_name: 'employer',
+        event_name: 'group_advance_termination_confirmation',
+        notice_triggers: [
+            {
+                name: 'Notice to employee after they select a plan Annual Open Enrollment',
+                notice_template: 'notices/shop_employer_notices/group_advance_termination_confirmation',
+                notice_builder: 'ShopEmployerNotices::GroupAdvanceTerminationConfirmation',
+                mpi_indicator: 'SHOP_M041',
+                notice_trigger_element_group: {
+                    market_places: ['shop'],
+                    primary_recipients: ["employer"],
+                    primary_recipient_delivery_method: ["secure_message"],
+                    secondary_recipients: []
+                }
+            }
+        ]
+    },
+
     {
         hbx_id: 'SHOP_M053',
         title: 'EE Ineligibility Notice – Terminated from Roster',
