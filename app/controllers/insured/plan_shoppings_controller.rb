@@ -114,6 +114,8 @@ class Insured::PlanShoppingsController < ApplicationController
       hbx_enrollment.waive_coverage_by_benefit_group_assignment(waiver_reason)
       employee_waiver_notice(hbx_enrollment)
       redirect_to print_waiver_insured_plan_shopping_path(hbx_enrollment), notice: "Waive Coverage Successful"
+      notify_employer_when_employee_terminate_coverage(hbx_enrollment)
+      return
     else
       redirect_to new_insured_group_selection_path(person_id: @person.id, change_plan: 'change_plan', hbx_enrollment_id: hbx_enrollment.id), alert: "Waive Coverage Failed"
     end
@@ -145,6 +147,8 @@ class Insured::PlanShoppingsController < ApplicationController
       hbx_enrollment.update_renewal_coverage
       
       redirect_to family_account_path
+      notify_employer_when_employee_terminate_coverage(hbx_enrollment)
+      return
     else
       redirect_to :back
     end
