@@ -1,177 +1,186 @@
 require 'rails_helper'
 
 describe UsersController do
+  let(:admin) { instance_double(User) }
+  let(:user_policy) { instance_double(UserPolicy) }
+  let(:user) { instance_double(User, :email => user_email) }
+  let(:user_id) { "23432532423424" }
 
-  after :all do
-    DatabaseCleaner.clean
+  let(:user_email) { "some_email@some_domain.com" }
+
+  before :each do
+    allow(UserPolicy).to receive(:new).with(admin, User).and_return(user_policy)
+    allow(User).to receive(:find).with(user_id).and_return(user)
   end
 
-  let(:permission_yes) { FactoryGirl.create(:permission, can_lock_unlock: true, can_reset_password: true) }
-  let(:permission_no) { FactoryGirl.create(:permission, can_lock_unlock: false, can_reset_password: false) }
-  let(:admin) { FactoryGirl.create(:user, :with_family, :hbx_staff) }
-  let(:hbx_staff_role) { FactoryGirl.create(:hbx_staff_role, person: admin.person) }
-  let(:hbx_profile) { FactoryGirl.create(:hbx_profile) }
-
-  describe ".confirm_lock" do
-    let(:user) { FactoryGirl.create(:user, :with_consumer_role) }
+  describe ".confirm_lock, with a user allowed to perform locking" do
     before do
-      hbx_staff_role.permission_id = permission_no.id
-      hbx_staff_role.save
+      allow(user_policy).to receive(:lockable?).and_return(true)
       sign_in(admin)
-      get :confirm_lock, id: user.id, format: :js
+      get :confirm_lock, id: user_id, format: :js
     end
     it { expect(assigns(:user)).to eq(user) }
     it { expect(response).to render_template('confirm_lock') }
   end
 
   describe ".lockable" do
+    before do
+      allow(user_policy).to receive(:lockable?).and_return(can_lock)
+      allow(user).to receive(:lockable_notice).and_return("locked/unlocked")
+    end
 
     context 'When admin is not authorized for lockable then User status can not be changed' do
-      let(:user) { FactoryGirl.create(:user, :with_consumer_role) }
+      let(:can_lock) { false }
       before do
-        hbx_staff_role.permission_id = permission_no.id
-        hbx_staff_role.save
         sign_in(admin)
-        get :lockable, id: user.id
       end
-      it { expect(user.locked_at).to be_nil }
-      it { expect(response).to redirect_to(user_account_index_exchanges_hbx_profiles_url) }
+      it "does not toggle the lock status" do
+        expect(user).not_to receive(:update_lockable)
+        get :lockable, id: user_id
+      end
+      it do
+        get :lockable, id: user_id
+        expect(response).to redirect_to(user_account_index_exchanges_hbx_profiles_url)
+      end
     end
 
     context 'When admin is authorized for lockable then User status can be locked' do
-      let(:user) { FactoryGirl.create(:user, :with_consumer_role) }
+      let(:can_lock) { true }
       before do
-        hbx_staff_role.permission_id = permission_yes.id
-        hbx_staff_role.save
         sign_in(admin)
-        get :lockable, id: user.id
+        allow(user).to receive(:update_lockable)
       end
 
-      subject(:result) { User.find(user.id) }
-      it { expect(result.locked_at).not_to be_nil }
-      it { expect(response).to redirect_to(user_account_index_exchanges_hbx_profiles_url) }
+      it "toggles the user lock" do 
+        expect(user).to receive(:update_lockable)
+        get :lockable, id: user_id
+      end
+      it do
+        get :lockable, id: user_id
+        expect(response).to redirect_to(user_account_index_exchanges_hbx_profiles_url)
+      end
     end
 
     context 'When admin is authorized and User status is locked then it should be unlocked' do
-      let(:user) { FactoryGirl.create(:user, :with_consumer_role) }
+      let(:can_lock) { true }
       before do
-        hbx_staff_role.permission_id = permission_yes.id
-        hbx_staff_role.save
-        user.update_lockable
         sign_in(admin)
-        get :lockable, id: user.id
+        allow(user).to receive(:update_lockable)
       end
 
-      subject(:result) { User.find(user.id) }
-      it { expect(result.locked_at).to be_nil }
-      it { expect(response).to redirect_to(user_account_index_exchanges_hbx_profiles_url) }
+      it "toggles the user lock" do
+        expect(user).to receive(:update_lockable)
+        get :lockable, id: user_id
+      end
+      it do
+        get :lockable, id: user_id
+        expect(response).to redirect_to(user_account_index_exchanges_hbx_profiles_url)
+      end
     end
   end
 
   describe '.reset_password' do
-    let(:user) { FactoryGirl.create(:user, :with_consumer_role) }
+    before do
+      allow(user_policy).to receive(:reset_password?).and_return(can_reset_password)
+    end
+
     context 'When admin is not authorized for reset password then' do
+      let(:can_reset_password) { false }
       before do
-        hbx_staff_role.permission_id = permission_no.id
-        hbx_staff_role.save
         sign_in(admin)
-        get :reset_password, id: user.id, format: :js
       end
-      it { expect(assigns(:user)).to eq(user) }
-      it { expect(response).to redirect_to(user_account_index_exchanges_hbx_profiles_url) }
+      it "does not send password reset information" do
+        expect(User).not_to receive(:send_reset_password_instructions)
+        get :reset_password, id: user_id, format: :js
+      end
+      it do
+        get :reset_password, id: user_id, format: :js
+        expect(response).to redirect_to(user_account_index_exchanges_hbx_profiles_url)
+      end
     end
 
     context 'When admin is authorized for reset password then' do
+      let(:can_reset_password) { true }
       before do
-        hbx_staff_role.permission_id = permission_yes.id
-        hbx_staff_role.save
         sign_in(admin)
-        get :reset_password, id: user.id, format: :js
+        get :reset_password, id: user_id, format: :js
       end
-      it { expect(assigns(:user)).to eq(user) }
       it { expect(response).to render_template('reset_password') }
     end
   end
 
   describe '.confirm_reset_password' do
+    before do
+      allow(user_policy).to receive(:reset_password?).and_return(can_reset_password)
+    end
 
     context 'When admin is not authorized for reset password then' do
-      let(:user) { FactoryGirl.create(:user, :with_consumer_role) }
+      let(:can_reset_password) { false }
       before do
-        hbx_staff_role.permission_id = permission_no.id
-        hbx_staff_role.save
         sign_in(admin)
-        put :confirm_reset_password, id: user.id, format: :js
+        put :confirm_reset_password, id: user_id, format: :js
       end
+      it { expect(user).not_to receive(:send_reset_password_instructions) }
       it { expect(assigns(:user)).to eq(user) }
-      it { expect(user.reset_password_token).to be_nil }
-      it { expect(user.reset_password_sent_at).to be_nil }
       it { expect(response).to redirect_to(user_account_index_exchanges_hbx_profiles_url) }
     end
 
     context 'When user email not present then' do
-      let!(:user) { FactoryGirl.create(:user, :without_email, :with_family) }
+      let(:can_reset_password) { true }
       before do
-        hbx_staff_role.permission_id = permission_yes.id
-        hbx_staff_role.save
         sign_in(admin)
-        put :confirm_reset_password, id: user.id, user: { email: '' }, format: :js
-        user.reload
       end
-      it { expect(assigns(:user)).to eq(user) }
-      it { expect(assigns(:error)).to eq('Please enter a valid email') }
-      it { expect(user.reset_password_token).to be_nil }
-      it { expect(user.reset_password_sent_at).to be_nil }
-      it { expect(response).to render_template('users/reset_password.js.erb') }
+      it "does not reset the password" do
+        expect(User).not_to receive(:send_reset_password_instructions)
+        put :confirm_reset_password, id: user_id, user: { email: '' }, format: :js
+      end
+      it do
+        put :confirm_reset_password, id: user_id, user: { email: '' }, format: :js
+        expect(assigns(:error)).to eq('Please enter a valid email') 
+      end
+      it do
+        put :confirm_reset_password, id: user_id, user: { email: '' }, format: :js
+        expect(response).to render_template('users/reset_password.js.erb')
+      end
     end
 
-    context 'When user email is not valid then' do
-      let!(:user) { FactoryGirl.create(:user, :without_email, :with_family) }
+    context 'When user information is not valid' do
+      let(:can_reset_password) { true }
       before do
-        hbx_staff_role.permission_id = permission_yes.id
-        hbx_staff_role.save
+        allow(user).to receive(:errors).and_return(double(:full_messages => ["error message"]))
+        allow(user).to receive(:update_attributes).with({:email => user_email}).and_return(false)
         sign_in(admin)
-        put :confirm_reset_password, id: user.id, user: { email: 'hello' }, format: :js
-        user.reload
       end
-      it { expect(assigns(:user)).to eq(user) }
-      it { expect(assigns(:error)).to eq('Email is invalid') }
-      it { expect(user.reset_password_token).to be_nil }
-      it { expect(user.reset_password_sent_at).to be_nil }
-      it { expect(response).to render_template('users/reset_password.js.erb') }
-    end
 
-    context 'When user email is not unique then' do
-      let(:user1) { FactoryGirl.create(:user, :with_consumer_role) }
-      let!(:user) { FactoryGirl.create(:user, :without_email, :with_family) }
-      before do
-        hbx_staff_role.permission_id = permission_yes.id
-        hbx_staff_role.save
-        sign_in(admin)
-        put :confirm_reset_password, id: user.id, user: { email: user1.email }, format: :js
-        user.reload
+      it "does not reset the password" do
+        put :confirm_reset_password, id: user_id, user: { email: user_email }, format: :js
       end
-      it { expect(assigns(:user)).to eq(user) }
-      it { expect(assigns(:error)).to eq('Email is already taken') }
-      it { expect(user.reset_password_token).to be_nil }
-      it { expect(user.reset_password_sent_at).to be_nil }
-      it { expect(response).to render_template('users/reset_password.js.erb') }
+      it do
+        put :confirm_reset_password, id: user_id, user: { email: user_email }, format: :js
+        expect(assigns(:error)).to include("error message")
+      end
+      it do
+        put :confirm_reset_password, id: user_id, user: { email: user_email }, format: :js
+        expect(response).to render_template('users/reset_password.js.erb')
+      end
     end
 
     context 'When admin is authorized for reset password then' do
-      let!(:user) { FactoryGirl.create(:user, :with_consumer_role) }
+      let(:can_reset_password) { true }
       before do
-        hbx_staff_role.permission_id = permission_yes.id
-        hbx_staff_role.save
         sign_in(admin)
-        put :confirm_reset_password, id: user.id, format: :js
-        user.reload
+        allow(User).to receive(:send_reset_password_instructions).with({email: user_email})
       end
-      it { expect(assigns(:user)).to eq(user) }
-      it { expect(assigns(:error)).to be_nil }
-      it { expect(user.reset_password_token).not_to be_nil }
-      it { expect(user.reset_password_sent_at).not_to be_nil }
-      it { expect(response).to redirect_to(user_account_index_exchanges_hbx_profiles_url) }
+
+      it "sends the password reset email" do
+        expect(User).to receive(:send_reset_password_instructions).with({email: user_email})
+        put :confirm_reset_password, id: user_id, format: :js
+      end
+
+      it do
+        put :confirm_reset_password, id: user_id, format: :js
+        expect(response).to redirect_to(user_account_index_exchanges_hbx_profiles_url)
+      end
     end
 
   end
