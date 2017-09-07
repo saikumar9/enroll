@@ -17,7 +17,6 @@ class Users::PasswordsController < Devise::PasswordsController
       return false
     end
   end
-end
 
   protected
 
