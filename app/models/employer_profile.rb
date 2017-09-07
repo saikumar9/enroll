@@ -587,7 +587,6 @@ class EmployerProfile
           }
         })
     end
-  
 
     def organizations_eligible_for_renewal(new_date)
       months_prior_to_effective = Settings.aca.shop_market.renewal_application.earliest_start_prior_to_effective_on.months * -1
@@ -699,9 +698,9 @@ class EmployerProfile
               end
             end
           end
-        end    
+        end     
 
-        #initial Employer's missing binder payment due date notices to Employer's and active Employee's.
+        #initial employers misses binder payment due date deadline on next day notice
         binder_next_day = PlanYear.calculate_open_enrollment_date(TimeKeeper.date_of_record.next_month.beginning_of_month)[:binder_payment_due_date].next_day
         if new_date == binder_next_day
           initial_employers_enrolled_plan_year_state.each do |org|
