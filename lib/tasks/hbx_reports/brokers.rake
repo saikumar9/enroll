@@ -72,7 +72,7 @@ namespace :reports do
     def organization_info(broker)
       validate_broker = broker.broker_role.broker_agency_profile.nil? && broker.broker_role.broker_agency_profile.organization.primary_office_location.nil?
       return ["","","","",""] if validate_broker 
-      return ["","","",""] if broker.broker_role.broker_agency_profile.organization.primary_office_location.try(:address).nil?
+      return ["","","","",""] if broker.broker_role.broker_agency_profile.organization.primary_office_location.try(:address).nil?
       [
         broker.broker_role.broker_agency_profile.organization.primary_office_location.address.address_1,
         broker.broker_role.broker_agency_profile.organization.primary_office_location.address.address_2,
