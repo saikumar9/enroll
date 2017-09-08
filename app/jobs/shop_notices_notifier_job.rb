@@ -12,7 +12,7 @@ class ShopNoticesNotifierJob < ActiveJob::Base
           subject: event_kind.title,
           event_name: event,
           mpi_indicator: notice_trigger.mpi_indicator,
-          options: options,
+          options: options
       }.merge(notice_trigger.notice_trigger_element_group.notice_peferences)).deliver
     end
   end
