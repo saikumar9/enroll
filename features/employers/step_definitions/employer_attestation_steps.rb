@@ -120,12 +120,11 @@ When(/^Admin enters the information needed$/) do
 end
 
 When(/^Employer staff clicks employees tab$/) do
-  find('.interaction-click-control-employees').click
+  find('.interaction-click-control-employees').trigger('click')
 end
 
 Then (/^Employer staff should employees coverage status as canceled$/) do
-  wait_for_ajax
-  pending "Add employees to the roster and enroll them under current plan year. When attestation denied, along with plan year employee coverages should be canceled."
+  expect(page).to have_content "Canceled"
 end
 
 When (/^Employer Staff clicks documents tab$/) do
