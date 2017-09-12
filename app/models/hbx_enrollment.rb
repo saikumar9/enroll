@@ -808,7 +808,7 @@ class HbxEnrollment
     if self.is_shop?
       if benefit_group.is_congress
         PlanCostDecoratorCongress.new(qhp_plan, self, benefit_group)
-      elsif self.composite_rated?
+      elsif self.composite_rated? && (!plan.dental?)
         CompositeRatedPlanCostDecorator.new(qhp_plan, benefit_group, self.composite_rating_tier, is_cobra_status?)
       else
         reference_plan = (coverage_kind == "health") ? benefit_group.reference_plan : benefit_group.dental_reference_plan
@@ -1322,7 +1322,7 @@ class HbxEnrollment
     if plan.present? && benefit_group.present?
       if benefit_group.is_congress #is_a? BenefitGroupCongress
         @cost_decorator = PlanCostDecoratorCongress.new(plan, self, benefit_group)
-      elsif self.composite_rated?
+      elsif self.composite_rated? && (!plan.dental?)
         @cost_decorator = CompositeRatedPlanCostDecorator.new(plan, benefit_group, self.composite_rating_tier, is_cobra_status?)
       else
         reference_plan = (coverage_kind == 'dental' ?  benefit_group.dental_reference_plan : benefit_group.reference_plan)
