@@ -660,4 +660,23 @@ module ApplicationHelper
       "icons/#{site_key}-#{icon}"
     end     
   end
+
+  private
+
+  def initial_employee_plan_selection_confirmation(organization_ids)
+    begin
+      organization_ids.each do |org_id|
+        census_employees = Organization.find(org_id).employer_profile.census_employees.active
+        census_employees.each do |ce|
+          if ce.active_benefit_group_assignment.hbx_enrollment.present? && ce.active_benefit_group_assignment.hbx_enrollment.effective_on == Organization.find(org_id).employer_profile.active_plan_year.start_on
+            ShopNoticesNotifierJob.perfom_later(ce.id.to_s, "initial_employee_plan_selection_confirmation")
+          end
+        end
+      end
+    rescue Exception => e
+      puts "Unable to send Employee Open Enrollment begin notice to #{ce.full_name}" unless Rails.env.test?
+      Rails.logger.error["Unable to deliver census employee notice for #{notice_name} to census_employee.id due to #{e}"]
+    end
+  end
+
 end
