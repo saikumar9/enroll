@@ -5,6 +5,8 @@ module PdfTemplates
     attribute :notification_type, String
     attribute :subject, String
     attribute :mpi_indicator, String
+    attribute :first_name, String
+    attribute :last_name, String
     attribute :primary_fullname, String
     attribute :primary_identifier, String
     attribute :mpi_indicator, String
@@ -18,6 +20,7 @@ module PdfTemplates
     attribute :enrollment, PdfTemplates::Enrollment
     attribute :email, String
     attribute :plan_year, PdfTemplates::PlanYear
+    attribute :sep, PdfTemplates::SpecialEnrollmentPeriod
 
     def shop?
       return true
