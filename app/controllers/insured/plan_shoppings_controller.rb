@@ -143,7 +143,6 @@ class Insured::PlanShoppingsController < ApplicationController
     end
   end
 
-<<<<<<< HEAD
   def sep_qle_request_accept_notice_ee(employee_id, enrollment)
     sep = enrollment.special_enrollment_period
     options = { :sep_qle_end_on => sep.end_on.to_s, :sep_qle_title => sep.title, :sep_qle_on => sep.qle_on.to_s }
@@ -153,7 +152,8 @@ class Insured::PlanShoppingsController < ApplicationController
       logger.debug("Exception raised in %s" % e.backtrace)
       raise "Unable to trigger sep_qle_request_accept_notice_ee"
     end
-=======
+  end  
+
     def employee_mid_year_plan_change(person,change_plan)
      begin
       employee_role_id = person.active_employee_roles.first.census_employee.id
@@ -165,7 +165,6 @@ class Insured::PlanShoppingsController < ApplicationController
      rescue Exception => e
        log("#{e.message}; person_id: #{person.id}")
      end
->>>>>>> origin/use_case_17810
   end
 
   def terminate
