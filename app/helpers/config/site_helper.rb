@@ -31,6 +31,10 @@ module Config::SiteHelper
     Settings.site.curam_enabled
   end
 
+  def site_brokers_agreement_path
+    link_to "#{Settings.aca.state_name} #{Settings.site.short_name} Broker Agreement", Settings.site.terms_and_conditions_url
+  end
+
   def site_home_link
     link_to site_home_url, site_home_url
   end
