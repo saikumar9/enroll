@@ -5,7 +5,7 @@ gem 'rails', '4.2.3'
 
 # Mount Enroll App component engines
 gem "transport_gateway",  path: "components/transport_gateway"
-gem "notifier",           path: "components/notifier" 
+# gem "notifier",           path: "components/notifier"
 gem "transport_profiles",  path: "components/transport_profiles"
 
 # Use SCSS for stylesheets
@@ -117,7 +117,7 @@ gem 'chosen-rails'
 # gem 'rails_semantic_logger'
 # gem 'rocketjob', '~> 3.0'
 
-gem 'ckeditor'
+# gem 'ckeditor'
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
