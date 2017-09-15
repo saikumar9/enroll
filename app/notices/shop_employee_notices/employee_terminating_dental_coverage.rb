@@ -11,7 +11,7 @@ class ShopEmployeeNotices::EmployeeTerminatingDentalCoverage < ShopEmployeeNotic
     
  end
  	def append_data
-    terminated_enrollment = census_employee.published_benefit_group_assignment.hbx_enrollments.detect{ |h| h.coverage_kind == 'dental' && h.aasm_state == 'coverage_termination_selected'}
+    terminated_enrollment = census_employee.published_benefit_group_assignment.hbx_enrollments.detect{ |h| h.coverage_kind == 'dental' && h.aasm_state == 'coverage_termination_pending'}
     plan = terminated_enrollment.plan
     notice.plan = PdfTemplates::Plan.new({
                                              :plan_name => plan.name
