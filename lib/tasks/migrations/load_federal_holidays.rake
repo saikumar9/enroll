@@ -46,7 +46,7 @@ namespace :load_federal_holidays do
           )
       ScheduledEvent.find_or_create_by!(
           type: 'federal',
-          event_name: 'New Year Day',
+          event_name: "New Year's Day",
           offset_rule: 0,
           start_time: schedule_time(Date.new(Date.today.year, 01, 01))
           )
