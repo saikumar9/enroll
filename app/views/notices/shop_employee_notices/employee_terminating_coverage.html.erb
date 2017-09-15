@@ -30,7 +30,6 @@
   { content: "You can also find more information on our website at <a href= '#{site_main_web_address_url}'>#{site_website_name}</a>"} %>
  
 <% if notice.broker.present? %>
-  <%= render partial: 'notices/shared/paragraph', :locals => { content: "Please contact your broker for further assistance. You can also contact #{site_short_name} with any questions:"} %> <br>
   <%= render partial: 'notices/shared/broker_contact_info', :locals => {broker: notice.broker} %>
 <% end %>
 
