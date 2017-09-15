@@ -30,7 +30,7 @@ module Config::SiteHelper
   def site_curam_enabled?
     Settings.site.curam_enabled
   end
-  
+
   def site_home_link
     link_to site_home_url, site_home_url
   end
@@ -59,12 +59,12 @@ module Config::SiteHelper
     Settings.site.faqs_url
   end
 
-  def site_short_name
-    Settings.site.short_name
+  def site_policies_url
+    Settings.site.policies_url
   end
 
-  def site_registration_path(resource_name, params)
-    Settings.site.registration_path.present? ? Settings.site.registration_path : new_registration_path(resource_name, :invitation_id => params[:invitation_id])
+  def site_short_name
+    Settings.site.short_name
   end
 
   def site_long_name
@@ -113,10 +113,6 @@ module Config::SiteHelper
 
   def find_your_doctor_url
     Settings.site.shop_find_your_doctor_url
-  end
-
-  def site_main_web_address_text
-    Settings.site.main_web_address_text
   end
 
   def site_document_verification_checklist_url
