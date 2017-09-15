@@ -31,6 +31,7 @@ function setOpenEnrollmentDatePicker(){
 // show dental config links
 <% if (Settings.aca.dental_plan_years_available.include? @plan_year.start_on.year.to_s) %>
   $("#<%= @location_id %> .dental-config-links").show();
+  $(".reference-steps .dental").show();
 
   if ( $("#<%= @location_id %> .edit-add-dental").is(':hidden') ) {
       $("#<%= @location_id %> .select-dental-plan").show();
