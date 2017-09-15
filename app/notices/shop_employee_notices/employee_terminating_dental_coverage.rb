@@ -18,7 +18,7 @@ class ShopEmployeeNotices::EmployeeTerminatingDentalCoverage < ShopEmployeeNotic
                                          })
  		
     notice.enrollment = PdfTemplates::Enrollment.new({
-      :terminated_on => terminated_enrollment.set_coverage_termination_date,
+      :terminated_on => terminated_enrollment.terminated_on,
       :enrolled_count => terminated_enrollment.humanized_dependent_summary
       })
  	end	
