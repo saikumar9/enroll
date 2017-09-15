@@ -5,7 +5,7 @@ gem 'rails', '4.2.3'
 
 # Mount Enroll App component engines
 gem "transport_gateway",  path: "components/transport_gateway"
-gem "notifier",           path: "components/notifier" 
+# gem "notifier",           path: "components/notifier"
 gem "transport_profiles",  path: "components/transport_profiles"
 
 # Use SCSS for stylesheets
