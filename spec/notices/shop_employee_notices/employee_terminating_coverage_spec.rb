@@ -31,7 +31,7 @@ RSpec.describe ShopEmployeeNotices::EmployeeTerminatingCoverage, :dbclean => :af
         :template => application_event.notice_template
     }}
 
-let(:enrollment) { FactoryGirl.create(:hbx_enrollment, household: family.active_household, aasm_state:'coverage_termination_selected')}
+let(:enrollment) { FactoryGirl.create(:hbx_enrollment, household: family.active_household, aasm_state:'coverage_termination_pending')}
 
 describe "New" do
     before do
