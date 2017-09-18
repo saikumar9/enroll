@@ -21,6 +21,7 @@ module PdfTemplates
     attribute :email, String
     attribute :plan_year, PdfTemplates::PlanYear
     attribute :sep, PdfTemplates::SpecialEnrollmentPeriod
+    attribute :qle, PdfTemplates::QualifyingLifeEventKind
 
     def shop?
       return true
