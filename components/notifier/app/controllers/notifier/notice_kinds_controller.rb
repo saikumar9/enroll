@@ -67,7 +67,8 @@ module Notifier
 
       send_data Notifier::NoticeKind.to_csv, 
         :filename => "notices_#{TimeKeeper.date_of_record.strftime('%m_%d_%Y')}.csv",
-        :disposition => 'inline'
+        :disposition => 'attachment',
+        :type => 'text/csv'
     end
 
     def upload_notices
@@ -98,11 +99,13 @@ module Notifier
 
     def get_tokens
       builder = params['builder'] || 'Notifier::MergeDataModels::EmployerProfile'
-      tokens = builder.constantize.new.editor_tokens
+      token_builder = builder.constantize.new
+      tokens = token_builder.editor_tokens
+      # placeholders = token_builder.place_holders
 
       respond_to do |format|
         format.html
-        format.json {render json: tokens}
+        format.json { render json: {tokens: tokens} }
       end
     end
 
