@@ -91,6 +91,10 @@ module Config::SiteHelper
     Settings.site.main_web_address_url
   end
 
+  def site_main_web_address_business
+    Settings.site.main_web_address_business
+  end
+
   def site_main_web_link
     link_to site_website_name, site_main_web_address_url
   end

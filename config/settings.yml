@@ -15,6 +15,7 @@ site:
   health_care_website_url: "https://www.healthcare.gov"
   ivl_login_url: "https://mahealthconnector.optum.com/individual"
   short_name: "Health Connector"
+  main_web_address_business: "https://www.mahealthconnector.org/business"
   byline: "The Right Place for the Right Plan"
   long_name: "Massachusetts Health Connector"
   copyright_period_start: "2017"
