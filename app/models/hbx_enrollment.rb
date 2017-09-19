@@ -1,4 +1,4 @@
-  require 'ostruct'
+require 'ostruct'
 
 class HbxEnrollment
   include Mongoid::Document
@@ -1396,18 +1396,18 @@ class HbxEnrollment
   end
 
   def set_submitted_at
-   if submitted_at.blank?
+    if submitted_at.blank?
       write_attribute(:submitted_at, TimeKeeper.date_of_record)
-   end
- end
+    end
+  end
 
   def plan_year_check(employee_role)
-  covered_plan_year(employee_role).present? && !covered_plan_year(employee_role).send(:can_be_migrated?)
- end
+    covered_plan_year(employee_role).present? && !covered_plan_year(employee_role).send(:can_be_migrated?)
+  end
 
   def covered_plan_year(employee_role)
-    employee_role.employer_profile.plan_years.detect { |py| (py.start_on.beginning_of_day..py.end_on.end_of_day).cover?(family.current_sep.try(:effective_on))} if employee_role.present?
- end
+    employee_role.employer_profile.plan_years.detect { |py| (py.start_on.beginning_of_day..py.end_on.end_of_day).cover?(family.current_sep.try(:effective_on)) } if employee_role.present?
+  end
 
   def event_submission_date
     submitted_at.blank? ? Time.now : submitted_at
@@ -1451,6 +1451,13 @@ class HbxEnrollment
     if is_shop? && self.census_employee.present? 
       ShopNoticesNotifierJob.perform_later(self.census_employee.id.to_s, "select_plan_year_during_oe")
     end
+  end
+
+  def any_dependent_members_age_above_26?
+    hbx_enrollment_members.where(is_subscriber: false).map(&:family_member).map(&:person).each do |person|
+      return true if person.age_on(TimeKeeper.date_of_record) >= 26
+    end
+    return false
   end
 
   private
