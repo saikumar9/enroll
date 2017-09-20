@@ -154,10 +154,6 @@ class User
       Thread.current[:current_user] = user
     end
 
-    def logins_before_captcha
-      4
-    end
-
     def login_captcha_required?(login)
       begin
         logins_before_captcha <= self.or({oim_id: login}, {email: login}).first.failed_attempts
@@ -168,10 +164,6 @@ class User
 
     def current_user
       Thread.current[:current_user]
-    end
-
-    def logins_before_captcha
-      4
     end
 
     def has_answered_question? security_question_id
