@@ -11,6 +11,8 @@ module PdfTemplates
     attribute :binder_payment_due_date, Date
     attribute :binder_payment_total, Money
     attribute :renewing_start_on, Date
+    attribute :total_enrolled_count, Integer
+    attribute :eligible_to_enroll_count, Integer
     
   end
 end
