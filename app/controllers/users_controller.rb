@@ -9,7 +9,7 @@ class UsersController < ApplicationController
   def lockable
     user = User.find(params[:id])
     authorize User, :lockable?
-    user.update_lockable
+    user.lock!
     redirect_to user_account_index_exchanges_hbx_profiles_url, notice: "User #{user.person.full_name} is successfully #{user.lockable_notice}."
   rescue Exception => e
     redirect_to user_account_index_exchanges_hbx_profiles_url, alert: "You are not authorized for this action."
@@ -37,18 +37,24 @@ class UsersController < ApplicationController
     redirect_to user_account_index_exchanges_hbx_profiles_url, alert: "You are not authorized for this action."
   end
 
+  def login_history
+    @user = User.find(params[:id])
+    @user_login_history = SessionIdHistory.for_user(user_id: @user.id).order('created_at DESC').page(params[:page]).per(15)
+  end
+
+  def edit
+    @user = User.find(params[:id])
+  end
+
+  def update
+    @user = User.find(params[:id])
+    @user.update_attributes(email_update_params)
+  end
+
   private
 
-  def reset_password_params
+  def email_update_params
     params.require(:user).permit(:email)
   end
 
-  def validate_email
-     @error = if params[:user][:email].blank?
-               'Please enter a valid email'
-              elsif params[:user].present? && !@user.update_attributes(reset_password_params)
-                @user.errors.full_messages.join.gsub('(optional) ', '')
-              end
-  end
-  
 end

@@ -1,7 +1,7 @@
 Then(/^there are (\d+) preloaded (.*?) user accounts$/) do |num, status|
   (0...num.to_i).each do |int|
     user = FactoryGirl.create(:user, :with_family)
-    user.update_lockable if status.eql?('locked')
+    user.lock! if status.eql?('locked')
   end
 end
 
@@ -56,10 +56,6 @@ Then(/^an error (.*?) should be raised$/) do |error|
   within('.child-row') do
     expect(page).to have_content(error)
   end
-end
-
-Then(/^the reset password email should be sent to the user$/) do
-  expect(User.all.to_a.last.reset_password_token).to be_a String
 end
 
 Then(/^the user email should be (.*?)$/) do |email|
