@@ -5,12 +5,6 @@ Then(/^there are (\d+) preloaded (.*?) user accounts$/) do |num, status|
   end
 end
 
-Then(/^there are (\d+) preloaded user accounts without email$/) do |num|
-  (0...num.to_i).each do |int|
-    FactoryGirl.create(:user, :without_email, :with_family)
-  end
-end
-
 Then(/^Hbx Admin should see (.*?) link on user accounts page$/) do |text|
   find_link(text).visible?
 end
@@ -52,11 +46,6 @@ Then(/^the (.*?) user should be in the list$/) do |status|
   end
 end
 
-Then(/^an error (.*?) should be raised$/) do |error|
-  within('.child-row') do
-    expect(page).to have_content(error)
-  end
-end
 
 Then(/^the user email should be (.*?)$/) do |email|
   expect(User.all.to_a.last.email).to eq email
