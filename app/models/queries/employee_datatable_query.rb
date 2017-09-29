@@ -23,6 +23,8 @@ module Queries
           @employer_profile.census_employees.by_cobra
         when "terminated"
           @employer_profile.census_employees.terminated
+        when "retired"
+          @employer_profile.census_employees.retired
         when "all"
           @employer_profile.census_employees
         else

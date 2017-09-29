@@ -20,12 +20,14 @@ class CensusEmployee < CensusMember
   COBRA_STATES = %w(cobra_eligible cobra_linked cobra_terminated cobra_termination_pending)
   PENDING_STATES = %w(employee_termination_pending cobra_termination_pending)
   ENROLL_STATUS_STATES = %w(enroll waive will_not_participate)
+  RETIRED_STATES = %w(employee_retired_elgible employee_retired_linked)
 
   EMPLOYEE_TERMINATED_EVENT_NAME = "acapi.info.events.census_employee.terminated"
   EMPLOYEE_COBRA_TERMINATED_EVENT_NAME = "acapi.info.events.census_employee.cobra_terminated"
 
   field :is_business_owner, type: Boolean, default: false
   field :hired_on, type: Date
+  field :retired_on, type: Date
   field :employment_terminated_on, type: Date
   field :coverage_terminated_on, type: Date
   field :aasm_state, type: String
@@ -91,6 +93,7 @@ class CensusEmployee < CensusMember
   scope :by_cobra,          ->{ any_in(aasm_state: COBRA_STATES) }
   scope :pending,           ->{ any_in(aasm_state: PENDING_STATES) }
   scope :active_alone,      ->{ any_in(aasm_state: EMPLOYMENT_ACTIVE_ONLY) }
+  scope :retired,           ->{ any_in(aasm_state: RETIRED_STATES) }
 
   # scope :emplyee_profiles_active_cobra,        ->{ where(aasm_state: "eligible") }
   scope :employee_profiles_terminated,         ->{ where(aasm_state: "employment_terminated")}
@@ -261,6 +264,11 @@ class CensusEmployee < CensusMember
     else
       self
     end
+  end
+
+  def retire_from_employment(retirement_date)
+    self.retired_on = retirement_date
+    self.retire_employee_role!
   end
 
   def terminate_employee_enrollments
@@ -604,7 +612,9 @@ class CensusEmployee < CensusMember
     state :employment_terminated
     state :cobra_terminated
     state :rehired
-
+    state :employee_retired_elgible
+    state :employee_retired_linked
+   
     event :newly_designate, :after => :record_transition do
       transitions from: :eligible, to: :newly_designated_eligible
       transitions from: :employee_role_linked, to: :newly_designated_linked
@@ -644,6 +654,11 @@ class CensusEmployee < CensusMember
     event :terminate_employee_role, :after => :record_transition do
       transitions from: [:eligible, :employee_role_linked, :employee_termination_pending, :newly_designated_eligible, :newly_designated_linked], to: :employment_terminated
       transitions from: [:cobra_eligible, :cobra_linked, :cobra_termination_pending],  to: :cobra_terminated
+    end
+
+    event :retire_employee_role, :after => :record_transition do
+      transitions from: [:eligible], to: :employee_retired_elgible
+      transitions from: [:employee_role_linked], to: :employee_retired_linked
     end
 
     event :reinstate_eligibility, :after => [:record_transition] do

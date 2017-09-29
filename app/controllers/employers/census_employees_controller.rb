@@ -1,6 +1,6 @@
 class Employers::CensusEmployeesController < ApplicationController
   before_action :find_employer
-  before_action :find_census_employee, only: [:edit, :update, :show, :delink, :terminate, :rehire, :benefit_group, :cobra ,:cobra_reinstate, :confirm_effective_date]
+  before_action :find_census_employee, only: [:edit, :update, :show, :delink, :terminate, :rehire, :benefit_group, :cobra ,:cobra_reinstate, :confirm_effective_date, :retire]
   before_action :updateable?, except: [:edit, :show, :benefit_group]
   layout "two_column"
   def new
@@ -110,6 +110,33 @@ class Employers::CensusEmployeesController < ApplicationController
       #flash[:error] = "Please select Benefit Group."
       #render action: "edit"
     #end
+  end
+
+  def retire
+    authorize EmployerProfile, :updateable?
+    status = params[:status]
+
+    retirement_date = TimeKeeper.date_of_record.beginning_of_month
+    if params["retirement_date"].present?
+      retirement_date = DateTime.strptime(params["retirement_date"], '%m/%d/%Y').try(:to_date)
+      saved = @census_employee.retire_from_employment(retirement_date) && @census_employee.save
+    end
+
+    respond_to do |format|
+      format.js {
+        if saved
+          flash[:notice] = "Successfully Retired Census Employee."
+        else
+          flash[:error] = "Census Employee could not be retired."
+        end
+      }
+      format.all {
+        flash[:notice] = "Successfully Retired Census Employee."
+      }
+    end
+    flash.keep(:error)
+    flash.keep(:notice)
+    render js: "window.location = '#{employers_employer_profile_census_employee_path(@employer_profile.id, @census_employee.id, status: status)}'"
   end
 
   def terminate

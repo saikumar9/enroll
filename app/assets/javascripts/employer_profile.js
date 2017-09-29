@@ -586,6 +586,26 @@ $(document).on('click', '.cobra_confirm', function(){
   EmployerProfile.submitCobraDate(cobra_date, cobra_link);
 })
 
+$(document).on('click', ".retire_confirm", function(){
+  var retirement_date = $(this).closest('div').find('input').val();
+  var link_to_retire = $(this).data('link');
+
+  $.ajax({
+    type: 'get',
+    datatype : 'js',
+    url: link_to_retire,
+    data: {retirement_date: retirement_date},
+    success: function(response){
+
+        window.location.reload();
+
+    },
+    error: function(response){
+      Alert("Sorry, something went wrong");
+    }
+  });
+});
+
 $(document).on('click', ".delete_confirm", function(){
   var termination_date = $(this).closest('div').find('input').val();
   var link_to_delete = $(this).data('link');

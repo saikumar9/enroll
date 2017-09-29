@@ -26,6 +26,10 @@ module Effective
         table_column :terminated_on, :proc => Proc.new { |row|
           row.employment_terminated_on || "Active"
         }, :sortable => false, :filter => false, :visible => true 
+  
+        table_column :retired_on, :proc => Proc.new { |row|
+          row.retired_on || "Active"
+        }, :sortable => false, :filter => false, :visible => true 
 
         table_column :status, :proc => Proc.new { |row|
           employee_state_format(row.aasm_state, row.employment_terminated_on)
@@ -62,6 +66,7 @@ module Effective
               # Link Structure: ['Link Name', link_path(:params), 'link_type'], link_type can be 'ajax', 'static', or 'disabled'
               ['Edit', edit_employers_employer_profile_census_employee_path(@employer_profile, row.id), 'static'],
               ['Terminate', confirm_effective_date_employers_employer_profile_census_employees_path(@employer_profile, census_employee_id: row.id, census_employee: row.id, type: 'terminate'), terminate_possible?(row)],
+              ['Retire', confirm_effective_date_employers_employer_profile_census_employees_path(@employer_profile, census_employee_id: row.id, census_employee: row.id, type: 'retire'), retire_possible?(row)],
               ['Rehire', confirm_effective_date_employers_employer_profile_census_employees_path(@employer_profile, census_employee_id: row.id, census_employee: row.id, type: 'rehire'), rehire_possible?(row)],
               ['Initiate Cobra', confirm_effective_date_employers_employer_profile_census_employees_path(@employer_profile, census_employee_id: row.id, type: 'cobra'), cobra_possible?(row)]
           ]
@@ -94,6 +99,10 @@ module Effective
         census_employee.active_or_pending_termination? ? 'disabled' : 'ajax'
       end
 
+      def retire_possible? census_employee
+        census_employee.may_retire_employee_role? ? 'ajax' : 'disabled'
+      end
+
       def nested_filter_definition
           {
             employers:
@@ -101,6 +110,7 @@ module Effective
                     {scope: 'active_alone', label: 'Active only'},
                     {scope: 'active', label: 'Active & COBRA'},
                     {scope: 'by_cobra', label: 'COBRA only'},
+                    {scope: 'retired', label: 'Retired'},
                     {scope: 'terminated', label: 'Terminated'},
                     {scope: 'all', label: 'All'}
                 ],
