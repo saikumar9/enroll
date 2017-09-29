@@ -62,7 +62,7 @@ module Config::AcaModelConcern
     end
 
     def multiple_market_rating_areas?
-      @@multiple_market_rating_areas ||= Settings.aca.rating_areas.many?
+      @@multiple_market_rating_areas ||= false #Settings.aca.rating_areas.many?
     end
 
     def constrain_service_areas?

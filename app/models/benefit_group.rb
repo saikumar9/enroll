@@ -444,7 +444,11 @@ class BenefitGroup
       carrier_profile_id = reference_plan.carrier_profile_id
       Plan.valid_shop_health_plans_for_service_area("carrier", carrier_for_elected_plan, start_on.year, @profile_and_service_area_pairs.select { |pair| pair.first == carrier_profile_id }).to_a
     when "metal_level"
+      if use_simple_employer_calculation_model?
+      Plan.valid_shop_health_plans("metal_level", metal_level_for_elected_plan, start_on.year)
+    else
       Plan.valid_shop_health_plans_for_service_area("carrier", carrier_for_elected_plan, start_on.year, @profile_and_service_area_pairs).and(:metal_level => reference_plan.metal_level).to_a
+    end
     end
   end
 

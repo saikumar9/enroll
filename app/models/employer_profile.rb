@@ -994,7 +994,7 @@ class EmployerProfile
 
   def service_areas
     if use_simple_employer_calculation_model?
-      return nil
+      return []
     end
     primary_office_location = organization.primary_office_location
     CarrierServiceArea.service_areas_for(office_location: primary_office_location)
