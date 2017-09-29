@@ -24,8 +24,9 @@ class Insured::EmployeeRolesController < ApplicationController
     @person_params = params.require(:person).merge({user_id: current_user.id})
     @employee_candidate = Forms::EmployeeCandidate.new(@person_params)
     @person = @employee_candidate
+
     if @employee_candidate.valid?
-      found_census_employees = @employee_candidate.match_census_employees.select{|census_employee| census_employee.is_active? }
+      found_census_employees = @employee_candidate.match_census_employees.select{|census_employee| census_employee.is_active? || census_employee.is_retired? }
       if found_census_employees.empty?
         first_name = @person_params[:first_name]
         # @person = Factories::EnrollmentFactory.construct_consumer_role(params.permit!, current_user)

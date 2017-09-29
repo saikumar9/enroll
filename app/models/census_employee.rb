@@ -15,12 +15,12 @@ class CensusEmployee < CensusMember
   EMPLOYMENT_TERMINATED_STATES = %w(employment_terminated cobra_terminated rehired)
   EMPLOYMENT_ACTIVE_ONLY = %w(eligible employee_role_linked employee_termination_pending newly_designated_eligible newly_designated_linked)
   NEWLY_DESIGNATED_STATES = %w(newly_designated_eligible newly_designated_linked)
-  LINKED_STATES = %w(employee_role_linked newly_designated_linked cobra_linked)
-  ELIGIBLE_STATES = %w(eligible newly_designated_eligible cobra_eligible employee_termination_pending cobra_termination_pending)
+  LINKED_STATES = %w(employee_role_linked newly_designated_linked cobra_linked employee_retired_linked)
+  ELIGIBLE_STATES = %w(eligible newly_designated_eligible cobra_eligible employee_termination_pending cobra_termination_pending employee_retired_eligible)
   COBRA_STATES = %w(cobra_eligible cobra_linked cobra_terminated cobra_termination_pending)
   PENDING_STATES = %w(employee_termination_pending cobra_termination_pending)
   ENROLL_STATUS_STATES = %w(enroll waive will_not_participate)
-  RETIRED_STATES = %w(employee_retired_elgible employee_retired_linked)
+  RETIRED_STATES = %w(employee_retired_eligible employee_retired_linked)
 
   EMPLOYEE_TERMINATED_EVENT_NAME = "acapi.info.events.census_employee.terminated"
   EMPLOYEE_COBRA_TERMINATED_EVENT_NAME = "acapi.info.events.census_employee.cobra_terminated"
@@ -83,7 +83,7 @@ class CensusEmployee < CensusMember
   index({"benefit_group_assignments.benefit_group_id" => 1})
   index({"benefit_group_assignments.aasm_state" => 1})
 
-  scope :active,            ->{ any_in(aasm_state: EMPLOYMENT_ACTIVE_STATES) }
+  scope :active,            ->{ any_in(aasm_state: EMPLOYMENT_ACTIVE_STATES + RETIRED_STATES) }
   scope :terminated,        ->{ any_in(aasm_state: EMPLOYMENT_TERMINATED_STATES) }
   scope :non_terminated,    ->{ where(:aasm_state.nin => EMPLOYMENT_TERMINATED_STATES) }
   scope :newly_designated,  ->{ any_in(aasm_state: NEWLY_DESIGNATED_STATES) }
@@ -330,6 +330,10 @@ class CensusEmployee < CensusMember
 
   def is_active?
     EMPLOYMENT_ACTIVE_STATES.include?(aasm_state)
+  end
+
+  def is_retired?
+    RETIRED_STATES.include?(aasm_state)
   end
 
   def is_inactive?
@@ -612,7 +616,7 @@ class CensusEmployee < CensusMember
     state :employment_terminated
     state :cobra_terminated
     state :rehired
-    state :employee_retired_elgible
+    state :employee_retired_eligible
     state :employee_retired_linked
    
     event :newly_designate, :after => :record_transition do
@@ -638,6 +642,7 @@ class CensusEmployee < CensusMember
       transitions from: :eligible, to: :employee_role_linked, :guard => :has_benefit_group_assignment?
       transitions from: :cobra_eligible, to: :cobra_linked, guard: :has_benefit_group_assignment?
       transitions from: :newly_designated_eligible, to: :newly_designated_linked, :guard => :has_benefit_group_assignment?
+      transitions from: :employee_retired_eligible, to: :employee_retired_linked, :guard => :has_benefit_group_assignment?
     end
 
     event :delink_employee_role, :guard => :has_no_hbx_enrollments?, :after => :record_transition do
@@ -657,7 +662,7 @@ class CensusEmployee < CensusMember
     end
 
     event :retire_employee_role, :after => :record_transition do
-      transitions from: [:eligible], to: :employee_retired_elgible
+      transitions from: [:eligible], to: :employee_retired_eligible
       transitions from: [:employee_role_linked], to: :employee_retired_linked
     end
 

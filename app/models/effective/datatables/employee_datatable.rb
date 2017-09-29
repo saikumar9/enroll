@@ -108,9 +108,9 @@ module Effective
             employers:
                 [
                     {scope: 'active_alone', label: 'Active only'},
+                    {scope: 'retired', label: 'Retired'},
                     {scope: 'active', label: 'Active & COBRA'},
                     {scope: 'by_cobra', label: 'COBRA only'},
-                    {scope: 'retired', label: 'Retired'},
                     {scope: 'terminated', label: 'Terminated'},
                     {scope: 'all', label: 'All'}
                 ],
