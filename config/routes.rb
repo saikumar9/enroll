@@ -326,6 +326,7 @@ Rails.application.routes.draw do
       resources :census_employees, only: [:new, :create, :edit, :update, :show] do
         get :delink
         get :terminate
+        get :retire
         get :rehire
         get :cobra
         collection do

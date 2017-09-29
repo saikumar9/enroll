@@ -1,0 +1,23 @@
+<div class="table-responsive table-override">
+  <table class="table table-striped table-bordered border-override" style="table-layout: fixed;">
+    <td class="confirm-terminate-wrapper show_confirm_<%= @census_employee.id %>" colspan="10" id="enter-date">
+      <tr>
+        <td class="confirm-terminate-wrapper show_confirm_<%= @census_employee.id %>"  colspan="10"  id="enter-date">
+          <div class="confirm-terminate <%=pundit_class EmployerProfile, :updateable?%>">
+            <h5 style="margin-top: 0; margin-bottom: 0;"><strong>Enter retirement date for <%= name_to_listing(@census_employee) %></strong>
+              <br/>
+              <span class="lg fourteen">(retirement date must be in the past)</span>
+            </h5>
+            <div class="pull-right" style="margin-top: 2px;">
+              <i class="fa fa-calendar fa-lg"></i> <input class="text-center date-picker" data-date-max="+0d" placeholder="MM/DD/YYYY" type="text">
+              <a class="retire_confirm terminate" data-link="<%= employers_employer_profile_census_employee_retire_path(@employer_profile.id, @census_employee.id) %>" href="javascript:;" id="terminate_<%= @census_employee.id %>">
+                Retire Employee
+              </a>
+              <a class="terminate cancel" style="margin-right: 15px;">Cancel</a>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </td>
+  </table>
+</div>
