@@ -25,7 +25,7 @@ RSpec.describe "events/individuals/created.haml.erb" do
       it "should include broker_payment_accounts" do
         expect(Nokogiri::XML(rendered).xpath("//x:broker_payment_accounts/x:broker_payment_account", "x"=>"http://openhbx.org/api/terms/1.0").count).to eq 1
         expect(Nokogiri::XML(rendered).xpath("//x:broker_payment_accounts/x:broker_payment_account/x:routing_number", "x"=>"http://openhbx.org/api/terms/1.0").text).to eq individual.broker_role.broker_agency_profile.ach_routing_number
-        expect(Nokogiri::XML(rendered).xpath("//x:broker_payment_accounts/x:broker_payment_account/x:ach_account_number", "x"=>"http://openhbx.org/api/terms/1.0").text).to eq individual.broker_role.broker_agency_profile.ach_account_number
+        expect(Nokogiri::XML(rendered).xpath("//x:broker_payment_accounts/x:broker_payment_account/x:account_number", "x"=>"http://openhbx.org/api/terms/1.0").text).to eq individual.broker_role.broker_agency_profile.ach_account_number
       end
 
     end
