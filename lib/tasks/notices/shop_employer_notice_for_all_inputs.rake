@@ -3,12 +3,11 @@
 # Ex: rake notice:shop_employer_notice_event hbx_ids="1231 121 1567" feins="42112 12123 123123" employer_ids = "123123 12312312 123123123" event="specific_event"
 namespace :notice do
   desc "Generate shop employer notices"
-  task :shop_employer_notice_event, [:opts] => :environment do |task, args|
-    opts = args[:opts]
-    @employer_ids = opts[:employer_ids].try(:split, " ")
-    @hbx_ids = opts[:hbx_ids].try(:split, " ")
-    @feins = opts[:feins].try(:split, " ")
-    @event_name = opts[:event]
+  task :shop_employer_notice_event => :environment do |task, args|
+    @employer_ids = ENV['employer_ids'].try(:split, " ")
+    @hbx_ids = ENV['hbx_ids'].try(:split, " ")
+    @feins = ENV['feins'].try(:split, " ")
+    @event_name = ENV['event']
     if @event_name
       case
         when @employer_ids
