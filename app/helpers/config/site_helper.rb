@@ -3,7 +3,7 @@ module Config::SiteHelper
   def site_redirect_on_timeout_route
     Settings.site.curam_enabled? ? SamlInformation.iam_login_url : new_user_session_path
   end
-  
+
   def site_byline
     Settings.site.byline
   end
@@ -15,7 +15,7 @@ module Config::SiteHelper
   def site_website_name
     Settings.site.website_name
   end
-  
+
   def site_website_link
     link_to site_website_name, site_website_name
   end
@@ -35,7 +35,7 @@ module Config::SiteHelper
   def site_curam_enabled?
     Settings.site.curam_enabled
   end
-    
+
   def site_brokers_agreement_path
     link_to "#{Settings.aca.state_name} #{Settings.site.short_name} Broker Agreement", Settings.site.terms_and_conditions_url
   end
@@ -81,7 +81,11 @@ module Config::SiteHelper
   end
 
   def site_registration_path(resource_name, params)
-    Settings.site.registration_path.present? ? Settings.site.registration_path : new_registration_path(resource_name, :invitation_id => params[:invitation_id])
+    if Settings.site.registration_path.present? && ENV['AWS_ENV'] == 'prod'
+       Settings.site.registration_path
+    else
+      new_registration_path(resource_name, :invitation_id => params[:invitation_id])
+    end
   end
 
   def site_broker_quoting_enabled?
@@ -103,7 +107,7 @@ module Config::SiteHelper
   def site_make_their_premium_payments_online
     Settings.site.make_their_premium_payments_online
   end
-    
+
   def health_care_website
       Settings.site.health_care_website
   end
