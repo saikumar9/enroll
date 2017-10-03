@@ -1132,7 +1132,7 @@ shop_notice_triggers = [
             }
         ]
     },
-    
+
     {
         hbx_id: 'SHOP_M050',
         title: 'Eligible to Apply for Employer-sponsored Health Insurance',

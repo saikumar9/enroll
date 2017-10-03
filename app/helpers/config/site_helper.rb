@@ -15,7 +15,7 @@ module Config::SiteHelper
   def site_website_name
     Settings.site.website_name
   end
-
+  
   def site_website_link
     link_to site_website_name, site_website_name
   end
@@ -60,28 +60,24 @@ module Config::SiteHelper
     Settings.site.nondiscrimination_notice_url
   end
 
-  def link_to_site_business_resource_center
-    link_to "Business Resource Center", site_business_resource_center_url
+  def site_faqs_url
+    Settings.site.faqs_url
   end
 
   def site_policies_url
     Settings.site.policies_url
   end
 
-  def site_faqs_url
-    Settings.site.faqs_url
-  end
-
   def site_short_name
     Settings.site.short_name
   end
 
-  def site_registration_path(resource_name, params)
-    Settings.site.registration_path.present? ? Settings.site.registration_path : new_registration_path(resource_name, :invitation_id => params[:invitation_id])
-  end
-
   def site_long_name
     Settings.site.long_name
+  end
+
+  def site_registration_path(resource_name, params)
+    Settings.site.registration_path.present? ? Settings.site.registration_path : new_registration_path(resource_name, :invitation_id => params[:invitation_id])
   end
 
   def site_broker_quoting_enabled?
@@ -138,6 +134,10 @@ module Config::SiteHelper
 
   def site_document_verification_checklist_url
     Settings.site.document_verification_checklist_url
+  end
+
+  def site_main_web_address_text
+   Settings.site.main_web_address_text
   end
 
   def site_employer_application_deadline_link

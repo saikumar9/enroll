@@ -538,7 +538,6 @@ module ApplicationHelper
     end
   end
 
-
   def notify_employer_when_employee_terminate_coverage(hbx_enrollment)
     if hbx_enrollment.is_shop? && hbx_enrollment.census_employee.present?
       ShopNoticesNotifierJob.perform_later(hbx_enrollment.census_employee.id.to_s, "notify_employer_when_employee_terminate_coverage")
@@ -553,7 +552,7 @@ module ApplicationHelper
         ShopNoticesNotifierJob.perform_later(hbx_enrollment.census_employee.id.to_s, "notify_employee_confirming_dental_coverage_termination")
       end
     end
-  end
+  end    
 
   def disable_purchase?(disabled, hbx_enrollment, options = {})
     disabled || !hbx_enrollment.can_select_coverage?(qle: options[:qle])
