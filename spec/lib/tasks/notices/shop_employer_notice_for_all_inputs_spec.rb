@@ -10,13 +10,8 @@ RSpec.describe 'Generate notices to employer by taking hbx_ids, feins, employer_
   let!(:organization_feins) { double(:organization,  employer_profile: employer_profile, fein: "987") }
 
   before :each do
-   $stdout = StringIO.new
-
-   allow(ShopNoticesNotifierJob).to receive(:perform_later).and_return(true)
-  end
-
-  after(:each) do
-    Rake::Task['notice:shop_employer_notice_event'].reenable
+    $stdout = StringIO.new
+   ActiveJob::Base.queue_adapter = :test
   end
 
   after(:all) do
@@ -25,44 +20,52 @@ RSpec.describe 'Generate notices to employer by taking hbx_ids, feins, employer_
 
   context "should not Trigger notice" do
     it "When event name is not specified" do
+      ENV['event'] = nil
+      ENV['employer_ids'] = employer_profile.id
       allow(EmployerProfile).to receive(:find).with(employer_profile.id).and_return(employer_profile)
-      Rake::Task["notice:shop_employer_notice_event"].invoke(event: nil, employer_ids: employer_profile.id)
-      expect(ShopNoticesNotifierJob).to have_received(:perform_later).exactly(0).times
+      Rake::Task["notice:shop_employer_notice_event"].invoke
+      expect($stdout.string).to match(/Please specify the type of event name/)
+
+      # expect(ActiveJob::Base.queue_adapter.enqueued_jobs.count).to eq 1
+      # expect {
+      #   ShopNoticesNotifierJob.perform_later("rspec-id","rspec-event")
+      # }.to have_enqueued_job
     end
   end
 
   context "Trigger Notice for 2 employers" do
-    before do
+    it "when multiple hbx_ids input is given" do
+      ENV['event'] = "rspec-event"
+      ENV['hbx_ids'] = "1231 131323"
       allow(Organization).to receive(:where).with(hbx_id: "1231").and_return(organization)
       allow(Organization).to receive(:where).with(hbx_id: "131323").and_return(organization_hbx)
       allow(organization).to receive_message_chain("first.employer_profile") { employer_profile }
       allow(organization_hbx).to receive_message_chain("first.employer_profile") { employer_profile }
-      Rake::Task["notice:shop_employer_notice_event"].invoke(event: 'rspec-event', hbx_ids: '1231 131323')
-    end
-    it "when multiple hbx_ids input is given" do
-      expect(ShopNoticesNotifierJob).to have_received(:perform_later).exactly(2).times
+      Rake::Task["notice:shop_employer_notice_event"].invoke
+      expect(ActiveJob::Base.queue_adapter.enqueued_jobs.count).to eq 2
     end
   end
 
   context "Trigger Notice" do
-    before do
+    it "When organization fein is given" do
+      ENV['event'] = "rspec-event"
+      ENV['feins'] = "987"
       allow(Organization).to receive(:where).with(fein: "987").and_return(organization_feins)
       allow(organization_feins).to receive_message_chain("first.employer_profile") { employer_profile }
-      Rake::Task["notice:shop_employer_notice_event"].invoke(event: 'rspec-event', feins: '987')
-    end
-    it "When organization fein is given" do
-      expect(ShopNoticesNotifierJob).to have_received(:perform_later).exactly(1).times
+      Rake::Task["notice:shop_employer_notice_event"].invoke
+      expect(ActiveJob::Base.queue_adapter.enqueued_jobs.count).to eq 1
     end
   end
 
   context " Trigger Notice " do
-    before do
+    it "only once when fein and hbx_id is given" do
+      ENV['event'] = "rspec-event"
+      ENV['feins'] = "123123"
+      ENV['hbx_ids'] = "1231"
       allow(Organization).to receive(:where).with(hbx_id: "1231").and_return(organization)
       allow(organization).to receive_message_chain("first.employer_profile") { employer_profile }
-      Rake::Task["notice:shop_employer_notice_event"].invoke(event: 'rspec-event', feins: '123123', hbx_ids: '1231')
-    end
-    it "only once when fein and hbx_id is given" do
-      expect(ShopNoticesNotifierJob).to have_received(:perform_later).exactly(1).times
+      Rake::Task["notice:shop_employer_notice_event"].invoke
+      expect(ActiveJob::Base.queue_adapter.enqueued_jobs.count).to eq 1
     end
   end
-end
+  end
