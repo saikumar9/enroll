@@ -3,7 +3,7 @@ module Config::SiteHelper
   def site_redirect_on_timeout_route
     Settings.site.curam_enabled? ? SamlInformation.iam_login_url : new_user_session_path
   end
-  
+
   def site_byline
     Settings.site.byline
   end
@@ -14,6 +14,10 @@ module Config::SiteHelper
 
   def site_website_name
     Settings.site.website_name
+  end
+
+  def site_website_link
+    link_to site_website_name, site_website_name
   end
 
   def site_find_expert_link
@@ -44,10 +48,6 @@ module Config::SiteHelper
     Settings.site.policies_url
   end
 
-  def link_to_site_business_resource_center
-    link_to "Business Resource Center", site_business_resource_center_url
-  end  
-
   def site_help_url
     Settings.site.help_url
   end
@@ -72,16 +72,16 @@ module Config::SiteHelper
     Settings.site.short_name
   end
 
+  def site_long_name
+    Settings.site.long_name
+  end
+
   def site_registration_path(resource_name, params)
-    Settings.site.registration_path.present? ? Settings.site.registration_path : new_registration_path(resource_name, :invitation_id => params[:invitation_id])
-  end
-
-  def site_long_name
-    Settings.site.long_name
-  end
-
-  def site_long_name
-    Settings.site.long_name
+    if Settings.site.registration_path.present? && ENV['AWS_ENV'] == 'prod'
+       Settings.site.registration_path
+    else
+      new_registration_path(resource_name, :invitation_id => params[:invitation_id])
+    end
   end
 
   def site_broker_quoting_enabled?
@@ -120,10 +120,6 @@ module Config::SiteHelper
     Settings.site.use_default_devise_path
   end
 
-  def site_main_web_address_url
-    Settings.site.main_web_address_url
-  end
-
   def find_your_doctor_url
     Settings.site.shop_find_your_doctor_url
   end
@@ -146,10 +142,6 @@ module Config::SiteHelper
     
   def site_employer_application_deadline_link
     Settings.site.employer_application_deadline_link
-  end
-
-  def site_website_address
-    link_to site_website_name, site_main_web_address_url
   end
 
   def site_non_discrimination_complaint_url
