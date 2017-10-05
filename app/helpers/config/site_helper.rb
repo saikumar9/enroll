@@ -3,7 +3,7 @@ module Config::SiteHelper
   def site_redirect_on_timeout_route
     Settings.site.curam_enabled? ? SamlInformation.iam_login_url : new_user_session_path
   end
-  
+
   def site_byline
     Settings.site.byline
   end
@@ -15,7 +15,7 @@ module Config::SiteHelper
   def site_website_name
     Settings.site.website_name
   end
-  
+
   def site_website_link
     link_to site_website_name, site_website_name
   end
@@ -77,7 +77,11 @@ module Config::SiteHelper
   end
 
   def site_registration_path(resource_name, params)
-    Settings.site.registration_path.present? ? Settings.site.registration_path : new_registration_path(resource_name, :invitation_id => params[:invitation_id])
+    if Settings.site.registration_path.present? && ENV['AWS_ENV'] == 'prod'
+       Settings.site.registration_path
+    else
+      new_registration_path(resource_name, :invitation_id => params[:invitation_id])
+    end
   end
 
   def site_broker_quoting_enabled?
