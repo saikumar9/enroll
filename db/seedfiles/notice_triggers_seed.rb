@@ -795,7 +795,7 @@ shop_notice_triggers = [
                 }
             }
         ]
-    }
+    },
   # {
   #   hbx_id: 'SHOP27',
   #   title: 'Final Reminder to publish Application',
