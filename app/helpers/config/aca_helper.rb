@@ -60,6 +60,10 @@ module Config::AcaHelper
     @offers_nationwide_plans ||= Settings.aca.nationwide_markets
   end
 
+  def check_plan_options_title
+    Settings.site.plan_options_title_for_ma
+  end
+
   def fetch_plan_title_for_sole_source
     Settings.plan_option_titles.sole_source
   end
