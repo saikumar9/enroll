@@ -28,6 +28,7 @@ site:
   broker_quoting_enabled: false
   broker_enabled: false
   use_default_devise_path: true
+  plan_options_title_for_ma: true
   create_routes: ['/insured/employee/privacy','/employers/employer_profiles/new']
   sign_in_routes: ['/families/home']
   main_web_address_text: "MAhealthconnector.org"
@@ -79,6 +80,11 @@ contact_center:
     phone_2: "1-800-368-1019"
     phone_3: "800-537-7697"
     complaint_url: "https://www.hhs.gov/civil-rights/filing-a-complaint"
+
+plan_option_titles:
+  sole_source: 'One Plan'
+  metal_level: 'One Level'
+  single_carrier: 'One Carrier'
 
 notices:
   mailing_address:
