@@ -17,6 +17,7 @@ module Insured::EmployeeRolesHelper
   end
 
   def composite_relationship_check(offered_relationship_benefits=[], family_member, new_effective_on)
+    binding.pry
     direct_realation_to_primary = family_member.primary_relationship
 
     relationship = CompositeRatedPlanCostDecorator.benefit_relationship(direct_realation_to_primary)
