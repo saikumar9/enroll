@@ -51,7 +51,8 @@ describe ::Importers::Mhc::ConversionEmployerPlanYearCreate, dbclean: :after_eac
 
   context "provided with employer date" do
     before do
-      @employer = EmployerProfile.find_by_fein(fein)
+      @organization = Organization.where(fein: fein).first
+      @employer = @organization.employer_profile if @organization #EmployerProfile.find_by_fein(fein)
       # need to understand how service area been being mapped.
       # allow(CarrierProfile).to receive(:carrier_profile_service_area_pairs_for).with(@employer).and_return([carrier_profile.id, @employer.service_areas.first.service_area_id])
     end
