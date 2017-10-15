@@ -78,7 +78,7 @@ class CarrierProfile
        end
        acc
      end
-     if employer_profile
+     if employer_profile.present?
       employer_profile.service_areas.map do |service_area|
        [hios_carrier_id_mapping[service_area.issuer_hios_id], service_area.service_area_id]
       end.uniq
