@@ -1027,7 +1027,7 @@ class EmployerProfile
 
   def service_areas
     if use_simple_employer_calculation_model?
-      return []
+      return nil
     end
     primary_office_location = organization.primary_office_location
     CarrierServiceArea.service_areas_for(office_location: primary_office_location)
@@ -1041,7 +1041,10 @@ class EmployerProfile
     CarrierServiceArea.service_areas_available_on(primary_office_location.address, date.year)
   end
 
-  def service_area_ids    
+  def service_area_ids
+    if use_simple_employer_calculation_model?
+      return nil
+    end    
     service_areas.collect { |service_area| service_area.service_area_id }.uniq
   end
 
