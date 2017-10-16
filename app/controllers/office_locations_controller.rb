@@ -16,7 +16,6 @@ class OfficeLocationsController < ApplicationController
     @office_location = OfficeLocation.new
     @office_location.build_address
     @office_location.build_phone
-    @broker_agency = params[:broker_agency]
 
     respond_to do |format|
       format.js
