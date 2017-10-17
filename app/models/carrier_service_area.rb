@@ -41,12 +41,20 @@ class CarrierServiceArea
     end
 
     def service_areas_for(office_location:)
+      puts "service areas:"
+      CarrierServiceArea.all.each do |csa|
+        puts "for hios: #{csa.issuer_hios_id}"
+        puts "for zip: #{csa.service_area_zipcode}"
+      end
       address = office_location.address
       return([]) unless address.state.to_s.downcase == aca_state_abbreviation.to_s.downcase
       areas_valid_for_zip_code(zip_code: address.zip)
     end
 
     def service_areas_for_carrier(carrier_profile)
+      CarrierServiceArea.all.each do |csa|
+        puts csa.issuer_hios_id
+      end
       where(issuer_hios_id: carrier_profile.issuer_hios_ids)
     end
 
