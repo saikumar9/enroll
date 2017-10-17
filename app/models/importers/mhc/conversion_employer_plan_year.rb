@@ -33,11 +33,6 @@ module Importers::Mhc
 
     def service_area_plan_hios_ids
       employer_profile = find_employer
-      puts "Employer Profile:"
-      puts employer_profile.fein
-      carrier = find_carrier
-      puts "carrier"
-      carrier.issuer_hios_ids.each { |hios| pp hios }
 
       profile_and_service_area_pairs = CarrierProfile.carrier_profile_service_area_pairs_for(employer_profile)
       Plan.valid_shop_health_plans_for_service_area("carrier", carrier.id, calculated_coverage_start.year, profile_and_service_area_pairs.select { |pair| pair.first == carrier.id }).pluck(:hios_id)
