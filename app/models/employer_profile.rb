@@ -1030,8 +1030,6 @@ class EmployerProfile
       return nil
     end
     primary_office_location = organization.primary_office_location
-    puts "primary office location:"
-    puts primary_office_location.address.to_s
     CarrierServiceArea.service_areas_for(office_location: primary_office_location)
   end
 
