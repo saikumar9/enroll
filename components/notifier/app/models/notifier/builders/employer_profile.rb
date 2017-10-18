@@ -170,7 +170,7 @@ module Notifier
 
     def plan_year_binder_payment_due_date
       if current_plan_year.present?
-        merge_model.plan_year.renewal_py_submit_due_date = format_date(PlanYear.map_binder_payment_due_date_by_start_on(current_plan_year.start_on))
+        merge_model.plan_year.binder_payment_due_date = format_date(PlanYear.map_binder_payment_due_date_by_start_on(current_plan_year.start_on))
       end
     end
 
