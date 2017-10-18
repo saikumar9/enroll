@@ -3,6 +3,7 @@ module Observers
 
     PLANYEAR_NOTICE_EVENTS = [
       :renewal_application_created,
+      :renewal_group_notice,
       :initial_application_submitted,
       :renewal_application_submitted,
       :renewal_application_autosubmitted,
@@ -20,6 +21,10 @@ module Observers
         plan_year = new_model_event.klass_instance
 
         if new_model_event.event_key == :intial_application_submitted
+        end
+
+        if new_model_event.event_key == :renewal_group_notice
+          trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "renewal_group_notice")
         end
 
         if new_model_event.event_key == :ineligible_initial_application_submitted
