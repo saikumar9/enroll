@@ -46,6 +46,7 @@ describe ::Importers::Mhc::ConversionEmployerPlanYearCreate, dbclean: :after_eac
     importer = Importers::Mhc::ConversionEmployerSet.new(file_name, out_stream, registered_on.strftime('%Y-%m-%d'))
     importer.import!
     out_stream.rewind
+    allow(employer).to receive(:service_areas).and_return([carrier_one_service_area])
   end
 
   context "provided with employer date" do
