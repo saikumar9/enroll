@@ -92,7 +92,7 @@ namespace :load_rating_factors do
   def number_of_carriers
     case(@year)
     when 2017
-      return 4
+      return 8
     when 2018
       return 8
     end
