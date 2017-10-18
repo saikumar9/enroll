@@ -725,7 +725,7 @@ class EmployerProfile
               end
             end
           end
-        end     
+        end
 
         #initial Employer's missing binder payment due date notices to Employer's and active Employee's.
         binder_next_day = PlanYear.calculate_open_enrollment_date(TimeKeeper.date_of_record.next_month.beginning_of_month)[:binder_payment_due_date].next_day
@@ -1044,7 +1044,7 @@ class EmployerProfile
   def service_area_ids
     if use_simple_employer_calculation_model?
       return nil
-    end    
+    end
     service_areas.collect { |service_area| service_area.service_area_id }.uniq
   end
 

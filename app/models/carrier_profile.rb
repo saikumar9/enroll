@@ -71,18 +71,16 @@ class CarrierProfile
     end
 
     def carrier_profile_service_area_pairs_for(employer_profile)
-     hios_carrier_id_mapping = Organization.where("carrier_profile" => {"$exists" => true}).inject({}) do |acc, org|
-       cp = org.carrier_profile
-       cp.issuer_hios_ids.each do |ihid|
-         acc[ihid] = cp.id
-       end
-       acc
-     end
-     if employer_profile
+      hios_carrier_id_mapping = Organization.where("carrier_profile" => {"$exists" => true}).inject({}) do |acc, org|
+        cp = org.carrier_profile
+        cp.issuer_hios_ids.each do |ihid|
+          acc[ihid] = cp.id
+        end
+        acc
+      end
       employer_profile.service_areas.map do |service_area|
        [hios_carrier_id_mapping[service_area.issuer_hios_id], service_area.service_area_id]
       end.uniq
-     end
    end
 
     def first

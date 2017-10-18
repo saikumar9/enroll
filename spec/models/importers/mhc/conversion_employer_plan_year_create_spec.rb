@@ -30,39 +30,33 @@ describe ::Importers::Mhc::ConversionEmployerPlanYearCreate, dbclean: :after_eac
   let!(:default_plan_year_start) { (registered_on + 3.months).prev_year }
 
   let!(:fein) { record_attrs[:fein] }
-  # let!(:employer) { EmployerProfile.find_by_fein(fein) }
+  let(:employer) { EmployerProfile.find_by_fein(fein) }
 
-  let!(:carrier_profile) {FactoryGirl.create(:carrier_profile, with_service_areas: 0, issuer_hios_ids: ['11111'], abbrev: 'BMCHP', offers_sole_source: true)}
-  let!(:carrier_one_service_area) { create(:carrier_service_area, service_area_zipcode: '02108', issuer_hios_id: carrier_profile.issuer_hios_ids.first) }
+  let!(:carrier_profile) {FactoryGirl.create(:carrier_profile, with_service_areas: 0, issuer_hios_ids: ['12345'], abbrev: 'BMCHP', offers_sole_source: true)}
+  let!(:carrier_one_service_area) { create(:carrier_service_area, :for_partial_state, service_area_zipcode: '02743', issuer_hios_id: carrier_profile.issuer_hios_ids.first) }
+
   let!(:plan) { FactoryGirl.create(:plan, carrier_profile: carrier_profile, active_year: default_plan_year_start.year, service_area_id: carrier_one_service_area.service_area_id, hios_id: record_attrs[:single_plan_hios_id]) }
 
   subject { Importers::Mhc::ConversionEmployerPlanYearCreate.new(record_attrs.merge({:default_plan_year_start => default_plan_year_start})) }
-  
+
   let(:out_stream) { StringIO.new }
   let(:file_name) { File.join(Rails.root, "spec", "test_data", "conversion_employers", "mhc_sample_conversion_employers.xlsx") }
 
   before :each do
-    allow(CarrierServiceArea).to receive(:service_areas_for).and_return([carrier_one_service_area])
     importer = Importers::Mhc::ConversionEmployerSet.new(file_name, out_stream, registered_on.strftime('%Y-%m-%d'))
-    # allow(ConversionEmployerCreate).to receive(:new).with(record_attrs.merge({:registered_on => registered_on.strftime('%Y-%m-%d') }))
     importer.import!
     out_stream.rewind
+    allow(employer).to receive(:service_areas).and_return([carrier_one_service_area])
   end
 
   context "provided with employer date" do
-    before do
-      @organization = Organization.where(fein: fein).first
-      @employer = @organization.employer_profile if @organization #EmployerProfile.find_by_fein(fein)
-      # need to understand how service area been being mapped.
-      # allow(CarrierProfile).to receive(:carrier_profile_service_area_pairs_for).with(@employer).and_return([carrier_profile.id, @employer.service_areas.first.service_area_id])
-    end
 
     it "should create plan year" do
-      expect(@employer.present?).to be_truthy
-      expect(@employer.plan_years.empty?).to be_truthy
+      expect(employer.present?).to be_truthy
+      expect(employer.plan_years.empty?).to be_truthy
 
       subject.save
-      employer_profile = @employer.reload
+      employer_profile = employer.reload
       plan_year = employer_profile.plan_years.first
 
       expect(plan_year.present?).to be_truthy
@@ -71,7 +65,7 @@ describe ::Importers::Mhc::ConversionEmployerPlanYearCreate, dbclean: :after_eac
 
     it "should create benefit group with sole source plan offerings" do
       subject.save
-      employer_profile = @employer.reload
+      employer_profile = employer.reload
       plan_year = employer_profile.plan_years.first
       benefit_group = plan_year.benefit_groups.first
 
@@ -79,11 +73,11 @@ describe ::Importers::Mhc::ConversionEmployerPlanYearCreate, dbclean: :after_eac
       expect(benefit_group.elected_plan_ids).to eq [plan.id]
       expect(benefit_group.plan_option_kind).to eq 'sole_source'
     end
-    
+
     it "should create composite tiers" do
       subject.save
 
-      employer_profile = @employer.reload
+      employer_profile = employer.reload
       plan_year = employer_profile.plan_years.first
       benefit_group = plan_year.benefit_groups.first
 

@@ -2,8 +2,8 @@ module Importers::Mhc
   class ConversionEmployerPlanYear < Importers::ConversionEmployerPlanYear
 
     CARRIER_MAPPING = {
-      "bmc healthnet plan"=>"BMCHP", 
-      "fallon health"=>"FCHP", 
+      "bmc healthnet plan"=>"BMCHP",
+      "fallon health"=>"FCHP",
       "health new england"=>"HNE"
     }
 
