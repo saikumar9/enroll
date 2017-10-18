@@ -22,6 +22,10 @@ module Observers
         if new_model_event.event_key == :intial_application_submitted
         end
 
+        if new_model_event.event_key == :renewal_application_submitted
+          trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "renewal_application_published")
+        end
+
         if new_model_event.event_key == :ineligible_initial_application_submitted
           eligibility_warnings = plan_year.application_eligibility_warnings
 
