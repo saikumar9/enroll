@@ -19,15 +19,18 @@ module Observers
 
       if PLANYEAR_NOTICE_EVENTS.include?(new_model_event.event_key)
         plan_year = new_model_event.klass_instance
-
-        if new_model_event.event_key == :intial_application_submitted
-        end
-
+        
         if new_model_event.event_key == :renewal_application_denied
-         errors = plan_year.enrollment_errors
+          errors = plan_year.enrollment_errors
 
           if(errors.include?(:eligible_to_enroll_count) || errors.include?(:non_business_owner_enrollment_count))
-            trigger_notice(plan_year.employer_profile, "renewal_employer_ineligibility_notice")
+            trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "renewal_employer_ineligibility_notice")
+
+            plan_year.employer_profile.census_employees.non_terminated.each do |ce|
+              if ce.employee_role.present?
+                trigger_notice(recipient: ce.employee_role, event_object: plan_year, notice_event: "renewal_employer_ineligibility_notice")
+              end
+            end
           end
         end
         
@@ -35,21 +38,19 @@ module Observers
           trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "renewal_application_published")
         end
 
-        if new_model_event.event_key == :ineligible_initial_application_submitted
-          eligibility_warnings = plan_year.application_eligibility_warnings
-
-          # if (eligibility_warnings.include?(:primary_office_location) || eligibility_warnings.include?(:fte_count))
-            trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "initial_employer_denial")
-          # end
+        if new_model_event.event_key == :renewal_application_created
+          trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "renewal_application_created")
         end
 
-        if new_model_event.event_key == :ineligible_renewal_application_submitted && plan_year.application_eligibility_warnings.include?(:primary_office_location)
-          trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "employer_renewal_eligibility_denial_notice")
-          self.employer_profile.census_employees.non_terminated.each do |ce|
-            trigger_notice(ce.id.to_s, "termination_of_employers_health_coverage")
+        if new_model_event.event_key == :ineligible_renewal_application_submitted
+          if plan_year.application_eligibility_warnings.include?(:primary_office_location)
+            trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "employer_renewal_eligibility_denial_notice")
+
+            plan_year.employer_profile.census_employees.non_terminated.each do |ce|
+              trigger_notice(recipient: ce.employee_role, event_object: plan_year, notice_event: "termination_of_employers_health_coverage")
+            end
           end
         end
-
       end
     end
 
