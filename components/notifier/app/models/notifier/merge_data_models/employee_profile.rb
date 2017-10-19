@@ -8,16 +8,14 @@ module Notifier
     attribute :first_name, String
     attribute :last_name, String
     attribute :mailing_address, MergeDataModels::Address
-    attribute :ivl_sep_begin_date, Date
-    attribute :ivl_sep_end_date, Date
     attribute :employer_name, String
-    attribute :coverage_begin_date, Date
+    # attribute :coverage_begin_date, Date
     attribute :broker, MergeDataModels::Broker
-
     attribute :date_of_hire, Date
     attribute :earliest_coverage_begin_date, Date
     attribute :new_hire_oe_end_date, Date
     attribute :addresses, Array[MergeDataModels::Address]
+    attribute :enrollment, MergeDataModels::Plan
 
   
     def self.stubbed_object
@@ -25,10 +23,8 @@ module Notifier
         notice_date: TimeKeeper.date_of_record.strftime('%m/%d/%Y'),
         first_name: 'John',
         last_name: 'Whitmore',
-        ivl_sep_begin_date: TimeKeeper.date_of_record.strftime('%m/%d/%Y'),
-        ivl_sep_end_date: (TimeKeeper.date_of_record + 60.days).strftime('%m/%d/%Y'),
         employer_name: 'MA Health Connector',
-        coverage_begin_date: TimeKeeper.date_of_record.strftime('%m/%d/%Y'),
+        # coverage_begin_date: TimeKeeper.date_of_record.strftime('%m/%d/%Y'),
         date_of_hire: TimeKeeper.date_of_record.strftime('%m/%d/%Y') ,
         earliest_coverage_begin_date: TimeKeeper.date_of_record.next_month.beginning_of_month.strftime('%m/%d/%Y'),
         new_hire_oe_end_date: (TimeKeeper.date_of_record + 30.days).strftime('%m/%d/%Y')
@@ -36,6 +32,7 @@ module Notifier
       notice.mailing_address = Notifier::MergeDataModels::Address.new
       notice.broker = Notifier::MergeDataModels::Broker.new
       notice.addresses = [ notice.mailing_address ]
+      notice.enrollment = Notifier::MergeDataModels::Plan.new
       notice
     end
 

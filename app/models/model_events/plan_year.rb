@@ -10,13 +10,14 @@ module ModelEvents
       :ineligible_renewal_application_submitted,
       :open_enrollment_began,
       :open_enrollment_ended,
-      :application_denied
+      :application_denied,
+      :renewal_application_denied
     ]
 
     def notify_on_save
       if aasm_state_changed?
 
-        if is_transition_matching?(to: :renewing_draft, from: :draft)
+        if is_transition_matching?(to: :renewing_draft, from: :draft, event: :renew_plan_year)
           is_renewal_application_created = true
         end
 
@@ -50,6 +51,10 @@ module ModelEvents
 
         if is_transition_matching?(to: :application_ineligible, from: :enrolling, event: :advance_date)
           is_application_denied = true
+        end
+
+        if is_transition_matching?(to: :renewing_application_ineligible, from: :renewing_enrolling, event: :advance_date)
+          is_renewal_application_denied = true
         end
       
         # TODO -- encapsulated notify_observers to recover from errors raised by any of the observers
