@@ -64,6 +64,10 @@ module Config::AcaHelper
     Settings.site.plan_options_title_for_ma
   end
 
+  def reference_plans_for_metal_level
+    Settings.aca.reference_carriers_for_metal_level
+  end
+
   def fetch_plan_title_for_sole_source
     Settings.plan_option_titles.sole_source
   end
