@@ -67,9 +67,6 @@ module Notifier
       end
     end
 
-
-    def 
-
     def format_date(date)
       return if date.blank?
       date.strftime("%m/%d/%Y")
