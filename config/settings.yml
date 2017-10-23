@@ -14,10 +14,10 @@ site:
   health_care_website: "www.healthcare.gov"
   health_care_website_url: "https://www.healthcare.gov"
   short_name: "Health Connector"
-  byline: "The Right Place for the Right Plan"
+  byline: "Your Benefits Connection"
   long_name: "Massachusetts Health Connector"
   copyright_period_start: "2017"
-  header_message: "The Right Place for the Right Plan"
+  header_message: "Your Benefits Connection"
   logo_file_name: "mhc_logo.svg"
   s3_prefix: "mhc"
   broker_quoting_enabled: false
