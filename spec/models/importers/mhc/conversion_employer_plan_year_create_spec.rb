@@ -30,6 +30,7 @@ describe ::Importers::Mhc::ConversionEmployerPlanYearCreate, dbclean: :after_eac
   let!(:default_plan_year_start) { (registered_on + 3.months).prev_year }
 
   let!(:fein) { record_attrs[:fein] }
+  let(:employer) { EmployerProfile.find_by_fein(fein) }
 
   let!(:carrier_profile) {FactoryGirl.create(:carrier_profile, with_service_areas: 0, issuer_hios_ids: ['11111'], abbrev: 'NHP', offers_sole_source: true)}
   let!(:carrier_one_service_area) { create(:carrier_service_area, service_area_zipcode: '01862', issuer_hios_id: carrier_profile.issuer_hios_ids.first) }
