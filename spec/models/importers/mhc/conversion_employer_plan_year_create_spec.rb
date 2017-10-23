@@ -32,15 +32,14 @@ describe ::Importers::Mhc::ConversionEmployerPlanYearCreate, dbclean: :after_eac
   let!(:fein) { record_attrs[:fein] }
   let(:employer) { EmployerProfile.find_by_fein(fein) }
 
-  let!(:carrier_profile) {FactoryGirl.create(:carrier_profile, with_service_areas: 0, issuer_hios_ids: ['12345'], abbrev: 'BMCHP', offers_sole_source: true)}
-  let!(:carrier_one_service_area) { create(:carrier_service_area, :for_partial_state, service_area_zipcode: '02743', issuer_hios_id: carrier_profile.issuer_hios_ids.first) }
-
+  let!(:carrier_profile) {FactoryGirl.create(:carrier_profile, with_service_areas: 0, issuer_hios_ids: ['11111'], abbrev: 'NHP', offers_sole_source: true)}
+  let!(:carrier_one_service_area) { create(:carrier_service_area, service_area_zipcode: '01862', issuer_hios_id: carrier_profile.issuer_hios_ids.first) }
   let!(:plan) { FactoryGirl.create(:plan, carrier_profile: carrier_profile, active_year: default_plan_year_start.year, service_area_id: carrier_one_service_area.service_area_id, hios_id: record_attrs[:single_plan_hios_id]) }
 
   subject { Importers::Mhc::ConversionEmployerPlanYearCreate.new(record_attrs.merge({:default_plan_year_start => default_plan_year_start})) }
 
   let(:out_stream) { StringIO.new }
-  let(:file_name) { File.join(Rails.root, "spec", "test_data", "conversion_employers", "mhc_sample_conversion_employers.xlsx") }
+  let(:file_name) { File.join(Rails.root, "spec", "test_data", "conversion_employers", "Employer Full Launch Template_TEST_20171020.xlsx") }
 
   before :each do
     importer = Importers::Mhc::ConversionEmployerSet.new(file_name, out_stream, registered_on.strftime('%Y-%m-%d'))
