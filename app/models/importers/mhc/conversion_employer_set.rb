@@ -24,6 +24,7 @@ module Importers::Mhc
         "Contact Last Name",
         "Contact Email",
         "Contact Phone",
+        "Contact Phone Extension",
         "Enrolled Employee Count",
         "New Hire Coverage Policy",
         "Contact Address 1",
@@ -41,10 +42,16 @@ module Importers::Mhc
         "Plan Name",
         "Plan HIOS Id",
         "Employee Only Rating Tier Contribution",
-        "Employee Only Rating Tier Cost",  
+        "Employee Rating Tier Premium",
+        "Employee And Spouse Rating Tier Offered",
+        "Employee And Spouse Rating Tier Contribution",
+        "Employee And Spouse Rating Tier Premium",
+        "Employee And Dependents Rating Tier Offered",
+        "Employee And Dependents Rating Tier Contribution",
+        "Employee And Dependents Rating Tier Premium",
         "Family Rating Tier",
         "Family Rating Tier Contribution",
-        "Family Rating Tier Cost",
+        "Family Rating Tier Premium",
         "Import Status",
         "Import Details"
       ]
@@ -74,6 +81,7 @@ module Importers::Mhc
         :contact_last_name,
         :contact_email,
         :contact_phone,
+        :contact_phone_extension,
         :enrolled_employee_count,
         :new_hire_count,
         :ignore,
@@ -83,6 +91,8 @@ module Importers::Mhc
         :ignore,
         :broker_name,
         :broker_npn,
+        :ignore,
+        :ignore,
         :ignore,
         :carrier
       ]

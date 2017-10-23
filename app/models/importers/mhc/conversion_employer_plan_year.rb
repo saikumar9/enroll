@@ -3,11 +3,14 @@ module Importers::Mhc
 
     CARRIER_MAPPING = {
       "bmc healthnet plan"=>"BMCHP",
-      "fallon health"=>"FCHP",
-      "health new england"=>"HNE"
+      "fallon community health plan"=>"FCHP",
+      "health new england"=>"HNE",
+      "neighborhood health plan" => "NHP",
+      "harvard pilgrim health care" => "HPHC",
+      "boston medical center health plan" => "BMCHP"
     }
 
-    validate :validate_plan_selection
+    validate :validate_plan_selection, :validate_reference_plan
 
     attr_accessor :employee_only_rt_contribution,
       :employee_only_rt_premium,
@@ -21,8 +24,23 @@ module Importers::Mhc
       :family_rt_contribution,
       :family_rt_premium
 
+    def initialize(opts = {})
+      super(opts)
+    end
+
     def plan_selection=(val)
       @plan_selection = val.to_s.parameterize('_')
+    end
+
+    def validate_reference_plan
+      found_carrier = find_carrier
+      if found_carrier.blank?
+        errors.add(:carrer, "carrier not found")
+        return
+      end
+
+      available_plans = Plan.valid_shop_health_plans("carrier", found_carrier.id, (calculated_coverage_start).year).compact
+      select_reference_plan(available_plans)
     end
 
     def validate_plan_selection

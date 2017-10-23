@@ -5,24 +5,24 @@ describe ::Importers::Mhc::ConversionEmployerPlanYearCreate, dbclean: :after_eac
   let!(:record_attrs) {
     {
       :action=>"Add",
-      :fein=>"512121312",
-      :enrolled_employee_count=>"1",
+      :fein=>"089403883",
+      :enrolled_employee_count=>"2",
       :new_coverage_policy=>"First of the month following 30 days",
-      :coverage_start=>"01/01/2018",
-      :carrier=>"bmc healthnet plan",
+      :coverage_start=>"01/01/2017",
+      :carrier=>"neighborhood health plan",
       :plan_selection=>"Sole Source",
-      :single_plan_hios_id=>"82569MA0200001-01",
-      :employee_only_rt_contribution=>"100",
-      :employee_only_rt_premium=>"450",
-      :employee_and_spouse_rt_offered=>"True",
-      :employee_and_spouse_rt_contribution=>"76",
-      :employee_and_spouse_rt_premium=>"810",
-      :employee_and_one_or_more_dependents_rt_offered=>"False",
-      :employee_and_one_or_more_dependents_rt_contribution=>"75",
-      :employee_and_one_or_more_dependents_rt_premium=>"820",
-      :family_rt_offered=>"False",
-      :family_rt_contribution=>"70",
-      :family_rt_premium=>"850"
+      :single_plan_hios_id=>"41304MA0041055-01",
+      :employee_only_rt_contribution=>"50",
+      :employee_only_rt_premium=>"596.3",
+      :employee_and_spouse_rt_offered=>"false",
+      :employee_and_spouse_rt_contribution=>"50",
+      :employee_and_spouse_rt_premium=>"1192.61",
+      :employee_and_one_or_more_dependents_rt_offered=>"false",
+      :employee_and_one_or_more_dependents_rt_contribution=>"50",
+      :employee_and_one_or_more_dependents_rt_premium=>"1103.16",
+      :family_rt_offered=>"false",
+      :family_rt_contribution=>"50",
+      :family_rt_premium=>"1699.46"
     }
   }
 
@@ -30,17 +30,15 @@ describe ::Importers::Mhc::ConversionEmployerPlanYearCreate, dbclean: :after_eac
   let!(:default_plan_year_start) { (registered_on + 3.months).prev_year }
 
   let!(:fein) { record_attrs[:fein] }
-  let(:employer) { EmployerProfile.find_by_fein(fein) }
 
-  let!(:carrier_profile) {FactoryGirl.create(:carrier_profile, with_service_areas: 0, issuer_hios_ids: ['12345'], abbrev: 'BMCHP', offers_sole_source: true)}
-  let!(:carrier_one_service_area) { create(:carrier_service_area, :for_partial_state, service_area_zipcode: '02743', issuer_hios_id: carrier_profile.issuer_hios_ids.first) }
-
+  let!(:carrier_profile) {FactoryGirl.create(:carrier_profile, with_service_areas: 0, issuer_hios_ids: ['11111'], abbrev: 'NHP', offers_sole_source: true)}
+  let!(:carrier_one_service_area) { create(:carrier_service_area, service_area_zipcode: '01862', issuer_hios_id: carrier_profile.issuer_hios_ids.first) }
   let!(:plan) { FactoryGirl.create(:plan, carrier_profile: carrier_profile, active_year: default_plan_year_start.year, service_area_id: carrier_one_service_area.service_area_id, hios_id: record_attrs[:single_plan_hios_id]) }
 
   subject { Importers::Mhc::ConversionEmployerPlanYearCreate.new(record_attrs.merge({:default_plan_year_start => default_plan_year_start})) }
 
   let(:out_stream) { StringIO.new }
-  let(:file_name) { File.join(Rails.root, "spec", "test_data", "conversion_employers", "mhc_sample_conversion_employers.xlsx") }
+  let(:file_name) { File.join(Rails.root, "spec", "test_data", "conversion_employers", "Employer Full Launch Template_TEST_20171020.xlsx") }
 
   before :each do
     importer = Importers::Mhc::ConversionEmployerSet.new(file_name, out_stream, registered_on.strftime('%Y-%m-%d'))
@@ -50,6 +48,9 @@ describe ::Importers::Mhc::ConversionEmployerPlanYearCreate, dbclean: :after_eac
   end
 
   context "provided with employer date" do
+    before do
+      @employer = EmployerProfile.find_by_fein(fein)
+    end
 
     it "should create plan year" do
       expect(employer.present?).to be_truthy
@@ -89,7 +90,7 @@ describe ::Importers::Mhc::ConversionEmployerPlanYearCreate, dbclean: :after_eac
       expect(employee_tier.final_tier_premium).to eq record_attrs[:employee_only_rt_premium].to_f
 
       employee_and_spouse_tier = composite_tiers.where(composite_rating_tier: "employee_and_spouse").first
-      expect(employee_and_spouse_tier.offered).to be_truthy
+      expect(employee_and_spouse_tier.offered).to be_falsey
       expect(employee_and_spouse_tier.employer_contribution_percent).to eq record_attrs[:employee_and_spouse_rt_contribution].to_f
       expect(employee_and_spouse_tier.final_tier_premium).to eq record_attrs[:employee_and_spouse_rt_premium].to_f
 

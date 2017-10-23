@@ -24,6 +24,7 @@ module Importers::Mhc
         "Contact Last Name",
         "Contact Email",
         "Contact Phone",
+        "Contact Phone Extension",
         "Enrolled Employee Count",
         "New Hire Coverage Policy",
         "Contact Address 1",
@@ -41,14 +42,14 @@ module Importers::Mhc
         "Plan Name",
         "Plan HIOS Id",
         "Employee Only Rating Tier Contribution",
-        "Employee Only Rating Tier Premium",
+        "Employee Rating Tier Premium",
         "Employee And Spouse Rating Tier Offered",
         "Employee And Spouse Rating Tier Contribution",
-        "Employee And Spouse Rating Tier Premium",  
+        "Employee And Spouse Rating Tier Premium",
         "Employee And Dependents Rating Tier Offered",
         "Employee And Dependents Rating Tier Contribution",
-        "Employee And Dependents Rating Tier Premium",    
-        "Family Rating Tier Offered",
+        "Employee And Dependents Rating Tier Premium",
+        "Family Rating Tier",
         "Family Rating Tier Contribution",
         "Family Rating Tier Premium",
         "Import Status",
@@ -80,8 +81,11 @@ module Importers::Mhc
       :ignore,
       :ignore,
       :ignore,
+      :ignore,
       :enrolled_employee_count,
       :new_coverage_policy,
+      :ignore,
+      :ignore,
       :ignore,
       :ignore,
       :ignore,
@@ -121,9 +125,9 @@ module Importers::Mhc
       the_action = record_attrs[:action].blank? ? "add" : record_attrs[:action].to_s.strip.downcase
       case the_action
       when "update"
-        ConversionEmployerPlanYearUpdate.new(record_attrs.merge({:default_plan_year_start => @default_plan_year_start}))
+        ::Importers::Mhc::ConversionEmployerPlanYearUpdate.new(record_attrs.merge({:default_plan_year_start => @default_plan_year_start}))
       else
-        ConversionEmployerPlanYearCreate.new(record_attrs.merge({:default_plan_year_start => @default_plan_year_start}))
+        ::Importers::Mhc::ConversionEmployerPlanYearCreate.new(record_attrs.merge({:default_plan_year_start => @default_plan_year_start}))
       end
     end
   end
