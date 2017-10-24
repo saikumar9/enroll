@@ -497,6 +497,7 @@ shop_notice_triggers = [
           }
       ]
     },
+
     # {
     #   hbx_id: 'SHOP27',
     #   title: 'Final Reminder to publish Application',
@@ -519,7 +520,7 @@ shop_notice_triggers = [
     #   ]
     # },
 
-  {
+    {
     hbx_id: 'SHOP_M015',
     title: 'Notice of Low Enrollment - Action Needed',
     description: 'Notifies all the employers who doesnt meet minimum participation requirement',
@@ -784,7 +785,6 @@ shop_notice_triggers = [
      ]
    },
 
-
     {
         hbx_id: 'SHOP45',
         title: 'You have been Hired as a Broker',
@@ -794,30 +794,9 @@ shop_notice_triggers = [
         notice_triggers: [
            {
               name: 'Broker Hired',
-              notice_template: 'notices/shop_broker_notices/broker_hired_notice',
+              notice_template: 'notices/shop_broker_notices/broker_hired_notice.html.erb',
               notice_builder: 'ShopBrokerNotices::BrokerHiredNotice',
               mpi_indicator: 'SHOP_M045',
-              notice_trigger_element_group: {
-                market_places: ['shop'],
-                primary_recipients: ["broker"],
-                primary_recipient_delivery_method: ["secure_message"],
-                secondary_recipients: []
-              }
-            }
-        ]
-    },
-    {
-        hbx_id: 'SHOP47',
-        title: 'You have been removed as a Broker',
-        description: "When a broker is fired, a notice is sent to the broker's broker mail inbox alerting them of the hire.",
-        resource_name: 'broker_role',
-        event_name: 'broker_agency_fired_confirmation',
-        notice_triggers: [
-           {
-              name: 'Broker Agency Fired',
-              notice_template: 'notices/shop_broker_agency_notices/broker_agency_fired_notice',
-              notice_builder: 'ShopBrokerAgencyNotices::BrokerAgencyFiredNotice',
-              mpi_indicator: 'SHOP_M047',
               notice_trigger_element_group: {
               market_places: ['shop'],
               primary_recipients: ["broker"],
@@ -826,8 +805,9 @@ shop_notice_triggers = [
             }
           }
       ]
-  },
-  {
+    },
+
+    {
         hbx_id: 'SHOP44',
         title: 'You have been Hired as a Broker',
         description: "When a broker is hired to a group, a notice is sent to the broker's broker mail inbox alerting them of the hire.",
@@ -835,8 +815,8 @@ shop_notice_triggers = [
         event_name: 'broker_agency_hired_confirmation',
         notice_triggers: [
            {
-              name: 'Broker Agency Hired',
-              notice_template: 'notices/shop_broker_agency_notices/broker_agency_hired_notice',
+              name: 'Broker Hired',
+              notice_template: 'notices/shop_broker_agency_notices/broker_agency_hired_notice.html.erb',
               notice_builder: 'ShopBrokerAgencyNotices::BrokerAgencyHiredNotice',
               mpi_indicator: 'SHOP_M044',
               notice_trigger_element_group: {
@@ -848,6 +828,7 @@ shop_notice_triggers = [
             }
         ]
     },
+
     {
         hbx_id: 'SHOP48',
         title: 'You have been removed as a Broker',
@@ -935,6 +916,7 @@ shop_notice_triggers = [
             }
         ]
     },
+
     {
       hbx_id: 'SHOP_M070',
       title: 'Employee Enrollment Confirmation',
@@ -1089,12 +1071,12 @@ shop_notice_triggers = [
         ]
     },
 
-    {                
+    {
         hbx_id: 'SHOP59',
         title: 'Termination of Employer’s Health Coverage Offered Through The Health Connector',
         description: 'When an initial group misses the binder payment deadline this notice is sent to employees to let them know the group will not be offering coverage',
         resource_name: 'employee_role',
-        event_name: 'ee_ers_plan_year_will_not_be_written_notice', 
+        event_name: 'ee_ers_plan_year_will_not_be_written_notice',
         notice_triggers: [
           {
             name: " Notice to EEs that ER’s plan year will not be written",
@@ -1106,8 +1088,9 @@ shop_notice_triggers = [
                   primary_recipients: ["employee"],
                   primary_recipient_delivery_method: ["secure_message"],
                   secondary_recipients: []
+
+                }
             }
-          }
         ]
     },
 
@@ -1490,4 +1473,3 @@ puts "::: created Shop notice triggers ApplicationEventKinds Successfully :::"
 # ivl_notice_triggers.each do |trigger_params|
 #   ApplicationEventKind.create(trigger_params)
 # end
-

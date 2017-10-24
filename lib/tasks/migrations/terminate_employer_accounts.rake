@@ -55,7 +55,7 @@ namespace :migrations do
             send_notice_to_employees(organization)
           end
         end
-      end
+    end
 
       # organization.employer_profile.census_employees.non_terminated.each do |census_employee|
       #   if census_employee.employee_role_linked?
@@ -124,7 +124,7 @@ def enrollments_for_plan_year(plan_year)
 end
 
 def send_notice_to_employer(org)
-  puts "Notification generated for employer"
+  puts "group_advance_termination_confirmation:Notification generated for employer"
   begin
     ShopNoticesNotifierJob.perform_later(org.employer_profile.id.to_s, "group_advance_termination_confirmation")
   rescue Exception => e

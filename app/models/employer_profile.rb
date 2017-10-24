@@ -154,8 +154,8 @@ class EmployerProfile
     active_broker_agency_account.save!
     employer_broker_fired
     notify_broker_terminated
-    broker_agency_fired_confirmation
     broker_fired_confirmation_to_broker
+    broker_agency_fired_confirmation
   end
 
   def employer_broker_fired
@@ -170,7 +170,7 @@ class EmployerProfile
     begin
       trigger_notices("broker_agency_fired_confirmation")
     rescue Exception => e
-      puts "Unable to deliver broker agency fired confirmation notice to #{active_broker_agency_account.legal_name} due to #{e}" unless Rails.env.test?
+      puts "Unable to deliver broker agency fired confirmation notice to #{@employer_profile.broker_agency_profile.legal_name} due to #{e}" unless Rails.env.test?
     end
   end
 
@@ -719,7 +719,7 @@ class EmployerProfile
           if (new_date + 2.days == plan_year_due_date)
             initial_employers_reminder_to_publish(start_on_1).each do |organization|
               begin
-                organization.employer_profile.trigger_notices("initial_employer_final_reminder_to_publish_plan_year")
+                organization.employee_profile.trigger_notices("initial_employer_final_reminder_to_publish_plan_year")
               rescue Exception => e
                 puts "Unable to send final reminder notice to publish plan year to #{organization.legal_name} due to following errors {e}"
               end
