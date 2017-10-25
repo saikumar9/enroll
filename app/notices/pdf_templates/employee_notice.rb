@@ -4,6 +4,7 @@ module PdfTemplates
 
     attribute :notification_type, String
     attribute :subject, String
+    attribute :mpi_indicator, String
     attribute :first_name, String
     attribute :last_name, String
     attribute :primary_fullname, String

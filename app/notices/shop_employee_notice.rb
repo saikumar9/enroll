@@ -29,6 +29,7 @@ class ShopEmployeeNotice < Notice
   def build
     notice.notification_type = self.event_name
     notice.subject = self.subject
+    notice.mpi_indicator = self.mpi_indicator
     notice.first_name = census_employee.first_name
     notice.last_name = census_employee.last_name
     notice.primary_fullname = census_employee.employee_role.person.full_name

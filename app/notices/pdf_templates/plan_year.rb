@@ -13,6 +13,7 @@ module PdfTemplates
     attribute :total_enrolled_count, Integer
     attribute :eligible_to_enroll_count, Integer
     attribute :binder_payment_total, Money
-    
+    attribute :terminated_on, Date
+    attribute :binder_payment_total, Money
   end
 end
