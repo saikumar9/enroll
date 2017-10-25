@@ -60,6 +60,30 @@ module Config::AcaHelper
     @offers_nationwide_plans ||= Settings.aca.nationwide_markets
   end
 
+  def check_plan_options_title
+    Settings.site.plan_options_title_for_ma
+  end
+
+  def reference_plans_for_metal_level
+    Settings.aca.reference_carriers_for_metal_level
+  end
+
+  def fetch_plan_title_for_sole_source
+    Settings.plan_option_titles.sole_source
+  end
+
+  def sole_source_active_year
+    Settings.plan_option_titles.sole_source_active
+  end
+
+  def fetch_plan_title_for_metal_level
+    Settings.plan_option_titles.metal_level
+  end
+
+  def fetch_plan_title_for_single_carrier
+    Settings.plan_option_titles.single_carrier
+  end
+
   def carrier_special_plan_identifier_namespace
     @carrier_special_plan_identifier_namespace ||= Settings.aca.carrier_special_plan_identifier_namespace
   end
