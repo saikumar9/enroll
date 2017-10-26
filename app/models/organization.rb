@@ -265,8 +265,13 @@ class Organization
     end
     Rails.cache.fetch(cache_string, expires_in: 2.hour) do
       Organization.exists(carrier_profile: true).inject({}) do |carrier_names, org|
+        ## don't enable Tufts for now
+        next carrier_names if org.fein == '800721489'
         unless (filters[:primary_office_location].nil?)
           next carrier_names unless CarrierServiceArea.valid_for?(office_location: office_location, carrier_profile: org.carrier_profile)
+          if filters[:active_year]
+            next carrier_names if CarrierServiceArea.valid_for_carrier_on(address: office_location.address, carrier_profile: org.carrier_profile, year: filters[:active_year]).empty?
+          end
         end
         if (filters[:sole_source_only]) ## Only sole source carriers requested
           next carrier_names unless org.carrier_profile.offers_sole_source?  # skip carrier unless it is a sole source provider
@@ -280,17 +285,14 @@ class Organization
         if (filters[:selected_carrier_level])
           case filters[:selected_carrier_level]
           when 'single_carrier'
-            offered_plans = Plan.check_plan_offerings_for_single_carrier
+            carrier_plans.select! { |plan| plan.is_vertical }
           when 'metal_level'
-            offered_plans = Plan.check_plan_offerings_for_metal_level
+            carrier_plans.select! { |plan| plan.is_horizontal }
           when 'sole_source'
-            offered_plans = Plan.check_plan_offerings_for_sole_source
+            carrier_plans.select! { |plan| plan.is_sole_source }
           end
-          combined_plans = offered_plans.to_a & carrier_plans
-          carrier_names[org.carrier_profile.id.to_s] = org.carrier_profile.legal_name if combined_plans.any?
-        else
-          carrier_names[org.carrier_profile.id.to_s] = org.carrier_profile.legal_name if carrier_plans.any?
         end
+        carrier_names[org.carrier_profile.id.to_s] = org.carrier_profile.legal_name if carrier_plans.any?
         carrier_names
       end
     end

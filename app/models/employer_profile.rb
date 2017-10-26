@@ -593,7 +593,7 @@ class EmployerProfile
       }
     })
     end
-    
+
     def initial_employers_enrolled_plan_year_state
       Organization.where(:"employer_profile.plan_years" =>
         { :$elemMatch => {
@@ -738,7 +738,7 @@ class EmployerProfile
                 end
             end
           end
-        end 
+        end
       end
 
       # Employer activities that take place monthly - on first of month
