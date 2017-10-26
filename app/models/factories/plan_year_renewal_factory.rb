@@ -97,35 +97,34 @@ module Factories
       elsif active_group.plan_option_kind == "metal_level"
         Plan.by_active_year(start_on_year).shop_market.health_coverage.by_metal_level(active_group.reference_plan.metal_level).and(hios_id: /-01/).map(&:id)
       elsif active_group.plan_option_kind == "sole_source"        
-        renewal_reference_plan = Plan.find(active_group.reference_plan_id).renewal_plan(@renewal_plan_year.start_on)
-        plans = [renewal_reference_plan.id]
+        reference_plan_id = Plan.find(active_group.reference_plan_id).renewal_plan_id
+        plans = [reference_plan_id]
       else
         Plan.where(:id.in => active_group.elected_plan_ids).collect{|plan| plan.renewal_plan(@renewal_plan_year.start_on)}.compact.map(&:id)
       end
     end
 
     def service_area_plan_hios_ids(carrier_id)
-      profile_and_service_area_pairs = CarrierProfile.carrier_profile_service_area_pairs_for(@employer_profile, @renewal_plan_year.start_on.year)
-      Plan.valid_shop_health_plans_for_service_area("carrier", carrier_id, @renewal_plan_year.start_on.year, profile_and_service_area_pairs).pluck(:hios_id)
+      employer_profile = find_employer
+      profile_and_service_area_pairs = CarrierProfile.carrier_profile_service_area_pairs_for(employer_profile, @renewal_plan_year.start_on.year)
+      Plan.valid_shop_health_plans_for_service_area("carrier", carrier_id, @renewal_plan_year.start_on.year, profile_and_service_area_pairs.select { |pair| pair.first == carrier_id }).pluck(:hios_id)
     end
 
     def clone_benefit_group(active_group)
       index = @active_plan_year.benefit_groups.index(active_group) + 1
       new_year = @active_plan_year.start_on.year + 1
-      renewal_plan = Plan.find(active_group.reference_plan_id).renewal_plan(@renewal_plan_year.start_on)
+      reference_plan_id = Plan.find(active_group.reference_plan_id).renewal_plan_id
 
-      if renewal_plan.blank?
-        raise PlanYearRenewalFactoryError, "Unable to find renewal for referenence plan: Id #{active_group.reference_plan.id} Year #{active_group.reference_plan.active_year} Hios #{active_group.reference_plan.hios_id}"
-      end
-
-      reference_plan_id = renewal_plan.id
- 
       if active_group.sole_source?
         service_area_hios = service_area_plan_hios_ids(active_group.reference_plan.carrier_profile_id)
 
-        if !service_area_hios.include?(renewal_plan.hios_id)
+        if !service_area_hios.include?(reference_plan_id)
           raise PlanYearRenewalFactoryError, "Unable to renew. renewal plan for referenence plan: #{active_group.reference_plan.id} not offered in employer service areas"
         end
+      end
+
+      if reference_plan_id.blank?
+        raise PlanYearRenewalFactoryError, "Unable to find renewal for referenence plan: Id #{active_group.reference_plan.id} Year #{active_group.reference_plan.active_year} Hios #{active_group.reference_plan.hios_id}"
       end
 
       elected_plan_ids = renewal_elected_plan_ids(active_group)
