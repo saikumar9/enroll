@@ -201,7 +201,7 @@ module Importers
     end
 
     def employer_attestation_attributes
-      EmployerAttestation.new(aasm_state: "approved")
+      EmployerAttestation.new(aasm_state: "submitted")
     end
 
     def map_poc(emp)
