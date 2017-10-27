@@ -78,8 +78,9 @@ FactoryGirl.define do
       end_date = renewing ? Settings.aca.shop_market.renewal_application.monthly_open_enrollment_end_on : Settings.aca.shop_market.open_enrollment.monthly_end_on
       Date.new(open_enrollment_start_on.year, open_enrollment_start_on.month, end_date)
     end
-
+    
     after(:create) do |custom_plan_year, evaluator|
+      c = CarrierProfile.first
       if evaluator.with_dental
         create(:benefit_group, :with_valid_dental, plan_year: custom_plan_year)
       else
@@ -90,14 +91,13 @@ FactoryGirl.define do
                                                                    description: "My #{Forgery('basic').text(:allow_lower   => false,
                                                                                                             :allow_upper   => false,
                                                                                                             :allow_numeric => true,
-                                                                                                            :allow_special => false, :exactly => 2)} Benefit group")
+                                                                                                            :allow_special => false, :exactly => 2)} Benefit group",
+                                                                    reference_plan_id: Plan.where(carrier_profile_id: c.id).first.id)
       end
     end
   end
 
   factory :notice_benefit_group, class: BenefitGroup do
-    c = CarrierProfile.first
-    pl = Plan.where(carrier_profile_id: c.id).first
     plan_year
     composite_tier_contributions { [
       FactoryGirl.build(:composite_tier_contribution, benefit_group: self),
@@ -118,7 +118,6 @@ FactoryGirl.define do
     description "my first benefit group"
     effective_on_offset 0
     default false
-    reference_plan_id  pl.id
     elected_plan_ids { [ self.reference_plan_id ]}
   end
 end

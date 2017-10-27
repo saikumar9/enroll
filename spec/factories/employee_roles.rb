@@ -5,7 +5,7 @@ FactoryGirl.define do
     association :employer_profile
     sequence(:ssn, 111111111)
     gender "male"
-    dob  {Date.new(1965,1,1)}
+    dob  {Date.new(1964,11,23)}
     hired_on {20.months.ago}
 
   end
