@@ -170,15 +170,26 @@ RSpec.describe Organization, dbclean: :after_each do
 
       context "when limiting carriers to service area and coverage selection level and active year" do
         before do
+<<<<<<< HEAD
           allow(CarrierServiceArea).to receive(:valid_for_carrier_on).and_return([])
           allow(CarrierServiceArea).to receive(:valid_for_carrier_on).with(address: address, carrier_profile: carrier_profile_1, year: 2017).and_return([carrier_one_service_area])
           allow(CarrierServiceArea).to receive(:valid_for_carrier_on).with(address: address, carrier_profile: carrier_profile_1, year: 2018).and_return([carrier_one_service_area])
           allow(CarrierServiceArea).to receive(:valid_for_carrier_on).with(address: address, carrier_profile: sole_source_participater, year: 2018).and_return([carrier_one_service_area])
+=======
+          ##mock things
+>>>>>>> feature-carriers-listed-only-when-available_new
           allow(Plan).to receive(:valid_shop_health_plans).with("carrier", carrier_profile_2.id, 2017).and_return([])
           allow(Plan).to receive(:valid_shop_health_plans).with("carrier", sole_source_participater.id, 2017).and_return([])
           allow(Plan).to receive(:valid_shop_health_plans).with("carrier", sole_source_participater.id, 2018).and_return([carrier_plan])
           allow(Plan).to receive(:valid_shop_health_plans).with("carrier", carrier_profile_1.id, 2017).and_return([carrier_plan])
           allow(Plan).to receive(:valid_shop_health_plans).with("carrier", carrier_profile_1.id, 2018).and_return([carrier_plan])
+<<<<<<< HEAD
+=======
+
+          allow(Plan).to receive(:check_plan_offerings_for_sole_source).and_return([carrier_plan])
+          allow(Plan).to receive(:check_plan_offerings_for_metal_level).and_return([])
+          allow(Plan).to receive(:check_plan_offerings_for_single_carrier).and_return([])
+>>>>>>> feature-carriers-listed-only-when-available_new
         end
 
         it "returns carriers if they are available in the service area and offer plans for that coverage level" do
