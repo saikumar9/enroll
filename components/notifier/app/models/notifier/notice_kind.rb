@@ -38,7 +38,7 @@ module Notifier
 
     def set_data_elements
       if template.present?
-        tokens = template.raw_body.scan(/\#\{([\w|\.]*)\}/).flatten.reject{|element| element.scan(/Settings/).any?}.uniq
+        tokens = template.raw_body.scan(/\#\{([\w|\.|\s|\+|\-]*)\}/).flatten.reject{|element| element.scan(/Settings/).any?}.uniq.map(&:strip)
         conditional_tokens = template.raw_body.scan(/\[\[([\s|\w|\.|?]*)/).flatten.map(&:strip).collect{|ele| ele.gsub(/if|else|end|else if|elsif/i, '')}.map(&:strip).reject{|elem| elem.blank?}.uniq
         template.data_elements = tokens + conditional_tokens
       end
@@ -67,10 +67,10 @@ module Notifier
 
     def self.to_csv
       CSV.generate(headers: true) do |csv|
-        csv << ['Notice Number', 'Title', 'Description', 'Recipient', 'Notice Template']
+        csv << ['Notice Number', 'Title', 'Description', 'Recipient', 'Event Name', 'Notice Template']
 
         all.each do |notice|
-          csv << [notice.notice_number, notice.title, notice.description, notice.recipient, notice.template.try(:raw_body)]
+          csv << [notice.notice_number, notice.title, notice.description, notice.recipient, notice.event_name, notice.template.try(:raw_body)]
         end
       end
     end

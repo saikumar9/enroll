@@ -13,7 +13,11 @@ module Observers
       :application_denied,
       :renewal_application_denied
     ]
-  
+
+    HBXENROLLMENT_NOTICE_EVENTS = [
+      :application_coverage_selected
+    ]
+    
     def plan_year_update(new_model_event)
       raise ArgumentError.new("expected ModelEvents::ModelEvent") unless new_model_event.is_a?(ModelEvents::ModelEvent)
 
@@ -24,11 +28,25 @@ module Observers
         end
 
         if new_model_event.event_key == :renewal_application_denied
-         errors = plan_year.enrollment_errors
+          trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "renewal_employer_ineligibility_notice")
 
-          if(errors.include?(:eligible_to_enroll_count) || errors.include?(:non_business_owner_enrollment_count))
-            trigger_notice(plan_year.employer_profile, "renewal_employer_ineligibility_notice")
+          plan_year.employer_profile.census_employees.non_terminated.each do |ce|
+            if ce.employee_role.present?
+              trigger_notice(recipient: ce.employee_role, event_object: plan_year, notice_event: "employee_renewal_employer_ineligibility_notice")
+            end
           end
+        end
+        
+        if new_model_event.event_key == :renewal_application_submitted
+          trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "renewal_application_published")
+        end
+
+        if new_model_event.event_key == :renewal_group_notice
+          trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "renewal_group_notice")
+        end
+          
+        if new_model_event.event_key == :renewal_application_created
+          trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "renewal_application_created")
         end
 
         if new_model_event.event_key == :ineligible_initial_application_submitted
@@ -38,11 +56,38 @@ module Observers
             trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "initial_employer_denial")
           # end
         end
+
+        if new_model_event.event_key == :ineligible_renewal_application_submitted && plan_year.application_eligibility_warnings.include?(:primary_office_location)
+          trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "employer_renewal_eligibility_denial_notice")
+          self.employer_profile.census_employees.non_terminated.each do |ce|
+            trigger_notice(ce.id.to_s, "termination_of_employers_health_coverage")
+          end
+        end
+
+      end
+
+      if PlanYear::DATA_CHANGE_EVENTS.include?(new_model_event.event_key)
       end
     end
 
     def employer_profile_update; end
-    def hbx_enrollment_update; end
+
+    def hbx_enrollment_update(new_model_event)
+      raise ArgumentError.new("expected ModelEvents::ModelEvent") unless new_model_event.is_a?(ModelEvents::ModelEvent) 
+
+      if HBXENROLLMENT_NOTICE_EVENTS.include?(new_model_event.event_key)
+        hbx_enrollment = new_model_event.klass_instance
+
+        if new_model_event.event_key == :application_coverage_selected
+          if enrollment.is_shop? && (enrollment.enrollment_kind == "special_enrollment" || enrollment.census_employee.new_hire_enrollment_period.present?)
+            if enrollment.census_employee.new_hire_enrollment_period.last >= TimeKeeper.date_of_record || enrollment.special_enrollment_period.present?
+              trigger_notice(recipient: enrollment.census_employee.employee_role, event_object: hbx_enrollment, notice_event: "employee_plan_selection_confirmation_sep_new_hire")
+            end
+          end
+        end
+      end
+    end
+
     def census_employee_update; end
   end
 end
