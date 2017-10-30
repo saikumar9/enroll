@@ -56,6 +56,28 @@ module Config::AcaHelper
     @enabled_metal_level_years ||= Settings.aca.plan_option_years.metal_level_carriers_available
   end
 
+  def metal_levels_explaned
+    response = ""
+    metal_level_contributions = {
+      'bronze': '60%',
+      'silver': '70%',
+      'gold': '80%',
+      'platinum': '90%'
+    }.with_indifferent_access
+    reference_plans_for_metal_level.each_with_index do |level, index|
+      if metal_level_contributions[level]
+        if index == 0
+          response << "#{level.capitalize} means the plan is expected to pay #{metal_level_contributions[level]} of expenses for an average population of consumers"
+        elsif (index == reference_plans_for_metal_level.length - 2) # subtracting 2 because of dental
+          response << ", and #{level.capitalize} #{metal_level_contributions[level]}."
+        else
+          response << ", #{level.capitalize} #{metal_level_contributions[level]}"
+        end
+      end
+    end
+    response
+  end
+
   def offers_single_carrier?
     @offer_single_carrier ||= Settings.aca.plan_options_available.include?("single_carrier")
   end
