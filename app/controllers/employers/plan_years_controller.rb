@@ -314,12 +314,12 @@ class Employers::PlanYearsController < ApplicationController
 
         ## TODO: different if we dont have service areas enabled
         ## TODO: awfully slow
-        @single_carriers = Organization.valid_carrier_names(
+        @single_carriers = Organization.load_carriers(
                             primary_office_location: @employer_profile.organization.primary_office_location,
                             selected_carrier_level: 'single_carrier',
                             active_year: @start_on
                             )
-        @sole_source_carriers = Organization.valid_carrier_names(
+        @sole_source_carriers = Organization.load_carriers(
                             primary_office_location: @employer_profile.organization.primary_office_location,
                             selected_carrier_level: 'sole_source',
                             active_year: @start_on
@@ -448,7 +448,7 @@ class Employers::PlanYearsController < ApplicationController
 
     ## TODO: different if we dont have service areas enabled
     ## TODO: awfully slow
-    @carrier_names = Organization.valid_carrier_names(
+    @carrier_names = Organization.load_carriers(
                         primary_office_location: @employer_profile.organization.primary_office_location,
                         selected_carrier_level: params[:selected_carrier_level],
                         active_year: @start_on
