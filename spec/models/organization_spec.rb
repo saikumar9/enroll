@@ -158,14 +158,6 @@ RSpec.describe Organization, dbclean: :after_each do
           carriers = [[sole_source_participater.legal_name, sole_source_participater.id.to_s]]
           expect(Organization.valid_carrier_names_for_options(sole_source_only: true)).to match_array carriers
         end
-
-        it "can filter out by service area" do
-          carrier_names = {}
-          carrier_names[carrier_profile_1.id.to_s] = carrier_profile_1.legal_name
-          carrier_names[sole_source_participater.id.to_s] = sole_source_participater.legal_name
-
-          expect(Organization.valid_carrier_names(primary_office_location: office_location)).to match_array carrier_names
-        end
       end
 
       context "when limiting carriers to service area and coverage selection level and active year" do

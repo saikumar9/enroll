@@ -78,6 +78,10 @@ module Config::AcaHelper
     response
   end
 
+  def enabled_metal_level_years
+    @enabled_metal_level_years ||= Settings.aca.plan_option_years.metal_level_carriers_available
+  end
+
   def offers_single_carrier?
     @offer_single_carrier ||= Settings.aca.plan_options_available.include?("single_carrier")
   end
