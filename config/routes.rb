@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   mount Notifier::Engine, at: "/notifier"
   # mount RocketJobMissionControl::Engine => 'rocketjob'
   mount TransportProfiles::Engine, at: "/transport_profiles"
+  mount SponsoredApplications::Engine,  at: "/sponsored_applications"
 
   require 'resque/server'
   mount Resque::Server, at: '/jobs'
