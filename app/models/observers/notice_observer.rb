@@ -11,6 +11,7 @@ module Observers
       :open_enrollment_began,
       :application_denied,
       :renewal_application_denied,
+      :renewal_enrollment_confirmation
     ]
 
     HBXENROLLMENT_NOTICE_EVENTS = [
@@ -63,6 +64,12 @@ module Observers
                 trigger_notice(recipient: ce.employee_role, event_object: plan_year, notice_event: "termination_of_employers_health_coverage")
               end
             end
+          end
+        end
+
+        if new_model_event.event_key == :renewal_enrollment_started
+          plan_year.employer_profile.census_employees.non_terminated.each do |ce|
+            trigger_notice(receipient: ce.employee_role, event_object: plan_year, notice_event: "renewal_employee_enrollment_confirmation")
           end
         end
 
