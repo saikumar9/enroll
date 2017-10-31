@@ -164,7 +164,6 @@ class Plan
   scope :catastrophic_level,  ->{ where(metal_level: "catastrophic") }
   scope :expanded_bronze_level,  ->{ where(metal_level: "expanded_bronze") }
 
-
   scope :metal_level_sans_silver,  ->{ where(:metal_leval.in => %w(platinum gold bronze catastrophic))}
 
   # Plan.metal_level_sans_silver.silver_level_by_csr_kind("csr_87")
