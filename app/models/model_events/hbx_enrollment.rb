@@ -2,11 +2,10 @@ module ModelEvents
   module HbxEnrollment
 
     EMPLOYEE_APPLICATION_EVENTS = [
-      :is_application_coverage_selected
+      :application_coverage_selected
     ]
 
     def notify_on_save
-      return if self.is_conversion
 
       if aasm_state_changed?
 

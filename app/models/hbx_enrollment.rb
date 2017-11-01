@@ -196,6 +196,7 @@ class HbxEnrollment
 
   before_save :generate_hbx_id, :set_submitted_at
   after_save :check_created_at
+  after_save :notify_on_save
 
   def generate_hbx_signature
     if self.subscriber
