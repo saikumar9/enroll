@@ -9,6 +9,8 @@ class HbxEnrollment
   include MongoidSupport::AssociationProxies
   include Acapi::Notifiers
   extend Acapi::Notifiers
+  include Concerns::Observable
+  include ModelEvents::HbxEnrollment
 
   embedded_in :household
 
