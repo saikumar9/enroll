@@ -9,13 +9,7 @@ FactoryGirl.define do
     state_code nil
     service_area_zipcode nil
     partial_county_justification nil
-    active_year {
-      current_time = TimeKeeper.date_of_record
-      if ((12 + Settings.aca.shop_market.initial_application.earliest_start_prior_to_effective_on.months) < current_time.month)
-        current_time = current_time + 1.year
-      end
-      current_time.year
-    }
+    active_year { TimeKeeper.date_of_record.year }
 
     trait :for_partial_state do
       service_area_name 'Partial State Area'
