@@ -13,6 +13,7 @@ FactoryGirl.define do
       unless evaluator.with_service_areas == 0
         carrier_profile.issuer_hios_ids.each do |hios_id|
           create(:carrier_service_area, issuer_hios_id: hios_id)
+          create(:carrier_service_area, issuer_hios_id: hios_id, active_year: TimeKeeper.date_of_record.year + 1)
         end
       end
       create(:composite_rating_tier_factor_set, carrier_profile: carrier_profile)
