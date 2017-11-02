@@ -4,7 +4,13 @@ FactoryGirl.define do
     sequence(:name)      { |n| "BlueChoice Silver#{n} 2,000" }
     abbrev              "BC Silver $2k"
     sequence(:hios_id, (10..99).cycle)  { |n| "41842DC04000#{n}-01" }
-    active_year         { TimeKeeper.date_of_record.year }
+    active_year         {
+      current_time = TimeKeeper.date_of_record
+      if ((12 + Settings.aca.shop_market.initial_application.earliest_start_prior_to_effective_on.months) < current_time.month)
+        current_time = current_time + 1.year
+      end
+      current_time.year
+    }
     coverage_kind       "health"
     metal_level         "silver"
     plan_type           "pos"
