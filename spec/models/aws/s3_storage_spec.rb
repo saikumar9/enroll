@@ -54,7 +54,7 @@ describe Aws::S3Storage do
         allow_any_instance_of(Aws::S3Storage).to receive(:get_object).and_raise(Exception)
         expect {
           subject.find(invalid_url)
-        }.to raise_error("Unable to find S3 bucket with key")
+        end.to raise_error(StandardError)
       end
     end
   end
