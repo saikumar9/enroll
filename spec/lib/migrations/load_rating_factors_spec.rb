@@ -27,7 +27,7 @@ RSpec.describe 'Load Rate Factors Task', :type => :task do
                                               }
 
       it 'creates sic code factor sets' do
-        expect(SicCodeRatingFactorSet.count).to be(3)
+        expect(SicCodeRatingFactorSet.count).to be(4)
       end
 
       it "creates sic factor entries" do
@@ -52,7 +52,7 @@ RSpec.describe 'Load Rate Factors Task', :type => :task do
                                                   default_factor_value: 1.0
                                               }
       it 'creates employer group size codes' do
-        expect(EmployerGroupSizeRatingFactorSet.count).to be(3)
+        expect(EmployerGroupSizeRatingFactorSet.count).to be(4)
       end
 
       it 'creates employer group size factor entries' do
@@ -73,7 +73,7 @@ RSpec.describe 'Load Rate Factors Task', :type => :task do
                                                   default_factor_value: 1.0
                                               }
       it 'creates employer participation rate codes' do
-        expect(EmployerParticipationRateRatingFactorSet.count).to be(3)
+        expect(EmployerParticipationRateRatingFactorSet.count).to be(4)
       end
 
       it 'creates employer participation rate factor entries' do
@@ -94,7 +94,7 @@ RSpec.describe 'Load Rate Factors Task', :type => :task do
                                                   default_factor_value: 1.0
                                               }
       it 'creates composite rating codes' do
-        expect(CompositeRatingTierFactorSet.count).to be(3)
+        expect(CompositeRatingTierFactorSet.count).to be(4)
       end
 
       it 'creates composite tier factor entries' do
