@@ -54,6 +54,7 @@ describe Aws::S3Storage do
         allow_any_instance_of(Aws::S3Storage).to receive(:get_object).with('local', nil).and_raise(StandardError)
         expect do
           subject.find(invalid_url)
+        end.to raise_error(StandardError)
       end
     end
   end

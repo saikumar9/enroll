@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
   require 'resque/server'
   mount Resque::Server, at: '/jobs'
-  devise_for :users, :controllers => { :registrations => "users/registrations", :sessions => 'users/sessions' }
+  devise_for :users, :controllers => { :registrations => "users/registrations", :sessions => 'users/sessions', :passwords => 'users/passwords' }
 
 
   get 'check_time_until_logout' => 'session_timeout#check_time_until_logout', :constraints => { :only_ajax => true }
@@ -350,8 +350,7 @@ Rails.application.routes.draw do
   # match 'thank_you', to: 'broker_roles#thank_you', via: [:get]
 
   match 'broker_registration', to: 'broker_agencies/broker_roles#new_broker_agency', via: [:get]
-  match 'check_ach_routing_number', to: 'broker_agencies/broker_roles#check_ach_routing', via: [:get]
-  
+
   namespace :carriers do
     resources :carrier_profiles do
     end
