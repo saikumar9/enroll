@@ -265,6 +265,7 @@ When(/^.+ terminate one employee$/) do
 end
 
 Then(/^.+ should see terminate successful msg$/) do
+  wait_for_ajax(3,2)
   expect(page).to have_content('Successfully terminated Census Employee.')
 end
 
@@ -338,9 +339,9 @@ Then(/^.+ should not see individual on enrollment title/) do
   expect(page).not_to have_content("Individual & Family")
 end
 
-def enter_plan_year_info
-  find(:xpath, "//p[@class='label'][contains(., 'SELECT START ON')]", :wait => 3).click
-  find(:xpath, "//li[@data-index='1'][contains(., '#{(Date.today + 2.months).year}')]", :wait => 3).click
+And(/^.+ should be able to enter plan year, benefits, relationship benefits for cobra$/) do
+  find(:xpath, "//p[@class='label'][contains(., 'SELECT START ON')]").click
+  find(:xpath, "//li[@data-index='1'][contains(., '#{(Date.today + 1.months).year}')]").click
 
   screenshot("employer_add_plan_year")
   find('.interaction-field-control-plan-year-fte-count').click
@@ -365,7 +366,9 @@ And(/^.+ should be able to enter sole source plan year, benefits, relationship b
   wait_for_ajax
   find('.sole-source-plan-tab a').click
   wait_for_ajax
+
   find('.reference-plans label').click
+  
   wait_for_ajax
   fill_in "plan_year[benefit_groups_attributes][0][composite_tier_contributions_attributes][0][employer_contribution_percent]", :with => 50
   fill_in "plan_year[benefit_groups_attributes][0][composite_tier_contributions_attributes][3][employer_contribution_percent]", :with => 50
