@@ -14,9 +14,6 @@ module Observers
       :renewal_application_denied
     ]
 
-    HBXENROLLMENT_NOTICE_EVENTS = [
-      :application_coverage_selected
-    ]
     
     def plan_year_update(new_model_event)
       raise ArgumentError.new("expected ModelEvents::ModelEvent") unless new_model_event.is_a?(ModelEvents::ModelEvent)
@@ -67,16 +64,15 @@ module Observers
     def hbx_enrollment_update(new_model_event)
       raise ArgumentError.new("expected ModelEvents::ModelEvent") unless new_model_event.is_a?(ModelEvents::ModelEvent) 
 
-      if HBXENROLLMENT_NOTICE_EVENTS.include?(new_model_event.event_key)
+      if HbxEnrollment::REGISTERED_EVENTS.include?(new_model_event.event_key)
         hbx_enrollment = new_model_event.klass_instance
-
-        if new_model_event.event_key == :application_coverage_selected
-          if hbx_enrollment.is_shop? && (hbx_enrollment.enrollment_kind == "special_enrollment" || hbx_enrollment.census_employee.new_hire_enrollment_period.present?)
-            if hbx_enrollment.census_employee.new_hire_enrollment_period.last >= TimeKeeper.date_of_record || hbx_enrollment.special_enrollment_period.present?
-              trigger_notice(recipient: hbx_enrollment.census_employee.employee_role, event_object: hbx_enrollment, notice_event: "employee_plan_selection_confirmation_sep_new_hire")
+          if new_model_event.event_key == :application_coverage_selected
+            if hbx_enrollment.is_shop?
+              if (hbx_enrollment.enrollment_kind == "special_enrollment" || hbx_enrollment.census_employee.new_hire_enrollment_period.include?(TimeKeeper.date_of_record))
+                trigger_notice(recipient: hbx_enrollment.census_employee.employee_role, event_object: hbx_enrollment, notice_event: "employee_plan_selection_confirmation_sep_new_hire")
+              end
             end
           end
-        end
       end
     end
 
