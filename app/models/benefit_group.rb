@@ -390,7 +390,7 @@ class BenefitGroup
     return 0 if targeted_census_employees.count > 100
     targeted_census_employees_participation.collect do |ce|
       if plan_option_kind == 'sole_source'
-        pcd = CompositeRatedPlanCostDecorator.new(reference_plan, self, effective_composite_tier(ce))
+        pcd = CompositeRatedPlanCostDecorator.new(reference_plan, self, effective_composite_tier(ce), ce.is_cobra_status?)
       else
         if coverage_kind == 'dental'
           pcd = PlanCostDecorator.new(dental_reference_plan, ce, self, dental_reference_plan)
