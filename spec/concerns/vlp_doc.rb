@@ -5,7 +5,7 @@ class FakesController < ApplicationController
 end
 
 describe FakesController do
-  let(:consumer_role) { FactoryGirl.build_stubbed(:consumer_role) }
+  let(:consumer_role) { FactoryBot.build_stubbed(:consumer_role) }
 
   context "updating consumer documents" do
     before :each do

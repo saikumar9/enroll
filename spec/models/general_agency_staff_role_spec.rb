@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 describe GeneralAgencyStaffRole, dbclean: :after_each do
-  let(:address) {FactoryGirl.build(:address)}
-  let(:saved_person) {FactoryGirl.create(:person, addresses: [address])}
-  let(:general_agency_profile) {FactoryGirl.create(:general_agency_profile)}
-  let(:person0) {FactoryGirl.create(:person)}
-  let(:person1) {FactoryGirl.create(:person)}
+  let(:address) {FactoryBot.build(:address)}
+  let(:saved_person) {FactoryBot.create(:person, addresses: [address])}
+  let(:general_agency_profile) {FactoryBot.create(:general_agency_profile)}
+  let(:person0) {FactoryBot.create(:person)}
+  let(:person1) {FactoryBot.create(:person)}
   let(:npn0) {"7775566"}
   let(:npn1) {"48484848"}
 
@@ -70,7 +70,7 @@ describe GeneralAgencyStaffRole, dbclean: :after_each do
   end
 
   context "aasm" do
-    let(:staff_role) { FactoryGirl.create(:general_agency_staff_role) }
+    let(:staff_role) { FactoryBot.create(:general_agency_staff_role) }
 
     context "applicant?" do
       it "should return true" do
@@ -129,7 +129,7 @@ describe GeneralAgencyStaffRole, dbclean: :after_each do
   end
 
   context "instance method" do
-    let(:staff_role) { FactoryGirl.create(:general_agency_staff_role) }
+    let(:staff_role) { FactoryBot.create(:general_agency_staff_role) }
     it "parent" do
       expect(staff_role.parent).to eq staff_role.person
     end

@@ -137,7 +137,7 @@ end
 
 
 describe Forms::ConsumerCandidate, "ssn validations" do
-  let(:person) {FactoryGirl.create(:person)}
+  let(:person) {FactoryBot.create(:person)}
 
   before do
     allow(Person).to receive(:where).and_return([person])

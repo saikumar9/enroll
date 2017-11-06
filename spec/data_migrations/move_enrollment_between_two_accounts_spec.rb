@@ -13,10 +13,10 @@ describe MoveEnrollmentBetweenTwoAccount, dbclean: :after_each do
   end
 
   describe "it should move an ivl enrollment" do
-    let(:family1) {FactoryGirl.create(:family, :with_primary_family_member)}
-    let(:family2) {FactoryGirl.create(:family, :with_primary_family_member)}
+    let(:family1) {FactoryBot.create(:family, :with_primary_family_member)}
+    let(:family2) {FactoryBot.create(:family, :with_primary_family_member)}
     let(:hbx_enrollment) {
-       FactoryGirl.create(:hbx_enrollment,
+       FactoryBot.create(:hbx_enrollment,
                            household: family1.active_household,
                            coverage_kind: "health",
                            kind: "individual",
@@ -24,9 +24,9 @@ describe MoveEnrollmentBetweenTwoAccount, dbclean: :after_each do
                            consumer_role: consumer_role,
                            aasm_state: 'shopping')
                         }
-    let!(:consumer_role) {FactoryGirl.create(:consumer_role,person: family1.family_members[0].person)}
-    let!(:consumer_role1) {FactoryGirl.create(:consumer_role,person: family2.family_members[0].person)}
-    let!(:hbx_profile) {FactoryGirl.create(:hbx_profile,:open_enrollment_coverage_period)}
+    let!(:consumer_role) {FactoryBot.create(:consumer_role,person: family1.family_members[0].person)}
+    let!(:consumer_role1) {FactoryBot.create(:consumer_role,person: family2.family_members[0].person)}
+    let!(:hbx_profile) {FactoryBot.create(:hbx_profile,:open_enrollment_coverage_period)}
     before do
       coverage_household_member = family1.households.first.coverage_households.first.coverage_household_members.first
       h = HbxEnrollmentMember.new_from(coverage_household_member: coverage_household_member)
@@ -56,10 +56,10 @@ describe MoveEnrollmentBetweenTwoAccount, dbclean: :after_each do
     end
   end
   describe "it should move a shop enrollment" do
-    let(:family1) {FactoryGirl.create(:family, :with_primary_family_member)}
-    let(:family2) {FactoryGirl.create(:family, :with_primary_family_member)}
+    let(:family1) {FactoryBot.create(:family, :with_primary_family_member)}
+    let(:family2) {FactoryBot.create(:family, :with_primary_family_member)}
     let(:hbx_enrollment) {
-      FactoryGirl.create(:hbx_enrollment,
+      FactoryBot.create(:hbx_enrollment,
                          household: family1.active_household,
                          coverage_kind: "health",
                          kind: "employer_sponsored",
@@ -69,10 +69,10 @@ describe MoveEnrollmentBetweenTwoAccount, dbclean: :after_each do
                          benefit_group_assignment: benefit_group_assignment,
                          benefit_group_id: benefit_group_assignment.benefit_group.id)
     }
-    let(:employee_role) {FactoryGirl.create(:employee_role,person: family1.family_members[0].person, census_employee:census_employee, employer_profile: benefit_group_assignment.benefit_group.plan_year.employer_profile)}
-    let!(:employee_role2) {FactoryGirl.create(:employee_role,person: family2.family_members[0].person, census_employee:census_employee, employer_profile: benefit_group_assignment.benefit_group.plan_year.employer_profile)}
-    let(:census_employee){FactoryGirl.create(:census_employee)}
-    let(:benefit_group_assignment) {FactoryGirl.create(:benefit_group_assignment,census_employee:census_employee)}
+    let(:employee_role) {FactoryBot.create(:employee_role,person: family1.family_members[0].person, census_employee:census_employee, employer_profile: benefit_group_assignment.benefit_group.plan_year.employer_profile)}
+    let!(:employee_role2) {FactoryBot.create(:employee_role,person: family2.family_members[0].person, census_employee:census_employee, employer_profile: benefit_group_assignment.benefit_group.plan_year.employer_profile)}
+    let(:census_employee){FactoryBot.create(:census_employee)}
+    let(:benefit_group_assignment) {FactoryBot.create(:benefit_group_assignment,census_employee:census_employee)}
     before do
       coverage_household_member = family1.households.first.coverage_households.first.coverage_household_members.first
       census_employee.update_attributes(employer_profile_id: benefit_group_assignment.plan_year.employer_profile.id)

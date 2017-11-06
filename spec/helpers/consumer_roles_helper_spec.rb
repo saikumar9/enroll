@@ -1,8 +1,8 @@
 require "rails_helper"
 
 RSpec.describe ConsumerRolesHelper, :type => :helper do
-  let(:person) {FactoryGirl.build(:person)}
-  let(:consumer_role) {FactoryGirl.build(:consumer_role)}
+  let(:person) {FactoryBot.build(:person)}
+  let(:consumer_role) {FactoryBot.build(:consumer_role)}
   before :each do
     allow(person).to receive(:consumer_role).and_return consumer_role
     allow(consumer_role).to receive(:person).and_return person

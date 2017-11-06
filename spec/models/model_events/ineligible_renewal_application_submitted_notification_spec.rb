@@ -8,20 +8,20 @@ describe 'ModelEvents::InEligibleRenewalApplicationSubmittedNotification' do
   let(:start_on) { (TimeKeeper.date_of_record - effective_on.months).beginning_of_month }
 
   let!(:employer) {
-    FactoryGirl.create(:employer_with_renewing_planyear, start_on: start_on, renewal_plan_year_state: 'renewing_draft')
+    FactoryBot.create(:employer_with_renewing_planyear, start_on: start_on, renewal_plan_year_state: 'renewing_draft')
   }
 
   let(:model_instance) { employer.renewing_plan_year }
 
   let!(:renewing_employees) {
-    employees = FactoryGirl.create_list(:census_employee_with_active_and_renewal_assignment, 5, hired_on: (TimeKeeper.date_of_record - 2.years), employer_profile: employer,
+    employees = FactoryBot.create_list(:census_employee_with_active_and_renewal_assignment, 5, hired_on: (TimeKeeper.date_of_record - 2.years), employer_profile: employer,
       benefit_group: employer.active_plan_year.benefit_groups.first,
       renewal_benefit_group: model_instance.benefit_groups.first,
       created_at: TimeKeeper.date_of_record.prev_year)
 
     employees.each do |ce|
-      person = FactoryGirl.create(:person, last_name: ce.last_name, first_name: ce.first_name)
-      employee_role = FactoryGirl.create(:employee_role, person: person, census_employee: ce, employer_profile: employer)
+      person = FactoryBot.create(:person, last_name: ce.last_name, first_name: ce.first_name)
+      employee_role = FactoryBot.create(:employee_role, person: person, census_employee: ce, employer_profile: employer)
       ce.update_attributes({employee_role: employee_role})
     end    
   }

@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Insured::VerificationDocumentsController, :type => :controller do
-  let(:user) { FactoryGirl.create(:user) }
-  let(:person) { FactoryGirl.build(:person, :with_consumer_role) }
+  let(:user) { FactoryBot.create(:user) }
+  let(:person) { FactoryBot.build(:person, :with_consumer_role) }
   let(:consumer_role) { {consumer_role: ''} }
   let(:consumer_wrapper) { double }
 

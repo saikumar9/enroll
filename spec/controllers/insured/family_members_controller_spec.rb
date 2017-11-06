@@ -2,12 +2,12 @@ require 'rails_helper'
 
 RSpec.describe Insured::FamilyMembersController do
   let(:user) { instance_double("User", :primary_family => test_family, :person => person) }
-  let(:qle) { FactoryGirl.create(:qualifying_life_event_kind) }
-  let(:test_family) { FactoryGirl.build(:family, :with_primary_family_member) }
+  let(:qle) { FactoryBot.create(:qualifying_life_event_kind) }
+  let(:test_family) { FactoryBot.build(:family, :with_primary_family_member) }
   let(:person) { test_family.primary_family_member.person }
-  let(:published_plan_year)  { FactoryGirl.build(:plan_year, aasm_state: :published)}
-  let(:employer_profile) { FactoryGirl.create(:employer_profile) }
-  let(:employee_role) { FactoryGirl.create(:employee_role, employer_profile: employer_profile, person: person ) }
+  let(:published_plan_year)  { FactoryBot.build(:plan_year, aasm_state: :published)}
+  let(:employer_profile) { FactoryBot.create(:employer_profile) }
+  let(:employee_role) { FactoryBot.create(:employee_role, employer_profile: employer_profile, person: person ) }
   let(:employee_role_id) { employee_role.id }
 
   before do
@@ -117,7 +117,7 @@ RSpec.describe Insured::FamilyMembersController do
     let(:dependent) { double(addresses: [address], family_member: true, same_with_primary: true) }
     let(:dependent_properties) { { :family_id => "saldjfalkdjf"} }
     let(:save_result) { false }
-    # let(:test_family) { FactoryGirl.build(:family, :with_primary_family_member) }
+    # let(:test_family) { FactoryBot.build(:family, :with_primary_family_member) }
 
     before :each do
       sign_in(user)

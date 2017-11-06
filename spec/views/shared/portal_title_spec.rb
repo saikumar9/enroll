@@ -3,10 +3,10 @@ require 'rails_helper'
 RSpec.describe "layouts/_header.html.erb" do
 
   let(:person_user){Person.new(first_name: 'fred', last_name: 'flintstone')}
-  let(:current_user){FactoryGirl.create(:user, :person=>person_user)}
-  let(:broker_role){FactoryGirl.build(:broker_role, broker_agency_profile_id: 98)}
-  let(:employer_profile){ FactoryGirl.build(:employer_profile) }
-  let(:employer_staff_role){ FactoryGirl.build(:employer_staff_role, :person=>person_user, :employer_profile_id=>employer_profile.id)}
+  let(:current_user){FactoryBot.create(:user, :person=>person_user)}
+  let(:broker_role){FactoryBot.build(:broker_role, broker_agency_profile_id: 98)}
+  let(:employer_profile){ FactoryBot.build(:employer_profile) }
+  let(:employer_staff_role){ FactoryBot.build(:employer_staff_role, :person=>person_user, :employer_profile_id=>employer_profile.id)}
   let(:signed_in?){ true }
   before(:each) do
   	sign_in current_user
@@ -33,14 +33,14 @@ RSpec.describe "layouts/_header.html.erb" do
   end
 
   it 'identifies Customer Service Staff' do
-    person_user.csr_role = FactoryGirl.build(:csr_role, cac: false)
+    person_user.csr_role = FactoryBot.build(:csr_role, cac: false)
     current_user.roles=['csr']
     render :template => 'layouts/_header.html.erb'
     expect(rendered).to match(/I'm a Trained Expert/)
   end
 
   it 'identifies Certified Applicant Counselor' do
-    person_user.csr_role = FactoryGirl.build(:csr_role, cac: true)
+    person_user.csr_role = FactoryBot.build(:csr_role, cac: true)
     current_user.roles=['csr']
     render :template => 'layouts/_header.html.erb'
     expect(rendered).to match(/I'm a Trained Expert/)
@@ -48,7 +48,7 @@ RSpec.describe "layouts/_header.html.erb" do
 
   it 'identifies Assisters' do
     current_user.roles=['assister']
-    current_user.person.assister_role = FactoryGirl.build(:assister_role)
+    current_user.person.assister_role = FactoryBot.build(:assister_role)
     render :template => 'layouts/_header.html.erb'
     expect(rendered).to match(/I'm a Trained Expert/)
   end

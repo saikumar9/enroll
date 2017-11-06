@@ -2,10 +2,10 @@ require 'rails_helper'
 include Insured::FamiliesHelper
 
 RSpec.describe "insured/group_selection/_enrollment.html.erb" do
-  let(:employee_role) { FactoryGirl.build(:employee_role) }
-  let(:person) { FactoryGirl.build(:person) }
-  let(:plan) { FactoryGirl.build(:plan) }
-  let(:benefit_group) { FactoryGirl.build(:benefit_group) }
+  let(:employee_role) { FactoryBot.build(:employee_role) }
+  let(:person) { FactoryBot.build(:person) }
+  let(:plan) { FactoryBot.build(:plan) }
+  let(:benefit_group) { FactoryBot.build(:benefit_group) }
   let(:hbx_enrollment) { HbxEnrollment.new(plan: plan, benefit_group: benefit_group) }
   let(:family) { Family.new }
   before :each do

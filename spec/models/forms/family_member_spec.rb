@@ -120,8 +120,8 @@ describe Forms::FamilyMember do
     let(:addr1) {Address.new(zip: '1234', state: 'DC')}
     let(:addr2) {Address.new(zip: '4321', state: 'DC')}
     let(:addr3) {Address.new(zip: '1234', state: 'DC', 'address_3' => "abc")}
-    let(:person) {FactoryGirl.create(:person)}
-    let(:primary) {FactoryGirl.create(:person)}
+    let(:person) {FactoryBot.create(:person)}
+    let(:primary) {FactoryBot.create(:person)}
     let(:family) {double(primary_family_member: double(person: primary))}
     let(:family_member) {double(person: person, family: family)}
     let(:employee_dependent) { Forms::FamilyMember.new }
@@ -455,7 +455,7 @@ describe Forms::FamilyMember, "which describes an existing family member" do
     it "should update the relationship of the dependent" do
       allow(person).to receive(:update_attributes).with(person_properties.merge({:citizen_status=>nil, :no_ssn=>nil, :no_dc_address=>nil, :no_dc_address_reason=>nil})).and_return(true)
       allow(subject).to receive(:assign_person_address).and_return true
-      allow(person).to receive(:consumer_role).and_return FactoryGirl.build(:consumer_role)
+      allow(person).to receive(:consumer_role).and_return FactoryBot.build(:consumer_role)
       expect(family_member).to receive(:update_relationship).with(relationship)
       subject.update_attributes(update_attributes)
     end
@@ -463,15 +463,15 @@ describe Forms::FamilyMember, "which describes an existing family member" do
     it "should update the attributes of the person" do
       expect(person).to receive(:update_attributes).with(person_properties.merge({:citizen_status=>nil, :no_ssn=>nil, :no_dc_address=>nil, :no_dc_address_reason=>nil}))
       allow(family_member).to receive(:update_relationship).with(relationship)
-      allow(person).to receive(:consumer_role).and_return FactoryGirl.build(:consumer_role)
+      allow(person).to receive(:consumer_role).and_return FactoryBot.build(:consumer_role)
       subject.update_attributes(update_attributes)
     end
   end
 end
 
 describe Forms::FamilyMember, "relationship validation" do
-  let(:family) { FactoryGirl.build(:family) }
-  let(:family_member) { FactoryGirl.build(:family_member, family: family) }
+  let(:family) { FactoryBot.build(:family) }
+  let(:family_member) { FactoryBot.build(:family_member, family: family) }
   let(:family_members) { family.family_members}
   let(:ssn) { nil }
   let(:dob) { "2007-06-09" }

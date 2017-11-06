@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe ShopEmployerNotices::InitialShopApplicationIsDeniedAfterRequestForClarifyingDocumentation do
   before(:all) do
-    @employer_profile = FactoryGirl.create(:employer_profile)
-    @broker_role =  FactoryGirl.create(:broker_role, aasm_state: 'active')
-    @organization = FactoryGirl.create(:broker_agency, legal_name: "agencyone")
+    @employer_profile = FactoryBot.create(:employer_profile)
+    @broker_role =  FactoryBot.create(:broker_role, aasm_state: 'active')
+    @organization = FactoryBot.create(:broker_agency, legal_name: "agencyone")
     @organization.broker_agency_profile.update_attributes(primary_broker_role: @broker_role)
     @broker_role.update_attributes(broker_agency_profile_id: @organization.broker_agency_profile.id)
     @organization.broker_agency_profile.approve!
@@ -16,7 +16,7 @@ RSpec.describe ShopEmployerNotices::InitialShopApplicationIsDeniedAfterRequestFo
   let(:employer_profile){@employer_profile }
   let(:person) { @broker_role.person }
   let(:broker_role) { @broker_role }
-  let(:broker_agency_account) {FactoryGirl.create(:broker_agency_account, broker_agency_profile: @organization.broker_agency_profile,employer_profile: @employer_profile)}
+  let(:broker_agency_account) {FactoryBot.create(:broker_agency_account, broker_agency_profile: @organization.broker_agency_profile,employer_profile: @employer_profile)}
   let(:application_event){ double("ApplicationEventKind",{
       :name =>'DENIAL OF APPLICATION TO OFFER GROUP HEALTH COVERAGE IN THE MASSACHUSETTS HEALTH CONNECTOR',
       :notice_template => 'notices/shop_employer_notices/initial_shop_application_is_denied_after_request_for_clarifying_documentation',

@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe "insured/families/_employers_selection.html.erb" do
-  let(:person) {FactoryGirl.build(:person)}
-  let(:employee_role) {FactoryGirl.build(:employee_role)}
-  let(:er1) { FactoryGirl.build(:employer_profile) }
-  let(:er2) { FactoryGirl.build(:employer_profile) }
-  let(:ce1) { FactoryGirl.build(:census_employee, employer_profile: er1) }
-  let(:ce2) { FactoryGirl.build(:census_employee, employer_profile: er2) }
+  let(:person) {FactoryBot.build(:person)}
+  let(:employee_role) {FactoryBot.build(:employee_role)}
+  let(:er1) { FactoryBot.build(:employer_profile) }
+  let(:er2) { FactoryBot.build(:employer_profile) }
+  let(:ce1) { FactoryBot.build(:census_employee, employer_profile: er1) }
+  let(:ce2) { FactoryBot.build(:census_employee, employer_profile: er2) }
 
   before :each do
     allow(person).to receive(:active_census_employees).and_return([ce1, ce2])

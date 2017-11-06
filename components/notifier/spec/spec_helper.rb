@@ -18,7 +18,7 @@ require 'shoulda/matchers'
 require 'database_cleaner'
 require 'capybara/rails'
 require 'capybara/rspec'
-require 'factory_girl_rails'
+require 'factory_bot_rails'
 require 'pry'
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration

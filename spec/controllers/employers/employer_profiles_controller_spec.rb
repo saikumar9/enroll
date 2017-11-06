@@ -5,19 +5,19 @@ RSpec.describe Employers::EmployerProfilesController do
   describe "GET index" do
     let(:user) { double("user", :has_hbx_staff_role? => true, :has_employer_staff_role? => false)}
     let(:person) { double("person")}
-    let(:employer_profile1) { FactoryGirl.create(:employer_profile) }
-    let(:employer_profile2) { FactoryGirl.create(:employer_profile) }
+    let(:employer_profile1) { FactoryBot.create(:employer_profile) }
+    let(:employer_profile2) { FactoryBot.create(:employer_profile) }
 
     context 'when broker agency id present' do
       it 'should return employers for the broker agency', dbclean: :after_each do
         allow(user).to receive(:person).and_return(person)
         allow(controller).to receive(:find_mailbox_provider).and_return(true)
         sign_in(user)
-        employer_profile1 = FactoryGirl.create(:employer_profile)
-        employer_profile2 = FactoryGirl.create(:employer_profile)
-        organization = FactoryGirl.create(:organization)
-        broker_agency_profile = FactoryGirl.build(:broker_agency_profile, organization: organization)
-        broker_agency_account = FactoryGirl.build(:broker_agency_account, broker_agency_profile: broker_agency_profile)
+        employer_profile1 = FactoryBot.create(:employer_profile)
+        employer_profile2 = FactoryBot.create(:employer_profile)
+        organization = FactoryBot.create(:organization)
+        broker_agency_profile = FactoryBot.build(:broker_agency_profile, organization: organization)
+        broker_agency_account = FactoryBot.build(:broker_agency_account, broker_agency_profile: broker_agency_profile)
         employer_profile1.broker_agency_accounts << broker_agency_account
         employer_profile1.save!
         get :index, broker_agency_id: broker_agency_account.broker_agency_profile_id
@@ -32,8 +32,8 @@ RSpec.describe Employers::EmployerProfilesController do
         allow(user).to receive(:person).and_return(person)
         allow(controller).to receive(:find_mailbox_provider).and_return(true)
         sign_in(user)
-        employer_profile1 = FactoryGirl.create(:employer_profile)
-        employer_profile2 = FactoryGirl.create(:employer_profile)
+        employer_profile1 = FactoryBot.create(:employer_profile)
+        employer_profile2 = FactoryBot.create(:employer_profile)
         get :index
         expect(response).to have_http_status(:success)
         expect(assigns(:orgs).count).to eq(2)
@@ -62,7 +62,7 @@ RSpec.describe Employers::EmployerProfilesController do
     let(:zip_code) { '21208' }
     before do
       RatingArea.destroy_all
-      FactoryGirl.create(:rating_area, county_name: "Baltimore", zip_code:"21208")
+      FactoryBot.create(:rating_area, county_name: "Baltimore", zip_code:"21208")
       sign_in(user)
       get :counties_for_zip_code, { zip_code: zip_code }
     end
@@ -111,8 +111,8 @@ RSpec.describe Employers::EmployerProfilesController do
     let(:person) { double("person", :employer_staff_roles => [employer_staff_role]) }
     let(:employer_staff_role) { double(:employer_profile_id => employer_profile.id) }
 
-    let(:benefit_group)     { FactoryGirl.build(:benefit_group)}
-    let(:plan_year)         { FactoryGirl.create(:plan_year, benefit_groups: [benefit_group]) }
+    let(:benefit_group)     { FactoryBot.build(:benefit_group)}
+    let(:plan_year)         { FactoryBot.create(:plan_year, benefit_groups: [benefit_group]) }
     let(:employer_profile) { plan_year.employer_profile}
 
     let(:policy) {double("policy")}
@@ -157,7 +157,7 @@ RSpec.describe Employers::EmployerProfilesController do
 
     it "should get 20 census_employees without page params" do
       30.times do
-        FactoryGirl.create(:census_employee, employer_profile: employer_profile, last_name: "#{('A'..'Z').to_a.sample}last_name")
+        FactoryBot.create(:census_employee, employer_profile: employer_profile, last_name: "#{('A'..'Z').to_a.sample}last_name")
       end
       xhr :get,:show_profile, {employer_profile_id: employer_profile.id.to_s, tab: 'employees'}
       expect(assigns(:total_census_employees_quantity)).to eq employer_profile.census_employees.active.count
@@ -167,13 +167,13 @@ RSpec.describe Employers::EmployerProfilesController do
 
    it "should get employees with names starting with C and then B" do
       10.times do
-        FactoryGirl.create(:census_employee, employer_profile: employer_profile, last_name: "A#{('A'..'Z').to_a.sample}last_name")
+        FactoryBot.create(:census_employee, employer_profile: employer_profile, last_name: "A#{('A'..'Z').to_a.sample}last_name")
       end
       15.times do
-        FactoryGirl.create(:census_employee, employer_profile: employer_profile, last_name: "B#{('A'..'Z').to_a.sample}last_name")
+        FactoryBot.create(:census_employee, employer_profile: employer_profile, last_name: "B#{('A'..'Z').to_a.sample}last_name")
       end
       11.times do
-        FactoryGirl.create(:census_employee, employer_profile: employer_profile, last_name: "C#{('A'..'Z').to_a.sample}last_name")
+        FactoryBot.create(:census_employee, employer_profile: employer_profile, last_name: "C#{('A'..'Z').to_a.sample}last_name")
       end
       xhr :get,:show_profile, {employer_profile_id: employer_profile.id.to_s, tab: 'employees', page: 'C'}
       expect(assigns(:census_employees).count).to eq 11
@@ -183,7 +183,7 @@ RSpec.describe Employers::EmployerProfilesController do
 
     it "search by employee name" do
       employer_profile.census_employees.delete_all
-      census_employee = FactoryGirl.create(:census_employee, employer_profile: employer_profile)
+      census_employee = FactoryBot.create(:census_employee, employer_profile: employer_profile)
 
       xhr :get,:show_profile, {employer_profile_id: employer_profile.id.to_s, tab: 'employees'}
       expect(assigns(:datatable)).not_to eq nil
@@ -193,7 +193,7 @@ RSpec.describe Employers::EmployerProfilesController do
 
     it "census_employee record not found" do
       employer_profile.census_employees.delete_all
-      census_employee = FactoryGirl.create(:census_employee, employer_profile: employer_profile, first_name: "test1",
+      census_employee = FactoryBot.create(:census_employee, employer_profile: employer_profile, first_name: "test1",
                                            last_name: "test1")
 
       params ={commit: "search", status: "active", employee_search: "test11", search: true,id: employer_profile.id.to_s}
@@ -204,9 +204,9 @@ RSpec.describe Employers::EmployerProfilesController do
 
     it "should return census_employee when searching with name" do
       employer_profile.census_employees.delete_all
-      census_employee = FactoryGirl.create(:census_employee, employer_profile: employer_profile, first_name: "test1",
+      census_employee = FactoryBot.create(:census_employee, employer_profile: employer_profile, first_name: "test1",
                                            last_name: "test1")
-      census_employee1 = FactoryGirl.create(:census_employee, employer_profile: employer_profile, first_name: "test11",
+      census_employee1 = FactoryBot.create(:census_employee, employer_profile: employer_profile, first_name: "test11",
                                             last_name: "test11")
       params ={commit: "search", status: "active", employee_search: "test11", search: true,id: employer_profile.id.to_s}
       xhr :get,:show, params
@@ -216,8 +216,8 @@ RSpec.describe Employers::EmployerProfilesController do
 
     it "should return census_employee when searching with ssn" do
       employer_profile.census_employees.delete_all
-      census_employee = FactoryGirl.create(:census_employee, employer_profile: employer_profile, ssn: "123456789")
-      census_employee1 = FactoryGirl.create(:census_employee, employer_profile: employer_profile, ssn: "987654321")
+      census_employee = FactoryBot.create(:census_employee, employer_profile: employer_profile, ssn: "123456789")
+      census_employee1 = FactoryBot.create(:census_employee, employer_profile: employer_profile, ssn: "987654321")
       params ={commit: "search", status: "active", employee_search: "123456789", search: true,id: employer_profile.id.to_s}
       xhr :get,:show, params
       expect(assigns(:census_employees).count).to eq 1
@@ -232,8 +232,8 @@ RSpec.describe Employers::EmployerProfilesController do
 
 
   describe "GET show" do
-    let(:user) { FactoryGirl.create(:user) }
-    let(:person){ FactoryGirl.create(:person) }
+    let(:user) { FactoryBot.create(:user) }
+    let(:person){ FactoryBot.create(:person) }
     let(:employer_profile) {instance_double("EmployerProfile", id: double("id"))}
     let(:hbx_enrollment) {
       instance_double("HbxEnrollment",
@@ -252,7 +252,7 @@ RSpec.describe Employers::EmployerProfilesController do
     let(:policy) {double("policy")}
 
     context "it should return published plan year " do
-      let(:broker_agency_account) { FactoryGirl.build_stubbed(:broker_agency_account) }
+      let(:broker_agency_account) { FactoryBot.build_stubbed(:broker_agency_account) }
 
       before do
         allow(::AccessPolicies::EmployerProfile).to receive(:new).and_return(policy)
@@ -278,7 +278,7 @@ RSpec.describe Employers::EmployerProfilesController do
 
 
       it "should get announcement" do
-        FactoryGirl.create(:announcement, content: "msg for Employer", audiences: ['Employer'])
+        FactoryBot.create(:announcement, content: "msg for Employer", audiences: ['Employer'])
         allow(user).to receive(:person).and_return(person)
         allow(user).to receive(:has_employer_staff_role?).and_return true
         get :show, id: employer_profile.id, tab: "home"
@@ -428,9 +428,9 @@ RSpec.describe Employers::EmployerProfilesController do
     let(:organization) { double(:employer_profile => double) }
 
     before(:each) do
-      @user = FactoryGirl.create(:user)
-      p=FactoryGirl.create(:person, user: @user)
-      @hbx_staff_role = FactoryGirl.create(:hbx_staff_role, person: p)
+      @user = FactoryBot.create(:user)
+      p=FactoryBot.create(:person, user: @user)
+      @hbx_staff_role = FactoryBot.create(:hbx_staff_role, person: p)
 
 
       allow(@user).to receive(:switch_to_idp!)
@@ -503,9 +503,9 @@ RSpec.describe Employers::EmployerProfilesController do
     let(:organization) {double(office_locations: office_locations)}
 
     before(:each) do
-      @user = FactoryGirl.create(:user)
-      p=FactoryGirl.create(:person, user: @user)
-      @hbx_staff_role = FactoryGirl.create(:hbx_staff_role, person: p)
+      @user = FactoryBot.create(:user)
+      p=FactoryBot.create(:person, user: @user)
+      @hbx_staff_role = FactoryBot.create(:hbx_staff_role, person: p)
       allow(@hbx_staff_role).to receive_message_chain('permission.modify_employer').and_return(true)
       sign_in @user
       allow(Forms::EmployerProfile).to receive(:new).and_return(found_employer)
@@ -563,7 +563,7 @@ RSpec.describe Employers::EmployerProfilesController do
 
     context "given valid parameters render 'match' template" do
       let(:validation_result) { true }
-      let(:found_employer) { FactoryGirl.create(:employer_profile) }
+      let(:found_employer) { FactoryBot.create(:employer_profile) }
 
       it "renders the 'match' template" do
         allow(user).to receive(:person).and_return(person)
@@ -590,7 +590,7 @@ RSpec.describe Employers::EmployerProfilesController do
     let(:user) { double("user")}
     let(:employer_profile) { double("EmployerProfile") }
     let(:organization) { double("Organization", id: "test") }
-    let(:person) { FactoryGirl.build(:person) }
+    let(:person) { FactoryBot.build(:person) }
     let(:staff_roles){ [person] }
     let(:organization_params) {
       {
@@ -670,7 +670,7 @@ RSpec.describe Employers::EmployerProfilesController do
       end
 
     context "notify address change" do
-      let(:employer_profile1) { FactoryGirl.build(:employer_profile) }
+      let(:employer_profile1) { FactoryBot.build(:employer_profile) }
       let(:address)  { Address.new(kind: "primary", address_1: "609 H St", city: "Washington", state: "DC", zip: "20002") }
       let(:office_location) { OfficeLocation.new(
           is_primary: true,
@@ -734,7 +734,7 @@ RSpec.describe Employers::EmployerProfilesController do
 
   #describe "DELETE destroy" do
   #  let(:user) { double("user")}
-  #  let(:employer_profile) { FactoryGirl.create(:employer_profile) }
+  #  let(:employer_profile) { FactoryBot.create(:employer_profile) }
 
   #  it "should redirect" do
   #    sign_in(user)
@@ -746,8 +746,8 @@ RSpec.describe Employers::EmployerProfilesController do
   #end
 
   describe "GET export_census_employees" do
-    let(:user) { FactoryGirl.create(:user) }
-    let(:employer_profile) { FactoryGirl.create(:employer_profile) }
+    let(:user) { FactoryBot.create(:user) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile) }
 
    it "should export cvs" do
      sign_in(user)
@@ -758,8 +758,8 @@ RSpec.describe Employers::EmployerProfilesController do
   end
 
   describe "GET new Document" do
-    let(:user) { FactoryGirl.create(:user) }
-    let(:employer_profile) { FactoryGirl.create(:employer_profile) }
+    let(:user) { FactoryBot.create(:user) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile) }
     it "should load upload Page" do
       sign_in(user)
       xhr :get, :new_document, id: employer_profile
@@ -769,8 +769,8 @@ RSpec.describe Employers::EmployerProfilesController do
 
 
   describe "POST Upload Document" do
-    let(:user) { FactoryGirl.create(:user) }
-    let(:employer_profile) { FactoryGirl.create(:employer_profile) }
+    let(:user) { FactoryBot.create(:user) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile) }
     #let(:params) { { id: employer_profile.id, file:'test/JavaScript.pdf', subject: 'JavaScript.pdf' } }
 
     let(:subject){"Employee Attestation"}
@@ -798,8 +798,8 @@ RSpec.describe Employers::EmployerProfilesController do
   end
 
   describe "Delete Document" do
-    let(:user) { FactoryGirl.create(:user) }
-    let(:employer_profile) { FactoryGirl.create(:employer_profile) }
+    let(:user) { FactoryBot.create(:user) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile) }
 
     it "should delete documents" do
       sign_in(user)

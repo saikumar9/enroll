@@ -26,9 +26,9 @@ describe Subscribers::LawfulPresence do
     let(:xml_hash3) { {:case_number => "12121", :lawful_presence_determination => {
         :response_code => "not_lawfully_present", :legal_status => "other"}} }
 
-    let(:person) { person = FactoryGirl.create(:person)
+    let(:person) { person = FactoryBot.create(:person)
     consumer_role = person.build_consumer_role
-    consumer_role = FactoryGirl.build(:consumer_role)
+    consumer_role = FactoryBot.build(:consumer_role)
     person.consumer_role = consumer_role
     person.consumer_role.aasm_state = "dhs_pending"
     person

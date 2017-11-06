@@ -5,9 +5,9 @@ describe BenefitGroupAssignment, type: :model do
   it { should validate_presence_of :start_on }
   it { should validate_presence_of :is_active }
 
-  let(:benefit_group)     { FactoryGirl.create(:benefit_group)  }
+  let(:benefit_group)     { FactoryBot.create(:benefit_group)  }
   let(:employer_profile)  { benefit_group.plan_year.employer_profile }
-  let(:census_employee)   { FactoryGirl.create(:census_employee, employer_profile: employer_profile) }
+  let(:census_employee)   { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
   let(:start_on)          { benefit_group.plan_year.start_on }
 
   describe ".new" do
@@ -160,7 +160,7 @@ describe BenefitGroupAssignment, type: :model do
           end
 
           context "with an associated, matching hbx_enrollment" do
-            let(:employee_role)   { FactoryGirl.build(:employee_role, employer_profile: employer_profile )}
+            let(:employee_role)   { FactoryBot.build(:employee_role, employer_profile: employer_profile )}
             let(:hbx_enrollment)  { HbxEnrollment.new(benefit_group: benefit_group, employee_role: census_employee.employee_role ) }
 
             before { benefit_group_assignment.hbx_enrollment = hbx_enrollment }
@@ -170,10 +170,10 @@ describe BenefitGroupAssignment, type: :model do
             end
 
             context "and hbx_enrollment is non-matching" do
-              let(:other_benefit_group)     { FactoryGirl.build(:benefit_group) }
-              let(:other_plan_year)         { FactoryGirl.build(:plan_year, benefit_group: benefit_group) }
-              let(:other_employer_profile)  { FactoryGirl.create(:employer_profile, plan_year: plan_year) }
-              let(:other_employee_role)     { FactoryGirl.create(:employee_role, employer_profile: employer_profile) }
+              let(:other_benefit_group)     { FactoryBot.build(:benefit_group) }
+              let(:other_plan_year)         { FactoryBot.build(:plan_year, benefit_group: benefit_group) }
+              let(:other_employer_profile)  { FactoryBot.create(:employer_profile, plan_year: plan_year) }
+              let(:other_employee_role)     { FactoryBot.create(:employee_role, employer_profile: employer_profile) }
 
               context "because it has different benefit group" do
                 before { hbx_enrollment.benefit_group = other_benefit_group }
@@ -243,12 +243,12 @@ describe BenefitGroupAssignment, type: :model do
 
   describe '#active_and_waived_enrollments', dbclean: :after_each do
 
-    let(:household) { FactoryGirl.create(:household, family: family)}
-    let(:family) { FactoryGirl.create(:family, :with_primary_family_member)}
+    let(:household) { FactoryBot.create(:household, family: family)}
+    let(:family) { FactoryBot.create(:family, :with_primary_family_member)}
 
     shared_examples_for "active and waived enrollments" do |state, status, result|
 
-      let!(:enrollment) { FactoryGirl.create(:hbx_enrollment, household: household,
+      let!(:enrollment) { FactoryBot.create(:hbx_enrollment, household: household,
                           benefit_group_assignment_id: census_employee.active_benefit_group_assignment.id, 
                           aasm_state: state
                           )}

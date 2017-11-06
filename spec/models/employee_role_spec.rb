@@ -52,12 +52,12 @@ describe ".coverage_effective_on" do
     let(:hired_on) { TimeKeeper.date_of_record.beginning_of_month }
 
     let!(:employer_profile) {
-      org = FactoryGirl.create :organization, legal_name: "Corp 1"
-      employer = FactoryGirl.create :employer_profile, organization: org
-      plan_year = FactoryGirl.create :plan_year, employer_profile: employer, start_on: start_on, end_on: end_on, open_enrollment_start_on: open_enrollment_start_on, open_enrollment_end_on: open_enrollment_end_on, fte_count: 2, aasm_state: :active
-      FactoryGirl.create :benefit_group, plan_year: plan_year
-      renewal_plan_year = FactoryGirl.create :plan_year, employer_profile: employer, start_on: start_on + 1.year, end_on: end_on + 1.year, open_enrollment_start_on: open_enrollment_start_on + 1.year, open_enrollment_end_on: open_enrollment_end_on + 1.year + 3.days, fte_count: 2, aasm_state: :renewing_enrolling
-      FactoryGirl.create :benefit_group, plan_year: renewal_plan_year
+      org = FactoryBot.create :organization, legal_name: "Corp 1"
+      employer = FactoryBot.create :employer_profile, organization: org
+      plan_year = FactoryBot.create :plan_year, employer_profile: employer, start_on: start_on, end_on: end_on, open_enrollment_start_on: open_enrollment_start_on, open_enrollment_end_on: open_enrollment_end_on, fte_count: 2, aasm_state: :active
+      FactoryBot.create :benefit_group, plan_year: plan_year
+      renewal_plan_year = FactoryBot.create :plan_year, employer_profile: employer, start_on: start_on + 1.year, end_on: end_on + 1.year, open_enrollment_start_on: open_enrollment_start_on + 1.year, open_enrollment_end_on: open_enrollment_end_on + 1.year + 3.days, fte_count: 2, aasm_state: :renewing_enrolling
+      FactoryBot.create :benefit_group, plan_year: renewal_plan_year
       employer
     }
 
@@ -67,15 +67,15 @@ describe ".coverage_effective_on" do
     let(:open_enrollment_end_on) { open_enrollment_start_on.next_month + 9.days }
 
     let!(:census_employees){
-      FactoryGirl.create :census_employee, :owner, employer_profile: employer_profile
-      FactoryGirl.create :census_employee, employer_profile: employer_profile, hired_on: hired_on
+      FactoryBot.create :census_employee, :owner, employer_profile: employer_profile
+      FactoryBot.create :census_employee, employer_profile: employer_profile, hired_on: hired_on
     }
 
     let(:ce) { employer_profile.census_employees.non_business_owner.first }
 
     let(:employee_role) {
-      person = FactoryGirl.create(:person, last_name: ce.last_name, first_name: ce.first_name)
-      FactoryGirl.create(:employee_role, person: person, census_employee: ce, employer_profile: employer_profile)
+      person = FactoryBot.create(:person, last_name: ce.last_name, first_name: ce.first_name)
+      FactoryBot.create(:employee_role, person: person, census_employee: ce, employer_profile: employer_profile)
     }
 
 
@@ -103,10 +103,10 @@ describe EmployeeRole, dbclean: :after_each do
   let(:hired_on) { 10.days.ago.to_date }
 
   describe "built" do
-    let(:address) {FactoryGirl.build(:address)}
-    let(:saved_person) {FactoryGirl.create(:person, first_name: "Annie", last_name: "Lennox", addresses: [address])}
-    let(:new_person) {FactoryGirl.build(:person, first_name: "Carly", last_name: "Simon")}
-    let(:employer_profile) {FactoryGirl.create(:employer_profile)}
+    let(:address) {FactoryBot.build(:address)}
+    let(:saved_person) {FactoryBot.create(:person, first_name: "Annie", last_name: "Lennox", addresses: [address])}
+    let(:new_person) {FactoryBot.build(:person, first_name: "Carly", last_name: "Simon")}
+    let(:employer_profile) {FactoryBot.create(:employer_profile)}
 
     let(:valid_person_attributes) do
       {
@@ -276,10 +276,10 @@ describe EmployeeRole, dbclean: :after_each do
   let(:gender) { "male" }
 
   context "when created" do
-    let(:employer_profile) { FactoryGirl.create(:employer_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile) }
 
     let(:person) {
-      FactoryGirl.create(:person,
+      FactoryBot.create(:person,
         created_at: person_created_at,
         updated_at: person_updated_at
       )
@@ -435,10 +435,10 @@ describe EmployeeRole, dbclean: :after_each do
   context "with saved employee roles from multiple employers" do
     let(:match_size)                  { 5 }
     let(:non_match_size)              { 3 }
-    let(:match_employer_profile)      { FactoryGirl.create(:employer_profile) }
-    let(:non_match_employer_profile)  { FactoryGirl.create(:employer_profile) }
-    let!(:match_employee_roles)       { FactoryGirl.create_list(:employee_role, 5, employer_profile: match_employer_profile) }
-    let!(:non_match_employee_roles)   { FactoryGirl.create_list(:employee_role, 3, employer_profile: non_match_employer_profile) }
+    let(:match_employer_profile)      { FactoryBot.create(:employer_profile) }
+    let(:non_match_employer_profile)  { FactoryBot.create(:employer_profile) }
+    let!(:match_employee_roles)       { FactoryBot.create_list(:employee_role, 5, employer_profile: match_employer_profile) }
+    let!(:non_match_employee_roles)   { FactoryBot.create_list(:employee_role, 3, employer_profile: non_match_employer_profile) }
     let(:first_match_employee_role)   { match_employee_roles.first }
     let(:first_non_match_employee_role)   { non_match_employee_roles.first }
     let(:ee_ids)   { [first_match_employee_role.id, first_non_match_employee_role.id] }
@@ -467,12 +467,12 @@ end
 
 describe EmployeeRole, dbclean: :after_each do
 
-  let(:employer_profile)          { FactoryGirl.create(:employer_profile) }
+  let(:employer_profile)          { FactoryBot.create(:employer_profile) }
   let(:calendar_year) { TimeKeeper.date_of_record.year }
   let(:middle_of_prev_year) { Date.new(calendar_year - 1, 6, 10) }
 
-  let(:census_employee) { FactoryGirl.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: middle_of_prev_year, updated_at: middle_of_prev_year, hired_on: middle_of_prev_year) }
-  let(:person) { FactoryGirl.create(:person, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789') }
+  let(:census_employee) { FactoryBot.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: middle_of_prev_year, updated_at: middle_of_prev_year, hired_on: middle_of_prev_year) }
+  let(:person) { FactoryBot.create(:person, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789') }
 
   let(:employee_role) {
     person.employee_roles.create(
@@ -482,7 +482,7 @@ describe EmployeeRole, dbclean: :after_each do
       )
   }
 
-  let(:shop_family)       { FactoryGirl.create(:family, :with_primary_family_member) }
+  let(:shop_family)       { FactoryBot.create(:family, :with_primary_family_member) }
   let(:plan_year_start_on) { Date.new(calendar_year, 1, 1) }
   let(:plan_year_end_on) { Date.new(calendar_year, 12, 31) }
   let(:open_enrollment_start_on) { Date.new(calendar_year - 1, 12, 1) }
@@ -494,7 +494,7 @@ describe EmployeeRole, dbclean: :after_each do
 
   let!(:plan_year) {
 
-    py = FactoryGirl.create(:plan_year,
+    py = FactoryBot.create(:plan_year,
       start_on: plan_year_start_on,
       end_on: plan_year_end_on,
       open_enrollment_start_on: open_enrollment_start_on,
@@ -502,8 +502,8 @@ describe EmployeeRole, dbclean: :after_each do
       employer_profile: employer_profile
       )
 
-    blue = FactoryGirl.build(:benefit_group, title: "blue collar", plan_year: py)
-    white = FactoryGirl.build(:benefit_group, title: "white collar", plan_year: py)
+    blue = FactoryBot.build(:benefit_group, title: "blue collar", plan_year: py)
+    white = FactoryBot.build(:benefit_group, title: "white collar", plan_year: py)
     py.benefit_groups = [blue, white]
     py.save
     py.update_attributes(:aasm_state => 'published')
@@ -548,7 +548,7 @@ describe EmployeeRole, dbclean: :after_each do
 
   context ".is_eligible_to_enroll_without_qle?" do
     context 'when new hire open enrollment period available' do
-      let(:census_employee) { FactoryGirl.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: (plan_year_start_on + 10.days), updated_at: (plan_year_start_on + 10.days), hired_on: (plan_year_start_on + 10.days)) }
+      let(:census_employee) { FactoryBot.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: (plan_year_start_on + 10.days), updated_at: (plan_year_start_on + 10.days), hired_on: (plan_year_start_on + 10.days)) }
 
       before do
         TimeKeeper.set_date_of_record_unprotected!(plan_year_start_on + 15.days)
@@ -561,7 +561,7 @@ describe EmployeeRole, dbclean: :after_each do
 
 
     context 'when new roster entry enrollment period available' do
-      let(:census_employee) { FactoryGirl.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: (plan_year_start_on + 10.days), updated_at: (plan_year_start_on + 10.days), hired_on: middle_of_prev_year) }
+      let(:census_employee) { FactoryBot.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: (plan_year_start_on + 10.days), updated_at: (plan_year_start_on + 10.days), hired_on: middle_of_prev_year) }
 
       before do
         TimeKeeper.set_date_of_record_unprotected!(plan_year_start_on + 15.days)
@@ -573,7 +573,7 @@ describe EmployeeRole, dbclean: :after_each do
     end
 
     context 'when outside new hire enrollment period and employer open enrolment' do
-      let(:census_employee) { FactoryGirl.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: (plan_year_start_on + 10.days), updated_at: (plan_year_start_on + 10.days), hired_on: (plan_year_start_on + 10.days)) }
+      let(:census_employee) { FactoryBot.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: (plan_year_start_on + 10.days), updated_at: (plan_year_start_on + 10.days), hired_on: (plan_year_start_on + 10.days)) }
 
       before do
         TimeKeeper.set_date_of_record_unprotected!(plan_year_start_on + 55.days)
@@ -586,7 +586,7 @@ describe EmployeeRole, dbclean: :after_each do
   end
 
   context "can_select_coverage?" do
-    let(:employee_role) { FactoryGirl.build(:employee_role) }
+    let(:employee_role) { FactoryBot.build(:employee_role) }
 
     it "should return true when hired_on is less than two monthes ago" do
       employee_role.hired_on = TimeKeeper.date_of_record - 15.days
@@ -600,8 +600,8 @@ describe EmployeeRole, dbclean: :after_each do
   end
 
   context "is_cobra_status?" do
-    let(:employee_role) { FactoryGirl.build(:employee_role) }
-    let(:census_employee) { FactoryGirl.build(:census_employee) }
+    let(:employee_role) { FactoryBot.build(:employee_role) }
+    let(:census_employee) { FactoryBot.build(:census_employee) }
 
     it "should return false when without census_employee" do
       allow(employee_role).to receive(:census_employee).and_return nil
@@ -622,10 +622,10 @@ end
 
 describe "#benefit_group", dbclean: :after_each do
   subject { EmployeeRole.new(:person => person, :employer_profile => organization.employer_profile, :census_employee => census_employee) }
-  let(:person) { FactoryGirl.create(:person, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789') }
-  let(:organization) { FactoryGirl.create(:organization, :with_active_and_renewal_plan_years)}
-  let!(:family) { FactoryGirl.create(:family, :with_primary_family_member, person: person)}
-  let(:qle_kind) { FactoryGirl.create(:qualifying_life_event_kind, :effective_on_event_date) }
+  let(:person) { FactoryBot.create(:person, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789') }
+  let(:organization) { FactoryBot.create(:organization, :with_active_and_renewal_plan_years)}
+  let!(:family) { FactoryBot.create(:family, :with_primary_family_member, person: person)}
+  let(:qle_kind) { FactoryBot.create(:qualifying_life_event_kind, :effective_on_event_date) }
   let(:sep){
     sep = family.special_enrollment_periods.new
     sep.effective_on_kind = 'date_of_event'
@@ -635,7 +635,7 @@ describe "#benefit_group", dbclean: :after_each do
     sep
   }
 
-  let!(:census_employee) { FactoryGirl.create(:census_employee, first_name: person.first_name, last_name: person.last_name,
+  let!(:census_employee) { FactoryBot.create(:census_employee, first_name: person.first_name, last_name: person.last_name,
                             dob: person.dob, ssn: person.ssn, employer_profile: organization.employer_profile)}
   before do
     allow(family).to receive(:current_sep).and_return sep
@@ -661,7 +661,7 @@ describe "#benefit_group", dbclean: :after_each do
 
   context "plan shop through qle and having active & expired plan years" do
 
-    let(:organization) { FactoryGirl.create(:organization, :with_expired_and_active_plan_years)}
+    let(:organization) { FactoryBot.create(:organization, :with_expired_and_active_plan_years)}
 
     before do
       census_employee.benefit_group_assignments.each do |bga|
@@ -692,31 +692,31 @@ describe EmployeeRole do
   context 'is_dental_offered?' do
 
     let!(:employer_profile) {
-      org = FactoryGirl.create :organization, legal_name: "Corp 1"
-      FactoryGirl.create :employer_profile, organization: org
+      org = FactoryBot.create :organization, legal_name: "Corp 1"
+      FactoryBot.create :employer_profile, organization: org
     }
 
     let!(:renewal_plan) {
-      FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: start_on.year + 1, hios_id: "11111111122302-01", csr_variant_id: "01")
+      FactoryBot.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: start_on.year + 1, hios_id: "11111111122302-01", csr_variant_id: "01")
     }
 
     let!(:plan) {
-      FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: start_on.year, hios_id: "11111111122302-01", csr_variant_id: "01", renewal_plan_id: renewal_plan.id)
+      FactoryBot.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: start_on.year, hios_id: "11111111122302-01", csr_variant_id: "01", renewal_plan_id: renewal_plan.id)
     }
 
     let!(:current_plan_year) {
-      FactoryGirl.create :plan_year, employer_profile: employer_profile, start_on: start_on, end_on: end_on, open_enrollment_start_on: open_enrollment_start_on, open_enrollment_end_on: open_enrollment_end_on, fte_count: 2, aasm_state: :active
+      FactoryBot.create :plan_year, employer_profile: employer_profile, start_on: start_on, end_on: end_on, open_enrollment_start_on: open_enrollment_start_on, open_enrollment_end_on: open_enrollment_end_on, fte_count: 2, aasm_state: :active
     }
 
     let!(:current_benefit_group){
-      FactoryGirl.create :benefit_group, plan_year: current_plan_year, reference_plan_id: plan.id
+      FactoryBot.create :benefit_group, plan_year: current_plan_year, reference_plan_id: plan.id
     }
 
     let!(:family) {
-      FactoryGirl.create :census_employee, :owner, employer_profile: employer_profile
-      ce = FactoryGirl.create :census_employee, employer_profile: employer_profile
-      person = FactoryGirl.create(:person, last_name: ce.last_name, first_name: ce.first_name)
-      employee_role = FactoryGirl.create(:employee_role, person: person, census_employee: ce, employer_profile: employer_profile)
+      FactoryBot.create :census_employee, :owner, employer_profile: employer_profile
+      ce = FactoryBot.create :census_employee, employer_profile: employer_profile
+      person = FactoryBot.create(:person, last_name: ce.last_name, first_name: ce.first_name)
+      employee_role = FactoryBot.create(:employee_role, person: person, census_employee: ce, employer_profile: employer_profile)
       employee_role.census_employee.add_benefit_group_assignment current_benefit_group, current_benefit_group.start_on
       employee_role.census_employee.save!
       ce.update_attributes({employee_role: employee_role})
@@ -753,10 +753,10 @@ describe EmployeeRole do
       let(:open_enrollment_end_on) { open_enrollment_start_on + 9.days }
 
       let!(:renewing_plan_year) {
-        FactoryGirl.create :plan_year, employer_profile: employer_profile, start_on: start_on + 1.year, end_on: end_on + 1.year, open_enrollment_start_on: open_enrollment_start_on + 1.year, open_enrollment_end_on: open_enrollment_end_on + 1.year + 3.days, fte_count: 2, aasm_state: :renewing_published
+        FactoryBot.create :plan_year, employer_profile: employer_profile, start_on: start_on + 1.year, end_on: end_on + 1.year, open_enrollment_start_on: open_enrollment_start_on + 1.year, open_enrollment_end_on: open_enrollment_end_on + 1.year + 3.days, fte_count: 2, aasm_state: :renewing_published
       }
 
-      let!(:renewal_benefit_group){ FactoryGirl.create :benefit_group, plan_year: renewing_plan_year, reference_plan_id: renewal_plan.id }
+      let!(:renewal_benefit_group){ FactoryBot.create :benefit_group, plan_year: renewing_plan_year, reference_plan_id: renewal_plan.id }
       let!(:renewal_benefit_group_assignment) { ce.add_renew_benefit_group_assignment renewal_benefit_group }
 
       before do

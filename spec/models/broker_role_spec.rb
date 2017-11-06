@@ -2,16 +2,16 @@ require 'rails_helper'
 
 describe BrokerRole, dbclean: :after_each do
 
-  let(:address) {FactoryGirl.build(:address)}
-  let(:saved_person) {FactoryGirl.create(:person, addresses: [address])}
-  let(:person0) {FactoryGirl.create(:person)}
-  let(:person1) {FactoryGirl.create(:person)}
+  let(:address) {FactoryBot.build(:address)}
+  let(:saved_person) {FactoryBot.create(:person, addresses: [address])}
+  let(:person0) {FactoryBot.create(:person)}
+  let(:person1) {FactoryBot.create(:person)}
   let(:npn0) {"7775566"}
   let(:npn1) {"48484848"}
   let(:provider_kind)  {"broker"}
 
   # before :all do
-  #   @broker_agency_profile = FactoryGirl.create(:broker_agency_profile)
+  #   @broker_agency_profile = FactoryBot.create(:broker_agency_profile)
   # end
 
 
@@ -86,7 +86,7 @@ describe BrokerRole, dbclean: :after_each do
     end
 
     context "a broker registers" do
-      let(:person)  { FactoryGirl.build(:person) }
+      let(:person)  { FactoryBot.build(:person) }
       let(:registered_broker_role) { BrokerRole.new(person: person, npn: "2323334", provider_kind: "broker") }
 
       it "should initialize to applicant state" do
@@ -215,7 +215,7 @@ describe BrokerRole, dbclean: :after_each do
 
   describe BrokerRole, '.find_by_broker_agency_profile', :dbclean => :after_each do
     before :each do 
-      @ba = FactoryGirl.create(:broker_agency).broker_agency_profile
+      @ba = FactoryBot.create(:broker_agency).broker_agency_profile
     end
 
     it 'returns Broker instance for the specified National Producer Number' do
@@ -241,7 +241,7 @@ describe BrokerRole, dbclean: :after_each do
   # Instance methods
   describe BrokerRole, :dbclean => :around_each do
     before :all do 
-      @ba = FactoryGirl.create(:broker_agency).broker_agency_profile
+      @ba = FactoryBot.create(:broker_agency).broker_agency_profile
     end
 
     it '#broker_agency_profile sets agency' do
@@ -255,14 +255,14 @@ describe BrokerRole, dbclean: :after_each do
 
     # TODO
     it '#address= and #address sets & gets work address on parent person instance' do
-      # address = FactoryGirl.build(:address)
+      # address = FactoryBot.build(:address)
       # address.kind = "work"
 
       # expect(person0.build_broker_role(address: address).address._id).to eq address._id
       # expect(person0.build_broker_role(npn: npn0, provider_kind: provider_kind, address: address).save).to eq true
     end
     context '#email returns work email' do
-      person0= FactoryGirl.create(:person)
+      person0= FactoryBot.create(:person)
       provider_kind = 'broker'
 
       b1 = BrokerRole.create(person: person0, npn: 10000000+rand(10000), provider_kind: provider_kind, broker_agency_profile: @ba)
@@ -276,7 +276,7 @@ describe BrokerRole, dbclean: :after_each do
       end
     end
     context '#phone returns broker work phone or agency office phone' do
-      person0= FactoryGirl.create(:person)
+      person0= FactoryBot.create(:person)
       provider_kind = 'broker'
 
       it 'should return broker agency profile phone' do

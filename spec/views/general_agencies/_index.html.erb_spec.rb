@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "general_agencies/profiles/_families.html.erb", dbclean: :after_each do
-  let(:general_agency_profile) { FactoryGirl.create(:general_agency_profile) }
+  let(:general_agency_profile) { FactoryBot.create(:general_agency_profile) }
   before :each do
     assign :general_agency_profiles, Kaminari.paginate_array([general_agency_profile]).page(0)
     Settings.aca.general_agency_enabled = true

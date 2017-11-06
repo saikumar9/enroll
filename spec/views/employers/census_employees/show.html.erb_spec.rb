@@ -1,21 +1,21 @@
 require "rails_helper"
 
 RSpec.describe "employers/census_employees/show.html.erb" do
-  let(:plan){ FactoryGirl.create(:plan) }
-  let(:family){ FactoryGirl.create(:family, :with_primary_family_member) }
-  let(:household){ FactoryGirl.create(:household, family: family) }
+  let(:plan){ FactoryBot.create(:plan) }
+  let(:family){ FactoryBot.create(:family, :with_primary_family_member) }
+  let(:household){ FactoryBot.create(:household, family: family) }
   let(:person){ Person.new(first_name: "first name", last_name: "last_name", dob: 20.years.ago) }
-  let(:employer_profile) { FactoryGirl.create(:employer_profile) }
-  let(:plan_year){ FactoryGirl.create(:plan_year) }
-  let!(:census_employee) { FactoryGirl.create(:census_employee, employer_profile: employer_profile) }
+  let(:employer_profile) { FactoryBot.create(:employer_profile) }
+  let(:plan_year){ FactoryBot.create(:plan_year) }
+  let!(:census_employee) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
   let(:relationship_benefit){ RelationshipBenefit.new(relationship: "employee") }
   let(:benefit_group) {BenefitGroup.new(title: "plan name", relationship_benefits: [relationship_benefit], dental_relationship_benefits: [relationship_benefit], plan_year: plan_year )}
   let(:benefit_group_assignment) { BenefitGroupAssignment.new(benefit_group: benefit_group) }
   let(:reference_plan){ double("Reference Plan") }
   let(:address){ Address.new(kind: 'home', address_1: "1111 spalding ct", address_2: "apt 444", city: "atlanta", state: "ga", zip: "30338") }
-  let(:hbx_enrollment_member){ FactoryGirl.build(:hbx_enrollment_member, applicant_id: family.family_members.first.id, eligibility_date: (TimeKeeper.date_of_record).beginning_of_month) }
+  let(:hbx_enrollment_member){ FactoryBot.build(:hbx_enrollment_member, applicant_id: family.family_members.first.id, eligibility_date: (TimeKeeper.date_of_record).beginning_of_month) }
   # let(:hbx_enrollment) {double("HbxEnrollment1",waiver_reason: "this is reason", plan: double(name: "hbx enrollment plan name"), hbx_enrollment_members: [hbx_enrollment_member], coverage_kind: 'health')}
-  let(:hbx_enrollment){ FactoryGirl.create(:hbx_enrollment,
+  let(:hbx_enrollment){ FactoryBot.create(:hbx_enrollment,
     household: household,
     plan: plan,
     benefit_group: benefit_group,
@@ -23,7 +23,7 @@ RSpec.describe "employers/census_employees/show.html.erb" do
     coverage_kind: "health",
     external_enrollment: false )
   }
-  let(:hbx_enrollment_two){ FactoryGirl.create(:hbx_enrollment,
+  let(:hbx_enrollment_two){ FactoryBot.create(:hbx_enrollment,
     household: household,
     plan: plan,
     benefit_group: benefit_group,
@@ -34,7 +34,7 @@ RSpec.describe "employers/census_employees/show.html.erb" do
   # let(:hbx_enrollment_two) {double("HbxEnrollment2",waiver_reason: "this is reason", plan: double(name: "hbx enrollment plan name"), hbx_enrollment_members: [hbx_enrollment_member], coverage_kind: 'dental')}
   # let(:plan) {double(total_premium: 10, total_employer_contribution: 20, total_employee_cost:30)}
   let(:decorated_hbx_enrollment) { PlanCostDecorator.new(plan, hbx_enrollment, benefit_group, hbx_enrollment.plan) }
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
 
   before(:each) do
     sign_in user
@@ -162,7 +162,7 @@ RSpec.describe "employers/census_employees/show.html.erb" do
     end
 
     it "should return the existing one if email was already present" do
-      census_employee = FactoryGirl.create(:census_employee)
+      census_employee = FactoryBot.create(:census_employee)
       address = census_employee.email.address
       render template: "employers/census_employees/show.html.erb"
       expect(census_employee.email.kind).to eq 'home'
@@ -172,7 +172,7 @@ RSpec.describe "employers/census_employees/show.html.erb" do
 
   context 'with a previous coverage waiver' do
     let(:hbx_enrollment_three) do
-      FactoryGirl.create :hbx_enrollment, household: household,
+      FactoryBot.create :hbx_enrollment, household: household,
         plan: plan,
         benefit_group: benefit_group,
         hbx_enrollment_members: [ hbx_enrollment_member ],
@@ -218,7 +218,7 @@ RSpec.describe "employers/census_employees/show.html.erb" do
   end
 
   context "with health, dental, and past enrollments" do
-    let(:dental_plan){ FactoryGirl.create(:plan,
+    let(:dental_plan){ FactoryBot.create(:plan,
       name: "Some plan name",
       carrier_profile_id: carrier_profile._id,
       active_year: TimeKeeper.date_of_record.year,
@@ -226,14 +226,14 @@ RSpec.describe "employers/census_employees/show.html.erb" do
       dental_level: "high",
       coverage_kind: 'dental'
     )}
-    let(:dental_hbx_enrollment){ FactoryGirl.create(:hbx_enrollment,
+    let(:dental_hbx_enrollment){ FactoryBot.create(:hbx_enrollment,
       household: household,
       plan: dental_plan,
       benefit_group: benefit_group,
       coverage_kind: 'dental'
     )}
-    let(:carrier_profile) { FactoryGirl.build_stubbed(:carrier_profile) }
-    let(:past_enrollments) { FactoryGirl.create(:hbx_enrollment,
+    let(:carrier_profile) { FactoryBot.build_stubbed(:carrier_profile) }
+    let(:past_enrollments) { FactoryBot.create(:hbx_enrollment,
       household: household,
       plan: dental_plan,
       benefit_group: benefit_group,
@@ -277,7 +277,7 @@ RSpec.describe "employers/census_employees/show.html.erb" do
     end
 
     context "Employee status" do
-        let(:census_employee) { FactoryGirl.create(:census_employee, aasm_state: "eligible", hired_on: Time.now-15.days, employer_profile: employer_profile) }
+        let(:census_employee) { FactoryBot.create(:census_employee, aasm_state: "eligible", hired_on: Time.now-15.days, employer_profile: employer_profile) }
       before :each do
         census_employee.terminate_employment(TimeKeeper.date_of_record - 10.days) && census_employee.save
         census_employee.coverage_terminated_on = nil
@@ -298,7 +298,7 @@ RSpec.describe "employers/census_employees/show.html.erb" do
     end
 
     context "Hiding Address in CensusEmployee page if linked and populated" do
-      let(:census_employee) { FactoryGirl.create(:census_employee, hired_on: Time.now-15.days, employer_profile: employer_profile, employer_profile_id: employer_profile.id) }
+      let(:census_employee) { FactoryBot.create(:census_employee, hired_on: Time.now-15.days, employer_profile: employer_profile, employer_profile_id: employer_profile.id) }
       before :each do
         census_employee.aasm_state="employee_role_linked"
         census_employee.save!

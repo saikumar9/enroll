@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe ShopEmployerNotices::EmployerBrokerFiredNotice do
   before(:all) do
-    @employer_profile = FactoryGirl.create(:employer_profile)
-    @broker_role =  FactoryGirl.create(:broker_role, aasm_state: 'active')
-    @organization = FactoryGirl.create(:broker_agency, legal_name: "agencyone")
+    @employer_profile = FactoryBot.create(:employer_profile)
+    @broker_role =  FactoryBot.create(:broker_role, aasm_state: 'active')
+    @organization = FactoryBot.create(:broker_agency, legal_name: "agencyone")
     @organization.broker_agency_profile.update_attributes(primary_broker_role: @broker_role)
     @broker_role.update_attributes(broker_agency_profile_id: @organization.broker_agency_profile.id)
     @organization.broker_agency_profile.approve!
@@ -17,10 +17,10 @@ RSpec.describe ShopEmployerNotices::EmployerBrokerFiredNotice do
   let(:employer_profile){@employer_profile }
   let(:person) { @broker_role.person }
   let(:broker_role) { @broker_role }
-  let(:broker_agency_account) {FactoryGirl.create(:broker_agency_account, broker_agency_profile: @organization.broker_agency_profile,employer_profile: @employer_profile)}
+  let(:broker_agency_account) {FactoryBot.create(:broker_agency_account, broker_agency_profile: @organization.broker_agency_profile,employer_profile: @employer_profile)}
   let(:start_on) { TimeKeeper.date_of_record.beginning_of_month + 1.month - 1.year}
-  let!(:plan_year) { FactoryGirl.create(:plan_year, employer_profile: employer_profile, start_on: start_on, :aasm_state => 'draft', :fte_count => 55) }
-  let!(:active_benefit_group) { FactoryGirl.create(:benefit_group, plan_year: plan_year, title: "Benefits #{plan_year.start_on.year}") }
+  let!(:plan_year) { FactoryBot.create(:plan_year, employer_profile: employer_profile, start_on: start_on, :aasm_state => 'draft', :fte_count => 55) }
+  let!(:active_benefit_group) { FactoryBot.create(:benefit_group, plan_year: plan_year, title: "Benefits #{plan_year.start_on.year}") }
   let(:end_on) {TimeKeeper.date_of_record}
 
   #add person to broker agency profile
@@ -73,15 +73,15 @@ RSpec.describe ShopEmployerNotices::EmployerBrokerFiredNotice do
   end
 
   describe "append_data" do
-    let(:employer_profile)      { FactoryGirl.create(:employer_profile)}
-    let(:broker_agency_profile) { FactoryGirl.build(:broker_agency_profile) }
+    let(:employer_profile)      { FactoryBot.create(:employer_profile)}
+    let(:broker_agency_profile) { FactoryBot.build(:broker_agency_profile) }
     before do
       allow(employer_profile).to receive_message_chain("staff_roles.first").and_return(person)
       @employer_notice = ShopEmployerNotices::EmployerBrokerFiredNotice.new(employer_profile, valid_parmas)
     end
 
     it "should append necessary" do
-      FactoryGirl.create(:broker_agency_account, broker_agency_profile: broker_agency_profile, employer_profile: employer_profile, is_active: 'true')
+      FactoryBot.create(:broker_agency_account, broker_agency_profile: broker_agency_profile, employer_profile: employer_profile, is_active: 'true')
       employer_profile.fire_broker_agency
       employer_profile.save
       broker = employer_profile.broker_agency_accounts.unscoped.last.broker_agency_profile

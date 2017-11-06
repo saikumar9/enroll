@@ -3,11 +3,11 @@ require 'rails_helper'
 RSpec.describe "_waived_coverage_widget.html.erb" do
 
   context 'insured home waived coverage widget' do
-    let(:hbx_enrollment) { FactoryGirl.build_stubbed(:hbx_enrollment, household: household) }
-    let(:household) { FactoryGirl.build_stubbed(:household, family: family) }
-    let(:family) { FactoryGirl.build_stubbed(:family, person: person) }
-    let(:person) { FactoryGirl.build_stubbed(:person) }
-    let(:employer_profile) { FactoryGirl.build_stubbed(:employer_profile) }
+    let(:hbx_enrollment) { FactoryBot.build_stubbed(:hbx_enrollment, household: household) }
+    let(:household) { FactoryBot.build_stubbed(:household, family: family) }
+    let(:family) { FactoryBot.build_stubbed(:family, person: person) }
+    let(:person) { FactoryBot.build_stubbed(:person) }
+    let(:employer_profile) { FactoryBot.build_stubbed(:employer_profile) }
 
     before :each do
       assign(:person, person)

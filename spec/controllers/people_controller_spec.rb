@@ -2,17 +2,17 @@ require 'rails_helper'
 
 RSpec.describe PeopleController do
   let(:census_employee_id) { "abcdefg" }
-  let(:user) { FactoryGirl.build(:user) }
-  let(:email) {FactoryGirl.build(:email)}
+  let(:user) { FactoryBot.build(:user) }
+  let(:email) {FactoryBot.build(:email)}
 
-  let(:consumer_role){FactoryGirl.build(:consumer_role)}
+  let(:consumer_role){FactoryBot.build(:consumer_role)}
 
-  let(:census_employee){FactoryGirl.build(:census_employee)}
-  let(:employee_role){FactoryGirl.build(:employee_role, :census_employee => census_employee)}
-  let(:person) { FactoryGirl.create(:person, :with_employee_role) }
+  let(:census_employee){FactoryBot.build(:census_employee)}
+  let(:employee_role){FactoryBot.build(:employee_role, :census_employee => census_employee)}
+  let(:person) { FactoryBot.create(:person, :with_employee_role) }
 
 
-  let(:vlp_document){FactoryGirl.build(:vlp_document)}
+  let(:vlp_document){FactoryBot.build(:vlp_document)}
 
   it "GET new" do
     sign_in(user)

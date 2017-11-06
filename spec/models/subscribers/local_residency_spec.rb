@@ -11,9 +11,9 @@ describe Subscribers::LocalResidency do
     let(:xml) { File.read(Rails.root.join("spec", "test_data", "residency_verification_payloads", "response.xml")) }
     let(:xml_hash) { {residency_verification_response: 'ADDRESS_NOT_IN_AREA'} }
     let(:xml_hash2) { {residency_verification_response: 'ADDRESS_IN_AREA'} }
-    let(:person) { person = FactoryGirl.build(:person);
+    let(:person) { person = FactoryBot.build(:person);
     consumer_role = person.build_consumer_role;
-    consumer_role = FactoryGirl.build(:consumer_role);
+    consumer_role = FactoryBot.build(:consumer_role);
     person.consumer_role = consumer_role;
     person.consumer_role.aasm_state=:verifications_pending;
     person
@@ -47,7 +47,7 @@ describe Subscribers::LocalResidency do
   context "response saving" do
 
     let(:consumer_role) {
-      FactoryGirl.create(:consumer_role_object)
+      FactoryBot.create(:consumer_role_object)
     }
 
     let(:person_id) { consumer_role.person.id }

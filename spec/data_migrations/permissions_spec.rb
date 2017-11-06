@@ -9,8 +9,8 @@ describe DefinePermissions, dbclean: :after_each do
 
     before do
       Person.all.delete
-      person= FactoryGirl.create(:person)
-      role = FactoryGirl.create(:hbx_staff_role, person: person)
+      person= FactoryBot.create(:person)
+      role = FactoryBot.create(:hbx_staff_role, person: person)
       subject.initial_hbx
     end
 
@@ -26,9 +26,9 @@ describe DefinePermissions, dbclean: :after_each do
       before do
         User.all.delete
         Person.all.delete
-        person = FactoryGirl.create(:person)
-        permission = FactoryGirl.create(:permission, :hbx_staff)
-        role = FactoryGirl.create(:hbx_staff_role, person: person, subrole: "hbx_staff", permission_id: permission.id)
+        person = FactoryBot.create(:person)
+        permission = FactoryBot.create(:permission, :hbx_staff)
+        role = FactoryBot.create(:hbx_staff_role, person: person, subrole: "hbx_staff", permission_id: permission.id)
         subject.hbx_admin_can_complete_resident_application
       end
 
@@ -44,12 +44,12 @@ describe DefinePermissions, dbclean: :after_each do
     before do
       User.all.delete
       Person.all.delete
-      allow(Permission).to receive_message_chain('hbx_staff.id'){FactoryGirl.create(:permission, :hbx_staff).id}
-      allow(Permission).to receive_message_chain('hbx_read_only.id'){FactoryGirl.create(:permission, :hbx_read_only).id}
-      allow(Permission).to receive_message_chain('hbx_csr_supervisor.id'){FactoryGirl.create(:permission, :hbx_csr_supervisor).id}
-      allow(Permission).to receive_message_chain('hbx_csr_tier2.id'){FactoryGirl.create(:permission,  :hbx_csr_tier2).id}
-      allow(Permission).to receive_message_chain('hbx_csr_tier1.id'){FactoryGirl.create(:permission,  :hbx_csr_tier1).id}
-      allow(Permission).to receive_message_chain('hbx_csr_tier1.id'){FactoryGirl.create(:permission,  :developer).id}
+      allow(Permission).to receive_message_chain('hbx_staff.id'){FactoryBot.create(:permission, :hbx_staff).id}
+      allow(Permission).to receive_message_chain('hbx_read_only.id'){FactoryBot.create(:permission, :hbx_read_only).id}
+      allow(Permission).to receive_message_chain('hbx_csr_supervisor.id'){FactoryBot.create(:permission, :hbx_csr_supervisor).id}
+      allow(Permission).to receive_message_chain('hbx_csr_tier2.id'){FactoryBot.create(:permission,  :hbx_csr_tier2).id}
+      allow(Permission).to receive_message_chain('hbx_csr_tier1.id'){FactoryBot.create(:permission,  :hbx_csr_tier1).id}
+      allow(Permission).to receive_message_chain('hbx_csr_tier1.id'){FactoryBot.create(:permission,  :developer).id}
       subject.build_test_roles
     end
 

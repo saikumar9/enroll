@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe GeneralAgencyAccount, type: :model do
-  let(:broker_agency_profile) { FactoryGirl.build(:broker_agency_profile) }
+  let(:broker_agency_profile) { FactoryBot.build(:broker_agency_profile) }
 
   let(:valid_params) do
     {

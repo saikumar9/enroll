@@ -14,7 +14,7 @@ describe UpdateUserOrPersonRecords, dbclean: :after_each do
 
   describe "update username & email on user and also destroying headless user", dbclean: :after_each do
 
-    let(:user) { FactoryGirl.create(:user, :with_family)}
+    let(:user) { FactoryBot.create(:user, :with_family)}
     before do
       allow(ENV).to receive(:[]).with('action').and_return ""
       allow(ENV).to receive(:[]).with('user_email').and_return user.email
@@ -57,7 +57,7 @@ describe UpdateUserOrPersonRecords, dbclean: :after_each do
     end
 
     context "updating email on person record" do
-      let(:person) { FactoryGirl.create(:person)}
+      let(:person) { FactoryBot.create(:person)}
 
       before do
         allow(ENV).to receive(:[]).with('action').and_return "update_person_home_email"

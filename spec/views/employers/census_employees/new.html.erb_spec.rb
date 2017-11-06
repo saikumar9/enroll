@@ -2,12 +2,12 @@ require 'rails_helper'
 
 describe "employers/census_employees/new.html.erb" do
   before(:all) do
-    @user = FactoryGirl.create(:user)
-    p=FactoryGirl.create(:person, user: @user)
-    @hbx_staff_role = FactoryGirl.create(:hbx_staff_role, person: p)
+    @user = FactoryBot.create(:user)
+    p=FactoryBot.create(:person, user: @user)
+    @hbx_staff_role = FactoryBot.create(:hbx_staff_role, person: p)
   end
   let(:census_employee) { CensusEmployee.new }
-  let(:employer_profile) { FactoryGirl.create(:employer_profile) }
+  let(:employer_profile) { FactoryBot.create(:employer_profile) }
 
   before :each do
     sign_in @user

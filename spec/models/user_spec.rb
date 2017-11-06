@@ -170,11 +170,11 @@ RSpec.describe User, :type => :model, dbclean: :after_each do
       let(:params){valid_params.deep_merge({roles: ["employee", "broker", "hbx_staff"]})}
       it "should return proper roles" do
         user = User.new(**params)
-        person = FactoryGirl.create(:person)
+        person = FactoryBot.create(:person)
         allow(user).to receive(:person).and_return(person)
-        employer_staff_role =FactoryGirl.create(:employer_staff_role, person: person)
+        employer_staff_role =FactoryBot.create(:employer_staff_role, person: person)
         #allow(person).to receive(:employee_roles).and_return([role])
-        FactoryGirl.create(:employer_staff_role, person: person)
+        FactoryBot.create(:employer_staff_role, person: person)
         #Deprecated. DO NOT USE.  Migrate to person.active_employee_roles.present?
         #expect(user.has_employee_role?).to be_truthy
         expect(user.has_employer_staff_role?).to be_truthy
@@ -219,12 +219,12 @@ RSpec.describe User, :type => :model, dbclean: :after_each do
   end
 
   context "get_announcements_by_roles_and_portal" do
-    let(:person) { FactoryGirl.create(:person) }
-    let(:user) { FactoryGirl.create(:user, person: person) }
+    let(:person) { FactoryBot.create(:person) }
+    let(:user) { FactoryBot.create(:user, person: person) }
 
     before :each do
       Announcement::AUDIENCE_KINDS.each do |kind|
-        FactoryGirl.create(:announcement, content: "msg for #{kind}", audiences: [kind])
+        FactoryBot.create(:announcement, content: "msg for #{kind}", audiences: [kind])
       end
     end
 
@@ -301,7 +301,7 @@ RSpec.describe User, :type => :model, dbclean: :after_each do
     end
 
     context "when a user does NOT have a person associated", dbclean: :after_each do
-      let(:orphaned_user) { FactoryGirl.create(:user) }
+      let(:orphaned_user) { FactoryBot.create(:user) }
 
       it "should return the orphaned user" do
         orphaned_user.save!
@@ -310,8 +310,8 @@ RSpec.describe User, :type => :model, dbclean: :after_each do
     end
 
     context "when more than one user does not have a person associated", dbclean: :after_each do
-      let(:orphaned_user1) { FactoryGirl.create(:user, email: "zzz@mail.com") }
-      let(:orphaned_user2) { FactoryGirl.create(:user, email: "aaa@mail.com") }
+      let(:orphaned_user1) { FactoryBot.create(:user, email: "zzz@mail.com") }
+      let(:orphaned_user2) { FactoryBot.create(:user, email: "aaa@mail.com") }
       let(:orphaned_users) { [orphaned_user1, orphaned_user2] }
 
       before do
@@ -379,8 +379,8 @@ RSpec.describe User, :type => :model, dbclean: :after_each do
 
   describe "#handle_headless_records", dbclean: :after_each do
     let(:user) { User.new(**valid_params) }
-    let!(:headless_user_with_oim_id) { FactoryGirl.create(:user, oim_id: user.oim_id)}
-    let!(:headless_user_with_email) { FactoryGirl.create(:user, email: user.email)}
+    let!(:headless_user_with_oim_id) { FactoryBot.create(:user, oim_id: user.oim_id)}
+    let!(:headless_user_with_email) { FactoryBot.create(:user, email: user.email)}
 
     it "should destroy the headless user record which matches with the email" do
       user.handle_headless_records
@@ -400,8 +400,8 @@ RSpec.describe User, :type => :model, dbclean: :after_each do
   end
 
   describe "can_change_broker?", dbclean: :after_each do
-    let(:person) { FactoryGirl.create(:person) }
-    let(:user) { FactoryGirl.create(:user, person: person) }
+    let(:person) { FactoryBot.create(:person) }
+    let(:user) { FactoryBot.create(:user, person: person) }
 
     context "with user" do
       it "should return true when hbx staff" do

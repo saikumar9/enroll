@@ -2,7 +2,7 @@ require "rails_helper"
 include ActionView::Context
 RSpec.describe "insured/consumer_roles/_form.html.erb" do
   let(:person) { Person.new }
-  let(:current_user) {FactoryGirl.create(:user)}
+  let(:current_user) {FactoryBot.create(:user)}
   before :each do
     helper = Object.new.extend ActionView::Helpers::FormHelper
     helper.extend ActionDispatch::Routing::PolymorphicRoutes

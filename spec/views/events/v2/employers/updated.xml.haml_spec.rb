@@ -43,15 +43,15 @@ RSpec.describe "events/v2/employer/updated.haml.erb" do
 
 
   describe "given a employer" do
-    let(:benefit_group)     { FactoryGirl.build(:benefit_group)}
-    let(:plan_year)         { FactoryGirl.build(:plan_year, benefit_groups: [benefit_group], aasm_state:'published',
+    let(:benefit_group)     { FactoryBot.build(:benefit_group)}
+    let(:plan_year)         { FactoryBot.build(:plan_year, benefit_groups: [benefit_group], aasm_state:'published',
                   created_at: Date.new)}
     let!(:employer)  { EmployerProfile.new(**valid_params, plan_years: [plan_year]) }
 
-    let(:staff) { FactoryGirl.create(:person, :with_work_email, :with_work_phone)}
+    let(:staff) { FactoryBot.create(:person, :with_work_email, :with_work_phone)}
     let(:broker_agency_profile) { BrokerAgencyProfile.create(market_kind: "both") }
-    let(:person_broker) {FactoryGirl.build(:person,:with_work_email, :with_work_phone)}
-    let(:broker) {FactoryGirl.build(:broker_role,aasm_state:'active',person:person_broker)}
+    let(:person_broker) {FactoryBot.build(:person,:with_work_email, :with_work_phone)}
+    let(:broker) {FactoryBot.build(:broker_role,aasm_state:'active',person:person_broker)}
     include AcapiVocabularySpecHelpers
 
     before(:all) do
@@ -116,7 +116,7 @@ RSpec.describe "events/v2/employer/updated.haml.erb" do
       context "is_offering_dental? is true" do
 
         before do
-          dental_plan = FactoryGirl.create(:plan, name: "new dental plan", coverage_kind: 'dental',
+          dental_plan = FactoryBot.create(:plan, name: "new dental plan", coverage_kind: 'dental',
                                            dental_level: 'high')
           benefit_group.elected_dental_plans = [dental_plan]
           benefit_group.dental_reference_plan_id = dental_plan.id

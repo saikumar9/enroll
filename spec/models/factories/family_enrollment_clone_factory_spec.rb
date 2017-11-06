@@ -5,11 +5,11 @@ RSpec.describe Factories::FamilyEnrollmentCloneFactory, :type => :model do
   let(:renewal_start) { TimeKeeper.date_of_record.next_month.beginning_of_month }
 
   let!(:renewal_plan) {
-    FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: renewal_start.year, hios_id: "11111111122302-01", csr_variant_id: "01")
+    FactoryBot.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: renewal_start.year, hios_id: "11111111122302-01", csr_variant_id: "01")
   }
 
   let!(:plan) {
-    FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: renewal_start.year - 1, hios_id: "11111111122302-01", csr_variant_id: "01", renewal_plan_id: renewal_plan.id)
+    FactoryBot.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: renewal_start.year - 1, hios_id: "11111111122302-01", csr_variant_id: "01", renewal_plan_id: renewal_plan.id)
   }
 
   let!(:employer_profile) {
@@ -20,9 +20,9 @@ RSpec.describe Factories::FamilyEnrollmentCloneFactory, :type => :model do
   let(:coverage_terminated_on) { TimeKeeper.date_of_record.prev_month.end_of_month }
 
   let!(:build_plan_years_and_employees) {
-    owner = FactoryGirl.create :census_employee, :owner, employer_profile: employer_profile
-    employee_role = FactoryGirl.create :employee_role, employer_profile: employer_profile
-    employee = FactoryGirl.create :census_employee, employer_profile: employer_profile
+    owner = FactoryBot.create :census_employee, :owner, employer_profile: employer_profile
+    employee_role = FactoryBot.create :employee_role, employer_profile: employer_profile
+    employee = FactoryBot.create :census_employee, employer_profile: employer_profile
     employee.update(aasm_state: 'cobra_linked', cobra_begin_date: coverage_terminated_on.next_day, coverage_terminated_on: coverage_terminated_on, employee_role_id: employee_role.id)
     employee.add_benefit_group_assignment benefit_group, benefit_group.start_on
   }
@@ -32,12 +32,12 @@ RSpec.describe Factories::FamilyEnrollmentCloneFactory, :type => :model do
   }
 
   let!(:family) {
-    person = FactoryGirl.create(:person, last_name: ce.last_name, first_name: ce.first_name)
-    employee_role = FactoryGirl.create(:employee_role, person: person, census_employee: ce, employer_profile: employer_profile)
+    person = FactoryBot.create(:person, last_name: ce.last_name, first_name: ce.first_name)
+    employee_role = FactoryBot.create(:employee_role, person: person, census_employee: ce, employer_profile: employer_profile)
     ce.update_attributes({employee_role: employee_role})
     family_rec = Family.find_or_build_from_employee_role(employee_role)
 
-    FactoryGirl.create(:hbx_enrollment,
+    FactoryBot.create(:hbx_enrollment,
       household: person.primary_family.active_household,
       coverage_kind: "health",
       effective_on: ce.active_benefit_group_assignment.benefit_group.start_on,

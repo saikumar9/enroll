@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe GeneralAgencies::ProfilesController, dbclean: :after_each do
-  let(:general_agency_profile) { FactoryGirl.create(:general_agency_profile) }
-  let(:general_agency_staff) { FactoryGirl.create(:general_agency_staff_role) }
-  let(:person) { FactoryGirl.create(:person) }
-  let(:user) { FactoryGirl.create(:user, person: person) }
+  let(:general_agency_profile) { FactoryBot.create(:general_agency_profile) }
+  let(:general_agency_staff) { FactoryBot.create(:general_agency_staff_role) }
+  let(:person) { FactoryBot.create(:person) }
+  let(:user) { FactoryBot.create(:user, person: person) }
 
   before :each do
     Settings.aca.general_agency_enabled = true
@@ -76,7 +76,7 @@ RSpec.describe GeneralAgencies::ProfilesController, dbclean: :after_each do
 
     it "should get general_agency_profile" do
       Organization.delete_all
-      ga = FactoryGirl.create(:general_agency_profile)
+      ga = FactoryBot.create(:general_agency_profile)
       xhr :get, :search_general_agency, general_agency_search: ga.legal_name, format: :js
       expect(assigns[:general_agency_profiles]).to eq [ga]
     end
@@ -84,7 +84,7 @@ RSpec.describe GeneralAgencies::ProfilesController, dbclean: :after_each do
 
   describe "GET show" do
     before(:each) do
-      FactoryGirl.create(:announcement, content: "msg for GA", audiences: ['GA'])
+      FactoryBot.create(:announcement, content: "msg for GA", audiences: ['GA'])
       allow(user).to receive(:has_general_agency_staff_role?).and_return true
       sign_in(user)
       get :show, id: general_agency_profile.id
@@ -131,7 +131,7 @@ RSpec.describe GeneralAgencies::ProfilesController, dbclean: :after_each do
   end
 
   describe "GET families" do
-    let(:family) { FactoryGirl.create(:family, :with_primary_family_member) }
+    let(:family) { FactoryBot.create(:family, :with_primary_family_member) }
     before(:each) do
       allow(GeneralAgencyProfile).to receive(:find).and_return(general_agency_profile)
       allow(general_agency_profile).to receive(:families).and_return [family]
@@ -139,8 +139,8 @@ RSpec.describe GeneralAgencies::ProfilesController, dbclean: :after_each do
     end
 
     context "without page params" do
-      let(:person2) { FactoryGirl.create(:person , :last_name => "smith11") } # last name has to be in small case
-      let(:family2) { FactoryGirl.create(:family, :with_primary_family_member , :person => person2  ) }
+      let(:person2) { FactoryBot.create(:person , :last_name => "smith11") } # last name has to be in small case
+      let(:family2) { FactoryBot.create(:family, :with_primary_family_member , :person => person2  ) }
       before(:each) do
         allow(general_agency_profile).to receive(:families).and_return [family,family2]
         xhr :get, :families, id: general_agency_profile.id
@@ -225,7 +225,7 @@ RSpec.describe GeneralAgencies::ProfilesController, dbclean: :after_each do
 
   describe "POST update_staff" do
     before(:each) do
-      FactoryGirl.create(:hbx_profile) if HbxProfile.count == 0
+      FactoryBot.create(:hbx_profile) if HbxProfile.count == 0
       sign_in(user)
       post :update_staff, id: general_agency_staff.id, approve: 'true'
     end

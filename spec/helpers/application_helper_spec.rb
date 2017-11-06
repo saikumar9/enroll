@@ -29,8 +29,8 @@ RSpec.describe ApplicationHelper, :type => :helper do
   end
 
   describe "#display_carrier_logo" do
-    let(:carrier_profile){ FactoryGirl.build(:carrier_profile, legal_name: "Kaiser")}
-    let(:plan){ FactoryGirl.build(:plan, carrier_profile: carrier_profile) }
+    let(:carrier_profile){ FactoryBot.build(:carrier_profile, legal_name: "Kaiser")}
+    let(:plan){ FactoryBot.build(:plan, carrier_profile: carrier_profile) }
 
     before do
       allow(plan).to receive(:carrier_profile).and_return(carrier_profile)
@@ -67,8 +67,8 @@ RSpec.describe ApplicationHelper, :type => :helper do
   end
 
   describe "#display_dental_metal_level" do
-    let(:dental_plan_2015){FactoryGirl.create(:plan_template,:shop_dental, active_year: 2015)}
-    let(:dental_plan_2016){FactoryGirl.create(:plan_template,:shop_dental, active_year: 2016)}
+    let(:dental_plan_2015){FactoryBot.create(:plan_template,:shop_dental, active_year: 2015)}
+    let(:dental_plan_2016){FactoryBot.create(:plan_template,:shop_dental, active_year: 2016)}
 
     it "should display metal level if its a 2015 plan" do
       expect(display_dental_metal_level(dental_plan_2015)).to eq dental_plan_2015.metal_level.titleize
@@ -81,15 +81,15 @@ RSpec.describe ApplicationHelper, :type => :helper do
 
 
   describe "#enrollment_progress_bar" do
-    let(:employer_profile) { FactoryGirl.create(:employer_profile) }
-    let(:plan_year) { FactoryGirl.create(:plan_year, employer_profile: employer_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile) }
+    let(:plan_year) { FactoryBot.create(:plan_year, employer_profile: employer_profile) }
 
     it "display progress bar" do
       expect(helper.enrollment_progress_bar(plan_year, 1, minimum: false)).to include('<div class="progress-wrapper employer-dummy">')
     end
 
     context ">100 census employees" do
-      let!(:employees) { FactoryGirl.create_list(:census_employee, 101, employer_profile: employer_profile) }
+      let!(:employees) { FactoryBot.create_list(:census_employee, 101, employer_profile: employer_profile) }
 
       it "does not display" do
         expect(helper.enrollment_progress_bar(plan_year, 1, minimum: false)).to eq nil
@@ -297,8 +297,8 @@ RSpec.describe ApplicationHelper, :type => :helper do
   end
 
   describe "show_default_ga?", dbclean: :after_each do
-    let(:general_agency_profile) { FactoryGirl.create(:general_agency_profile, :shop_agency) }
-    let(:broker_agency_profile) { FactoryGirl.create(:broker_agency_profile, :shop_agency) }
+    let(:general_agency_profile) { FactoryBot.create(:general_agency_profile, :shop_agency) }
+    let(:broker_agency_profile) { FactoryBot.create(:broker_agency_profile, :shop_agency) }
 
     it "should return false without broker_agency_profile" do
       expect(helper.show_default_ga?(general_agency_profile, nil)).to eq false
@@ -321,14 +321,14 @@ RSpec.describe ApplicationHelper, :type => :helper do
 
 
   describe "find_plan_name", dbclean: :after_each do
-    let(:family) { FactoryGirl.create(:family, :with_primary_family_member) }
-    let(:shop_enrollment) { FactoryGirl.create(:hbx_enrollment,
+    let(:family) { FactoryBot.create(:family, :with_primary_family_member) }
+    let(:shop_enrollment) { FactoryBot.create(:hbx_enrollment,
                                         household: family.active_household,
                                         kind: "employer_sponsored",
                                         submitted_at: TimeKeeper.datetime_of_record - 3.days,
                                         created_at: TimeKeeper.datetime_of_record - 3.days
                                 )}
-    let(:ivl_enrollment)    { FactoryGirl.create(:hbx_enrollment,
+    let(:ivl_enrollment)    { FactoryBot.create(:hbx_enrollment,
                                         household: family.latest_household,
                                         coverage_kind: "health",
                                         effective_on: TimeKeeper.datetime_of_record - 10.days,
@@ -370,9 +370,9 @@ end
 
   describe "#is_new_paper_application?" do
     let(:person_id) { double }
-    let(:admin_user) { FactoryGirl.create(:user, :hbx_staff)}
-    let(:user) { FactoryGirl.create(:user)}
-    let(:person) { FactoryGirl.create(:person, user: user)}
+    let(:admin_user) { FactoryBot.create(:user, :hbx_staff)}
+    let(:user) { FactoryBot.create(:user)}
+    let(:person) { FactoryBot.create(:person, user: user)}
     before do
       allow(admin_user).to receive(:person_id).and_return person_id
     end
@@ -409,7 +409,7 @@ end
 
   describe ".notify_employee_confirming_coverage_termination" do
     let(:enrollment) { double("HbxEnrollment", effective_on: double("effective_on", year: double), applied_aptc_amount: 0) }
-    let(:census_employee) {FactoryGirl.create(:census_employee)}
+    let(:census_employee) {FactoryBot.create(:census_employee)}
     it "should trigger notify_employee_confirming_coverage_termination job in queue" do
       allow(enrollment).to receive(:is_shop?).and_return(true)
       allow(enrollment).to receive(:coverage_kind).and_return("health")

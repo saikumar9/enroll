@@ -6,8 +6,8 @@ RSpec.describe "insured/families/_consumer_broker.html.erb" do
 
 
 
-  let(:family1) { FactoryGirl.create(:family, :with_primary_family_member)}
-  let(:broker_agency_account){FactoryGirl.create(:broker_agency_account,family:family1,is_active:true)}
+  let(:family1) { FactoryBot.create(:family, :with_primary_family_member)}
+  let(:broker_agency_account){FactoryBot.create(:broker_agency_account,family:family1,is_active:true)}
 
 
 
