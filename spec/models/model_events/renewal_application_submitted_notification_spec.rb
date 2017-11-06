@@ -7,8 +7,8 @@ describe 'ModelEvents::RenewalApplicationSubmittedNotification' do
   let(:start_on) { (TimeKeeper.date_of_record + 3.months).beginning_of_month }
 
   let!(:employer) { create(:employer_with_planyear, start_on: (TimeKeeper.date_of_record + 2.months).beginning_of_month.prev_year, plan_year_state: 'active') }
-  let(:model_instance) { build(:renewing_plan_year, employer_profile: employer, start_on: start_on, aasm_state: 'renewing_draft', benefit_groups: [benefit_group]) }
-  let(:benefit_group) { FactoryGirl.create(:benefit_group) }
+  let!(:model_instance) { build(:renewing_plan_year, employer_profile: employer, start_on: start_on, aasm_state: 'renewing_draft', benefit_groups: [benefit_group]) }
+  let!(:benefit_group) { FactoryGirl.create(:benefit_group) }
 
   describe "ModelEvent" do
     context "when renewal application created" do

@@ -705,12 +705,23 @@ function attachEmployerHealthContributionShowHide() {
   });
 }
 
+function confirmActivePlanYear() {
+  var planYear = $('#plan_year_start_on').val() || "0000"
+  planYear = planYear.substr(0,4);
+
+  if($.inArray(planYear, <%= Settings.aca.dental_plan_years_available %>) !== -1){
+    $(".show-dental-plans").show();
+  }else{
+    $(".show-dental-plans").hide();
+  }
+}
+
 function loadCarrierNames() {
   var start_on = $("#plan_year_start_on").val().substr(0,4);
   var selected_carrier_level = $(this).siblings('input').val();
   var employer_profile_id = $('#employerProfileId').data('value');
   var benefit_group_id = $('#benefitGroupId').data('value');
-  var location_id = $('.health .nav li:visible').closest('fieldset').attr('id');
+  var location_id = $(this).closest('fieldset').attr('id');
   $.ajax({
     type: "GET",
     data:{
@@ -757,22 +768,10 @@ function onlyShowEnabledCarrierChoices() {
   }
 }
 
-function confirmActivePlanYear() {
-  var planYear = $('#plan_year_start_on').val() || "0000"
-  planYear = planYear.substr(0,4);
-
-
-
-  if($.inArray(planYear, <%= Settings.aca.dental_plan_years_available %>) !== -1){
-    $(".show-dental-plans").show();
-  }else{
-    $(".show-dental-plans").hide();
-  }
-}
 
 $(document).ready(ready);
 $(document).on('page:load', plan_year_selection_loader);
 $(document).on('ready', attachEmployerHealthContributionShowHide);
-$(document).on('click','.health .nav-tabs label', loadCarrierNames)
-$(document).on('change','#plan_year_start_on', onlyShowEnabledCarrierChoices)
 $(document).on('ready', confirmActivePlanYear);
+$(document).on('click','.health .nav-tabs label', loadCarrierNames);
+$(document).on('change','#plan_year_start_on', onlyShowEnabledCarrierChoices);
