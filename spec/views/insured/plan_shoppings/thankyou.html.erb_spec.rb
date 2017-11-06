@@ -3,9 +3,9 @@ require "rails_helper"
 RSpec.describe "insured/thankyou.html.erb" do
 
   context "shop enrollment" do
-    let(:employee_role){FactoryGirl.create(:employee_role)}
-    let(:plan){FactoryGirl.create(:plan)}
-    let(:benefit_group){ FactoryGirl.build(:benefit_group) }
+    let(:employee_role){FactoryBot.create(:employee_role)}
+    let(:plan){FactoryBot.create(:plan)}
+    let(:benefit_group){ FactoryBot.build(:benefit_group) }
     let(:hbx_enrollment){ HbxEnrollment.new(benefit_group: benefit_group, employee_role: employee_role, effective_on: 1.month.ago.to_date, updated_at: DateTime.now  ) }
     let(:carrier_profile) { double(legal_name: "carefirst")}
 
@@ -48,9 +48,9 @@ RSpec.describe "insured/thankyou.html.erb" do
   end
 
   context "ivl enrollment" do
-    let(:employee_role){FactoryGirl.create(:employee_role)}
-    let(:plan){FactoryGirl.create(:plan)}
-    let(:benefit_group){ FactoryGirl.build(:benefit_group) }
+    let(:employee_role){FactoryBot.create(:employee_role)}
+    let(:plan){FactoryBot.create(:plan)}
+    let(:benefit_group){ FactoryBot.build(:benefit_group) }
     let(:hbx_enrollment){ HbxEnrollment.new(benefit_group: benefit_group, employee_role: employee_role, effective_on: 1.month.ago.to_date, updated_at: DateTime.now  ) }
     let(:carrier_profile) { double(legal_name: "carefirst")}
 

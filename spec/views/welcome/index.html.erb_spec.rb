@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "welcome/index.html.erb", :type => :view do
 
   describe "a signed in user" do
-    let(:user) { FactoryGirl.create(:user, oim_id: "test@enroll.com") }
+    let(:user) { FactoryBot.create(:user, oim_id: "test@enroll.com") }
 
     before :each do
       sign_in user

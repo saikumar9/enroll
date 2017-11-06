@@ -10,25 +10,25 @@ describe EmployeeRole do
   end
 
   context "an organization exists" do
-    let!(:organization) { FactoryGirl.create(:organization) }
+    let!(:organization) { FactoryBot.create(:organization) }
 
     context "with an employer profile" do
-      let!(:employer_profile) { FactoryGirl.create(:employer_profile, organization: organization) }
+      let!(:employer_profile) { FactoryBot.create(:employer_profile, organization: organization) }
 
       context "and two draft plan years exist" do
-        let!(:plan_year_a) { FactoryGirl.create(:plan_year_not_started, employer_profile: employer_profile) }
-        let!(:plan_year_b) { FactoryGirl.create(:plan_year_not_started, employer_profile: employer_profile) }
+        let!(:plan_year_a) { FactoryBot.create(:plan_year_not_started, employer_profile: employer_profile) }
+        let!(:plan_year_b) { FactoryBot.create(:plan_year_not_started, employer_profile: employer_profile) }
 
         context "with benefit groups" do
-          let!(:benefit_group_a) { FactoryGirl.create(:benefit_group, plan_year: plan_year_a) }
-          let!(:benefit_group_b) { FactoryGirl.create(:benefit_group, plan_year: plan_year_b) }
+          let!(:benefit_group_a) { FactoryBot.create(:benefit_group, plan_year: plan_year_a) }
+          let!(:benefit_group_b) { FactoryBot.create(:benefit_group, plan_year: plan_year_b) }
 
           it "the reference plans should not be the same" do
             expect(benefit_group_a.reference_plan_id).not_to eq benefit_group_b.reference_plan_id
           end
 
           context "and we have an employee on the roster" do
-            let!(:census_employee) { FactoryGirl.create(:census_employee, employer_profile: employer_profile) }
+            let!(:census_employee) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
 
             context "and a new employee role is created" do
               let(:employee_role) do
@@ -38,8 +38,8 @@ describe EmployeeRole do
               end
 
               context "and the employee is assigned to both benefit groups" do
-                let!(:benefit_group_assignment_a) { FactoryGirl.create(:benefit_group_assignment, census_employee: census_employee, benefit_group: benefit_group_a) }
-                let!(:benefit_group_assignment_b) { FactoryGirl.create(:benefit_group_assignment, census_employee: census_employee, benefit_group: benefit_group_b) }
+                let!(:benefit_group_assignment_a) { FactoryBot.create(:benefit_group_assignment, census_employee: census_employee, benefit_group: benefit_group_a) }
+                let!(:benefit_group_assignment_b) { FactoryBot.create(:benefit_group_assignment, census_employee: census_employee, benefit_group: benefit_group_b) }
 
                 context "and the first plan year is published" do
                   before do

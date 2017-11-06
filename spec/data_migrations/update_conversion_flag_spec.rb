@@ -13,7 +13,7 @@ describe UpdateConversionFlag, dbclean: :after_each do
   end
 
   describe "updating conversion flag of employer" do
-    let(:employer_profile) { FactoryGirl.create(:employer_profile, profile_source: "conversion")}
+    let(:employer_profile) { FactoryBot.create(:employer_profile, profile_source: "conversion")}
 
     before(:each) do
       allow(ENV).to receive(:[]).with("fein").and_return(employer_profile.fein)

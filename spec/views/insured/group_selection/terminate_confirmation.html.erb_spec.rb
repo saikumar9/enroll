@@ -3,13 +3,13 @@ include Insured::FamiliesHelper
 
 RSpec.describe "app/views/insured/group_selection/terminate_confirm.html.erb" do
   context "DCHL ID and Premium" do
-    let(:family) { FactoryGirl.create(:family, :with_primary_family_member)}
-    let(:hbx_enrollment) { FactoryGirl.build(:hbx_enrollment, :with_enrollment_members, :individual_assisted, { household: family.households.first })}
-    let(:plan_year) { FactoryGirl.create(:plan_year, {aasm_state: 'enrolling'}) }
+    let(:family) { FactoryBot.create(:family, :with_primary_family_member)}
+    let(:hbx_enrollment) { FactoryBot.build(:hbx_enrollment, :with_enrollment_members, :individual_assisted, { household: family.households.first })}
+    let(:plan_year) { FactoryBot.create(:plan_year, {aasm_state: 'enrolling'}) }
     let(:employer_profile) { plan_year.employer_profile }
     let(:employee_names) { ["fname1 sname1", "fname2 sname2"] }
 
-    let(:current_user) {FactoryGirl.create(:user)}
+    let(:current_user) {FactoryBot.create(:user)}
 
     before(:each) do
       allow(hbx_enrollment).to receive(:covered_members_first_names).and_return(employee_names)

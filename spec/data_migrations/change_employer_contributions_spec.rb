@@ -14,9 +14,9 @@ describe ChangeEmployerContributions, dbclean: :after_each do
 
   describe "changing employer contributions" do
 
-    let(:benefit_group)     { FactoryGirl.create(:benefit_group, plan_year: plan_year)}
-    let(:plan_year)         { FactoryGirl.create(:plan_year, employer_profile: employer_profile) }
-    let(:employer_profile)  { FactoryGirl.create(:employer_profile) }
+    let(:benefit_group)     { FactoryBot.create(:benefit_group, plan_year: plan_year)}
+    let(:plan_year)         { FactoryBot.create(:plan_year, employer_profile: employer_profile) }
+    let(:employer_profile)  { FactoryBot.create(:employer_profile) }
 
     before(:each) do
       allow(ENV).to receive(:[]).with("fein").and_return(employer_profile.parent.fein)

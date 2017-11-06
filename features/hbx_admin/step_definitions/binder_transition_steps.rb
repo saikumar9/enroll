@@ -3,7 +3,7 @@ module BinderTransitionWorld
 
   def employer(*traits)
     attributes = traits.extract_options!
-    @employer ||= FactoryGirl.create :employer, *traits, attributes
+    @employer ||= FactoryBot.create :employer, *traits, attributes
   end
 end
 World(BinderTransitionWorld)

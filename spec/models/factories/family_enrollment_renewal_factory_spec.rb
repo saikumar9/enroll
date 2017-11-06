@@ -7,27 +7,27 @@ RSpec.describe Factories::FamilyEnrollmentRenewalFactory, :type => :model do
     let(:renewal_year) { (TimeKeeper.date_of_record.end_of_month + 1.day - Settings.aca.shop_market.renewal_application.earliest_start_prior_to_effective_on.months.months).year }
 
     let!(:renewal_plan) {
-      FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: renewal_year, hios_id: "11111111122302-01", csr_variant_id: "01")
+      FactoryBot.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: renewal_year, hios_id: "11111111122302-01", csr_variant_id: "01")
     }
 
     let!(:plan) {
-      FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: renewal_year - 1, hios_id: "11111111122302-01", csr_variant_id: "01", renewal_plan_id: renewal_plan.id)
+      FactoryBot.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: renewal_year - 1, hios_id: "11111111122302-01", csr_variant_id: "01", renewal_plan_id: renewal_plan.id)
     }
 
     let!(:organization) {
-      org = FactoryGirl.create :organization, legal_name: "Corp 1"
-      employer_profile = FactoryGirl.create :employer_profile, organization: org
-      FactoryGirl.create(:qualifying_life_event_kind, market_kind: "shop")
+      org = FactoryBot.create :organization, legal_name: "Corp 1"
+      employer_profile = FactoryBot.create :employer_profile, organization: org
+      FactoryBot.create(:qualifying_life_event_kind, market_kind: "shop")
       org.reload
     }
 
     let(:employer_profile) { organization.employer_profile }
 
     let!(:build_plan_years_and_employees) {
-      owner = FactoryGirl.create :census_employee, :owner, employer_profile: employer_profile
-      employee = FactoryGirl.create :census_employee, employer_profile: employer_profile
+      owner = FactoryBot.create :census_employee, :owner, employer_profile: employer_profile
+      employee = FactoryBot.create :census_employee, employer_profile: employer_profile
 
-      benefit_group = FactoryGirl.create :benefit_group, plan_year: active_plan_year, reference_plan_id: plan.id
+      benefit_group = FactoryBot.create :benefit_group, plan_year: active_plan_year, reference_plan_id: plan.id
       employee.add_benefit_group_assignment benefit_group, benefit_group.start_on
 
       employee.add_renew_benefit_group_assignment renewal_benefit_group
@@ -40,15 +40,15 @@ RSpec.describe Factories::FamilyEnrollmentRenewalFactory, :type => :model do
     let(:end_on) { start_on + 1.year - 1.day }
 
     let(:active_plan_year) {
-      FactoryGirl.create :plan_year, employer_profile: employer_profile, start_on: start_on - 1.year, end_on: end_on - 1.year, open_enrollment_start_on: open_enrollment_start_on - 1.year, open_enrollment_end_on: open_enrollment_end_on - 1.year - 3.days, fte_count: 2, aasm_state: :published
+      FactoryBot.create :plan_year, employer_profile: employer_profile, start_on: start_on - 1.year, end_on: end_on - 1.year, open_enrollment_start_on: open_enrollment_start_on - 1.year, open_enrollment_end_on: open_enrollment_end_on - 1.year - 3.days, fte_count: 2, aasm_state: :published
     }
 
     let(:renewing_plan_year) {
-      FactoryGirl.create :plan_year, employer_profile: employer_profile, start_on: start_on, end_on: end_on, open_enrollment_start_on: open_enrollment_start_on, open_enrollment_end_on: open_enrollment_end_on, fte_count: 2, aasm_state: :renewing_draft
+      FactoryBot.create :plan_year, employer_profile: employer_profile, start_on: start_on, end_on: end_on, open_enrollment_start_on: open_enrollment_start_on, open_enrollment_end_on: open_enrollment_end_on, fte_count: 2, aasm_state: :renewing_draft
     }
 
     let(:renewal_benefit_group){
-      FactoryGirl.create :benefit_group, plan_year: renewing_plan_year, reference_plan_id: renewal_plan.id
+      FactoryBot.create :benefit_group, plan_year: renewing_plan_year, reference_plan_id: renewal_plan.id
     }
 
     let!(:ce) {
@@ -68,12 +68,12 @@ RSpec.describe Factories::FamilyEnrollmentRenewalFactory, :type => :model do
     context 'with active coverage' do
 
       let!(:family) {
-        person = FactoryGirl.create(:person, last_name: ce.last_name, first_name: ce.first_name)
-        employee_role = FactoryGirl.create(:employee_role, person: person, census_employee: ce, employer_profile: organization.employer_profile)
+        person = FactoryBot.create(:person, last_name: ce.last_name, first_name: ce.first_name)
+        employee_role = FactoryBot.create(:employee_role, person: person, census_employee: ce, employer_profile: organization.employer_profile)
         ce.update_attributes({employee_role: employee_role})
         family_rec = Family.find_or_build_from_employee_role(employee_role)
 
-        FactoryGirl.create(:hbx_enrollment,
+        FactoryBot.create(:hbx_enrollment,
           household: person.primary_family.active_household,
           coverage_kind: "health",
           effective_on: ce.active_benefit_group_assignment.benefit_group.start_on,
@@ -103,11 +103,11 @@ RSpec.describe Factories::FamilyEnrollmentRenewalFactory, :type => :model do
       context 'when employer changed plan offerings for renewing plan year' do
 
         let!(:new_renewal_plan) {
-          FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'silver', active_year: renewal_year, hios_id: "11111111122301-01", csr_variant_id: "01")
+          FactoryBot.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'silver', active_year: renewal_year, hios_id: "11111111122301-01", csr_variant_id: "01")
         }
 
         let(:renewal_benefit_group){
-          FactoryGirl.create :benefit_group, plan_year: renewing_plan_year, reference_plan_id: new_renewal_plan.id
+          FactoryBot.create :benefit_group, plan_year: renewing_plan_year, reference_plan_id: new_renewal_plan.id
         }
 
         it 'should not recive passive renewal' do
@@ -123,12 +123,12 @@ RSpec.describe Factories::FamilyEnrollmentRenewalFactory, :type => :model do
     context 'with no active coverage' do
 
       let!(:family) {
-        person = FactoryGirl.create(:person, last_name: ce.last_name, first_name: ce.first_name)
-        employee_role = FactoryGirl.create(:employee_role, person: person, census_employee: ce, employer_profile: organization.employer_profile)
+        person = FactoryBot.create(:person, last_name: ce.last_name, first_name: ce.first_name)
+        employee_role = FactoryBot.create(:employee_role, person: person, census_employee: ce, employer_profile: organization.employer_profile)
         ce.update_attributes({employee_role: employee_role})
         family_rec = Family.find_or_build_from_employee_role(employee_role)
 
-        FactoryGirl.create(:hbx_enrollment,
+        FactoryBot.create(:hbx_enrollment,
           household: person.primary_family.active_household,
           coverage_kind: "health",
           effective_on: ce.active_benefit_group_assignment.benefit_group.start_on,
@@ -162,8 +162,8 @@ RSpec.describe Factories::FamilyEnrollmentRenewalFactory, :type => :model do
     # context 'with waived coverage' do
 
     #   let!(:family) {
-    #     person = FactoryGirl.create(:person, last_name: ce.last_name, first_name: ce.first_name)
-    #     employee_role = FactoryGirl.create(:employee_role, person: person, census_employee: ce, employer_profile: organization.employer_profile)
+    #     person = FactoryBot.create(:person, last_name: ce.last_name, first_name: ce.first_name)
+    #     employee_role = FactoryBot.create(:employee_role, person: person, census_employee: ce, employer_profile: organization.employer_profile)
     #     ce.update_attributes({employee_role: employee_role})
     #     family_rec = Family.find_or_build_from_employee_role(employee_role)
     #     family_rec.reload
@@ -182,8 +182,8 @@ RSpec.describe Factories::FamilyEnrollmentRenewalFactory, :type => :model do
     context 'with no active/waived coverage' do
 
       let!(:family) {
-        person = FactoryGirl.create(:person, last_name: ce.last_name, first_name: ce.first_name)
-        employee_role = FactoryGirl.create(:employee_role, person: person, census_employee: ce, employer_profile: organization.employer_profile)
+        person = FactoryBot.create(:person, last_name: ce.last_name, first_name: ce.first_name)
+        employee_role = FactoryBot.create(:employee_role, person: person, census_employee: ce, employer_profile: organization.employer_profile)
         ce.update_attributes({employee_role: employee_role})
         family_rec = Family.find_or_build_from_employee_role(employee_role)
         family_rec.reload
@@ -200,15 +200,15 @@ RSpec.describe Factories::FamilyEnrollmentRenewalFactory, :type => :model do
     end
 
     context ".renewal_relationship_benefits" do
-      let(:census_employee) {FactoryGirl.create(:census_employee)}
-      let(:benefit_group_assignment) { FactoryGirl.create(:benefit_group_assignment, benefit_group: renewal_benefit_group, census_employee: census_employee)}
-      let(:person) { FactoryGirl.create(:person)}
-      let!(:shop_family) { FactoryGirl.create(:family, :with_primary_family_member, :person => person) }
-      let!(:auto_renewing_health_enrollment)   { FactoryGirl.create(:hbx_enrollment,
+      let(:census_employee) {FactoryBot.create(:census_employee)}
+      let(:benefit_group_assignment) { FactoryBot.create(:benefit_group_assignment, benefit_group: renewal_benefit_group, census_employee: census_employee)}
+      let(:person) { FactoryBot.create(:person)}
+      let!(:shop_family) { FactoryBot.create(:family, :with_primary_family_member, :person => person) }
+      let!(:auto_renewing_health_enrollment)   { FactoryBot.create(:hbx_enrollment,
                                                                     household: shop_family.latest_household,
                                                                     coverage_kind: "health",
                                                                     kind: "employer_sponsored")}
-      let!(:auto_renewing_dental_enrollment)   { FactoryGirl.create(:hbx_enrollment,
+      let!(:auto_renewing_dental_enrollment)   { FactoryBot.create(:hbx_enrollment,
                                                                     household: shop_family.latest_household,
                                                                     coverage_kind: "dental",
                                                                     kind: "employer_sponsored")}
@@ -249,12 +249,12 @@ RSpec.describe Factories::FamilyEnrollmentRenewalFactory, :type => :model do
       let(:spouse) { double(primary_relationship: "ex-spouse")}
       let(:employee) { double(primary_relationship: "self")}
       let(:domestic_partner) { double(primary_relationship: "life_partner") }
-      let(:person1) {FactoryGirl.create(:person)}
-      let(:person2) {FactoryGirl.create(:person,dob: TimeKeeper.date_of_record - 20.years)}
+      let(:person1) {FactoryBot.create(:person)}
+      let(:person2) {FactoryBot.create(:person,dob: TimeKeeper.date_of_record - 20.years)}
       let(:child) {double(primary_relationship: "ward")}
       let(:is_composite_rated) { false }
       let(:renewing_enrollment) { instance_double(HbxEnrollment, :composite_rated? => is_composite_rated) }
-      let!(:benefit_group) { FactoryGirl.create(:benefit_group) }
+      let!(:benefit_group) { FactoryBot.create(:benefit_group) }
       let!(:plan_year_start_on) {TimeKeeper.date_of_record}
       before :each do
         allow(subject).to receive(:renewal_relationship_benefits).and_return orb
@@ -307,15 +307,15 @@ RSpec.describe Factories::FamilyEnrollmentRenewalFactory, :type => :model do
     end
 
     context "clone_enrollment_members" do
-      let(:person) { FactoryGirl.build_stubbed(:person)}
-      let(:family) { FactoryGirl.build_stubbed(:family, :with_primary_family_member, person: person) }
-      let(:household) { FactoryGirl.build_stubbed(:household, family: family) }
-      let(:active_enrollment) { FactoryGirl.build_stubbed(:hbx_enrollment, household: household, hbx_enrollment_members: [hbx_enrollment_member, hbx_enrollment_member_two]) }
-      let(:hbx_enrollment_member) { FactoryGirl.build_stubbed(:hbx_enrollment_member) }
-      let(:hbx_enrollment_member_two) { FactoryGirl.build_stubbed(:hbx_enrollment_member, is_subscriber: false) }
+      let(:person) { FactoryBot.build_stubbed(:person)}
+      let(:family) { FactoryBot.build_stubbed(:family, :with_primary_family_member, person: person) }
+      let(:household) { FactoryBot.build_stubbed(:household, family: family) }
+      let(:active_enrollment) { FactoryBot.build_stubbed(:hbx_enrollment, household: household, hbx_enrollment_members: [hbx_enrollment_member, hbx_enrollment_member_two]) }
+      let(:hbx_enrollment_member) { FactoryBot.build_stubbed(:hbx_enrollment_member) }
+      let(:hbx_enrollment_member_two) { FactoryBot.build_stubbed(:hbx_enrollment_member, is_subscriber: false) }
 
 
-      let(:renewal_enrollment) { FactoryGirl.build_stubbed(:hbx_enrollment, household: household) }
+      let(:renewal_enrollment) { FactoryBot.build_stubbed(:hbx_enrollment, household: household) }
 
       it "should return hbx_enrollment_members if member relationship offered in renewal plan year and covered in current hbx_enrollment" do
         allow(subject).to receive(:is_relationship_offered_and_member_covered?).and_return(true)
@@ -330,16 +330,16 @@ RSpec.describe Factories::FamilyEnrollmentRenewalFactory, :type => :model do
 
     context 'with active coverage' do
       let!(:new_renewal_plan) {
-        FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'silver', active_year: renewal_year, hios_id: "11111111122301-01", csr_variant_id: "01")
+        FactoryBot.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'silver', active_year: renewal_year, hios_id: "11111111122301-01", csr_variant_id: "01")
       }
 
       let!(:family) {
-        person = FactoryGirl.create(:person, last_name: ce.last_name, first_name: ce.first_name)
-        employee_role = FactoryGirl.create(:employee_role, person: person, census_employee: ce, employer_profile: organization.employer_profile)
+        person = FactoryBot.create(:person, last_name: ce.last_name, first_name: ce.first_name)
+        employee_role = FactoryBot.create(:employee_role, person: person, census_employee: ce, employer_profile: organization.employer_profile)
         ce.update_attributes({employee_role: employee_role})
         family_rec = Family.find_or_build_from_employee_role(employee_role)
 
-        FactoryGirl.create(:hbx_enrollment,
+        FactoryBot.create(:hbx_enrollment,
           household: person.primary_family.active_household,
           coverage_kind: "health",
           effective_on: ce.active_benefit_group_assignment.benefit_group.start_on,

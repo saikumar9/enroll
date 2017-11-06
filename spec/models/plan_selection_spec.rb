@@ -4,11 +4,11 @@ describe PlanSelection do
 
   subject { PlanSelection.new(hbx_enrollment, hbx_enrollment.plan) }
 
-  let(:person) { FactoryGirl.create(:person, :with_consumer_role) }
-  let(:person1) { FactoryGirl.create(:person, :with_consumer_role) }
+  let(:person) { FactoryBot.create(:person, :with_consumer_role) }
+  let(:person1) { FactoryBot.create(:person, :with_consumer_role) }
 
-  let(:family) {FactoryGirl.create(:family, :with_primary_family_member, :person => person)}
-  let(:household) {FactoryGirl.create(:household, family: family)}
+  let(:family) {FactoryBot.create(:family, :with_primary_family_member, :person => person)}
+  let(:household) {FactoryBot.create(:household, family: family)}
 
   let(:year){ TimeKeeper.date_of_record.year }
   let(:effective_on) { Date.new(year, 3, 1)}
@@ -18,11 +18,11 @@ describe PlanSelection do
   let(:newly_covered_individuals) { family.family_members }
 
   let(:plan) { 
-    FactoryGirl.create(:plan, :with_premium_tables, market: 'individual', metal_level: 'silver', active_year: year, hios_id: "11111111122301-01", csr_variant_id: "01")
+    FactoryBot.create(:plan, :with_premium_tables, market: 'individual', metal_level: 'silver', active_year: year, hios_id: "11111111122301-01", csr_variant_id: "01")
   }
 
   let!(:previous_coverage){  
-    FactoryGirl.create(:hbx_enrollment,:with_enrollment_members, 
+    FactoryBot.create(:hbx_enrollment,:with_enrollment_members, 
      enrollment_members: covered_individuals,
      household: family.latest_household,
      coverage_kind: "health",
@@ -36,7 +36,7 @@ describe PlanSelection do
      ) }
 
   let!(:hbx_enrollment) {
-    FactoryGirl.create(:hbx_enrollment,:with_enrollment_members, 
+    FactoryBot.create(:hbx_enrollment,:with_enrollment_members, 
      enrollment_members: newly_covered_individuals,
      household: family.latest_household,
      coverage_kind: "health",
@@ -81,7 +81,7 @@ describe PlanSelection do
     end
 
     context 'when member not coverged before' do 
-      let(:family_member) { FactoryGirl.create(:family_member, family: family, person: person1)}
+      let(:family_member) { FactoryBot.create(:family_member, family: family, person: person1)}
       let(:covered_individuals) { family.family_members.select{|fm| fm != family_member} }
       let(:newly_covered_individuals) { family_member.to_a }
 

@@ -15,9 +15,9 @@ describe TerminateCensusEmployee, dbclean: :after_each do
   describe "census employee's employment_terminated_on with past date" do
     subject { TerminateCensusEmployee.new("termiante_census_employee", double(:current_scope => nil)) }
 
-    let(:employer_profile) { FactoryGirl.create(:employer_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile) }
     let(:employer_profile_id) { employer_profile.id }
-    let(:census_employee) { FactoryGirl.create(:census_employee, employer_profile_id: employer_profile.id, employment_terminated_on: TimeKeeper::date_of_record - 5.days, hired_on: "2014-11-11") }
+    let(:census_employee) { FactoryBot.create(:census_employee, employer_profile_id: employer_profile.id, employment_terminated_on: TimeKeeper::date_of_record - 5.days, hired_on: "2014-11-11") }
     let(:census_employee_params) {
       {"first_name" => "aqzz",
        "middle_name" => "",
@@ -41,9 +41,9 @@ describe TerminateCensusEmployee, dbclean: :after_each do
   describe "census employee's employment_terminated_on with future date" do
     subject { TerminateCensusEmployee.new("termiante_census_employee", double(:current_scope => nil)) }
 
-    let(:employer_profile) { FactoryGirl.create(:employer_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile) }
     let(:employer_profile_id) { employer_profile.id }
-    let(:census_employee) { FactoryGirl.create(:census_employee, employer_profile_id: employer_profile.id, hired_on: "2014-11-11") }
+    let(:census_employee) { FactoryBot.create(:census_employee, employer_profile_id: employer_profile.id, hired_on: "2014-11-11") }
     let(:census_employee_params) {
       {"first_name" => "aqzz",
        "middle_name" => "",
@@ -65,9 +65,9 @@ describe TerminateCensusEmployee, dbclean: :after_each do
   describe "terminating census employee's with employee_role_linked and with employment_terminated_on passed current date" do
     subject { TerminateCensusEmployee.new("termiante_census_employee", double(:current_scope => nil)) }
 
-    let(:employer_profile) { FactoryGirl.create(:employer_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile) }
     let(:employer_profile_id) { employer_profile.id }
-    let(:census_employee) { FactoryGirl.create(:census_employee, employer_profile_id: employer_profile.id, employment_terminated_on: TimeKeeper::date_of_record - 5.days, hired_on: "2014-11-11") }
+    let(:census_employee) { FactoryBot.create(:census_employee, employer_profile_id: employer_profile.id, employment_terminated_on: TimeKeeper::date_of_record - 5.days, hired_on: "2014-11-11") }
     let(:census_employee_params) {
       {"first_name" => "aqzz",
        "middle_name" => "",
@@ -91,9 +91,9 @@ describe TerminateCensusEmployee, dbclean: :after_each do
   describe "active census employee should not be terminated when no employment_terminated_on date present " do
     subject { TerminateCensusEmployee.new("termiante_census_employee", double(:current_scope => nil)) }
 
-    let(:employer_profile) { FactoryGirl.create(:employer_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile) }
     let(:employer_profile_id) { employer_profile.id }
-    let(:census_employee) { FactoryGirl.create(:census_employee, employer_profile_id: employer_profile.id, hired_on: "2014-11-11") }
+    let(:census_employee) { FactoryBot.create(:census_employee, employer_profile_id: employer_profile.id, hired_on: "2014-11-11") }
     let(:census_employee_params) {
       {"first_name" => "aqzz",
        "middle_name" => "",

@@ -62,7 +62,7 @@ RSpec.describe BrokerAgencies::InboxesController, :type => :controller do
     let(:broker_agency_profile) { double("BrokerAgencyProfile", legal_name: "my broker name") }
     let(:inbox){ double("Inbox") }
     let(:messages){ double("Message", build: double("test")) }
-    let(:organization){ FactoryGirl.create(:organization) }
+    let(:organization){ FactoryBot.create(:organization) }
     let(:hbx_profile){ double("HbxProfile") }
     it "renders" do
       sign_in

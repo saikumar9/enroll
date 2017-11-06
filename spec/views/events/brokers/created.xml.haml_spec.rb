@@ -11,7 +11,7 @@ RSpec.describe "events/brokers/created.xml.haml" do
         download_vocabularies
       end
 
-      let(:individual) { FactoryGirl.build_stubbed :generative_individual }
+      let(:individual) { FactoryBot.build_stubbed :generative_individual }
 
       before :each do
         allow(individual.broker_role).to receive(:latest_transition_time).and_return TimeKeeper.date_of_record

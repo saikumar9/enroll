@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 describe "insured/families/inbox.html.erb", dbclean: :after_each do
-  let(:user) { FactoryGirl.build_stubbed(:user, person: person) }
-  let(:person) { FactoryGirl.create(:person) }
+  let(:user) { FactoryBot.build_stubbed(:user, person: person) }
+  let(:person) { FactoryBot.create(:person) }
   let(:consumer_role) { double('consumer_role', :is_active? => true)}
 
   before :each do

@@ -1,6 +1,6 @@
 require 'rails_helper'
 describe "shared/_carrier_contact_information.html.erb" do
-  let(:plan) { FactoryGirl.build_stubbed(:plan) }
+  let(:plan) { FactoryBot.build_stubbed(:plan) }
   before :each do
     render partial: "shared/carrier_contact_information", locals: { plan: plan }
   end

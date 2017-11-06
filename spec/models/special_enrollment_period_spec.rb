@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe SpecialEnrollmentPeriod, :type => :model do
 
-  let(:family)        { FactoryGirl.create(:family, :with_primary_family_member) }
+  let(:family)        { FactoryBot.create(:family, :with_primary_family_member) }
   let(:shop_qle)      { QualifyingLifeEventKind.create(
                               title: "Entered into a legal domestic partnership",
                               action_kind: "add_benefit",
@@ -289,21 +289,21 @@ RSpec.describe SpecialEnrollmentPeriod, :type => :model do
 
   end
 
-  let(:family) { FactoryGirl.build(:family, :with_primary_family_member) }
+  let(:family) { FactoryBot.build(:family, :with_primary_family_member) }
   let(:primary_applicant) { double }
-  let(:person) { FactoryGirl.create(:person, :with_employee_role) }
+  let(:person) { FactoryBot.create(:person, :with_employee_role) }
   let(:event_date) { TimeKeeper.date_of_record }
   let(:expired_event_date) { TimeKeeper.date_of_record - 1.year }
   let(:first_of_following_month) { TimeKeeper.date_of_record.end_of_month + 1 }
-  let(:qle_effective_date) { FactoryGirl.create(:qualifying_life_event_kind, :effective_on_event_date) }
-  let(:qle_first_of_month) { FactoryGirl.create(:qualifying_life_event_kind, :effective_on_first_of_month) }
+  let(:qle_effective_date) { FactoryBot.create(:qualifying_life_event_kind, :effective_on_event_date) }
+  let(:qle_first_of_month) { FactoryBot.create(:qualifying_life_event_kind, :effective_on_first_of_month) }
 
   describe "it should set SHOP Special Enrollment Period dates based on QLE kind" do
     let(:sep_effective_date) { SpecialEnrollmentPeriod.new(qualifying_life_event_kind: qle_effective_date, effective_on_kind: 'date_of_event', qle_on: event_date) }
     let(:sep_first_of_month) { SpecialEnrollmentPeriod.new(qualifying_life_event_kind: qle_first_of_month, effective_on_kind: 'first_of_month', qle_on: event_date) }
     let(:sep_expired) { SpecialEnrollmentPeriod.new(qualifying_life_event_kind: qle_first_of_month, qle_on: expired_event_date) }
     let(:sep) { SpecialEnrollmentPeriod.new }
-    let(:qle) { FactoryGirl.create(:qualifying_life_event_kind, market_kind: 'shop') }
+    let(:qle) { FactoryBot.create(:qualifying_life_event_kind, market_kind: 'shop') }
 
 
     context "SHOP QLE and event date are specified" do
@@ -429,9 +429,9 @@ RSpec.describe SpecialEnrollmentPeriod, :type => :model do
   context "is reporting a qle before the employer plan start_date" do
     let(:plan_year_start_on) { Date.new(TimeKeeper.date_of_record.year, 04, 01) }
     let(:sep_effective_on) { Date.new(TimeKeeper.date_of_record.year, 02, 01) }
-    let!(:published_plan_year) { FactoryGirl.create(:plan_year, start_on: plan_year_start_on) }
-    let(:census_employee) { FactoryGirl.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', hired_on: Date.new(TimeKeeper.date_of_record.year, 03, 14)) }
-    let(:shop_family)       { FactoryGirl.create(:family, :with_primary_family_member)  }
+    let!(:published_plan_year) { FactoryBot.create(:plan_year, start_on: plan_year_start_on) }
+    let(:census_employee) { FactoryBot.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', hired_on: Date.new(TimeKeeper.date_of_record.year, 03, 14)) }
+    let(:shop_family)       { FactoryBot.create(:family, :with_primary_family_member)  }
 
     let(:sep){
       sep = shop_family.special_enrollment_periods.new
@@ -457,11 +457,11 @@ RSpec.describe SpecialEnrollmentPeriod, :type => :model do
 
 
   context "is reporting a qle before the employer plan start_date and having an expired plan year" do
-    let(:organization) { FactoryGirl.create(:organization, :with_expired_and_active_plan_years)}
-    let(:census_employee) { FactoryGirl.create :census_employee, employer_profile: organization.employer_profile, dob: TimeKeeper.date_of_record - 30.years, first_name: person.first_name, last_name: person.last_name }
-    let(:employee_role) { FactoryGirl.create(:employee_role, person: person, census_employee: census_employee, employer_profile: organization.employer_profile)}
-    let(:person) { FactoryGirl.create(:person)}
-    let(:family) { FactoryGirl.create(:family, :with_primary_family_member, person: person)}
+    let(:organization) { FactoryBot.create(:organization, :with_expired_and_active_plan_years)}
+    let(:census_employee) { FactoryBot.create :census_employee, employer_profile: organization.employer_profile, dob: TimeKeeper.date_of_record - 30.years, first_name: person.first_name, last_name: person.last_name }
+    let(:employee_role) { FactoryBot.create(:employee_role, person: person, census_employee: census_employee, employer_profile: organization.employer_profile)}
+    let(:person) { FactoryBot.create(:person)}
+    let(:family) { FactoryBot.create(:family, :with_primary_family_member, person: person)}
     let!(:sep){
       sep = family.special_enrollment_periods.new
       sep.effective_on_kind = 'date_of_event'

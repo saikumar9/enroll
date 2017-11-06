@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe "app/views/events/v2/employers/_benefit_group.xml.haml" do
-  let(:benefit_group) { FactoryGirl.create(:benefit_group) }
+  let(:benefit_group) { FactoryBot.create(:benefit_group) }
 
   context "benefit_group xml" do
     context "reference plan" do

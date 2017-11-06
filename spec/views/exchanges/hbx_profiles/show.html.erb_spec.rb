@@ -4,8 +4,8 @@ include Pundit
 RSpec.describe "exchanges/hbx_profiles/show.html.erb", :type => :view do
 
   describe "a signed in admin user" do
-    let(:user) { FactoryGirl.create(:user, person: person)}
-    let(:person) {FactoryGirl.create(:person, :with_employee_role) }
+    let(:user) { FactoryBot.create(:user, person: person)}
+    let(:person) {FactoryBot.create(:person, :with_employee_role) }
 
     before :each do
       sign_in user

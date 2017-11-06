@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :plan_year do
     employer_profile
 
@@ -22,11 +22,11 @@ FactoryGirl.define do
     fte_count { 5 }
 
     trait :with_benefit_group_congress do
-      benefit_groups { [FactoryGirl.build(:benefit_group_congress)] }
+      benefit_groups { [FactoryBot.build(:benefit_group_congress)] }
     end
 
     trait :with_benefit_group do
-      benefit_groups { [FactoryGirl.build(:benefit_group, effective_on_kind: "first_of_month")] }
+      benefit_groups { [FactoryBot.build(:benefit_group, effective_on_kind: "first_of_month")] }
     end
 
   end

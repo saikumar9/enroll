@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe VerificationHelper, :type => :helper do
-  let(:person) { FactoryGirl.create(:person, :with_consumer_role) }
+  let(:person) { FactoryBot.create(:person, :with_consumer_role) }
   before :each do
     assign(:person, person)
   end
@@ -10,7 +10,7 @@ RSpec.describe VerificationHelper, :type => :helper do
     doc_status_classes = ["warning", "default", "success", "danger"]
     doc_status_array.each_with_index do |doc_verif_status, index|
       context "doc status is #{doc_verif_status}" do
-        let(:document) { FactoryGirl.build(:vlp_document, :status=>doc_verif_status) }
+        let(:document) { FactoryBot.build(:vlp_document, :status=>doc_verif_status) }
         it "returns #{doc_status_classes[index]} class for #{doc_verif_status} document status" do
           expect(helper.doc_status_label(document)).to eq doc_status_classes[index]
         end
@@ -26,7 +26,7 @@ RSpec.describe VerificationHelper, :type => :helper do
       end
 
       it "returns in review for outstanding with docs" do
-        person.consumer_role.vlp_documents << FactoryGirl.build(:vlp_document, :verification_type => "Social Security Number")
+        person.consumer_role.vlp_documents << FactoryBot.build(:vlp_document, :verification_type => "Social Security Number")
         expect(helper.verification_type_status("Social Security Number", person)).to eq "in review"
       end
 
@@ -39,7 +39,7 @@ RSpec.describe VerificationHelper, :type => :helper do
     context "Native American status" do
       context "native american with uploaded docs" do
         it "returns in review status" do
-          person.consumer_role.vlp_documents << FactoryGirl.build(:vlp_document, :verification_type => "American Indian Status")
+          person.consumer_role.vlp_documents << FactoryBot.build(:vlp_document, :verification_type => "American Indian Status")
           expect(helper.verification_type_status("American Indian Status", person)).to eq "in review"
         end
       end
@@ -70,7 +70,7 @@ RSpec.describe VerificationHelper, :type => :helper do
         context "lawful presence with uploaded docs" do
           it "returns in review status" do
             person.consumer_role.lawful_presence_determination.aasm_state = "verification_pending"
-            person.consumer_role.vlp_documents << FactoryGirl.build(:vlp_document, :verification_type => "Citizenship")
+            person.consumer_role.vlp_documents << FactoryBot.build(:vlp_document, :verification_type => "Citizenship")
             expect(helper.verification_type_status("Citizenship", person)).to eq "in review"
           end
         end
@@ -93,7 +93,7 @@ RSpec.describe VerificationHelper, :type => :helper do
         context "lawful presence with uploaded docs" do
           it "returns in review status" do
             person.consumer_role.lawful_presence_determination.aasm_state = "verification_pending"
-            person.consumer_role.vlp_documents << FactoryGirl.build(:vlp_document, :verification_type => "Immigration status")
+            person.consumer_role.vlp_documents << FactoryBot.build(:vlp_document, :verification_type => "Immigration status")
             expect(helper.verification_type_status("Immigration status", person)).to eq "in review"
           end
         end
@@ -140,30 +140,30 @@ RSpec.describe VerificationHelper, :type => :helper do
 
     context "verification type status in review" do
       it "returns warning for SSN outstanding with docs" do
-        person.consumer_role.vlp_documents << FactoryGirl.build(:vlp_document, :verification_type => "Social Security Number")
+        person.consumer_role.vlp_documents << FactoryBot.build(:vlp_document, :verification_type => "Social Security Number")
         expect(helper.verification_type_class("Social Security Number", person)).to eq("warning")
       end
 
       it "returns warning for American Indian outstanding with docs" do
-        person.consumer_role.vlp_documents << FactoryGirl.build(:vlp_document, :verification_type => "American Indian Status")
+        person.consumer_role.vlp_documents << FactoryBot.build(:vlp_document, :verification_type => "American Indian Status")
         expect(helper.verification_type_class("American Indian Status", person)).to eq("warning")
       end
 
       it "returns warning for Citizenship outstanding with docs" do
         person.consumer_role.lawful_presence_determination.aasm_state = "verification_pending"
-        person.consumer_role.vlp_documents << FactoryGirl.build(:vlp_document, :verification_type => "Citizenship")
+        person.consumer_role.vlp_documents << FactoryBot.build(:vlp_document, :verification_type => "Citizenship")
         expect(helper.verification_type_class("Citizenship", person)).to eq("warning")
       end
 
       it "returns warning for Immigration status outstanding with docs" do
         person.consumer_role.lawful_presence_determination.aasm_state = "verification_pending"
-        person.consumer_role.vlp_documents << FactoryGirl.build(:vlp_document, :verification_type => "Immigration status")
+        person.consumer_role.vlp_documents << FactoryBot.build(:vlp_document, :verification_type => "Immigration status")
         expect(helper.verification_type_class("Immigration status", person)).to eq("warning")
       end
     end
 
     context "verification type status outstanding" do
-      let(:lawful_presence_determination) { FactoryGirl.build(:lawful_presence_determination, aasm_state: "verification_outstanding") }
+      let(:lawful_presence_determination) { FactoryBot.build(:lawful_presence_determination, aasm_state: "verification_outstanding") }
       before :each do
         person.consumer_role.is_state_resident = false
         person.consumer_role.vlp_documents = []
@@ -195,10 +195,10 @@ RSpec.describe VerificationHelper, :type => :helper do
   end
 
   describe "#enrollment_group_verified?" do
-    let(:family) { FactoryGirl.create(:family, :with_primary_family_member) }
+    let(:family) { FactoryBot.create(:family, :with_primary_family_member) }
     it "returns true if any family members has outstanding verification state" do
       family.family_members.each do |member|
-        member.person = FactoryGirl.create(:person, :with_consumer_role)
+        member.person = FactoryBot.create(:person, :with_consumer_role)
         member.person.consumer_role.aasm_state="verification_outstanding"
         member.save
       end
@@ -208,7 +208,7 @@ RSpec.describe VerificationHelper, :type => :helper do
 
     it "returns false if all family members are fully verified or pending" do
       family.family_members.each do |member|
-        member.person = FactoryGirl.create(:person, :with_consumer_role)
+        member.person = FactoryBot.create(:person, :with_consumer_role)
         member.save
       end
       allow_any_instance_of(Person).to receive_message_chain("primary_family.active_family_members").and_return(family.family_members)
@@ -217,7 +217,7 @@ RSpec.describe VerificationHelper, :type => :helper do
   end
 
   describe "#verification due date" do
-    let(:family) { FactoryGirl.build(:family) }
+    let(:family) { FactoryBot.build(:family) }
     let(:hbx_enrollment_sp) { HbxEnrollment.new(:submitted_at => TimeKeeper.date_of_record, :special_verification_period => Date.new(2016,5,6)) }
     let(:hbx_enrollment_no_sp) { HbxEnrollment.new(:submitted_at => TimeKeeper.date_of_record) }
     before :each do
@@ -239,10 +239,10 @@ RSpec.describe VerificationHelper, :type => :helper do
   end
 
   describe "#documents uploaded" do
-    let(:family) { FactoryGirl.create(:family, :with_primary_family_member) }
+    let(:family) { FactoryBot.create(:family, :with_primary_family_member) }
     it "returns true if any family member has uploaded docs" do
       family.family_members.each do |member|
-        member.person = FactoryGirl.create(:person, :with_consumer_role)
+        member.person = FactoryBot.create(:person, :with_consumer_role)
       end
       allow_any_instance_of(Person).to receive_message_chain("primary_family.active_family_members").and_return(family.family_members)
       expect(helper.documents_uploaded).to be_falsey
@@ -251,7 +251,7 @@ RSpec.describe VerificationHelper, :type => :helper do
 
   describe "#documents count" do
     it "returns the number of uploaded documents" do
-      person.consumer_role.vlp_documents<<FactoryGirl.build(:vlp_document)
+      person.consumer_role.vlp_documents<<FactoryBot.build(:vlp_document)
       expect(helper.documents_count(person)).to eq 2
     end
     it "returns 0 for consumer without vlp" do
@@ -308,7 +308,7 @@ RSpec.describe VerificationHelper, :type => :helper do
   describe "#show_v_type" do
     context "SSN" do
       it "returns in review if documents for ssn uploaded" do
-        person.consumer_role.vlp_documents << FactoryGirl.build(:vlp_document, :verification_type => "Social Security Number")
+        person.consumer_role.vlp_documents << FactoryBot.build(:vlp_document, :verification_type => "Social Security Number")
         expect(helper.show_v_type('Social Security Number', person)).to eq("&nbsp;&nbsp;&nbsp;In Review&nbsp;&nbsp;&nbsp;")
       end
       it "returns verified if ssn_validation is valid" do
@@ -325,7 +325,7 @@ RSpec.describe VerificationHelper, :type => :helper do
     end
     context "Citizenship" do
       it "returns in review if documents for citizenship uploaded" do
-        person.consumer_role.vlp_documents << FactoryGirl.build(:vlp_document, :verification_type => "citizenship")
+        person.consumer_role.vlp_documents << FactoryBot.build(:vlp_document, :verification_type => "citizenship")
         expect(helper.show_v_type('Citizenship', person)).to eq("&nbsp;&nbsp;&nbsp;In Review&nbsp;&nbsp;&nbsp;")
       end
       it "returns verified if lawful_presence_determination successful" do
@@ -345,7 +345,7 @@ RSpec.describe VerificationHelper, :type => :helper do
     end
     context "Immigration status" do
       it "returns in review if documents for citizenship uploaded" do
-        person.consumer_role.vlp_documents << FactoryGirl.build(:vlp_document, :verification_type => "Immigration status")
+        person.consumer_role.vlp_documents << FactoryBot.build(:vlp_document, :verification_type => "Immigration status")
         expect(helper.show_v_type('Immigration status', person)).to eq("&nbsp;&nbsp;&nbsp;In Review&nbsp;&nbsp;&nbsp;")
       end
       it "returns verified if lawful_presence_determination successful" do

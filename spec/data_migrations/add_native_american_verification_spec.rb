@@ -3,7 +3,7 @@ require File.join(Rails.root, "app", "data_migrations", "add_native_american_ver
 
 describe AddNativeVerification, :dbclean => :after_each do
   subject { AddNativeVerification.new("fix me task", double(:current_scope => nil)) }
-  let(:person) { FactoryGirl.create(:person, :with_consumer_role)}
+  let(:person) { FactoryBot.create(:person, :with_consumer_role)}
 
   shared_examples_for "native american verification status" do |new_status, current_status, indian|
     it "assigns #{new_status} as native_validation status" do

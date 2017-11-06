@@ -3,7 +3,7 @@ require File.join(Rails.root, "app", "data_migrations", "update_verification_typ
 
 describe "UpdateVerificationTypes data migration", dbclean: :after_each do
   let(:verification_attr) { OpenStruct.new({ :determined_at => Time.now, :vlp_authority => "hbx" })}
-  let(:person) { FactoryGirl.create(:person, :with_consumer_role)}
+  let(:person) { FactoryBot.create(:person, :with_consumer_role)}
   subject { UpdateVerificationTypes.new("fix me task", double(:current_scope => nil)) }
   shared_examples_for "update verification types for fully verified people" do |result, old_authority, new_authority|
     before do

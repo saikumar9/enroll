@@ -1,16 +1,16 @@
 When(/^\w+ visits? the Insured portal during open enrollment$/) do
   visit "/"
   click_link 'Consumer/Family Portal'
-  FactoryGirl.create(:hbx_profile, :open_enrollment_coverage_period)
-  FactoryGirl.create(:qualifying_life_event_kind, market_kind: "individual")
+  FactoryBot.create(:hbx_profile, :open_enrollment_coverage_period)
+  FactoryBot.create(:qualifying_life_event_kind, market_kind: "individual")
 
   Caches::PlanDetails.load_record_cache!
   screenshot("individual_start")
 end
 
 When(/^\w+ visits? the Insured portal outside of open enrollment$/) do
-  FactoryGirl.create(:hbx_profile, :no_open_enrollment_coverage_period)
-  FactoryGirl.create(:qualifying_life_event_kind, market_kind: "individual")
+  FactoryBot.create(:hbx_profile, :no_open_enrollment_coverage_period)
+  FactoryBot.create(:qualifying_life_event_kind, market_kind: "individual")
   Caches::PlanDetails.load_record_cache!
 
   visit "/"
@@ -353,9 +353,9 @@ Then(/^.+ sees the Verify Identity Consent page/)  do
 end
 
 When(/^a CSR exists/) do
-  p = FactoryGirl.create(:person, :with_csr_role, first_name: "Sherry", last_name: "Buckner")
+  p = FactoryBot.create(:person, :with_csr_role, first_name: "Sherry", last_name: "Buckner")
   sleep 2 # Need to wait on factory
-  FactoryGirl.create(:user, email: "sherry.buckner@dc.gov", password: "aA1!aA1!aA1!", password_confirmation: "aA1!aA1!aA1!", person: p, roles: ["csr"] )
+  FactoryBot.create(:user, email: "sherry.buckner@dc.gov", password: "aA1!aA1!aA1!", password_confirmation: "aA1!aA1!aA1!", person: p, roles: ["csr"] )
 end
 
 When(/^CSR accesses the HBX portal$/) do

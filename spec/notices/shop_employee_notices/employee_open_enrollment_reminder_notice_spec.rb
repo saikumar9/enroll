@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe ShopEmployeeNotices::EmployeeOpenEnrollmentReminderNotice, :dbclean => :after_each do
   let!(:employer_profile){ create :employer_profile, :aasm_state => "active"}
   let!(:person){ create :person}
-  let(:employee_role) {FactoryGirl.create(:employee_role, person: person, employer_profile: employer_profile)}
-  let(:census_employee) { FactoryGirl.create(:census_employee, employee_role_id: employee_role.id, employer_profile_id: employer_profile.id) }
+  let(:employee_role) {FactoryBot.create(:employee_role, person: person, employer_profile: employer_profile)}
+  let(:census_employee) { FactoryBot.create(:census_employee, employee_role_id: employee_role.id, employer_profile_id: employer_profile.id) }
   let(:start_on) { TimeKeeper.date_of_record.beginning_of_month + 2.month - 1.year}
   let(:application_event){ double("ApplicationEventKind",{
                             :name =>'Renewal Open Enrollment available for Employee',
@@ -60,12 +60,12 @@ RSpec.describe ShopEmployeeNotices::EmployeeOpenEnrollmentReminderNotice, :dbcle
     end
     context "initial employer" do
       let!(:employer_profile){ create :employer_profile, :aasm_state => "enrolling"}
-      let!(:plan_year) { FactoryGirl.create(:plan_year, employer_profile: employer_profile, start_on: start_on, :aasm_state => 'active' ) }
-      let!(:active_benefit_group) { FactoryGirl.create(:benefit_group, plan_year: plan_year, title: "Benefits #{plan_year.start_on.year}") }
-      let!(:family) { FactoryGirl.create(:family, :with_primary_family_member, person: person)}
-      let!(:benefit_group_assignment)  { FactoryGirl.create(:benefit_group_assignment, benefit_group_id: active_benefit_group.id, census_employee: census_employee, start_on: active_benefit_group.start_on) }
-      let!(:hbx_enrollment) { FactoryGirl.create(:hbx_enrollment, household: family.active_household, effective_on: TimeKeeper.date_of_record.beginning_of_month + 1.month - 1.year, plan: plan)}
-      let(:plan) { FactoryGirl.create(:plan, :with_premium_tables)}
+      let!(:plan_year) { FactoryBot.create(:plan_year, employer_profile: employer_profile, start_on: start_on, :aasm_state => 'active' ) }
+      let!(:active_benefit_group) { FactoryBot.create(:benefit_group, plan_year: plan_year, title: "Benefits #{plan_year.start_on.year}") }
+      let!(:family) { FactoryBot.create(:family, :with_primary_family_member, person: person)}
+      let!(:benefit_group_assignment)  { FactoryBot.create(:benefit_group_assignment, benefit_group_id: active_benefit_group.id, census_employee: census_employee, start_on: active_benefit_group.start_on) }
+      let!(:hbx_enrollment) { FactoryBot.create(:hbx_enrollment, household: family.active_household, effective_on: TimeKeeper.date_of_record.beginning_of_month + 1.month - 1.year, plan: plan)}
+      let(:plan) { FactoryBot.create(:plan, :with_premium_tables)}
       it "it should return open enrollment end date" do
         hbx_enrollment.update_attributes(benefit_group_assignment_id: benefit_group_assignment.id)
         plan_year = census_employee.active_benefit_group_assignment.benefit_group.plan_year
@@ -76,15 +76,15 @@ RSpec.describe ShopEmployeeNotices::EmployeeOpenEnrollmentReminderNotice, :dbcle
 
     context "renewing employer" do
       let!(:employer_profile){ create :employer_profile, :aasm_state => "renewing_enrolling"}
-      let!(:plan_year) { FactoryGirl.create(:plan_year, employer_profile: employer_profile, start_on: start_on, :aasm_state => 'active' ) }
-      let!(:active_benefit_group) { FactoryGirl.create(:benefit_group, plan_year: plan_year, title: "Benefits #{plan_year.start_on.year}") }
-      let!(:renewal_plan_year) { FactoryGirl.create(:plan_year, employer_profile: employer_profile, start_on: start_on + 1.year, :aasm_state => 'renewing_draft' ) }
-      let!(:renewal_benefit_group) { FactoryGirl.create(:benefit_group, plan_year: renewal_plan_year, title: "Benefits #{renewal_plan_year.start_on.year}") }
-      let!(:family) { FactoryGirl.create(:family, :with_primary_family_member, person: person)}
-      let!(:benefit_group_assignment)  { FactoryGirl.create(:benefit_group_assignment, benefit_group_id: renewal_benefit_group.id, census_employee: census_employee, start_on: renewal_benefit_group.start_on) }
-      let!(:hbx_enrollment) { FactoryGirl.create(:hbx_enrollment, household: family.active_household, effective_on: TimeKeeper.date_of_record.beginning_of_month + 1.month - 1.year, plan: plan)}
-      let(:renewal_plan) { FactoryGirl.create(:plan)}
-      let(:plan) { FactoryGirl.create(:plan, :with_premium_tables, :renewal_plan_id => renewal_plan.id)}
+      let!(:plan_year) { FactoryBot.create(:plan_year, employer_profile: employer_profile, start_on: start_on, :aasm_state => 'active' ) }
+      let!(:active_benefit_group) { FactoryBot.create(:benefit_group, plan_year: plan_year, title: "Benefits #{plan_year.start_on.year}") }
+      let!(:renewal_plan_year) { FactoryBot.create(:plan_year, employer_profile: employer_profile, start_on: start_on + 1.year, :aasm_state => 'renewing_draft' ) }
+      let!(:renewal_benefit_group) { FactoryBot.create(:benefit_group, plan_year: renewal_plan_year, title: "Benefits #{renewal_plan_year.start_on.year}") }
+      let!(:family) { FactoryBot.create(:family, :with_primary_family_member, person: person)}
+      let!(:benefit_group_assignment)  { FactoryBot.create(:benefit_group_assignment, benefit_group_id: renewal_benefit_group.id, census_employee: census_employee, start_on: renewal_benefit_group.start_on) }
+      let!(:hbx_enrollment) { FactoryBot.create(:hbx_enrollment, household: family.active_household, effective_on: TimeKeeper.date_of_record.beginning_of_month + 1.month - 1.year, plan: plan)}
+      let(:renewal_plan) { FactoryBot.create(:plan)}
+      let(:plan) { FactoryBot.create(:plan, :with_premium_tables, :renewal_plan_id => renewal_plan.id)}
       before do
         @employee_notice = ShopEmployeeNotices::EmployeeOpenEnrollmentReminderNotice.new(census_employee, valid_parmas)
         allow(census_employee).to receive(:active_benefit_group_assignment).and_return benefit_group_assignment

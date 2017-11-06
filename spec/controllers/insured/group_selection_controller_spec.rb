@@ -1,19 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe Insured::GroupSelectionController, :type => :controller do
-  let(:person) {FactoryGirl.create(:person)}
+  let(:person) {FactoryBot.create(:person)}
   let(:user) { instance_double("User", :person => person) }
-  let(:consumer_role) {FactoryGirl.create(:consumer_role)}
-  let(:employee_role) {FactoryGirl.create(:employee_role)}
+  let(:consumer_role) {FactoryBot.create(:consumer_role)}
+  let(:employee_role) {FactoryBot.create(:employee_role)}
   let(:household) {double(:immediate_family_coverage_household=> coverage_household, :hbx_enrollments => hbx_enrollments)}
   let(:coverage_household) {double}
   let(:family) {Family.new}
   let(:hbx_enrollment) {HbxEnrollment.create}
   let(:hbx_enrollments) {double(:enrolled => [hbx_enrollment], :where => collectiondouble)}
   let(:collectiondouble) { double(where: double(order_by: [hbx_enrollment]))}
-  let(:hbx_profile) {FactoryGirl.create(:hbx_profile)}
-  let(:benefit_group) { FactoryGirl.create(:benefit_group)}
-  let(:benefit_package) { FactoryGirl.build(:benefit_package,
+  let(:hbx_profile) {FactoryBot.create(:hbx_profile)}
+  let(:benefit_group) { FactoryBot.create(:benefit_group)}
+  let(:benefit_package) { FactoryBot.build(:benefit_package,
       benefit_coverage_period: hbx_profile.benefit_sponsorship.benefit_coverage_periods.first,
       title: "individual_health_benefits_2015",
       elected_premium_credit_strategy: "unassisted",
@@ -43,10 +43,10 @@ RSpec.describe Insured::GroupSelectionController, :type => :controller do
   end
 
   context "GET new" do
-    let(:census_employee) {FactoryGirl.build(:census_employee)}
-    let(:hbx_enrollment_member) { FactoryGirl.build(:hbx_enrollment_member) }
+    let(:census_employee) {FactoryBot.build(:census_employee)}
+    let(:hbx_enrollment_member) { FactoryBot.build(:hbx_enrollment_member) }
     let(:family_member) { FamilyMember.new }
-    let(:benefit_group) {FactoryGirl.create(:benefit_group)}
+    let(:benefit_group) {FactoryBot.create(:benefit_group)}
     it "return http success" do
       sign_in user
       get :new, person_id: person.id, employee_role_id: employee_role.id
@@ -135,7 +135,7 @@ RSpec.describe Insured::GroupSelectionController, :type => :controller do
     context "individual" do
       let(:hbx_profile) {double(benefit_sponsorship: benefit_sponsorship)}
       let(:benefit_sponsorship) {double(benefit_coverage_periods: [benefit_coverage_period])}
-      let(:benefit_coverage_period) {FactoryGirl.build(:benefit_coverage_period)}
+      let(:benefit_coverage_period) {FactoryBot.build(:benefit_coverage_period)}
       before :each do
         allow(HbxProfile).to receive(:current_hbx).and_return hbx_profile
         allow(benefit_coverage_period).to receive(:benefit_packages).and_return [benefit_package]
@@ -206,10 +206,10 @@ RSpec.describe Insured::GroupSelectionController, :type => :controller do
 
   context "POST CREATE" do
     let(:family_member_ids) {{"0"=>"559366ca63686947784d8f01", "1"=>"559366ca63686947784e8f01", "2"=>"559366ca63686947784f8f01", "3"=>"559366ca6368694778508f01"}}
-    let(:benefit_group) {FactoryGirl.create(:benefit_group)}
+    let(:benefit_group) {FactoryBot.create(:benefit_group)}
     let(:benefit_group_assignment) {double(update: true)}
     let(:employee_roles){ [double("EmployeeRole")] }
-    let(:census_employee) {FactoryGirl.create(:census_employee)}
+    let(:census_employee) {FactoryBot.create(:census_employee)}
 
     before do
       allow(coverage_household).to receive(:household).and_return(household)
@@ -227,7 +227,7 @@ RSpec.describe Insured::GroupSelectionController, :type => :controller do
     end
 
     it "should redirect" do
-      user=FactoryGirl.create(:user, id: 99, person: person)
+      user=FactoryBot.create(:user, id: 99, person: person)
       sign_in user
       allow(hbx_enrollment).to receive(:save).and_return(true)
       post :create, person_id: person.id, employee_role_id: employee_role.id, family_member_ids: family_member_ids
@@ -236,7 +236,7 @@ RSpec.describe Insured::GroupSelectionController, :type => :controller do
     end
 
     it "with change_plan" do
-      user = FactoryGirl.create(:user, id: 98, person: FactoryGirl.create(:person))
+      user = FactoryBot.create(:user, id: 98, person: FactoryBot.create(:person))
       sign_in user
       allow(hbx_enrollment).to receive(:save).and_return(true)
       post :create, person_id: person.id, employee_role_id: employee_role.id, family_member_ids: family_member_ids, change_plan: 'change'
@@ -246,9 +246,9 @@ RSpec.describe Insured::GroupSelectionController, :type => :controller do
 
     context "when keep_existing_plan" do
       let(:old_hbx) { HbxEnrollment.new }
-      let(:special_enrollment) { FactoryGirl.build(:special_enrollment_period, family: family) }
+      let(:special_enrollment) { FactoryBot.build(:special_enrollment_period, family: family) }
       before :each do
-        user = FactoryGirl.create(:user, person: FactoryGirl.create(:person))
+        user = FactoryBot.create(:user, person: FactoryBot.create(:person))
         sign_in user
         allow(hbx_enrollment).to receive(:save).and_return(true)
         allow(hbx_enrollment).to receive(:plan=).and_return(true)
@@ -272,7 +272,7 @@ RSpec.describe Insured::GroupSelectionController, :type => :controller do
     context "when keep_existing_plan_id_is_nil" do
       let(:old_hbx) { HbxEnrollment.new }
       before :each do
-        user = FactoryGirl.create(:user, person: FactoryGirl.create(:person))
+        user = FactoryBot.create(:user, person: FactoryBot.create(:person))
         sign_in user
         allow(hbx_enrollment).to receive(:save).and_return(true)
         allow(hbx_enrollment).to receive(:plan=).and_return(true)
@@ -293,7 +293,7 @@ RSpec.describe Insured::GroupSelectionController, :type => :controller do
     end
 
     it "should render group selection page if not valid" do
-      user = FactoryGirl.create(:user, id: 96, person: FactoryGirl.create(:person))
+      user = FactoryBot.create(:user, id: 96, person: FactoryBot.create(:person))
       sign_in user
       allow(person).to receive(:employee_roles).and_return([employee_role])
       post :create, person_id: person.id, employee_role_id: employee_role.id, family_member_ids: family_member_ids
@@ -303,7 +303,7 @@ RSpec.describe Insured::GroupSelectionController, :type => :controller do
     end
     
     it "for cobra with invalid date" do
-      user = FactoryGirl.create(:user, id: 196, person: FactoryGirl.create(:person))
+      user = FactoryBot.create(:user, id: 196, person: FactoryBot.create(:person))
       sign_in user
       allow(person).to receive(:employee_roles).and_return([employee_role])
       allow(employee_role).to receive(:census_employee).and_return(census_employee)

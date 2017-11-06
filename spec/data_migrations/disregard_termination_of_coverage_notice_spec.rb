@@ -13,9 +13,9 @@ describe DisregardTerminationOfCoverageNotice, dbclean: :after_each do
   end
 
   describe "disregard_termination_of_coverage_notice", dbclean: :after_each do
-  	let!(:organization) {FactoryGirl.create(:organization, fein: "261813097")}
-    let!(:employer_profile)  { FactoryGirl.create(:employer_profile, organization: organization) }
-    let!(:person) { FactoryGirl.create(:person, hbx_id: "100239") }
+  	let!(:organization) {FactoryBot.create(:organization, fein: "261813097")}
+    let!(:employer_profile)  { FactoryBot.create(:employer_profile, organization: organization) }
+    let!(:person) { FactoryBot.create(:person, hbx_id: "100239") }
 
     before do
       allow(ENV).to receive(:[]).with("fein").and_return(organization.fein)

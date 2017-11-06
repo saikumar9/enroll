@@ -21,7 +21,7 @@ if ENV["COVERAGE"]
 end
 
 require File.join(File.dirname(__FILE__), "factories", "wrapping_sequence")
-require 'factory_girl_rails'
+require 'factory_bot_rails'
 require 'ivl_helper'
 
 RSpec.configure do |config|
@@ -94,9 +94,7 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
   RSpec.configure do |config|
-    config.include FactoryGirl::Syntax::Methods
+    config.include FactoryBot::Syntax::Methods
   end
 end
 require 'pundit/rspec'
-
-

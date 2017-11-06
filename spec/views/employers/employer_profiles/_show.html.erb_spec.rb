@@ -1,14 +1,14 @@
 require "rails_helper"
 
 RSpec.describe "employers/employer_profiles/_show_profile" do
-  let(:employer_profile) { FactoryGirl.create(:employer_profile) }
-  let(:plan_year) { FactoryGirl.create(:plan_year, employer_profile: employer_profile, aasm_state: 'published') }
-  let(:benefit_group) { FactoryGirl.create(:benefit_group, plan_year: plan_year) }
-  let(:plan) { FactoryGirl.create(:plan) }
-  let(:census_employee1) { FactoryGirl.create(:census_employee, employer_profile: employer_profile) }
-  let(:census_employee2) { FactoryGirl.create(:census_employee, employer_profile: employer_profile) }
-  let(:census_employee3) { FactoryGirl.create(:census_employee, employer_profile: employer_profile) }
-  let(:user) { FactoryGirl.create(:user) }
+  let(:employer_profile) { FactoryBot.create(:employer_profile) }
+  let(:plan_year) { FactoryBot.create(:plan_year, employer_profile: employer_profile, aasm_state: 'published') }
+  let(:benefit_group) { FactoryBot.create(:benefit_group, plan_year: plan_year) }
+  let(:plan) { FactoryBot.create(:plan) }
+  let(:census_employee1) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+  let(:census_employee2) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+  let(:census_employee3) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+  let(:user) { FactoryBot.create(:user) }
 
   before :each do
     @employer_profile = employer_profile

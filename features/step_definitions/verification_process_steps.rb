@@ -1,7 +1,7 @@
 module VerificationUser
   def user(*traits)
     attributes = traits.extract_options!
-    @user ||= FactoryGirl.create :user, *traits, attributes
+    @user ||= FactoryBot.create :user, *traits, attributes
   end
 end
 World(VerificationUser)
@@ -70,7 +70,7 @@ end
 
 Given(/^consumer has outstanding verification and unverified enrollments$/) do
   family = user.person.primary_family
-  FactoryGirl.create(:hbx_enrollment,
+  FactoryBot.create(:hbx_enrollment,
                      household: family.active_household,
                      coverage_kind: "health",
                      effective_on: TimeKeeper.date_of_record - 2.months,

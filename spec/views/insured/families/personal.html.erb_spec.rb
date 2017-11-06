@@ -22,7 +22,7 @@ RSpec.describe "insured/families/personal.html.erb" do
   end
 
   context "for employee role" do
-   let(:person) {FactoryGirl.create(:person, :with_employee_role)}
+   let(:person) {FactoryBot.create(:person, :with_employee_role)}
 
 
    it "should renders home address fields" do
@@ -41,7 +41,7 @@ RSpec.describe "insured/families/personal.html.erb" do
  end
 
    context "for consumer role" do
-   let(:person) {FactoryGirl.create(:person, :with_consumer_role)}
+   let(:person) {FactoryBot.create(:person, :with_consumer_role)}
 
 
    it "should renders home address fields and consumer fields" do

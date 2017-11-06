@@ -7,7 +7,7 @@ describe HbxEnrollment do
     let(:blue_collar_employee_count)              { 7 }
     let(:white_collar_employee_count)             { 5 }
     let(:fte_count)                               { blue_collar_employee_count + white_collar_employee_count }
-    let(:employer_profile)                        { FactoryGirl.create(:employer_profile) }
+    let(:employer_profile)                        { FactoryBot.create(:employer_profile) }
 
     let(:plan_year_start_on)                      { TimeKeeper.date_of_record.next_month.end_of_month + 1.day }
     let(:plan_year_end_on)                        { (plan_year_start_on + 1.year) - 1.day }
@@ -34,29 +34,29 @@ describe HbxEnrollment do
                                                     end
                                                     }
 
-    let!(:plan_year)                               { py = FactoryGirl.create(:plan_year,
+    let!(:plan_year)                               { py = FactoryBot.create(:plan_year,
                                                                              start_on: plan_year_start_on,
                                                                              end_on: plan_year_end_on,
                                                                              open_enrollment_start_on: TimeKeeper.date_of_record,
                                                                              open_enrollment_end_on: TimeKeeper.date_of_record + 5.days,
                                                                              employer_profile: employer_profile
                                                                              )
-                                                     blue = FactoryGirl.build(:benefit_group, title: "blue collar", plan_year: py)
-                                                     white = FactoryGirl.build(:benefit_group, title: "white collar", plan_year: py)
+                                                     blue = FactoryBot.build(:benefit_group, title: "blue collar", plan_year: py)
+                                                     white = FactoryBot.build(:benefit_group, title: "white collar", plan_year: py)
 
                                                      py.benefit_groups = [blue, white]
                                                      py.save
                                                      py.publish!
                                                      py
                                                      }
-    let!(:blue_collar_census_employees)            { ees = FactoryGirl.create_list(:census_employee, blue_collar_employee_count, employer_profile: employer_profile)
+    let!(:blue_collar_census_employees)            { ees = FactoryBot.create_list(:census_employee, blue_collar_employee_count, employer_profile: employer_profile)
                                                      ees.each() do |ee|
                                                        ee.benefit_group_assignments = [blue_collar_benefit_group_assignment]
                                                        ee.save
                                                      end
                                                      ees
                                                      }
-    let!(:white_collar_census_employees)           { ees = FactoryGirl.create_list(:census_employee, white_collar_employee_count, employer_profile: employer_profile)
+    let!(:white_collar_census_employees)           { ees = FactoryBot.create_list(:census_employee, white_collar_employee_count, employer_profile: employer_profile)
                                                      ees.each() do |ee|
                                                        ee.benefit_group_assignments = [white_collar_benefit_group_assignment]
                                                        ee.save
@@ -475,7 +475,7 @@ describe HbxEnrollment, dbclean: :after_all do
 
     context "decorated_elected_plans" do
       let(:benefit_package) { BenefitPackage.new }
-      let(:consumer_role) { FactoryGirl.create(:consumer_role) }
+      let(:consumer_role) { FactoryBot.create(:consumer_role) }
       let(:person) { double(primary_family: family)}
       let(:family) { double }
       let(:enrollment) {
@@ -492,8 +492,8 @@ describe HbxEnrollment, dbclean: :after_all do
       let(:benefit_sponsorship) { double(earliest_effective_date: TimeKeeper.date_of_record - 2.months, renewal_benefit_coverage_period: renewal_bcp, current_benefit_coverage_period: bcp) }
       let(:renewal_bcp) { double(earliest_effective_date: TimeKeeper.date_of_record - 2.months) }
       let(:bcp) { double(earliest_effective_date: TimeKeeper.date_of_record - 2.months) }
-      let(:plan) { FactoryGirl.create(:plan) }
-      let(:plan2) { FactoryGirl.create(:plan) }
+      let(:plan) { FactoryBot.create(:plan) }
+      let(:plan2) { FactoryBot.create(:plan) }
 
       context "when in open enrollment" do
         before :each do
@@ -616,12 +616,12 @@ describe HbxEnrollment, dbclean: :after_all do
     end
 
     context "inactive_pre_hbx" do
-      let(:consumer_role) {FactoryGirl.create(:consumer_role)}
-      let(:hbx_profile) { FactoryGirl.create(:hbx_profile) }
+      let(:consumer_role) {FactoryBot.create(:consumer_role)}
+      let(:hbx_profile) { FactoryBot.create(:hbx_profile) }
       let(:benefit_package) { hbx_profile.benefit_sponsorship.benefit_coverage_periods.first.benefit_packages.first }
       let(:benefit_coverage_period) { hbx_profile.benefit_sponsorship.benefit_coverage_periods.first }
       let(:hbx) {HbxEnrollment.new(consumer_role_id: consumer_role.id)}
-      let(:family) {FactoryGirl.build(:family)}
+      let(:family) {FactoryBot.build(:family)}
       before :each do
         allow(benefit_coverage_period).to receive(:earliest_effective_date).and_return TimeKeeper.date_of_record
         allow(coverage_household).to receive(:household).and_return household
@@ -649,13 +649,13 @@ describe HbxEnrollment, dbclean: :after_all do
   end
 
   context "#propogate_waiver", dbclean: :after_each do
-    let(:family) { FactoryGirl.create(:family, :with_primary_family_member)}
-    let(:census_employee) { FactoryGirl.create(:census_employee)}
-    let(:benefit_group_assignment) { FactoryGirl.create(:benefit_group_assignment, benefit_group: benefit_group, census_employee: census_employee) }
-    let(:benefit_group) { FactoryGirl.create(:benefit_group)}
-    let(:enrollment) { FactoryGirl.create(:hbx_enrollment, :individual_unassisted, household: family.active_household)}
-    let(:enrollment_two) { FactoryGirl.create(:hbx_enrollment, :shop, household: family.active_household)}
-    let(:enrollment_three) { FactoryGirl.create(:hbx_enrollment, :cobra_shop, household: family.active_household)}
+    let(:family) { FactoryBot.create(:family, :with_primary_family_member)}
+    let(:census_employee) { FactoryBot.create(:census_employee)}
+    let(:benefit_group_assignment) { FactoryBot.create(:benefit_group_assignment, benefit_group: benefit_group, census_employee: census_employee) }
+    let(:benefit_group) { FactoryBot.create(:benefit_group)}
+    let(:enrollment) { FactoryBot.create(:hbx_enrollment, :individual_unassisted, household: family.active_household)}
+    let(:enrollment_two) { FactoryBot.create(:hbx_enrollment, :shop, household: family.active_household)}
+    let(:enrollment_three) { FactoryBot.create(:hbx_enrollment, :cobra_shop, household: family.active_household)}
     before do
       benefit_group_assignment.update_attribute(:hbx_enrollment_id, enrollment_two.id)
       enrollment_two.update_attributes(benefit_group_id: benefit_group_assignment.benefit_group.id, benefit_group_assignment_id: benefit_group_assignment.id)
@@ -706,7 +706,7 @@ describe HbxProfile, "class methods", type: :model do
       @coverage_household = household.coverage_households.first
     end
     let(:benefit_package) { BenefitPackage.new }
-    let(:consumer_role) { FactoryGirl.create(:consumer_role) }
+    let(:consumer_role) { FactoryBot.create(:consumer_role) }
     let(:person) { double(primary_family: family)}
     let(:family) { double(current_sep: double(effective_on:TimeKeeper.date_of_record)) }
     let(:hbx_profile) {double}
@@ -752,13 +752,13 @@ describe HbxProfile, "class methods", type: :model do
   context "is reporting a qle before the employer plan start_date and having a expired plan year" do
     let(:coverage_household) { double}
     let(:coverage_household_members) {double}
-    let(:household) {FactoryGirl.create(:household, family: family)}
-    let(:qle_kind) { FactoryGirl.create(:qualifying_life_event_kind, :effective_on_event_date) }
-    let(:organization) { FactoryGirl.create(:organization, :with_expired_and_active_plan_years)}
-    let(:census_employee) { FactoryGirl.create :census_employee, employer_profile: organization.employer_profile, dob: TimeKeeper.date_of_record - 30.years, first_name: person.first_name, last_name: person.last_name }
-    let(:employee_role) { FactoryGirl.create(:employee_role, person: person, census_employee: census_employee, employer_profile: organization.employer_profile)}
-    let(:person) { FactoryGirl.create(:person)}
-    let(:family) { FactoryGirl.create(:family, :with_primary_family_member, person: person)}
+    let(:household) {FactoryBot.create(:household, family: family)}
+    let(:qle_kind) { FactoryBot.create(:qualifying_life_event_kind, :effective_on_event_date) }
+    let(:organization) { FactoryBot.create(:organization, :with_expired_and_active_plan_years)}
+    let(:census_employee) { FactoryBot.create :census_employee, employer_profile: organization.employer_profile, dob: TimeKeeper.date_of_record - 30.years, first_name: person.first_name, last_name: person.last_name }
+    let(:employee_role) { FactoryBot.create(:employee_role, person: person, census_employee: census_employee, employer_profile: organization.employer_profile)}
+    let(:person) { FactoryBot.create(:person)}
+    let(:family) { FactoryBot.create(:family, :with_primary_family_member, person: person)}
     let(:sep){
       sep = family.special_enrollment_periods.new
       sep.effective_on_kind = 'date_of_event'
@@ -853,13 +853,13 @@ describe HbxProfile, "class methods", type: :model do
   end
 
   context "ivl user switching plan from one carrier to other carrier previous hbx_enrollment aasm_sate should be cancel/terminate in DB." do
-    let(:person1) { FactoryGirl.create(:person, :with_consumer_role) }
-    let(:family1) {FactoryGirl.create(:family, :with_primary_family_member, :person => person1)}
-    let(:household) {FactoryGirl.create(:household, family: family1)}
+    let(:person1) { FactoryBot.create(:person, :with_consumer_role) }
+    let(:family1) {FactoryBot.create(:family, :with_primary_family_member, :person => person1)}
+    let(:household) {FactoryBot.create(:household, family: family1)}
     let(:date){ TimeKeeper.date_of_record }
-    let!(:carrier_profile1) {FactoryGirl.build(:carrier_profile)}
-    let!(:carrier_profile2) {FactoryGirl.create(:carrier_profile, organization: organization)}
-    let!(:organization) { FactoryGirl.create(:organization, legal_name: "CareFirst", dba: "care")}
+    let!(:carrier_profile1) {FactoryBot.build(:carrier_profile)}
+    let!(:carrier_profile2) {FactoryBot.create(:carrier_profile, organization: organization)}
+    let!(:organization) { FactoryBot.create(:organization, legal_name: "CareFirst", dba: "care")}
     let(:plan1){ Plan.new(active_year: date.year, market: "individual", carrier_profile: carrier_profile1) }
     let(:plan2){ Plan.new(active_year: date.year, market: "individual", carrier_profile: carrier_profile2) }
 
@@ -945,8 +945,8 @@ describe HbxProfile, "class methods", type: :model do
   end
 
   context "cancel_coverage!", dbclean: :after_each do
-    let(:family) { FactoryGirl.create(:family, :with_primary_family_member)}
-    let(:hbx_enrollment) { FactoryGirl.create(:hbx_enrollment, household: family.active_household, aasm_state: "inactive")}
+    let(:family) { FactoryBot.create(:family, :with_primary_family_member)}
+    let(:hbx_enrollment) { FactoryBot.create(:hbx_enrollment, household: family.active_household, aasm_state: "inactive")}
 
     it "should cancel the enrollment" do
       hbx_enrollment.cancel_coverage!
@@ -962,15 +962,15 @@ end
 
 describe HbxEnrollment, dbclean: :after_each do
 
-  let(:employer_profile)          { FactoryGirl.create(:employer_profile) }
+  let(:employer_profile)          { FactoryBot.create(:employer_profile) }
 
   let(:calendar_year) { TimeKeeper.date_of_record.year }
 
   let(:middle_of_prev_year) { Date.new(calendar_year - 1, 6, 10) }
-  let(:census_employee) { FactoryGirl.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: middle_of_prev_year, updated_at: middle_of_prev_year, hired_on: middle_of_prev_year) }
-  let(:person) { FactoryGirl.create(:person, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789') }
+  let(:census_employee) { FactoryBot.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: middle_of_prev_year, updated_at: middle_of_prev_year, hired_on: middle_of_prev_year) }
+  let(:person) { FactoryBot.create(:person, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789') }
 
-  let(:shop_family)       { FactoryGirl.create(:family, :with_primary_family_member) }
+  let(:shop_family)       { FactoryBot.create(:family, :with_primary_family_member) }
   let(:plan_year_start_on) { Date.new(calendar_year, 1, 1) }
   let(:plan_year_end_on) { Date.new(calendar_year, 12, 31) }
   let(:open_enrollment_start_on) { Date.new(calendar_year - 1, 12, 1) }
@@ -978,7 +978,7 @@ describe HbxEnrollment, dbclean: :after_each do
   let(:effective_date)         { plan_year_start_on }
 
 
-  let!(:plan_year)                               { py = FactoryGirl.create(:plan_year,
+  let!(:plan_year)                               { py = FactoryBot.create(:plan_year,
                                                                            start_on: plan_year_start_on,
                                                                            end_on: plan_year_end_on,
                                                                            open_enrollment_start_on: open_enrollment_start_on,
@@ -986,8 +986,8 @@ describe HbxEnrollment, dbclean: :after_each do
                                                                            employer_profile: employer_profile
                                                                            )
 
-                                                   blue = FactoryGirl.build(:benefit_group, title: "blue collar", plan_year: py)
-                                                   white = FactoryGirl.build(:benefit_group, title: "white collar", plan_year: py)
+                                                   blue = FactoryBot.build(:benefit_group, title: "blue collar", plan_year: py)
+                                                   white = FactoryBot.build(:benefit_group, title: "white collar", plan_year: py)
                                                    py.benefit_groups = [blue, white]
                                                    py.save
                                                    py.update_attributes({:aasm_state => 'published'})
@@ -997,13 +997,13 @@ describe HbxEnrollment, dbclean: :after_each do
 
   let(:hired_on) { middle_of_prev_year }
   let(:created_at) { middle_of_prev_year }
-  let(:census_employee) { FactoryGirl.create(:census_employee_with_active_assignment, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: created_at, updated_at: created_at, hired_on: hired_on, benefit_group: plan_year.benefit_groups.first) }
+  let(:census_employee) { FactoryBot.create(:census_employee_with_active_assignment, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: created_at, updated_at: created_at, hired_on: hired_on, benefit_group: plan_year.benefit_groups.first) }
 
   let(:employee_role) {
-      FactoryGirl.create(:employee_role, employer_profile: employer_profile, hired_on: census_employee.hired_on, census_employee_id: census_employee.id)
+      FactoryBot.create(:employee_role, employer_profile: employer_profile, hired_on: census_employee.hired_on, census_employee_id: census_employee.id)
     }
 
-  let(:shop_enrollment)   { FactoryGirl.build(:hbx_enrollment,
+  let(:shop_enrollment)   { FactoryBot.build(:hbx_enrollment,
                                               household: shop_family.latest_household,
                                               coverage_kind: "health",
                                               effective_on: effective_date,
@@ -1041,7 +1041,7 @@ describe HbxEnrollment, dbclean: :after_each do
 
     context 'when QLE' do
       let(:qle_date) { effective_date + 15.days }
-      let(:qualifying_life_event_kind) { FactoryGirl.create(:qualifying_life_event_kind)}
+      let(:qualifying_life_event_kind) { FactoryBot.create(:qualifying_life_event_kind)}
 
       let(:special_enrollment_period) {
         special_enrollment = shop_family.special_enrollment_periods.build({
@@ -1111,14 +1111,14 @@ end
 describe HbxEnrollment, dbclean: :after_each do
 
   context ".can_select_coverage?" do
-    let(:employer_profile)          { FactoryGirl.create(:employer_profile) }
+    let(:employer_profile)          { FactoryBot.create(:employer_profile) }
 
     let(:calendar_year) { TimeKeeper.date_of_record.year }
 
     let(:middle_of_prev_year) { Date.new(calendar_year - 1, 6, 10) }
-    let(:person) { FactoryGirl.create(:person, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789') }
+    let(:person) { FactoryBot.create(:person, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789') }
 
-    let(:shop_family)       { FactoryGirl.create(:family, :with_primary_family_member) }
+    let(:shop_family)       { FactoryBot.create(:family, :with_primary_family_member) }
     let(:plan_year_start_on) { Date.new(calendar_year, 1, 1) }
     let(:plan_year_end_on) { Date.new(calendar_year, 12, 31) }
     let(:open_enrollment_start_on) { Date.new(calendar_year - 1, 12, 1) }
@@ -1126,7 +1126,7 @@ describe HbxEnrollment, dbclean: :after_each do
     let(:effective_date)         { plan_year_start_on }
 
 
-    let!(:plan_year)                               { py = FactoryGirl.create(:plan_year,
+    let!(:plan_year)                               { py = FactoryBot.create(:plan_year,
                                                                              start_on: plan_year_start_on,
                                                                              end_on: plan_year_end_on,
                                                                              open_enrollment_start_on: open_enrollment_start_on,
@@ -1134,8 +1134,8 @@ describe HbxEnrollment, dbclean: :after_each do
                                                                              employer_profile: employer_profile
                                                                              )
 
-                                                     blue = FactoryGirl.build(:benefit_group, title: "blue collar", plan_year: py)
-                                                     white = FactoryGirl.build(:benefit_group, title: "white collar", plan_year: py)
+                                                     blue = FactoryBot.build(:benefit_group, title: "blue collar", plan_year: py)
+                                                     white = FactoryBot.build(:benefit_group, title: "white collar", plan_year: py)
                                                      py.benefit_groups = [blue, white]
                                                      py.save
                                                      py.update_attributes({:aasm_state => 'published'})
@@ -1146,13 +1146,13 @@ describe HbxEnrollment, dbclean: :after_each do
     let(:created_at) { middle_of_prev_year }
     let(:updated_at) { middle_of_prev_year }
 
-    let(:census_employee) { FactoryGirl.create(:census_employee_with_active_assignment, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: created_at, updated_at: updated_at, hired_on: hired_on, benefit_group: plan_year.benefit_groups.first) }
+    let(:census_employee) { FactoryBot.create(:census_employee_with_active_assignment, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: created_at, updated_at: updated_at, hired_on: hired_on, benefit_group: plan_year.benefit_groups.first) }
 
     let(:employee_role) {
-      FactoryGirl.create(:employee_role, employer_profile: employer_profile, hired_on: census_employee.hired_on, census_employee_id: census_employee.id)
+      FactoryBot.create(:employee_role, employer_profile: employer_profile, hired_on: census_employee.hired_on, census_employee_id: census_employee.id)
     }
 
-    let(:shop_enrollment)   { FactoryGirl.create(:hbx_enrollment,
+    let(:shop_enrollment)   { FactoryBot.create(:hbx_enrollment,
                                                  household: shop_family.latest_household,
                                                  coverage_kind: "health",
                                                  effective_on: effective_date,
@@ -1257,16 +1257,16 @@ describe HbxEnrollment, dbclean: :after_each do
     context 'with QLE' do
 
       let(:qle_date) { effective_date + 15.days }
-      let(:qualifying_life_event_kind) { FactoryGirl.create(:qualifying_life_event_kind)}
+      let(:qualifying_life_event_kind) { FactoryBot.create(:qualifying_life_event_kind)}
       let(:user) { instance_double("User", :primary_family => test_family, :person => person) }
-      let(:qle) { FactoryGirl.create(:qualifying_life_event_kind) }
-      let(:test_family) { FactoryGirl.build(:family, :with_primary_family_member) }
+      let(:qle) { FactoryBot.create(:qualifying_life_event_kind) }
+      let(:test_family) { FactoryBot.build(:family, :with_primary_family_member) }
       let(:person) { shop_family.primary_family_member.person }
-      let(:published_plan_year)  { FactoryGirl.build(:plan_year, aasm_state: :published)}
-      let(:employer_profile) { FactoryGirl.create(:employer_profile) }
-      let(:employee_role) { FactoryGirl.create(:employee_role, employer_profile: employer_profile, person: person, census_employee: census_employee ) }
+      let(:published_plan_year)  { FactoryBot.build(:plan_year, aasm_state: :published)}
+      let(:employer_profile) { FactoryBot.create(:employer_profile) }
+      let(:employee_role) { FactoryBot.create(:employee_role, employer_profile: employer_profile, person: person, census_employee: census_employee ) }
       let(:employee_role_id) { employee_role.id }
-      let(:new_census_employee) { FactoryGirl.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', hired_on: middle_of_prev_year, created_at: Date.new(calendar_year, 5, 10), updated_at: Date.new(calendar_year, 5, 10)) }
+      let(:new_census_employee) { FactoryBot.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', hired_on: middle_of_prev_year, created_at: Date.new(calendar_year, 5, 10), updated_at: Date.new(calendar_year, 5, 10)) }
 
 
       let(:special_enrollment_period) {
@@ -1279,7 +1279,7 @@ describe HbxEnrollment, dbclean: :after_each do
         special_enrollment
       }
 
-      let(:shop_enrollment)   { FactoryGirl.create(:hbx_enrollment,
+      let(:shop_enrollment)   { FactoryBot.create(:hbx_enrollment,
                                                    household: shop_family.latest_household,
                                                    coverage_kind: "health",
                                                    effective_on: effective_date,
@@ -1321,16 +1321,16 @@ end
 
 context "Benefits are terminated" do
   let(:effective_on_date)         { TimeKeeper.date_of_record.beginning_of_month }
-  let(:benefit_group)             { FactoryGirl.create(:benefit_group) }
-  let!(:hbx_profile)               { FactoryGirl.create(:hbx_profile) }
+  let(:benefit_group)             { FactoryBot.create(:benefit_group) }
+  let!(:hbx_profile)               { FactoryBot.create(:hbx_profile) }
 
   before do
     TimeKeeper.set_date_of_record_unprotected!(Date.new(effective_on_date.year, 6, 1))
   end
 
   context "Individual benefit" do
-    let(:ivl_family)        { FactoryGirl.create(:family, :with_primary_family_member) }
-    let(:ivl_enrollment)    { FactoryGirl.create(:hbx_enrollment,
+    let(:ivl_family)        { FactoryBot.create(:family, :with_primary_family_member) }
+    let(:ivl_enrollment)    { FactoryBot.create(:hbx_enrollment,
                                                  household: ivl_family.latest_household,
                                                  coverage_kind: "health",
                                                  effective_on: effective_on_date,
@@ -1361,8 +1361,8 @@ context "Benefits are terminated" do
   end
 
   context "SHOP benefit" do
-    let(:shop_family)       { FactoryGirl.create(:family, :with_primary_family_member) }
-    let(:shop_enrollment)   { FactoryGirl.create(:hbx_enrollment,
+    let(:shop_family)       { FactoryBot.create(:family, :with_primary_family_member) }
+    let(:shop_enrollment)   { FactoryBot.create(:hbx_enrollment,
                                                  household: shop_family.latest_household,
                                                  coverage_kind: "health",
                                                  effective_on: effective_on_date,
@@ -1864,7 +1864,7 @@ describe HbxEnrollment, 'dental shop calculation related', type: :model, dbclean
   end
 
   context "update_coverage_kind_by_plan" do
-    let(:plan) { FactoryGirl.create(:plan, coverage_kind: 'health') }
+    let(:plan) { FactoryBot.create(:plan, coverage_kind: 'health') }
     attr_reader :enrollment, :household, :coverage_household
     before :all do
       @household = mikes_family.households.first
@@ -1887,9 +1887,9 @@ describe HbxEnrollment, 'dental shop calculation related', type: :model, dbclean
 end
 
 context "A cancelled external enrollment", :dbclean => :after_each do
-  let(:family) { FactoryGirl.create(:family, :with_primary_family_member) }
+  let(:family) { FactoryBot.create(:family, :with_primary_family_member) }
   let(:enrollment) do
-    FactoryGirl.create(:hbx_enrollment,
+    FactoryBot.create(:hbx_enrollment,
                        household: family.active_household,
                        kind: "employer_sponsored",
                        submitted_at: TimeKeeper.datetime_of_record - 3.day,
@@ -1988,8 +1988,8 @@ context "for cobra", :dbclean => :after_each do
   end
 
   context "future_enrollment_termination_date" do
-    let(:employee_role) { FactoryGirl.create(:employee_role) }
-    let(:census_employee) { FactoryGirl.create(:census_employee) }
+    let(:employee_role) { FactoryBot.create(:employee_role) }
+    let(:census_employee) { FactoryBot.create(:census_employee) }
     let(:coverage_termination_date) { TimeKeeper.date_of_record + 1.months }
 
     it "should return blank if not coverage_termination_pending" do
@@ -2011,7 +2011,7 @@ context "for cobra", :dbclean => :after_each do
   end
 
   context "benefit_package_name" do
-    let(:benefit_group) { FactoryGirl.create(:benefit_group) }
+    let(:benefit_group) { FactoryBot.create(:benefit_group) }
     let(:benefit_package) { BenefitPackage.new(title: 'benefit package title') }
     it "for shop" do
       enrollment.kind = 'employer_sponsored'
@@ -2025,11 +2025,11 @@ context '.process_verification_reminders' do
 
   context "when family exists with pending outstanding verifications" do
 
-    let(:consumer_role) { FactoryGirl.create(:consumer_role) }
-    let(:hbx_profile) { FactoryGirl.create(:hbx_profile) }
+    let(:consumer_role) { FactoryBot.create(:consumer_role) }
+    let(:hbx_profile) { FactoryBot.create(:hbx_profile) }
     let(:benefit_package) { hbx_profile.benefit_sponsorship.benefit_coverage_periods.first.benefit_packages.first }
-    let(:family) { FactoryGirl.create(:family, :with_primary_family_member, e_case_id: rand(10000), person: consumer_role.person) }
-    let(:plan) { FactoryGirl.create(:plan) }
+    let(:family) { FactoryBot.create(:family, :with_primary_family_member, e_case_id: rand(10000), person: consumer_role.person) }
+    let(:plan) { FactoryBot.create(:plan) }
 
     let(:hbx_enrollment) {
       enrollment = family.active_household.new_hbx_enrollment_from(
@@ -2104,8 +2104,8 @@ end
 describe HbxEnrollment, 'Updating Existing Coverage', type: :model, dbclean: :after_all do
 
   let!(:employer_profile) {
-    org = FactoryGirl.create :organization, legal_name: "Corp 1"
-    FactoryGirl.create :employer_profile, organization: org
+    org = FactoryBot.create :organization, legal_name: "Corp 1"
+    FactoryBot.create :employer_profile, organization: org
   }
 
   let(:start_on) { (TimeKeeper.date_of_record + 2.months).beginning_of_month - 1.year }
@@ -2114,32 +2114,32 @@ describe HbxEnrollment, 'Updating Existing Coverage', type: :model, dbclean: :af
   let(:open_enrollment_end_on) { open_enrollment_start_on.next_month + 9.days }
 
   let!(:renewal_plan) {
-    FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: start_on.year + 1, hios_id: "11111111122302-01", csr_variant_id: "01")
+    FactoryBot.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: start_on.year + 1, hios_id: "11111111122302-01", csr_variant_id: "01")
   }
 
   let!(:plan) {
-    FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: start_on.year, hios_id: "11111111122302-01", csr_variant_id: "01", renewal_plan_id: renewal_plan.id)
+    FactoryBot.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: start_on.year, hios_id: "11111111122302-01", csr_variant_id: "01", renewal_plan_id: renewal_plan.id)
   }
 
   let!(:current_plan_year) {
-    FactoryGirl.create :plan_year, employer_profile: employer_profile, start_on: start_on, end_on: end_on, open_enrollment_start_on: open_enrollment_start_on, open_enrollment_end_on: open_enrollment_end_on, fte_count: 2, aasm_state: :active
+    FactoryBot.create :plan_year, employer_profile: employer_profile, start_on: start_on, end_on: end_on, open_enrollment_start_on: open_enrollment_start_on, open_enrollment_end_on: open_enrollment_end_on, fte_count: 2, aasm_state: :active
   }
 
   let!(:current_benefit_group){
-    FactoryGirl.create :benefit_group, plan_year: current_plan_year, reference_plan_id: plan.id
+    FactoryBot.create :benefit_group, plan_year: current_plan_year, reference_plan_id: plan.id
   }
 
   let!(:census_employees){
-    FactoryGirl.create :census_employee, :owner, employer_profile: employer_profile
-    employee = FactoryGirl.create :census_employee, employer_profile: employer_profile
+    FactoryBot.create :census_employee, :owner, employer_profile: employer_profile
+    employee = FactoryBot.create :census_employee, employer_profile: employer_profile
     employee.add_benefit_group_assignment current_benefit_group, current_benefit_group.start_on
   }
 
   let(:ce) { employer_profile.census_employees.non_business_owner.first }
 
   let!(:family) {
-    person = FactoryGirl.create(:person, last_name: ce.last_name, first_name: ce.first_name)
-    employee_role = FactoryGirl.create(:employee_role, person: person, census_employee: ce, employer_profile: employer_profile)
+    person = FactoryBot.create(:person, last_name: ce.last_name, first_name: ce.first_name)
+    employee_role = FactoryBot.create(:employee_role, person: person, census_employee: ce, employer_profile: employer_profile)
     ce.update_attributes({employee_role: employee_role})
     Family.find_or_build_from_employee_role(employee_role)
   }
@@ -2147,7 +2147,7 @@ describe HbxEnrollment, 'Updating Existing Coverage', type: :model, dbclean: :af
   let(:person) { family.primary_applicant.person }
 
   let!(:enrollment) {
-    FactoryGirl.create(:hbx_enrollment,
+    FactoryBot.create(:hbx_enrollment,
                        household: family.active_household,
                        coverage_kind: "health",
                        effective_on: current_benefit_group.start_on,
@@ -2164,7 +2164,7 @@ describe HbxEnrollment, 'Updating Existing Coverage', type: :model, dbclean: :af
   context 'When family has active coverage and makes changes for their coverage' do
 
     let(:new_enrollment) {
-      FactoryGirl.create(:hbx_enrollment,
+      FactoryBot.create(:hbx_enrollment,
                          household: family.active_household,
                          coverage_kind: "health",
                          effective_on: TimeKeeper.date_of_record.next_month.beginning_of_month,
@@ -2194,10 +2194,10 @@ describe HbxEnrollment, 'Updating Existing Coverage', type: :model, dbclean: :af
   context 'When family passively renewed' do
 
     let!(:renewing_plan_year) {
-      FactoryGirl.create :plan_year, employer_profile: employer_profile, start_on: start_on + 1.year, end_on: end_on + 1.year, open_enrollment_start_on: open_enrollment_start_on + 1.year, open_enrollment_end_on: open_enrollment_end_on + 1.year + 3.days, fte_count: 2, aasm_state: :renewing_enrolling
+      FactoryBot.create :plan_year, employer_profile: employer_profile, start_on: start_on + 1.year, end_on: end_on + 1.year, open_enrollment_start_on: open_enrollment_start_on + 1.year, open_enrollment_end_on: open_enrollment_end_on + 1.year + 3.days, fte_count: 2, aasm_state: :renewing_enrolling
     }
 
-    let!(:renewal_benefit_group){ FactoryGirl.create :benefit_group, plan_year: renewing_plan_year, reference_plan_id: renewal_plan.id, elected_plan_ids: elected_plans }
+    let!(:renewal_benefit_group){ FactoryBot.create :benefit_group, plan_year: renewing_plan_year, reference_plan_id: renewal_plan.id, elected_plan_ids: elected_plans }
     let!(:renewal_benefit_group_assignment) { employer_profile.census_employees.each{|ce| ce.add_renew_benefit_group_assignment renewal_benefit_group; ce.save!;} }
 
     let!(:generate_passive_renewal) {
@@ -2212,7 +2212,7 @@ describe HbxEnrollment, 'Updating Existing Coverage', type: :model, dbclean: :af
     }
 
     let!(:new_plan) {
-      FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'silver', active_year: start_on.year + 1, hios_id: "11111111122301-01", csr_variant_id: "01")
+      FactoryBot.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'silver', active_year: start_on.year + 1, hios_id: "11111111122301-01", csr_variant_id: "01")
     }
 
     let(:elected_plans) { [renewal_plan.id] }
@@ -2220,7 +2220,7 @@ describe HbxEnrollment, 'Updating Existing Coverage', type: :model, dbclean: :af
     context 'When Actively Renewed' do
 
       let(:new_enrollment) {
-        FactoryGirl.create(:hbx_enrollment,
+        FactoryBot.create(:hbx_enrollment,
          household: family.active_household,
          coverage_kind: "health",
          effective_on: renewing_plan_year.start_on,
@@ -2276,17 +2276,17 @@ describe HbxEnrollment, 'Updating Existing Coverage', type: :model, dbclean: :af
       context 'when EE enters SEP and picks new plan' do
 
         let(:new_renewal_plan) {
-          FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: start_on.year + 1, hios_id: "11111111122302-01", csr_variant_id: "01")
+          FactoryBot.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: start_on.year + 1, hios_id: "11111111122302-01", csr_variant_id: "01")
         }
 
         let(:new_plan) {
-          FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: start_on.year, hios_id: "11111111122302-01", csr_variant_id: "01", renewal_plan_id: new_renewal_plan.id)
+          FactoryBot.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: start_on.year, hios_id: "11111111122302-01", csr_variant_id: "01", renewal_plan_id: new_renewal_plan.id)
         }
 
         let(:elected_plans) { [renewal_plan.id, new_renewal_plan.id] }
 
         let(:new_enrollment) {
-          FactoryGirl.create(:hbx_enrollment,
+          FactoryBot.create(:hbx_enrollment,
            household: family.active_household,
            coverage_kind: "health",
            effective_on: TimeKeeper.date_of_record.next_month.beginning_of_month,
@@ -2303,7 +2303,7 @@ describe HbxEnrollment, 'Updating Existing Coverage', type: :model, dbclean: :af
         }
 
         let(:sep){
-          FactoryGirl.create(:special_enrollment_period, family: family)
+          FactoryBot.create(:special_enrollment_period, family: family)
         }
 
         it 'should cancel passive renewal and create new passive' do
@@ -2351,9 +2351,9 @@ describe HbxEnrollment, 'Updating Existing Coverage', type: :model, dbclean: :af
 end
 
 describe HbxEnrollment, 'Voiding enrollments', type: :model, dbclean: :after_all do
-  let!(:hbx_profile)    { FactoryGirl.create(:hbx_profile) }
-  let(:family)          { FactoryGirl.build(:individual_market_family) }
-  let(:hbx_enrollment)  { FactoryGirl.build(:hbx_enrollment, :individual_unassisted, household: family.active_household, effective_on: TimeKeeper.date_of_record ) }
+  let!(:hbx_profile)    { FactoryBot.create(:hbx_profile) }
+  let(:family)          { FactoryBot.build(:individual_market_family) }
+  let(:hbx_enrollment)  { FactoryBot.build(:hbx_enrollment, :individual_unassisted, household: family.active_household, effective_on: TimeKeeper.date_of_record ) }
 
   context "Enrollment is in active state" do
     it "enrollment is in coverage_selected state" do
@@ -2401,8 +2401,8 @@ describe HbxEnrollment, 'Voiding enrollments', type: :model, dbclean: :after_all
 end
 
 describe HbxEnrollment, 'state machine' do
-  let(:family) { FactoryGirl.build(:individual_market_family) }
-  subject { FactoryGirl.build(:hbx_enrollment, :individual_unassisted, household: family.active_household ) }
+  let(:family) { FactoryBot.build(:individual_market_family) }
+  subject { FactoryBot.build(:hbx_enrollment, :individual_unassisted, household: family.active_household ) }
 
   events = [:move_to_enrolled, :move_to_contingent, :move_to_pending]
 
@@ -2481,20 +2481,20 @@ describe HbxEnrollment, '.build_plan_premium', type: :model, dbclean: :after_all
   let(:benefit_group) { employer_profile.published_plan_year.benefit_groups.first}
 
   let!(:census_employees){
-    FactoryGirl.create :census_employee, :owner, employer_profile: employer_profile
-    employee = FactoryGirl.create :census_employee, employer_profile: employer_profile
+    FactoryBot.create :census_employee, :owner, employer_profile: employer_profile
+    employee = FactoryBot.create :census_employee, employer_profile: employer_profile
     employee.add_benefit_group_assignment benefit_group, benefit_group.start_on
   }
 
   let!(:plan) {
-    FactoryGirl.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: benefit_group.start_on.year, hios_id: "11111111122302-01", csr_variant_id: "01")
+    FactoryBot.create(:plan, :with_premium_tables, market: 'shop', metal_level: 'gold', active_year: benefit_group.start_on.year, hios_id: "11111111122302-01", csr_variant_id: "01")
   }
 
   let(:ce) { employer_profile.census_employees.non_business_owner.first }
 
   let!(:family) {
-    person = FactoryGirl.create(:person, last_name: ce.last_name, first_name: ce.first_name)
-    employee_role = FactoryGirl.create(:employee_role, person: person, census_employee: ce, employer_profile: employer_profile)
+    person = FactoryBot.create(:person, last_name: ce.last_name, first_name: ce.first_name)
+    employee_role = FactoryBot.create(:employee_role, person: person, census_employee: ce, employer_profile: employer_profile)
     ce.update_attributes({employee_role: employee_role})
     Family.find_or_build_from_employee_role(employee_role)
   }
@@ -2503,7 +2503,7 @@ describe HbxEnrollment, '.build_plan_premium', type: :model, dbclean: :after_all
 
   context 'Employer Sponsored Coverage' do
     let!(:enrollment) {
-      FactoryGirl.create(:hbx_enrollment,
+      FactoryBot.create(:hbx_enrollment,
        household: family.active_household,
        coverage_kind: "health",
        effective_on: benefit_group.start_on,
@@ -2537,7 +2537,7 @@ describe HbxEnrollment, '.build_plan_premium', type: :model, dbclean: :after_all
 
   context 'Individual Coverage' do
     let!(:enrollment) {
-      FactoryGirl.create(:hbx_enrollment,
+      FactoryBot.create(:hbx_enrollment,
        household: family.active_household,
        coverage_kind: "health",
        effective_on: TimeKeeper.date_of_record.beginning_of_month,
@@ -2564,7 +2564,7 @@ describe HbxEnrollment, dbclean: :after_all do
   context "Cancel / Terminate Previous Enrollments for Shop" do
     let(:household) {mikes_family.households.first}
     let(:coverage_household) {household.coverage_households.first}
-    let(:family) {FactoryGirl.build(:family)}
+    let(:family) {FactoryBot.build(:family)}
 
     before :each do
       allow(coverage_household).to receive(:household).and_return household
@@ -2585,11 +2585,11 @@ describe HbxEnrollment, dbclean: :after_all do
   context "Cancel / Terminate Previous Enrollments for IVL" do
     attr_reader :enrollment, :household, :coverage_household
 
-    let(:consumer_role) {FactoryGirl.create(:consumer_role)}
-    let(:hbx_profile) { FactoryGirl.create(:hbx_profile) }
+    let(:consumer_role) {FactoryBot.create(:consumer_role)}
+    let(:hbx_profile) { FactoryBot.create(:hbx_profile) }
     let(:benefit_package) { hbx_profile.benefit_sponsorship.benefit_coverage_periods.first.benefit_packages.first }
     let(:benefit_coverage_period) { hbx_profile.benefit_sponsorship.benefit_coverage_periods.first }
-    let(:family) {FactoryGirl.build(:family)}
+    let(:family) {FactoryBot.build(:family)}
 
     before :each do
       @household = mikes_family.households.first

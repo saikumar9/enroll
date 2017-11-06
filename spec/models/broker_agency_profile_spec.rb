@@ -12,10 +12,10 @@ RSpec.describe BrokerAgencyProfile, dbclean: :after_each do
   it { should delegate_method(:updated_by).to :organization }
 
 
-  let(:organization) {FactoryGirl.create(:organization)}
+  let(:organization) {FactoryBot.create(:organization)}
   let(:market_kind) {"both"}
   let(:bad_market_kind) {"commodities"}
-  let(:primary_broker_role) { FactoryGirl.create(:broker_role) }
+  let(:primary_broker_role) { FactoryBot.create(:broker_role) }
 
   let(:market_kind_error_message) {"#{bad_market_kind} is not a valid market kind"}
   let(:enabled_market_kinds) { %W[shop individual both] }
@@ -122,7 +122,7 @@ RSpec.describe BrokerAgencyProfile, dbclean: :after_each do
           let(:my_client_count)       { 3 }
           let(:broker_agency_account) { BrokerAgencyAccount.new(broker_agency_profile_id: broker_agency_profile.id,
                                           start_on: TimeKeeper.date_of_record, is_active: true)}
-          let!(:my_clients)           { FactoryGirl.create_list(:employer_profile, my_client_count,
+          let!(:my_clients)           { FactoryBot.create_list(:employer_profile, my_client_count,
                                           broker_agency_accounts: [broker_agency_account], sic_code: '1111' )}
 
           it "should find all my active employer clients" do
@@ -136,7 +136,7 @@ RSpec.describe BrokerAgencyProfile, dbclean: :after_each do
 
         context "and additional brokers apply join the agency" do
           let(:added_broker_count)         { 5 }
-          let!(:added_broker_roles)        { FactoryGirl.create_list(:broker_role, added_broker_count,
+          let!(:added_broker_roles)        { FactoryBot.create_list(:broker_role, added_broker_count,
                                             broker_agency_profile: broker_agency_profile) }
 
           it "should find all the new broker roles as candidates" do
@@ -186,21 +186,21 @@ RSpec.describe BrokerAgencyProfile, dbclean: :after_each do
   end
   describe "#phone for broker agency" do
     before :each, :dbclean => :after_each  do
-      @ba = FactoryGirl.create(:broker_agency).broker_agency_profile
+      @ba = FactoryBot.create(:broker_agency).broker_agency_profile
     end
     it 'should have a phone' do
       expect(@ba.phone).to match(@ba.organization.primary_office_location.phone.to_s)
     end
   end
   describe "#families" do
-    let(:broker_agency_profile) { FactoryGirl.build(:broker_agency_profile) }
-    let(:writing_agent)         { FactoryGirl.create(:broker_role, broker_agency_profile_id: broker_agency_profile.id) }
-    let(:broker_agency_profile2) { FactoryGirl.build(:broker_agency_profile) }
-    let(:writing_agent2)         { FactoryGirl.create(:broker_role, broker_agency_profile_id: broker_agency_profile2.id) }
-    let(:person) { FactoryGirl.create(:person)}
-    let(:family1) {FactoryGirl.create(:family,:with_primary_family_member, e_case_id: rand(10000), person:person)}
-    let(:family2) {FactoryGirl.create(:family,:with_primary_family_member, e_case_id: rand(10000))}
-    let(:organization) {FactoryGirl.create(:organization, fein: 333000535 + rand(1000))}
+    let(:broker_agency_profile) { FactoryBot.build(:broker_agency_profile) }
+    let(:writing_agent)         { FactoryBot.create(:broker_role, broker_agency_profile_id: broker_agency_profile.id) }
+    let(:broker_agency_profile2) { FactoryBot.build(:broker_agency_profile) }
+    let(:writing_agent2)         { FactoryBot.create(:broker_role, broker_agency_profile_id: broker_agency_profile2.id) }
+    let(:person) { FactoryBot.create(:person)}
+    let(:family1) {FactoryBot.create(:family,:with_primary_family_member, e_case_id: rand(10000), person:person)}
+    let(:family2) {FactoryBot.create(:family,:with_primary_family_member, e_case_id: rand(10000))}
+    let(:organization) {FactoryBot.create(:organization, fein: 333000535 + rand(1000))}
 
     it "should find a consumer family" do
       family1.hire_broker_agency(writing_agent.id)
@@ -214,7 +214,7 @@ RSpec.describe BrokerAgencyProfile, dbclean: :after_each do
     end
     it "should find a linked employee" do
       employer = organization.create_employer_profile(entity_kind: "partnership", sic_code: '1111', broker_agency_profile: broker_agency_profile)
-      employee_role = FactoryGirl.create(:employee_role, person: person, employer_profile: employer)
+      employee_role = FactoryBot.create(:employee_role, person: person, employer_profile: employer)
       expect(broker_agency_profile.linked_employees.count).to eq(1)
     end
     it "should find  linked family" do

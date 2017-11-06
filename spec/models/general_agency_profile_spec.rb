@@ -8,7 +8,7 @@ RSpec.describe GeneralAgencyProfile, dbclean: :after_each do
   it { should delegate_method(:fein).to :organization }
   it { should delegate_method(:is_active).to :organization }
 
-  let(:organization) {FactoryGirl.create(:organization)}
+  let(:organization) {FactoryBot.create(:organization)}
   let(:market_kind) {"shop"}
   let(:bad_market_kind) {"commodities"}
   let(:market_kind_error_message) {"#{bad_market_kind} is not a valid market kind"}
@@ -91,7 +91,7 @@ RSpec.describe GeneralAgencyProfile, dbclean: :after_each do
           let(:my_client_count)       { 3 }
           let(:general_agency_account) { GeneralAgencyAccount.new(general_agency_profile_id: general_agency_profile.id,
                                           start_on: TimeKeeper.date_of_record)}
-          let!(:my_clients)           { FactoryGirl.create_list(:employer_profile, my_client_count,
+          let!(:my_clients)           { FactoryBot.create_list(:employer_profile, my_client_count,
                                           general_agency_accounts: [general_agency_account] )}
 
           it "should find all my active employer clients" do
@@ -106,10 +106,10 @@ RSpec.describe GeneralAgencyProfile, dbclean: :after_each do
     end
 
     describe "all_by_broker_role" do
-      let(:broker_role) { FactoryGirl.build :broker_role }
-      let(:general_agency_profile_approved) { FactoryGirl.build :general_agency_profile , :aasm_state => "is_approved"}
-      let(:general_agency_profile_applicant1) { FactoryGirl.build :general_agency_profile , :aasm_state => "is_applicant"}
-      let(:general_agency_profile_applicant2) { FactoryGirl.build :general_agency_profile , :aasm_state => "is_applicant"}
+      let(:broker_role) { FactoryBot.build :broker_role }
+      let(:general_agency_profile_approved) { FactoryBot.build :general_agency_profile , :aasm_state => "is_approved"}
+      let(:general_agency_profile_applicant1) { FactoryBot.build :general_agency_profile , :aasm_state => "is_applicant"}
+      let(:general_agency_profile_applicant2) { FactoryBot.build :general_agency_profile , :aasm_state => "is_applicant"}
       context "with approved general_agency_profiles" do
         before do
           allow(GeneralAgencyProfile).to receive(:all).and_return([general_agency_profile_approved,general_agency_profile_applicant1])
@@ -139,10 +139,10 @@ RSpec.describe GeneralAgencyProfile, dbclean: :after_each do
   end
 
   describe "instance method", dbclean: :after_each do
-    let(:general_agency_profile) { FactoryGirl.create(:general_agency_profile) }
-    let(:employer_profile) { FactoryGirl.create(:employer_profile) }
-    let(:person) { FactoryGirl.create(:person, :with_family) }
-    let(:general_agency_staff_role) { FactoryGirl.create(:general_agency_staff_role, person:person, general_agency_profile_id: general_agency_profile.id) }
+    let(:general_agency_profile) { FactoryBot.create(:general_agency_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile) }
+    let(:person) { FactoryBot.create(:person, :with_family) }
+    let(:general_agency_staff_role) { FactoryBot.create(:general_agency_staff_role, person:person, general_agency_profile_id: general_agency_profile.id) }
 
     it "current_state" do
       general_agency_profile.aasm_state = "is_approved"
@@ -185,12 +185,12 @@ RSpec.describe GeneralAgencyProfile, dbclean: :after_each do
   end
 
   describe "class method" do
-    let(:general_agency_profile) { FactoryGirl.create(:general_agency_profile) }
-    let(:broker_role) { FactoryGirl.create(:broker_role) }
+    let(:general_agency_profile) { FactoryBot.create(:general_agency_profile) }
+    let(:broker_role) { FactoryBot.create(:broker_role) }
 
     context "all_by_broker_role" do
       before :each do
-        10.times { FactoryGirl.create(:general_agency_profile) }
+        10.times { FactoryBot.create(:general_agency_profile) }
         broker_role.favorite_general_agencies.create(general_agency_profile_id: general_agency_profile.id)
       end
 
@@ -201,9 +201,9 @@ RSpec.describe GeneralAgencyProfile, dbclean: :after_each do
     end
 
     context "filter_by" do
-      let(:ga1) { FactoryGirl.create(:general_agency_profile, aasm_state: 'is_applicant') }
-      let(:ga2) { FactoryGirl.create(:general_agency_profile, aasm_state: 'is_approved') }
-      let(:ga3) { FactoryGirl.create(:general_agency_profile, aasm_state: 'is_suspended') }
+      let(:ga1) { FactoryBot.create(:general_agency_profile, aasm_state: 'is_applicant') }
+      let(:ga2) { FactoryBot.create(:general_agency_profile, aasm_state: 'is_approved') }
+      let(:ga3) { FactoryBot.create(:general_agency_profile, aasm_state: 'is_suspended') }
       before :each do
         ga1
         ga2

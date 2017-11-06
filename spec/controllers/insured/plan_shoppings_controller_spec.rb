@@ -4,12 +4,12 @@ RSpec.describe Insured::PlanShoppingsController, :type => :controller do
 
   describe ".sort_by_standard_plans" do
       context "width standard plan present" do
-        let(:household) { FactoryGirl.build_stubbed(:household, family: family) }
-        let(:family) { FactoryGirl.build_stubbed(:family, :with_primary_family_member, person: person )}
-        let(:person) { FactoryGirl.build_stubbed(:person) }
-        let(:user) { FactoryGirl.build_stubbed(:user, person: person) }
-        let(:hbx_enrollment_one) { FactoryGirl.build_stubbed(:hbx_enrollment, household: household) }
-        let(:benefit_group) { FactoryGirl.build_stubbed(:benefit_group) }
+        let(:household) { FactoryBot.build_stubbed(:household, family: family) }
+        let(:family) { FactoryBot.build_stubbed(:family, :with_primary_family_member, person: person )}
+        let(:person) { FactoryBot.build_stubbed(:person) }
+        let(:user) { FactoryBot.build_stubbed(:user, person: person) }
+        let(:hbx_enrollment_one) { FactoryBot.build_stubbed(:hbx_enrollment, household: household) }
+        let(:benefit_group) { FactoryBot.build_stubbed(:benefit_group) }
 
         before :each do
           sign_in user
@@ -19,8 +19,8 @@ RSpec.describe Insured::PlanShoppingsController, :type => :controller do
 
         @controller = Insured::PlanShoppingsController.new
 
-        let(:plan1) { FactoryGirl.build(:plan) }
-        let(:plan2) { FactoryGirl.build(:plan, is_standard_plan: true ) }
+        let(:plan1) { FactoryBot.build(:plan) }
+        let(:plan2) { FactoryBot.build(:plan, is_standard_plan: true ) }
         let(:plans) {[PlanCostDecorator.new(plan1, hbx_enrollment_one, benefit_group, benefit_group.reference_plan_id), PlanCostDecorator.new(plan2, hbx_enrollment_one, benefit_group, benefit_group.reference_plan_id)]}
 
         it "should display the standard plan first" do
@@ -31,11 +31,11 @@ RSpec.describe Insured::PlanShoppingsController, :type => :controller do
 
   describe "not eligible for cost sharing or aptc / normal user" do
 
-    let(:household) { FactoryGirl.build_stubbed(:household, family: family) }
-    let(:family) { FactoryGirl.build_stubbed(:family, :with_primary_family_member, person: person )}
-    let(:person) { FactoryGirl.build_stubbed(:person) }
-    let(:user) { FactoryGirl.build_stubbed(:user, person: person) }
-    let(:hbx_enrollment_one) { FactoryGirl.build_stubbed(:hbx_enrollment, household: household) }
+    let(:household) { FactoryBot.build_stubbed(:household, family: family) }
+    let(:family) { FactoryBot.build_stubbed(:family, :with_primary_family_member, person: person )}
+    let(:person) { FactoryBot.build_stubbed(:person) }
+    let(:user) { FactoryBot.build_stubbed(:user, person: person) }
+    let(:hbx_enrollment_one) { FactoryBot.build_stubbed(:hbx_enrollment, household: household) }
 
     context "GET plans" do
       before :each do
@@ -65,8 +65,8 @@ RSpec.describe Insured::PlanShoppingsController, :type => :controller do
   let(:benefit_group) {double("BenefitGroup", is_congress: false)}
   let(:reference_plan) {double("Plan")}
   let(:usermailer) {double("UserMailer")}
-  let(:person) { FactoryGirl.create(:person) }
-  let(:user) { FactoryGirl.create(:user, person: person) }
+  let(:person) { FactoryBot.create(:person) }
+  let(:user) { FactoryBot.create(:user, person: person) }
   let(:employee_role) { EmployeeRole.new }
   let(:household) {double("Household", hbx_enrollments: hbx_enrollments)}
   let(:hbx_enrollments) {double("HbxEnrollment")}
@@ -145,20 +145,20 @@ RSpec.describe Insured::PlanShoppingsController, :type => :controller do
 
     let(:user) { double("User") }
     let(:enrollment) { double("HbxEnrollment", effective_on: double("effective_on", year: double), applied_aptc_amount: 0) }
-    let(:factory_employee_role) { FactoryGirl.build(:employee_role) }
-    let(:person1) { FactoryGirl.build(:person) }
-    let(:factory_plan) { FactoryGirl.build(:plan) }
-    let(:factory_benefit_group) { FactoryGirl.build(:benefit_group) }
-    let(:factory_employee_role){FactoryGirl.create(:employee_role)}
+    let(:factory_employee_role) { FactoryBot.build(:employee_role) }
+    let(:person1) { FactoryBot.build(:person) }
+    let(:factory_plan) { FactoryBot.build(:plan) }
+    let(:factory_benefit_group) { FactoryBot.build(:benefit_group) }
+    let(:factory_employee_role){FactoryBot.create(:employee_role)}
     let(:qle) { double("Qualifyinglifeeventkind", end_on: Date.today + 1.month, title: "New Job", qle_on: Date.today)}
     let(:hbx_enrollment) { HbxEnrollment.new(plan: factory_plan, employee_role: factory_employee_role, effective_on: 1.month.ago.to_date, benefit_group: factory_benefit_group, kind: "employer_sponsored") }
-    let(:census_employee) { FactoryGirl.create(:census_employee) }
+    let(:census_employee) { FactoryBot.create(:census_employee) }
     let(:plan) { double("Plan") }
     let(:benefit_group) { double("BenefitGroup
 ", is_congress: false) }
     let(:reference_plan) { double("Plan") }
     let(:employee_role) { double("EmployeeRole") }
-    let(:employer_profile) { FactoryGirl.create(:employer_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile) }
     let(:options) { { :sep_qle_end_on => qle.end_on.to_s, :sep_qle_title => qle.title, :sep_qle_on => qle.qle_on.to_s }}
 
     before do
@@ -238,7 +238,7 @@ RSpec.describe Insured::PlanShoppingsController, :type => :controller do
     let(:reference_plan) { double("Plan") }
     let(:family) { double("Family") }
     let(:plan_year) { double("PlanYear") }
-    let(:employer_profile) { FactoryGirl.create(:employer_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile) }
 
     before do
       allow(user).to receive(:person).and_return(person)
@@ -290,8 +290,8 @@ RSpec.describe Insured::PlanShoppingsController, :type => :controller do
 
     it "returns http success as BROKER" do
       person = create(:person)
-      f=FactoryGirl.create(:family,:family_members=>[{:is_primary_applicant=>true, :is_active=>true, :person_id => person.id}])
-      current_broker_user = FactoryGirl.create(:user, :roles => ['broker_agency_staff'],
+      f=FactoryBot.create(:family,:family_members=>[{:is_primary_applicant=>true, :is_active=>true, :person_id => person.id}])
+      current_broker_user = FactoryBot.create(:user, :roles => ['broker_agency_staff'],
         :person => person )
       current_broker_user.person.broker_role = BrokerRole.new({:broker_agency_profile_id => 99})
       allow(session).to receive(:[]).and_return(person.id.to_s)
@@ -415,7 +415,7 @@ RSpec.describe Insured::PlanShoppingsController, :type => :controller do
     end
 
     context "waived_enrollment coverage kind" do
-        let(:person) { FactoryGirl.create(:person) }
+        let(:person) { FactoryBot.create(:person) }
         let(:household) {double(:immediate_family_coverage_household=> coverage_household)}
         let(:coverage_household) {double}
         let(:family) {Family.new}
@@ -548,7 +548,7 @@ RSpec.describe Insured::PlanShoppingsController, :type => :controller do
 
     context "when user has_active_consumer_role" do
       let(:tax_household) {double("TaxHousehold")}
-      let(:family) { FactoryGirl.build(:individual_market_family) }
+      let(:family) { FactoryBot.build(:individual_market_family) }
       let(:person) {double("Person",primary_family: family, has_active_consumer_role?: true)}
       let(:user) {double("user",person: person)}
 
@@ -638,19 +638,19 @@ RSpec.describe Insured::PlanShoppingsController, :type => :controller do
   end
 
   describe ".build_same_plan_premiums" do
-    let!(:hbx_profile) { FactoryGirl.create(:hbx_profile) }
+    let!(:hbx_profile) { FactoryBot.create(:hbx_profile) }
     let(:dob) { Date.new(1985, 4, 10) }
-    let(:person) { FactoryGirl.create(:person, :with_family,  :with_consumer_role, dob: dob) }
+    let(:person) { FactoryBot.create(:person, :with_family,  :with_consumer_role, dob: dob) }
     let(:family) { person.primary_family }
     let(:household) { family.active_household }
-    let(:individual_plans) { FactoryGirl.create_list(:plan, 5, :with_premium_tables, market: 'individual') }
+    let(:individual_plans) { FactoryBot.create_list(:plan, 5, :with_premium_tables, market: 'individual') }
     let(:plan) { individual_plans.first }
     let!(:previous_hbx_enrollment) {
-      FactoryGirl.create(:hbx_enrollment, :with_enrollment_members, enrollment_members: family.family_members, household: household, plan: plan, effective_on: TimeKeeper.date_of_record.beginning_of_year, kind: 'individual')
+      FactoryBot.create(:hbx_enrollment, :with_enrollment_members, enrollment_members: family.family_members, household: household, plan: plan, effective_on: TimeKeeper.date_of_record.beginning_of_year, kind: 'individual')
     }
 
     let!(:new_hbx_enrollment) {
-      FactoryGirl.create(:hbx_enrollment, :with_enrollment_members, enrollment_members: family.family_members, household: household, plan: plan, effective_on: Date.new(TimeKeeper.date_of_record.year, 5, 1), kind: 'individual', aasm_state: 'shopping')
+      FactoryBot.create(:hbx_enrollment, :with_enrollment_members, enrollment_members: family.family_members, household: household, plan: plan, effective_on: Date.new(TimeKeeper.date_of_record.year, 5, 1), kind: 'individual', aasm_state: 'shopping')
     }
 
     let(:benefit_coverage_period) { hbx_profile.benefit_sponsorship.current_benefit_period }

@@ -2,9 +2,9 @@ require 'rails_helper'
 
 describe "employers/broker_agency/_active_broker.html.erb" do
   let(:employer_profile) { broker_agency_account.employer_profile }
-  let(:broker_agency_account) { FactoryGirl.create(:broker_agency_account, start_on: TimeKeeper.date_of_record) }
-  let(:person) { FactoryGirl.create(:person) }
-  let(:user) { FactoryGirl.create(:user, person: person) }
+  let(:broker_agency_account) { FactoryBot.create(:broker_agency_account, start_on: TimeKeeper.date_of_record) }
+  let(:person) { FactoryBot.create(:person) }
+  let(:user) { FactoryBot.create(:user, person: person) }
 
   before :each do
     TimeKeeper.set_date_of_record_unprotected!(Date.today)
@@ -60,8 +60,8 @@ describe "employers/broker_agency/_active_broker.html.erb" do
   end
 
   context "can_change_broker?" do
-    let(:person) { FactoryGirl.create(:person) }
-    let(:user) { FactoryGirl.create(:user, person: person) }
+    let(:person) { FactoryBot.create(:person) }
+    let(:user) { FactoryBot.create(:user, person: person) }
     context "without broker" do
       before :each do
         user.roles = [:general_agency_staff]
