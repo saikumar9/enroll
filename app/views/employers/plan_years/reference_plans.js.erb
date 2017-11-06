@@ -4,7 +4,6 @@ $('#<%= @location_id %> .reference-plans').css({ "height": "450px", "y-overflow"
 $('#<%= @location_id %> .reference-plans').show();
 
 $('#<%= @location_id %> .health .reference-plan .col-xs-2').on('click', function() {
-
   if ($(this).find('input[type=radio]').is(':checked')) {
   } else {
       $(this).find('input[type=radio]').prop('checked', true );
