@@ -110,7 +110,7 @@ module Effective
       def nested_filter_definition
         @next_30_day = TimeKeeper.date_of_record.next_month.beginning_of_month
         @next_60_day = @next_30_day.next_month
-        @next_90_day = @next_60_day.next_month
+        # @next_90_day = @next_60_day.next_month
 
         filters = {
         enrolling_renewing:
@@ -134,7 +134,7 @@ module Effective
             [
               {scope: @next_30_day, label: @next_30_day },
               {scope: @next_60_day, label: @next_60_day },
-              {scope: @next_90_day, label: @next_90_day },
+              # {scope: @next_90_day, label: @next_90_day },
               #{scope: "employer_profile_plan_year_start_on('#{@next_60_day})'", label: @next_60_day },
               #{scope: "employer_profile_plan_year_start_on('#{@next_90_day})'",  label: @next_90_day },
             ],
