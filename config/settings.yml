@@ -13,6 +13,7 @@ site:
   main_web_address: "www.MAhealthconnector.org"
   health_care_website: "www.healthcare.gov"
   health_care_website_url: "https://www.healthcare.gov"
+  ivl_login_url: "https://mahealthconnector.optum.com/individual"
   short_name: "Health Connector"
   byline: "The Right Place for the Right Plan"
   long_name: "Massachusetts Health Connector"
@@ -23,6 +24,7 @@ site:
   employer_application_deadline_link: "https://www.mahealthconnector.org/business/employers/employer-resources-and-information/employer-coverage-deadlines"
   s3_prefix: "mhc"
   broker_quoting_enabled: false
+  broker_enabled: false
   use_default_devise_path: true
   plan_options_title_for_ma: true
   create_routes: ['/insured/employee/privacy','/employers/employer_profiles/new']
@@ -31,7 +33,8 @@ site:
   main_web_address_text: "MAhealthconnector.org"
   curam_enabled: false
   document_verification_checklist_url: "https://www.mahealthconnector.org/business/business-resource-center/employer-verification-checklist"
-
+  terms_and_conditions_url: "https://www.mahealthconnector.org/business/brokers/certification/terms-and-conditions"
+  registration_path: "https://www.mahealthconnector.org/business/create-a-business-account"
   social_media:
     facebook_url: ""
 
@@ -99,6 +102,13 @@ aca:
   minimum_primary_contribution_percentage: 50
   minimum_family_contribution_percentage: 30
   plan_options_available: ["sole_source", "single_carrier", "metal_level"]
+    ## acceptable options are ["sole_source", "single_carrier", "metal_level", "single_plan"]
+
+  plan_option_years:
+    single_carriers_available: ['2018']
+    sole_source_carriers_available: ['2017','2018']
+    metal_level_carriers_available: ['2018']
+
   ## acceptable options are ["sole_source", "single_carrier", "metal_level", "single_plan"]
   reference_carriers_for_metal_level: ["silver", "gold", "dental"]
     ## acceptable options are ["sole_source", "single_carrier", "metal_level", "single_plan"]
