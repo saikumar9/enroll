@@ -3,27 +3,11 @@ class EmployerProfileAccount
   include SetCurrentUser
   include Mongoid::Timestamps
   include AASM
+  include EmployerProfileAccountConcern
 
   embedded_in :employer_profile
 
-  field :next_premium_due_on, type: Date
-  field :next_premium_amount, type: Money
-  field :aasm_state, type: String, default: "binder_pending"
-
-  embeds_many :premium_payments
   embeds_many :workflow_state_transitions, as: :transitional
-
-  accepts_nested_attributes_for :premium_payments
-
-  validates_presence_of :next_premium_due_on, :next_premium_amount
-
-  scope :active,      ->{ not_in(aasm_state: %w(canceled terminated)) }
-
-
-  def last_premium_payment
-    return premium_payments.first if premium_payments.size == 1
-    premium_payments.order_by(:paid_on.desc).limit(1).first
-  end
 
   def self.find(id)
     org = Organization.where(:"employer_profile.employer_profile_account._id" => id)
@@ -32,14 +16,6 @@ class EmployerProfileAccount
 
   def latest_workflow_state_transition
     workflow_state_transitions.order_by(:'transition_at'.desc).limit(1).first
-  end
-
-  def first_day_of_month?
-    TimeKeeper.date_of_record.day == 1
-  end
-
-  # TODO: implement this
-  def notify_employees
   end
 
   aasm do
