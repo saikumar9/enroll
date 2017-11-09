@@ -170,7 +170,7 @@ class EmployerProfile
     begin
       trigger_notices("broker_agency_fired_confirmation")
     rescue Exception => e
-      puts "Unable to deliver broker agency fired confirmation notice to #{@employer_profile.broker_agency_profile.legal_name} due to #{e}" unless Rails.env.test?
+      puts "Unable to deliver broker agency fired confirmation notice to #{active_broker_agency_account.legal_name} due to #{e}" unless Rails.env.test?
     end
   end
 
@@ -297,7 +297,7 @@ class EmployerProfile
   end
 
   def plan_year_drafts
-    plan_years.reduce([]) { |set, py| set << py if py.aasm_state == "draft" }
+    plan_years.reduce([]) { |set, py| set << py if py.aasm_state == "draft"; set }
   end
 
   def is_conversion?
@@ -399,7 +399,7 @@ class EmployerProfile
   end
 
   def renewing_plan_year_drafts
-    plan_years.reduce([]) { |set, py| set << py if py.aasm_state == "renewing_draft" }
+    plan_years.reduce([]) { |set, py| set << py if py.aasm_state == "renewing_draft"; set }
   end
 
   def is_primary_office_local?
@@ -537,6 +537,16 @@ class EmployerProfile
       CensusEmployee.matchable(person.ssn, person.dob)
     end
 
+    def organizations_for_low_enrollment_notice(new_date)
+      Organization.where(:"employer_profile.plan_years" =>
+        { :$elemMatch => {
+          :"aasm_state".in => ["enrolling", "renewing_enrolling"],
+          :"open_enrollment_end_on" => new_date+2.days
+          }
+      })
+
+    end
+
     def organizations_for_open_enrollment_begin(new_date)
       Organization.where(:"employer_profile.plan_years" =>
           { :$elemMatch => {
@@ -646,6 +656,19 @@ class EmployerProfile
           open_enrollment_factory.end_open_enrollment
         end
 
+        organizations_for_low_enrollment_notice(new_date).each do |organization|
+          begin
+            plan_year = organization.employer_profile.plan_years.where(:aasm_state.in => ["enrolling", "renewing_enrolling"]).first
+            #exclude congressional employees
+            next if ((plan_year.benefit_groups.any?{|bg| bg.is_congress?}) || (plan_year.effective_date.yday == 1))
+            if plan_year.enrollment_ratio < Settings.aca.shop_market.employee_participation_ratio_minimum
+              organization.employer_profile.trigger_notices("low_enrollment_notice_for_employer")
+            end
+          rescue Exception => e
+            puts "Unable to deliver Low Enrollment Notice to #{organization.legal_name} due to #{e}"
+          end
+        end
+
         employer_enroll_factory = Factories::EmployerEnrollFactory.new
         employer_enroll_factory.date = new_date
 
@@ -695,7 +718,7 @@ class EmployerProfile
           if (new_date + 2.days == plan_year_due_date)
             initial_employers_reminder_to_publish(start_on_1).each do |organization|
               begin
-                organization.employee_profile.trigger_notices("initial_employer_final_reminder_to_publish_plan_year")
+                organization.employer_profile.trigger_notices("initial_employer_final_reminder_to_publish_plan_year")
               rescue Exception => e
                 puts "Unable to send final reminder notice to publish plan year to #{organization.legal_name} due to following errors {e}"
               end
