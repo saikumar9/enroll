@@ -322,6 +322,29 @@ shop_notice_triggers = [
     #     }
     #   ]
     # },
+
+     {
+        hbx_id: 'SHOP_M015',
+        title: 'Notice of Low Enrollment - Action Needed',
+        description: 'Notifies all the employers who doesnt meet minimum participation requirement',
+        resource_name: 'employer',
+        event_name: 'low_enrollment_notice_for_employer',
+        notice_triggers: [
+          {
+            name: 'Low Enrollment Notice',
+            notice_template: 'notices/shop_employer_notices/low_enrollment_notice_for_employer',
+            notice_builder: 'ShopEmployerNotices::LowEnrollmentNotice',
+            mpi_indicator: 'SHOP_M015',
+            notice_trigger_element_group: {
+              market_places: ['shop'],
+              primary_recipients: ["employer"],
+              primary_recipient_delivery_method: ["secure_message"],
+              secondary_recipients: []
+            }
+          }
+        ]
+      },
+
     # {
     #   hbx_id: 'SHOP16',
     #   title: 'Application to Offer Group Health Coverage in DC Health Link',
@@ -741,26 +764,26 @@ shop_notice_triggers = [
     },
 
     {
-    hbx_id: 'SHOP_M039',
-    title: 'Employee Terminating coverage',
-    description: 'Employee Terminating coverage after QLE',
-    resource_name: 'employer',
-    event_name: 'notify_employer_when_employee_terminate_coverage',
-    notice_triggers: [
-      {
-        name: 'Notice to employer when employee terminates coverage',
-        notice_template: 'notices/employee_terminating_coverage',
-        notice_builder: 'EmployeeTerminatingCoverage',
-        mpi_indicator: 'SHOP_M039',
-        notice_trigger_element_group: {
-          market_places: ['shop'],
-          primary_recipients: ["employer"],
-          primary_recipient_delivery_method: ["secure_message"],
-          secondary_recipients: []
-        }
-      }
-    ]
-  },
+        hbx_id: 'SHOP_M039',
+        title: 'Employee Terminating coverage',
+        description: 'Employee Terminating coverage after QLE',
+        resource_name: 'employer',
+        event_name: 'notify_employer_when_employee_terminate_coverage',
+        notice_triggers: [
+          {
+            name: 'Notice to employer when employee terminates coverage',
+            notice_template: 'notices/employee_terminating_coverage',
+            notice_builder: 'EmployeeTerminatingCoverage',
+            mpi_indicator: 'SHOP_M039',
+            notice_trigger_element_group: {
+              market_places: ['shop'],
+              primary_recipients: ["employer"],
+              primary_recipient_delivery_method: ["secure_message"],
+              secondary_recipients: []
+            }
+          }
+        ]
+    },
 
    {
    hbx_id: 'SHOP46',

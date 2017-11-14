@@ -93,7 +93,7 @@ module Config::ContactCenterHelper
 
   def contact_center_appeal_zip
     Settings.contact_center.appeal_center.zip_code
-  end  
+  end
 
   def non_discrimination_email
     Settings.contact_center.non_discrimination.email
