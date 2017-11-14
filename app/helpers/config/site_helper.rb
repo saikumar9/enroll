@@ -44,10 +44,6 @@ module Config::SiteHelper
     link_to site_home_url, site_home_url
   end
 
-  def site_policies_url
-    Settings.site.policies_url
-  end
-
   def site_help_url
     Settings.site.help_url
   end
@@ -62,6 +58,10 @@ module Config::SiteHelper
 
   def site_nondiscrimination_notice_url
     Settings.site.nondiscrimination_notice_url
+  end
+    
+  def site_policies_url
+    Settings.site.policies_url
   end
 
   def site_faqs_url
