@@ -9,7 +9,7 @@ module Importers::Mhc
       "harvard pilgrim health care" => "HPHC",
       "boston medical center health plan" => "BMCHP",
       "blue cross blue shield ma" => "BCBS",
-      "Tufts Health Plan" => "THPD"
+      "tufts health plan premier" => "THPD"
     }
 
     validate :validate_plan_selection, :validate_reference_plan
