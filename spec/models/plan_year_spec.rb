@@ -1620,8 +1620,8 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
     end
 
     it "interval map using existing specified key values" do
-      binder_payment_due_date = PlanYear.map_binder_payment_due_date_by_start_on(Date.new(2017,9,1))
-      expect(binder_payment_due_date).to eq Date.new(2017,8,23)
+      binder_payment_due_date = PlanYear.map_binder_payment_due_date_by_start_on(Date.new(2018,9,1))
+      expect(binder_payment_due_date).to eq Date.new(2018,8,23)
     end
 
     it "out of map" do
