@@ -1,6 +1,7 @@
 module Effective
   module Datatables
     class EmployerDatatable < Effective::MongoidDatatable
+      include Config::SiteHelper
       datatable do
 
         bulk_actions_column(partial: 'datatables/employers/bulk_actions_column') do
@@ -110,9 +111,19 @@ module Effective
       def nested_filter_definition
         @next_30_day = TimeKeeper.date_of_record.next_month.beginning_of_month
         @next_60_day = @next_30_day.next_month
-        # @next_90_day = @next_60_day.next_month
+        @next_90_day = @next_60_day.next_month
+        upcoming_dates = [
+              {scope: @next_30_day, label: @next_30_day },
+              {scope: @next_60_day, label: @next_60_day }
+              #{scope: "employer_profile_plan_year_start_on('#{@next_60_day})'", label: @next_60_day },
+              #{scope: "employer_profile_plan_year_start_on('#{@next_90_day})'",  label: @next_90_day },
+        ]
+        unless check_upcoming_dates?
+          upcoming_dates.insert(2, {scope: @next_90_day, label: @next_90_day })
+        end
 
         filters = {
+        
         enrolling_renewing:
           [
             {scope: 'employer_profiles_renewing_application_pending', label: 'Application Pending'},
@@ -130,14 +141,7 @@ module Effective
             {scope:'employer_profiles_enrolled', label: 'All' },
             {scope:'employer_profiles_suspended', label: 'Suspended' },
           ],
-          upcoming_dates:
-            [
-              {scope: @next_30_day, label: @next_30_day },
-              {scope: @next_60_day, label: @next_60_day },
-              # {scope: @next_90_day, label: @next_90_day },
-              #{scope: "employer_profile_plan_year_start_on('#{@next_60_day})'", label: @next_60_day },
-              #{scope: "employer_profile_plan_year_start_on('#{@next_90_day})'",  label: @next_90_day },
-            ],
+        upcoming_dates: upcoming_dates,
         enrolling:
           [
             {scope: 'employer_profiles_enrolling', label: 'All'},
