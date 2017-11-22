@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :census_employee do
     first_name { Forgery(:name).first_name }
-    last_name { Forgery(:name).last_name }
+    sequence(:last_name) {|n| "Vedder#{n}" }
     dob "1964-10-23".to_date
     gender Forgery('personal').gender
     expected_selection "enroll"
