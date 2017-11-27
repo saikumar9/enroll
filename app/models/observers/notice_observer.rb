@@ -111,7 +111,7 @@ module Observers
       current_date = TimeKeeper.date_of_record
       organizations_for_force_publish(current_date).each do |organization|
         plan_year = organization.employer_profile.plan_years.where(:aasm_state => 'renewing_draft').first
-        trigger_notice(recipient: organization.employer_profile, event_object: plan_year, notice_event:event_name)
+        trigger_notice(recipient: organization.employer_profile, event_object: plan_year, notice_event: event_name)
       end
     end
 
