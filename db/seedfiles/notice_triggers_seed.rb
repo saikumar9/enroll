@@ -848,8 +848,8 @@ shop_notice_triggers = [
             }
         ]
     },
+    
     {
-<<<<<<< HEAD
         hbx_id: 'SHOP_M053',
         title: 'EE Ineligibility Notice – Terminated from Roster',
         description: 'Employee must be notified when they are terminated from an ER roster that they are no longer eligible to enroll in coverage with that ER, effective DOT',
@@ -1060,7 +1060,7 @@ shop_notice_triggers = [
   #       }
   #     }
   #   ]
-=======
+
       hbx_id: 'SHOP_M070',
       title: 'Employee Enrollment Confirmation',
       description: 'Employee selects a plan during annual open enrollment OE is still close and final confirmation',
@@ -1081,7 +1081,6 @@ shop_notice_triggers = [
         }
       ]
     },
->>>>>>> aed1efa55... 17118: MIE070 - Employee Plan Selection Confirmation (New Groups Open enrollment – Confirmation of Enrollment)
 ]
 
 ivl_notice_triggers = [
