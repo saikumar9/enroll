@@ -50,7 +50,7 @@ module Config::AcaHelper
 
   def offers_metal_level?
     @offer_metal_level ||= Settings.aca.plan_options_available.include?("metal_level")
-  end
+  end 
 
   def metal_levels_explaned
     response = ""
@@ -132,6 +132,10 @@ module Config::AcaHelper
 
   def site_broker_quoting_enabled?
    Settings.site.broker_quoting_enabled
+  end
+
+  def site_broker_enabled?
+   Settings.site.broker_enabled
   end
 
 end

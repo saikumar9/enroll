@@ -13,7 +13,8 @@ Given(/^Multiple Conversion Employers for (.*) exist with active and renewing pl
                                                             ssn: person[:ssn],
                                                             dob: person[:dob_date]
 
-
+ employee_role = FactoryGirl.create(:employee_role, employer_profile: secondary_employer_profile)
+ secondary_employee.update_attributes!(employee_role_id: employee_role.id)
 
   open_enrollment_start_on = TimeKeeper.date_of_record
   open_enrollment_end_on = open_enrollment_start_on.end_of_month + 13.days
@@ -197,6 +198,7 @@ end
 When(/(.*) click the button of new hire badge for 2st ER/) do |named_person|
   #py =Person.last.active_employee_roles.last.census_employee.renewal_benefit_group_assignment.benefit_group.plan_year
   #py.publish!
+  wait_for_ajax
   find_all('#shop_for_employer_sponsored_coverage').last.click
 end
 
