@@ -10,6 +10,7 @@ FactoryGirl.define do
       with_dental false
       is_conversion false
       add "MA"
+      cp "cp"
     end
 
     trait :add do
@@ -22,7 +23,7 @@ FactoryGirl.define do
 
     trait :employer_with_renewing_planyear do
       after(:create) do |employer, evaluator|
-        create(:notice_custom_plan_year, employer_profile: employer, start_on: evaluator.start_on - 1.year, aasm_state: 'published', is_conversion: evaluator.is_conversion)
+        create(:notice_custom_plan_year, employer_profile: employer, cp: evaluator.cp, start_on: evaluator.start_on - 1.year, aasm_state: 'published', is_conversion: evaluator.is_conversion)
         create(:employer_attestation, :with_attestation_document, employer_profile: employer)
       end
     end
@@ -64,6 +65,7 @@ FactoryGirl.define do
     transient do
       renewing false
       with_dental false
+      cp "cp"
     end
 
     employer_profile
@@ -78,7 +80,6 @@ FactoryGirl.define do
       Date.new(open_enrollment_start_on.year, open_enrollment_start_on.month, end_date)
     end
     after(:create) do |custom_plan_year, evaluator|
-      c = CarrierProfile.find("53e67210eb899a4603000029")
       if evaluator.with_dental
         create(:benefit_group, :with_valid_dental, plan_year: custom_plan_year)
       else
@@ -90,7 +91,7 @@ FactoryGirl.define do
                                                                                                             :allow_upper   => false,
                                                                                                             :allow_numeric => true,
                                                                                                             :allow_special => false, :exactly => 2)} Benefit group",
-                                                                    reference_plan_id: Plan.where(carrier_profile_id: c.id, active_year: "2017").last.id)
+                                                                    reference_plan_id: Plan.find(evaluator.cp).id)
       end
     end
   end
