@@ -106,7 +106,6 @@ module Observers
       end
     end
 
-
     def trigger_on_queried_records(event_name)
       current_date = TimeKeeper.date_of_record
       organizations_for_force_publish(current_date).each do |organization|
@@ -115,9 +114,8 @@ module Observers
       end
     end
 
-    def employer_profile_date_change; end
-    def hbx_enrollment_date_change; end
-    def census_employee_date_change; end
-
+    def employer_profile_date_change(model_event); end
+    def hbx_enrollment_date_change(model_event); end
+    def census_employee_date_change(model_event); end
   end
 end
