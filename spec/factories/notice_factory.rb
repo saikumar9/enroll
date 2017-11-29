@@ -23,7 +23,6 @@ FactoryGirl.define do
     trait :employer_with_renewing_planyear do
       after(:create) do |employer, evaluator|
         create(:notice_custom_plan_year, employer_profile: employer, start_on: evaluator.start_on - 1.year, aasm_state: 'published', is_conversion: evaluator.is_conversion)
-        create(:notice_custom_plan_year, employer_profile: employer, start_on: evaluator.start_on, aasm_state: evaluator.renewal_plan_year_state, renewing: true, with_dental: evaluator.with_dental)
         create(:employer_attestation, :with_attestation_document, employer_profile: employer)
       end
     end
@@ -79,7 +78,7 @@ FactoryGirl.define do
       Date.new(open_enrollment_start_on.year, open_enrollment_start_on.month, end_date)
     end
     after(:create) do |custom_plan_year, evaluator|
-      c = CarrierProfile.first
+      c = CarrierProfile.find("53e67210eb899a4603000029")
       if evaluator.with_dental
         create(:benefit_group, :with_valid_dental, plan_year: custom_plan_year)
       else
@@ -91,7 +90,7 @@ FactoryGirl.define do
                                                                                                             :allow_upper   => false,
                                                                                                             :allow_numeric => true,
                                                                                                             :allow_special => false, :exactly => 2)} Benefit group",
-                                                                    reference_plan_id: Plan.where(carrier_profile_id: c.id).first.id)
+                                                                    reference_plan_id: Plan.where(carrier_profile_id: c.id, active_year: "2017").last.id)
       end
     end
   end
@@ -112,7 +111,7 @@ FactoryGirl.define do
       ] }
     effective_on_kind "first_of_month"
     terminate_on_kind "end_of_month"
-    plan_option_kind "sole_source"
+    plan_option_kind "single_carrier"
     description "my first benefit group"
     effective_on_offset 0
     default false
