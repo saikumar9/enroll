@@ -359,7 +359,7 @@ class BenefitGroup
       build_composite_tier_contributions
       estimate_composite_rates
     end
-    targeted_census_employees.active.collect do |ce|
+    targeted_census_employees.active.expected_to_enroll.collect do |ce|
       pcd = if self.sole_source? && (!plan.dental?)
         CompositeRatedPlanCostDecorator.new(plan, self, effective_composite_tier(ce), ce.is_cobra_status?)
       else
@@ -372,7 +372,7 @@ class BenefitGroup
   def monthly_employee_cost(coverage_kind=nil)
     rp = coverage_kind == "dental" ? dental_reference_plan : reference_plan
     return 0 if targeted_census_employees.count > 100
-    targeted_census_employees.active.collect do |ce|
+    targeted_census_employees_participation.collect do |ce|
       pcd = if self.sole_source? && (!rp.dental?)
         CompositeRatedPlanCostDecorator.new(rp, self, effective_composite_tier(ce), ce.is_cobra_status?)
       else
@@ -387,7 +387,19 @@ class BenefitGroup
   end
 
   def monthly_max_employee_cost(coverage_kind = nil)
-    monthly_employee_cost(coverage_kind).max
+    return 0 if targeted_census_employees.count > 100
+    targeted_census_employees_participation.collect do |ce|
+      if plan_option_kind == 'sole_source'
+        pcd = CompositeRatedPlanCostDecorator.new(reference_plan, self, effective_composite_tier(ce), ce.is_cobra_status?)
+      else
+        if coverage_kind == 'dental'
+          pcd = PlanCostDecorator.new(dental_reference_plan, ce, self, dental_reference_plan)
+        else
+          pcd = PlanCostDecorator.new(reference_plan, ce, self, reference_plan)
+        end
+      end
+      pcd.total_employee_cost
+    end.max
   end
 
   def targeted_census_employees
@@ -526,14 +538,18 @@ class BenefitGroup
     EmployerParticipationRateRatingFactorSet.value_for(carrier_id, year, participation_rate * 100.0)
   end
 
+  def targeted_census_employees_participation
+    targeted_census_employees.select{|ce| ce.is_included_in_participation_rate?}
+  end
+
   def participation_rate
-    total_employees = targeted_census_employees.count
+    total_employees = targeted_census_employees_participation.count
     return(0.0) if total_employees < 1
     waived_and_active_count = if plan_year.estimate_group_size?
-                                targeted_census_employees.select { |ce| ce.expected_to_enroll_or_valid_waive? }.length
-                              else
-                                all_active_and_waived_health_enrollments.length
-                              end
+                          targeted_census_employees_participation.select{|ce| ce.expected_to_enroll_or_valid_waive?}.length
+                        else
+                          all_active_and_waived_health_enrollments.length
+                        end
     waived_and_active_count/(total_employees * 1.0)
   end
 
@@ -588,15 +604,62 @@ class BenefitGroup
   # year status
   def group_size_count
     if plan_year.estimate_group_size?
-      targeted_census_employees.select { |ce| ce.expected_to_enroll? }.length
+      targeted_census_employees_participation.select { |ce| ce.expected_to_enroll? }.length
     else
       all_active_health_enrollments.length
     end
   end
 
+  def export_group_size_count
+    group_size_count if !use_simple_employer_calculation_model?
+  end
+
+  def export_rate_basis_type
+    rating_area  if multiple_market_rating_areas? && !rating_area.blank?
+  end
+
+  def export_ctc_calculated
+    temp = {}
+    composite_tier_contributions.map{|ctc| temp[ctc.composite_rating_tier] = ctc.estimated_tier_premium}
+    composite_premium(temp)
+
+  end
+
+  def export_ctc_final
+    temp = {}
+    composite_tier_contributions.map{|ctc| temp[ctc.composite_rating_tier] = ctc.final_tier_premium}
+    composite_premium(temp)
+  end
+
+  def composite_premium(temp)
+    result = []
+    if temp.has_key?("employee_only")
+      result << temp["employee_only"]
+    else
+      result << " "
+    end
+    if temp.has_key?("employee_and_spouse")
+      result << temp["employee_and_spouse"]
+    else
+      result << " "
+    end
+    if temp.has_key?("employee_and_one_or_more_dependents")
+      result << temp["employee_and_one_or_more_dependents"]
+    else
+      result << " "
+    end
+    if temp.has_key?("family")
+      result << temp["family"]
+    else
+      result << " "
+    end
+    
+    result
+  end
+
   def composite_rating_enrollment_objects
     if plan_year.estimate_group_size?
-      targeted_census_employees.select { |ce| ce.expected_to_enroll? }
+      targeted_census_employees_participation.select { |ce| ce.expected_to_enroll? }
     else
       all_active_health_enrollments
     end

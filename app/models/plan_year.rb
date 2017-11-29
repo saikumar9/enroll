@@ -767,31 +767,20 @@ class PlanYear
     def map_binder_payment_due_date_by_start_on(start_on)
       dates_map = {}
       {
-        "2017-01-01" => '2016,12,23',
-        "2017-02-01" => '2017,1,23',
-        "2017-03-01" => '2017,2,23',
-        "2017-04-01" => '2017,3,23',
-        "2017-05-01" => '2017,4,24',
-        "2017-06-01" => '2017,5,23',
-        "2017-07-01" => '2017,6,23',
-        "2017-08-01" => '2017,7,24',
-        "2017-09-01" => '2017,8,23',
-        "2017-10-01" => '2017,9,25',
-        "2017-11-01" => '2017,10,23',
         "2017-12-01" => '2017,11,24',
         "2018-01-01" => '2017,12,26',
-        "2018-02-01" => '2018,1,23',
+        "2018-02-01" => '2018,1,24',
         "2018-03-01" => '2018,2,23',
         "2018-04-01" => '2018,3,23',
-        "2018-05-01" => '2018,4,23',
+        "2018-05-01" => '2018,4,25',
         "2018-06-01" => '2018,5,23',
         "2018-07-01" => '2018,6,25',
-        "2018-08-01" => '2018,7,23',
+        "2018-08-01" => '2018,7,25',
         "2018-09-01" => '2018,8,23',
-        "2018-10-01" => '2018,9,24',
-        "2018-11-01" => '2018,10,23',
-        "2018-12-01" => '2018,11,23',
-        "2019-01-01" => '2018,12,24',
+        "2018-10-01" => '2018,9,25',
+        "2018-11-01" => '2018,10,24',
+        "2018-12-01" => '2018,11,26',
+        "2019-01-01" => '2018,12,26',
       }.each_pair do |k, v|
         dates_map[k] = Date.strptime(v, '%Y,%m,%d')
       end
@@ -865,9 +854,8 @@ class PlanYear
     event :advance_date, :after => :record_transition do
       transitions from: :enrolled,  to: :active,                  :guard  => :is_event_date_valid?
       transitions from: :published, to: :enrolling,               :guard  => :is_event_date_valid?
-      transitions from: :enrolling, to: :enrolled,                :guards => [:is_open_enrollment_closed?, :is_enrollment_valid?]
+      transitions from: :enrolling, to: :enrolled,                :guards => [:is_open_enrollment_closed?, :is_enrollment_valid?], :after => :initial_employee_plan_selection_confirmation
       transitions from: :enrolling, to: :application_ineligible,  :guard => :is_open_enrollment_closed?, :after => [:initial_employer_ineligibility_notice, :notify_employee_of_initial_employer_ineligibility]
-
       # transitions from: :enrolling, to: :canceled,  :guard  => :is_open_enrollment_closed?, :after => :deny_enrollment  # Talk to Dan
 
       transitions from: :active, to: :terminated, :guard => :is_event_date_valid?
@@ -909,7 +897,7 @@ class PlanYear
       transitions from: :draft, to: :draft,     :guard => :is_application_invalid?
       transitions from: :draft, to: :enrolling, :guard => [:is_application_eligible?, :is_event_date_valid?], :after => [:accept_application, :zero_employees_on_roster, :record_sic_and_rating_area]
       transitions from: :draft, to: :published, :guard => :is_application_eligible?, :after => [:zero_employees_on_roster, :record_sic_and_rating_area]
-      transitions from: :draft, to: :publish_pending, :after => :initial_employer_denial_notice
+      transitions from: :draft, to: :publish_pending, :after => :initial_employer_denial_notice 
 
       transitions from: :renewing_draft, to: :renewing_draft,     :guard => :is_application_invalid?
       transitions from: :renewing_draft, to: :renewing_enrolling, :guard => [:is_application_eligible?, :is_event_date_valid?], :after => [:accept_application, :record_sic_and_rating_area]
@@ -1231,6 +1219,17 @@ class PlanYear
   def initial_employer_ineligibility_notice
     return true if benefit_groups.any? { |bg| bg.is_congress? }
     self.employer_profile.trigger_notices("initial_employer_ineligibility_notice")
+  end
+
+  def initial_employee_plan_selection_confirmation
+    return true if (benefit_groups.any?{|bg| bg.is_congress?})
+    self.employer_profile.census_employees.non_terminated.each do |ce|
+      begin
+        ShopNoticesNotifierJob.perform_later(ce.id.to_s, "initial_employee_plan_selection_confirmation")
+      rescue Exception => e
+        puts "Unable to send Employee Open Enrollment begin notice to #{ce.full_name}" unless Rails.env.test?
+      end
+    end
   end
 
   def record_transition

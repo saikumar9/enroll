@@ -8,6 +8,8 @@ class CensusEmployee < CensusMember
   include Config::AcaModelConcern
   include ::Eligibility::CensusEmployee
   include ::Eligibility::EmployeeBenefitPackages
+  include Concerns::Observable
+  include ModelEvents::CensusEmployee
 
   require 'roo'
 
@@ -91,6 +93,7 @@ class CensusEmployee < CensusMember
   scope :by_cobra,          ->{ any_in(aasm_state: COBRA_STATES) }
   scope :pending,           ->{ any_in(aasm_state: PENDING_STATES) }
   scope :active_alone,      ->{ any_in(aasm_state: EMPLOYMENT_ACTIVE_ONLY) }
+  scope :expected_to_enroll,->{ where(expected_selection: 'enroll') }
 
   # scope :emplyee_profiles_active_cobra,        ->{ where(aasm_state: "eligible") }
   scope :employee_profiles_terminated,         ->{ where(aasm_state: "employment_terminated")}
@@ -745,6 +748,11 @@ class CensusEmployee < CensusMember
 
   def show_plan_end_date?
     is_inactive? && coverage_terminated_on.present?
+  end
+
+  def is_included_in_participation_rate?
+    coverage_terminated_on.nil? ||
+    coverage_terminated_on >= active_benefit_group_assignment.start_on
   end
 
   def enrollments_for_display

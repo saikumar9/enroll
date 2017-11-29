@@ -9,6 +9,8 @@ class HbxEnrollment
   include MongoidSupport::AssociationProxies
   include Acapi::Notifiers
   extend Acapi::Notifiers
+  include Concerns::Observable
+  include ModelEvents::HbxEnrollment
 
   embedded_in :household
 
@@ -45,8 +47,7 @@ class HbxEnrollment
     "I have coverage through an individual market health plan",
     "I have coverage through Medicare",
     "I have coverage through Tricare",
-    "I have coverage through Medicaid",
-    "I do not have other coverage"
+    "I have coverage through Medicaid"
   ]
   CAN_TERMINATE_ENROLLMENTS = %w(coverage_termination_pending coverage_selected auto_renewing renewing_coverage_selected enrolled_contingent unverified coverage_enrolled)
 
@@ -194,6 +195,7 @@ class HbxEnrollment
 
   before_save :generate_hbx_id, :set_submitted_at
   after_save :check_created_at
+  after_save :notify_on_save
 
   def generate_hbx_signature
     if self.subscriber
