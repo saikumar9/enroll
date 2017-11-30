@@ -8,9 +8,7 @@ FactoryGirl.define do
       plan_year_state 'draft'
       renewal_plan_year_state 'renewing_draft'
       with_dental false
-      is_conversion false
       add "MA"
-      cp "cp"
     end
 
     trait :add do
@@ -19,20 +17,6 @@ FactoryGirl.define do
 
     trait :adds do
       add "MA"
-    end
-
-    trait :employer_with_renewing_planyear do
-      after(:create) do |employer, evaluator|
-        create(:notice_custom_plan_year, employer_profile: employer, cp: evaluator.cp, start_on: evaluator.start_on - 1.year, aasm_state: 'published', is_conversion: evaluator.is_conversion)
-        create(:employer_attestation, :with_attestation_document, employer_profile: employer)
-      end
-    end
-
-    trait :employer_with_planyear do
-      after(:create) do |employer, evaluator|
-        create(:notice_custom_plan_year, employer_profile: employer, start_on: evaluator.start_on, aasm_state: evaluator.plan_year_state, with_dental: evaluator.with_dental)
-        create(:employer_attestation, :with_attestation_document, employer_profile: employer)
-      end
     end
   end
 
@@ -65,7 +49,7 @@ FactoryGirl.define do
     transient do
       renewing false
       with_dental false
-      cp "cp"
+      ref_plan_id "cp"
     end
 
     employer_profile
@@ -91,7 +75,7 @@ FactoryGirl.define do
                                                                                                             :allow_upper   => false,
                                                                                                             :allow_numeric => true,
                                                                                                             :allow_special => false, :exactly => 2)} Benefit group",
-                                                                    reference_plan_id: Plan.find(evaluator.cp).id)
+                                                                    reference_plan_id: Plan.find(evaluator.ref_plan_id).id)
       end
     end
   end
