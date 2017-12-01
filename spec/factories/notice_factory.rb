@@ -96,7 +96,7 @@ FactoryGirl.define do
       ] }
     effective_on_kind "first_of_month"
     terminate_on_kind "end_of_month"
-    plan_option_kind "single_carrier"
+    plan_option_kind "sole_source"
     description "my first benefit group"
     effective_on_offset 0
     default false
