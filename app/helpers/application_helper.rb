@@ -661,8 +661,6 @@ module ApplicationHelper
     !Rails.env.test?
   end
 
-  private
-
   def initial_employee_plan_selection_confirmation(organization_ids)
     begin
       organization_ids.each do |org_id|
@@ -675,7 +673,7 @@ module ApplicationHelper
       end
     rescue Exception => e
       puts "Unable to send Employee Open Enrollment begin notice to #{ce.full_name}" unless Rails.env.test?
-      Rails.logger.error["Unable to deliver census employee notice for #{notice_name} to census_employee.id due to #{e}"]
+      Rails.logger.error["Unable to deliver initial_employee_plan_selection_confirmation due to #{e}"]
     end
   end
 
