@@ -71,11 +71,19 @@ module Observers
     end
 
     def plan_year_date_change(model_event)
+      current_date = TimeKeeper.date_of_record
       if PlanYear::DATA_CHANGE_EVENTS.include?(model_event.event_key)
+        if model_event.event_key == :renewal_plan_year_first_reminder_before_soft_dead_line
+          organizations_for_force_publish(current_date).each do |organization|
+            plan_year = organization.employer_profile.plan_years.where(:aasm_state => 'renewing_draft').first
+            trigger_notice(recipient: organization.employer_profile, event_object: plan_year, notice_event: "renewal_plan_year_first_reminder_before_soft_dead_line")
+          end
+        end
+
         if model_event.event_key == :renewal_plan_year_publish_dead_line
           organizations_for_force_publish(TimeKeeper.date_of_record).each do |organization|
-            plan_year = organization.employer_profile.plan_years.where(:aasm_state => 'renewing_draft').first
-            trigger_notice(recipient: organization.employer_profile, event_object: plan_year, notice_event: "renewal_plan_year_publish_dead_line")
+              plan_year = organization.employer_profile.plan_years.where(:aasm_state => 'renewing_draft').first
+              trigger_notice(recipient: organization.employer_profile, event_object: plan_year, notice_event:"renewal_plan_year_publish_dead_line" )
           end
         end
       end
@@ -85,6 +93,7 @@ module Observers
     def hbx_enrollment_date_change; end
     def census_employee_date_change; end
 
+<<<<<<< HEAD
     # def date_change_events(model_event)
     #   plan_year = model_event.klass_instance
     #   if PlanYear::DATA_CHANGE_EVENTS.include?(model_event.event_key)
@@ -100,5 +109,7 @@ module Observers
     #   end
     # end
 
+=======
+>>>>>>> origin/feature_18955_new
   end
 end
