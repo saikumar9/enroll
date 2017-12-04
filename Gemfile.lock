@@ -65,6 +65,7 @@ PATH
       mongoid (= 5.0.1)
       mongoid-autoinc
       mongoid-enum
+      mongoid-versioning
       mongoid_userstamp
       rails (~> 4.2.3)
 
