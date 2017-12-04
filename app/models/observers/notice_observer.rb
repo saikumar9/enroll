@@ -1,5 +1,22 @@
 module Observers
   class NoticeObserver < Observer
+
+    PLANYEAR_NOTICE_EVENTS = [
+      :renewal_application_created,
+      :initial_application_submitted,
+      :renewal_application_submitted,
+      :renewal_application_autosubmitted,
+      :ineligible_initial_application_submitted,
+      :ineligible_renewal_application_submitted,
+      :open_enrollment_began,
+      :open_enrollment_ended,
+      :application_denied,
+      :renewal_application_denied
+    ]
+
+    HBXENROLLMENT_NOTICE_EVENTS = [
+      :application_coverage_selected
+    ]
     
     def plan_year_update(new_model_event)
       raise ArgumentError.new("expected ModelEvents::ModelEvent") unless new_model_event.is_a?(ModelEvents::ModelEvent)
@@ -20,7 +37,10 @@ module Observers
             end
           end
         end
-        
+        if new_model_event.event_key == :renewal_employer_open_enrollment_completed
+          trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "renewal_employer_open_enrollment_completed")
+        end
+
         if new_model_event.event_key == :renewal_application_submitted
           trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "renewal_application_published")
         end
@@ -48,6 +68,7 @@ module Observers
         if new_model_event.event_key == :renewal_enrollment_confirmation
           errors = plan_year.enrollment_errors
           unless errors.include?(:non_business_owner_enrollment_count) || errors.include?(:eligible_to_enroll_count)
+            trigger_notice(recipient: plan_year.employer_profile,  event_object: plan_year, notice_event: "renewal_employer_open_enrollment_completed" )
             plan_year.employer_profile.census_employees.non_terminated.each do |ce|
               trigger_notice(recipient: ce.employee_role, event_object: plan_year, notice_event: "renewal_employee_enrollment_confirmation")
             end
@@ -101,12 +122,6 @@ module Observers
           trigger_on_queried_records("renewal_plan_year_publish_dead_line")
         end
 
-        if model_event.event_key == :renewal_employer_open_enrollment_completed
-          organizations_for_open_enrollment_end(current_date).each do |organization|
-            plan_year = organization.employer_profile.plan_years.where(:aasm_state => 'renewing_enrolling').first
-            trigger_notice(recipient: organization.employer_profile, event_object: plan_year, notice_event:"renewal_employer_open_enrollment_completed" )
-          end
-        end
       end
     end
 
