@@ -3,11 +3,6 @@ class EmployerProfileAccount
 
   embedded_in :employer_profile
 
-  def self.find(id)
-    org = Organization.where(:"employer_profile.employer_profile_account._id" => id)
-    org.first.employer_profile.employer_profile_account
-  end
-
 private
   def is_before_plan_year_start?
     employer_profile.published_plan_year.is_before_start?
