@@ -3,6 +3,7 @@ class BenefitGroup
   include Mongoid::Timestamps
   include ::Eligibility::BenefitGroup
   include Config::AcaModelConcern
+  include ConfigRatingAreaConcern
 
   embedded_in :plan_year
 

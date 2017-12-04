@@ -1,4 +1,5 @@
 class Person
+  include ConfigAcaLocationConcern
   include Config::AcaModelConcern
   include Config::SiteModelConcern
   include Mongoid::Document

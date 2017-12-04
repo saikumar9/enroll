@@ -1,6 +1,6 @@
 
 class PlanYear
-  include PlanModelConcerns::ConfigRatingAreaConcern
+  include ConfigRatingAreaConcern
   
   include Mongoid::Document
   include SetCurrentUser
