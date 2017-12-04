@@ -1,6 +1,7 @@
 class CarrierServiceArea
   include Mongoid::Document
   include Config::AcaModelConcern
+  include ConfigAcaLocationConcern  ## NAMESPACE?
 
   field :active_year, type: String
   field :issuer_hios_id, type: String

@@ -194,5 +194,7 @@ gem 'combine_pdf'
 gem 'recurring_select', :git => 'https://github.com/brianweiner/recurring_select'
 gem 'simple_calendar', :git => 'https://github.com/harshared/simple_calendar'
 
-gem 'shop_model_concerns', git: 'https://github.com/health-connector/shop_model_concerns'
-#gem 'shop_model_concerns', path: "../shop_model_concerns"
+#gem 'shop_model_concerns', git: 'https://github.com/health-connector/shop_model_concerns'
+gem 'shop_model_concerns', path: "../shop_model_concerns"
+gem 'plan_model_concerns', path: "../plan_model_concerns"
+gem 'location_model_concerns', path: "../location_model_concerns"

@@ -1,9 +1,9 @@
 class CarrierProfile
   include Mongoid::Document
-  include Config::AcaModelConcern
   include SetCurrentUser
   include Mongoid::Timestamps
-
+  include ConfigAcaLocationConcern  ## NAMESPACE?
+  
   embedded_in :organization
 
   # temporary field for importing seed files

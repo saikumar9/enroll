@@ -1,4 +1,7 @@
+
 class PlanYear
+  include PlanModelConcerns::ConfigRatingAreaConcern
+  
   include Mongoid::Document
   include SetCurrentUser
   include Mongoid::Timestamps
