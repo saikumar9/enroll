@@ -1,4 +1,6 @@
 class EmployerProfile
+  include LocationModelConcerns::ConfigAcaLocationConcern
+  
   include Config::AcaModelConcern
   include Mongoid::Document
   include SetCurrentUser
