@@ -11,8 +11,7 @@ module ModelEvents
       :ineligible_renewal_application_submitted,
       :open_enrollment_began,
       :application_denied,
-      :renewal_application_denied,
-      :renewal_employer_open_enrollment_completed
+      :renewal_application_denied
     ]
 
     DATA_CHANGE_EVENTS = [
@@ -52,10 +51,6 @@ module ModelEvents
 
         if is_transition_matching?(to: [:renewing_published, :renewing_enrolling], from: :renewing_draft, event: :force_publish)
           is_renewal_application_autosubmitted = true
-        end
-
-        if is_transition_matching?(to: :renewing_enrolled, from: :renewing_enrolling, event: :advance_date)
-          is_renewal_employer_open_enrollment_completed = true
         end
 
         if enrolling? || renewing_enrolling?
