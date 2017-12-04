@@ -1599,10 +1599,9 @@ shop_notice_triggers = [
                 }
             }
         ]
-    }
-    
-    {
+    },
 
+    {
       hbx_id: 'SHOP_M070',
       title: 'Employee Enrollment Confirmation',
       description: 'Employee selects a plan during annual open enrollment OE is still close and final confirmation',
@@ -1622,7 +1621,7 @@ shop_notice_triggers = [
             }
         }
       ]
-    },
+    }
 ]
 
 ivl_notice_triggers = [
