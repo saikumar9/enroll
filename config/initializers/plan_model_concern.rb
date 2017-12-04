@@ -1,4 +1,4 @@
-LocationModelConcerns.configure do |config|
+PlanModelConcerns.configure do |config|
   config.settings = Settings
   
   class PlanModelConcerns::Organization < Organization

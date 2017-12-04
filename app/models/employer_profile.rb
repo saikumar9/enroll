@@ -1,5 +1,5 @@
 class EmployerProfile
-  include LocationModelConcerns::ConfigAcaLocationConcern
+  include ConfigAcaLocationConcern
   
   include Config::AcaModelConcern
   include Mongoid::Document

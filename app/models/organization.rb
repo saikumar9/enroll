@@ -1,72 +1,21 @@
-class Organization
-  include Mongoid::Document
+class Organization  
+  include CoreModelConcerns::OrganizationConcern
   include SetCurrentUser
-  include Mongoid::Timestamps
-  include Mongoid::Versioning
+  
   include Acapi::Notifiers
   extend Acapi::Notifiers
-
+  
   extend Mongorder
 
-  ENTITY_KINDS = [
-    "tax_exempt_organization",
-    "c_corporation",
-    "s_corporation",
-    "partnership",
-    "limited_liability_corporation",
-    "limited_liability_partnership",
-    "household_employer",
-    "governmental_employer",
-    "foreign_embassy_or_consulate"
-  ]
 
-  FIELD_AND_EVENT_NAMES_MAP = {"legal_name" => "name_changed", "fein" => "fein_corrected"}
-
-  field :hbx_id, type: String
-  field :issuer_assigned_id, type: String
-
-  # Registered legal name
-  field :legal_name, type: String
-
-  # Doing Business As (alternate name)
-  field :dba, type: String
-
-  # Federal Employer ID Number
-  field :fein, type: String
-
-  # Web URL
-  field :home_page, type: String
-
-  field :is_active, type: Boolean
-
-  field :is_fake_fein, type: Boolean
-
-  # User or Person ID who created/updated
-  field :updated_by, type: BSON::ObjectId
-
-  embeds_many :office_locations, cascade_callbacks: true, validate: true
-  embeds_one :general_agency_profile, cascade_callbacks: true, validate: true
-  embeds_one :employer_profile, cascade_callbacks: true, validate: true
-  embeds_one :broker_agency_profile, cascade_callbacks: true, validate: true
-  embeds_one :carrier_profile, cascade_callbacks: true, validate: true
-  embeds_one :hbx_profile, cascade_callbacks: true, validate: true
+  embeds_one :general_agency_profile, cascade_callbacks: true, validate: true  ##Broker Concern
+  embeds_one :employer_profile, cascade_callbacks: true, validate: true  ##Shop Concern
+  embeds_one :broker_agency_profile, cascade_callbacks: true, validate: true  ##Broker Concern
+  embeds_one :carrier_profile, cascade_callbacks: true, validate: true ## PlanConcern
+  
   embeds_many :documents, as: :documentable
-  accepts_nested_attributes_for :office_locations, :employer_profile, :broker_agency_profile, :carrier_profile, :hbx_profile, :general_agency_profile
-
-  validates_presence_of :legal_name, :fein, :office_locations #, :updated_by
-
-  validates :fein,
-    length: { is: 9, message: "%{value} is not a valid FEIN" },
-    numericality: true,
-    uniqueness: true
-
-  validate :office_location_kinds
-
-  index({ hbx_id: 1 }, { unique: true })
-  index({ legal_name: 1 })
-  index({ dba: 1 }, {sparse: true})
-  index({ fein: 1 }, { unique: true })
-  index({ is_active: 1 })
+  
+  accepts_nested_attributes_for :employer_profile, :broker_agency_profile, :carrier_profile, :general_agency_profile
 
   # CarrierProfile child model indexes
   index({"carrier_profile._id" => 1}, { unique: true, sparse: true })
@@ -109,11 +58,6 @@ class Organization
          "fein" => 1, "legal_name" => 1, "dba" => 1},
          { name: "broker_agency_employer_search_index" })
 
-  before_save :generate_hbx_id
-  after_update :legal_name_or_fein_change_attributes,:if => :check_legal_name_or_fein_changed?
-  after_save :validate_and_send_denial_notice
-
-  default_scope                               ->{ order("legal_name ASC") }
   scope :employer_by_hbx_id,                  ->( employer_id ){ where(hbx_id: employer_id, "employer_profile" => { "$exists" => true }) }
   scope :by_broker_agency_profile,            ->( broker_agency_profile_id ) { where(:'employer_profile.broker_agency_accounts' => {:$elemMatch => { is_active: true, broker_agency_profile_id: broker_agency_profile_id } }) }
   scope :by_broker_role,                      ->( broker_role_id ){ where(:'employer_profile.broker_agency_accounts' => {:$elemMatch => { is_active: true, writing_agent_id: broker_role_id                   } }) }
@@ -179,25 +123,6 @@ class Organization
 
   scope :employer_profiles_with_attestation_document, -> { exists(:"employer_profile.employer_attestation.employer_attestation_documents" => true) }
 
-  scope :datatable_search, ->(query) { self.where({"$or" => ([{"legal_name" => Regexp.compile(Regexp.escape(query), true)}, {"fein" => Regexp.compile(Regexp.escape(query), true)}, {"hbx_id" => Regexp.compile(Regexp.escape(query), true)}])}) }
-
-  def self.generate_fein
-    loop do
-      random_fein = (["00"] + 7.times.map{rand(10)} ).join
-      break random_fein unless Organization.where(:fein => random_fein).count > 0
-    end
-  end
-
-  def validate_and_send_denial_notice
-    if employer_profile.present? && primary_office_location.present? && primary_office_location.address.present?
-      employer_profile.validate_and_send_denial_notice
-    end
-  end
-
-  def generate_hbx_id
-    write_attribute(:hbx_id, HbxIdGenerator.generate_organization_id) if hbx_id.blank?
-  end
-
   def invoices
     documents.select{ |document| document.subject == 'invoice' }
   end
@@ -206,31 +131,8 @@ class Organization
     documents.select{ |document| document.subject == 'invoice' && document.date.strftime("%Y%m") == TimeKeeper.date_of_record.strftime("%Y%m")}
   end
 
-  # Strip non-numeric characters
-  def fein=(new_fein)
-    write_attribute(:fein, new_fein.to_s.gsub(/\D/, ''))
-  end
-
-  def primary_office_location
-    office_locations.detect(&:is_primary?)
-  end
-
   def self.search_by_general_agency(search_content)
     Organization.has_general_agency_profile.or({legal_name: /#{search_content}/i}, {"fein" => /#{search_content}/i})
-  end
-
-  def self.default_search_order
-    [[:legal_name, 1]]
-  end
-
-  def self.search_hash(s_rex)
-    search_rex = Regexp.compile(Regexp.escape(s_rex), true)
-    {
-      "$or" => ([
-        {"legal_name" => search_rex},
-        {"fein" => search_rex},
-      ])
-    }
   end
 
   def self.retrieve_employers_eligible_for_binder_paid
@@ -405,13 +307,6 @@ class Organization
   end
 
   # Expects file_path string with file_name format /hbxid_mmddyyyy_invoices_r.pdf
-  # Returns Organization
-  def self.by_invoice_filename(file_path)
-    hbx_id= File.basename(file_path).split("_")[0]
-    Organization.where(hbx_id: hbx_id).first
-  end
-
-  # Expects file_path string with file_name format /hbxid_mmddyyyy_invoices_r.pdf
   # Returns Date
   def self.invoice_date(file_path)
     date_string= File.basename(file_path).split("_")[1]
@@ -422,28 +317,6 @@ class Organization
     docs =org.documents.where("date" => invoice_date)
     matching_documents = docs.select {|d| d.title.match(Regexp.new("^#{org.hbx_id}"))}
     return true if matching_documents.count > 0
-  end
-
-  def office_location_kinds
-    location_kinds = self.office_locations.select{|l| !l.persisted?}.flat_map(&:address).compact.flat_map(&:kind)
-    # should validate only office location which are not persisted AND kinds ie. primary, mailing, branch
-    return if no_primary = location_kinds.detect{|kind| kind == 'work' || kind == 'home'}
-    unless location_kinds.empty?
-      if location_kinds.count('primary').zero?
-        errors.add(:base, "must select one primary address")
-      elsif location_kinds.count('primary') > 1
-        errors.add(:base, "can't have multiple primary addresses")
-      elsif location_kinds.count('mailing') > 1
-        errors.add(:base, "can't have more than one mailing address")
-      end
-      if !errors.any?# this means that the validation succeeded and we can delete all the persisted ones
-        self.office_locations.delete_if{|l| l.persisted?}
-      end
-    end
-  end
-
-  def check_legal_name_or_fein_changed?
-    fein_changed? || legal_name_changed?
   end
 
   def legal_name_or_fein_change_attributes

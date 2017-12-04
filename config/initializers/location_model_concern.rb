@@ -1,9 +1,9 @@
-PlanModelConcerns.configure do |config|
+LocationModelConcerns.configure do |config|
   config.settings = Settings
   
-  class PlanModelConcerns::TimeKeeper < TimeKeeper
+  class LocationModelConcerns::TimeKeeper < TimeKeeper
   end
 
-  class PlanModelConcerns::WorkflowStateTransition < WorkflowStateTransition
+  class LocationModelConcerns::WorkflowStateTransition < WorkflowStateTransition
   end
 end

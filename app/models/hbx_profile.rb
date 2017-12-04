@@ -1,50 +1,15 @@
 class HbxProfile
-  include Config::AcaModelConcern
   include Config::SiteModelConcern
   include Config::ContactCenterModelConcern
-  include Mongoid::Document
   include SetCurrentUser
-  include Mongoid::Timestamps
   extend Acapi::Notifiers
-
+  include CoreModelConcerns::HbxProfileConcern
+  
   embedded_in :organization
-
-  field :cms_id, type: String
-  field :us_state_abbreviation, type: String
-
-  delegate :legal_name, :legal_name=, to: :organization, allow_nil: true
-  delegate :dba, :dba=, to: :organization, allow_nil: true
-  delegate :fein, :fein=, to: :organization, allow_nil: true
-  delegate :entity_kind, :entity_kind=, to: :organization, allow_nil: true
-
+  
   embeds_many :hbx_staff_roles
   embeds_many :enrollment_periods # TODO: deprecated - should be removed by 2015-09-03 - Sean Carley
-
-  embeds_one :benefit_sponsorship, cascade_callbacks: true
-  embeds_one :inbox, as: :recipient, cascade_callbacks: true
-
-  accepts_nested_attributes_for :inbox, :benefit_sponsorship
-
-  validates_presence_of :us_state_abbreviation, :cms_id
-
-  after_initialize :build_nested_models
-
-  def advance_day
-  end
-
-  def advance_month
-  end
-
-  def advance_quarter
-  end
-
-  def advance_year
-  end
-
-  def under_open_enrollment?
-    (benefit_sponsorship.present? && benefit_sponsorship.is_under_open_enrollment?) ?  true : false
-  end
-
+  
   def active_employers
     EmployerProfile.active
   end
@@ -75,25 +40,7 @@ class HbxProfile
 
 
   class << self
-    def find(id)
-      org = Organization.where("hbx_profile._id" => BSON::ObjectId.from_string(id)).first
-      org.hbx_profile if org.present?
-    end
-
-    def find_by_cms_id(id)
-      org = Organization.where("hbx_profile.cms_id": id).first
-      org.hbx_profile if org.present?
-    end
-
-    def find_by_state_abbreviation(state)
-      org = Organization.where("hbx_profile.us_state_abbreviation": state.to_s.upcase).first
-      org.hbx_profile if org.present?
-    end
-
-    def all
-      Organization.exists(hbx_profile: true).all.reduce([]) { |set, org| set << org.hbx_profile }
-    end
-
+    
     def current_hbx
       find_by_state_abbreviation(aca_state_abbreviation)
     end
@@ -123,19 +70,22 @@ class HbxProfile
   end
 
   ## Application-level caching
+  
+    ## HBX general settings
+    StateName = aca_state_name
+    StateAbbreviation = aca_state_abbreviation
+    CallCenterName = contact_center_name
+    CallCenterPhoneNumber = contact_center_phone_number
+    ShortName = site_short_name
 
-  ## HBX general settings
-  StateName = aca_state_name
-  StateAbbreviation = aca_state_abbreviation
-  CallCenterName = contact_center_name
-  CallCenterPhoneNumber = contact_center_phone_number
-  ShortName = site_short_name
-
-  # IndividualEnrollmentDueDayOfMonth = 15
-  # Temporary change for Dec 2015 extension
-  IndividualEnrollmentDueDayOfMonth = 19
-  IndividualEnrollmentTerminationMinimum = 14.days
-
+    # IndividualEnrollmentDueDayOfMonth = 15
+    # Temporary change for Dec 2015 extension
+    IndividualEnrollmentDueDayOfMonth = 19
+    IndividualEnrollmentTerminationMinimum = 14.days
+    
+    ShopOpenEnrollmentBeginDueDayOfMonth = Settings.aca.shop_market.open_enrollment.monthly_end_on - Settings.aca.shop_market.open_enrollment.minimum_length.days
+    ShopPlanYearPublishedDueDayOfMonth = ShopOpenEnrollmentBeginDueDayOfMonth
+    ShopOpenEnrollmentAdvBeginDueDayOfMonth = Settings.aca.shop_market.open_enrollment.minimum_length.adv_days
   ## Carriers
   # hbx_id, hbx_carrier_id, name, abbrev,
 
@@ -208,12 +158,6 @@ class HbxProfile
   # ShopBinderPaymentDueDayOfMonth = 15
   # ShopRenewalOpenEnrollmentEndDueDayOfMonth = 13
 
-
-  ShopOpenEnrollmentBeginDueDayOfMonth = Settings.aca.shop_market.open_enrollment.monthly_end_on - Settings.aca.shop_market.open_enrollment.minimum_length.days
-  ShopPlanYearPublishedDueDayOfMonth = ShopOpenEnrollmentBeginDueDayOfMonth
-  ShopOpenEnrollmentAdvBeginDueDayOfMonth = Settings.aca.shop_market.open_enrollment.minimum_length.adv_days
-
-
   # ShopOpenEnrollmentStartMax
   # EffectiveDate
 
@@ -226,15 +170,5 @@ class HbxProfile
   # OpenEnrollmentLatestEnd -- 10th day of month prior to effective date
   # BinderPaymentDueDate -- 15th or earliest banking day prior
 
-  private
-  def build_nested_models
-    build_inbox if inbox.nil?
-  end
 
-  def save_inbox
-    welcome_subject = "Welcome to #{site_short_name}"
-    welcome_body = "#{site_short_name} is the #{aca_state_name}'s on-line marketplace to shop, compare, and select health insurance that meets your health needs and budgets."
-    @inbox.save
-    @inbox.messages.create(subject: welcome_subject, body: welcome_body)
-  end
 end

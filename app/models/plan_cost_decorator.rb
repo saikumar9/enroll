@@ -3,6 +3,7 @@ class PlanCostDecorator < SimpleDelegator
 
   include ShopPolicyCalculations
   include Config::AcaModelConcern
+  include ConfigRatingAreaConcern
 
   def initialize(plan, member_provider, benefit_group, reference_plan, max_cont_cache = {})
     super(plan)
