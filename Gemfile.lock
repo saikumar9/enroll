@@ -46,18 +46,8 @@ GIT
       rails (>= 3.0)
 
 GIT
-  remote: https://github.com/prawnpdf/prawn.git
-  revision: 8028ca0cd2aae8c72df9fc4bf16388948423bcb2
-  ref: 8028ca0cd2
-  specs:
-    prawn (1.0.0.rc2)
-      afm
-      pdf-reader (~> 1.2)
-      ruby-rc4
-      ttfunk (~> 1.0.3)
-
-PATH
-  remote: ../broker_model_concerns
+  remote: https://github.com/health-connector/broker_model_concerns
+  revision: 3683be29fda87d46fd960de45e7bcb17e7db919c
   specs:
     broker_model_concerns (0.0.1)
       money-rails (~> 1.3.0)
@@ -68,8 +58,9 @@ PATH
       mongoid_userstamp
       rails (~> 4.2.3)
 
-PATH
-  remote: ../core_model_concerns
+GIT
+  remote: https://github.com/health-connector/core_model_concerns
+  revision: b65186348c2efca9b522a854e6989f8e2fdcf29f
   specs:
     core_model_concerns (0.0.1)
       money-rails (~> 1.3.0)
@@ -81,8 +72,9 @@ PATH
       mongoid_userstamp
       rails (~> 4.2.3)
 
-PATH
-  remote: ../location_model_concerns
+GIT
+  remote: https://github.com/health-connector/location_model_concerns
+  revision: 95b485c690953c7d15173125e12a5cc27824941d
   specs:
     location_model_concerns (0.0.1)
       money-rails (~> 1.3.0)
@@ -93,8 +85,9 @@ PATH
       mongoid_userstamp
       rails (~> 4.2.3)
 
-PATH
-  remote: ../plan_model_concerns
+GIT
+  remote: https://github.com/health-connector/plan_model_concerns
+  revision: ad5152cfb3134ee22a7d516cae51c1c371c48d4f
   specs:
     plan_model_concerns (0.0.1)
       money-rails (~> 1.3.0)
@@ -105,8 +98,9 @@ PATH
       mongoid_userstamp
       rails (~> 4.2.3)
 
-PATH
-  remote: ../shop_model_concerns
+GIT
+  remote: https://github.com/health-connector/shop_model_concerns
+  revision: 9cfa12a072cddec174a39a6f2fd680cebe169301
   specs:
     shop_model_concerns (0.0.1)
       money-rails (~> 1.3.0)
@@ -116,6 +110,17 @@ PATH
       mongoid-enum
       mongoid_userstamp
       rails (~> 4.2.3)
+
+GIT
+  remote: https://github.com/prawnpdf/prawn.git
+  revision: 8028ca0cd2aae8c72df9fc4bf16388948423bcb2
+  ref: 8028ca0cd2
+  specs:
+    prawn (1.0.0.rc2)
+      afm
+      pdf-reader (~> 1.2)
+      ruby-rc4
+      ttfunk (~> 1.0.3)
 
 PATH
   remote: components/notifier
