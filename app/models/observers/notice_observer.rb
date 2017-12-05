@@ -1,7 +1,27 @@
 module Observers
   class NoticeObserver < Observer
+
+    PLANYEAR_NOTICE_EVENTS = [
+      :renewal_application_created,
+      :initial_application_submitted,
+      :renewal_application_submitted,
+      :renewal_application_autosubmitted,
+      :ineligible_initial_application_submitted,
+      :ineligible_renewal_application_submitted,
+      :open_enrollment_began,
+      :open_enrollment_ended,
+      :application_denied,
+      :renewal_application_denied,
+      :renewal_employer_open_enrollment_completed
+    ]
+
+    HBXENROLLMENT_NOTICE_EVENTS = [
+      :application_coverage_selected
+    ]
     
     def plan_year_update(new_model_event)
+
+
       raise ArgumentError.new("expected ModelEvents::ModelEvent") unless new_model_event.is_a?(ModelEvents::ModelEvent)
 
       if PlanYear::REGISTERED_EVENTS.include?(new_model_event.event_key)
@@ -20,7 +40,10 @@ module Observers
             end
           end
         end
-        
+        if new_model_event.event_key == :renewal_employer_open_enrollment_completed
+          trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "renewal_employer_open_enrollment_completed")
+        end
+
         if new_model_event.event_key == :renewal_application_submitted
           trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "renewal_application_published")
         end
@@ -83,6 +106,7 @@ module Observers
         if model_event.event_key == :renewal_plan_year_publish_dead_line
           trigger_on_queried_records("renewal_plan_year_publish_dead_line")
         end
+
       end
     end
 
@@ -91,7 +115,7 @@ module Observers
       current_date = TimeKeeper.date_of_record
       organizations_for_force_publish(current_date).each do |organization|
         plan_year = organization.employer_profile.plan_years.where(:aasm_state => 'renewing_draft').first
-        trigger_notice(recipient: organization.employer_profile, event_object: plan_year, notice_event:event_name)
+        trigger_notice(recipient: organization.employer_profile, event_object: plan_year, notice_event: event_name)
       end
     end
 
