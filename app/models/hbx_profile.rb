@@ -1,9 +1,10 @@
 class HbxProfile
+  include CoreModelConcerns::HbxProfileConcern
+  
   include Config::SiteModelConcern
   include Config::ContactCenterModelConcern
   include SetCurrentUser
   extend Acapi::Notifiers
-  include CoreModelConcerns::HbxProfileConcern
   
   embedded_in :organization
   

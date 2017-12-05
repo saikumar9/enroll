@@ -47,7 +47,7 @@ GIT
 
 GIT
   remote: https://github.com/health-connector/broker_model_concerns
-  revision: 3683be29fda87d46fd960de45e7bcb17e7db919c
+  revision: 6927edcb12cae03f922a09f24ff35eb05378fce5
   specs:
     broker_model_concerns (0.0.1)
       money-rails (~> 1.3.0)
@@ -60,7 +60,7 @@ GIT
 
 GIT
   remote: https://github.com/health-connector/core_model_concerns
-  revision: b65186348c2efca9b522a854e6989f8e2fdcf29f
+  revision: 86668505fd79d698451d193b8546393788b39563
   specs:
     core_model_concerns (0.0.1)
       money-rails (~> 1.3.0)
