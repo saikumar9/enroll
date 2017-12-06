@@ -153,8 +153,6 @@ group :development, :test do
 
   # Keep these in Development and Test environments for access by rails generators
   gem 'rspec-rails', '~> 3.4.2'
-  gem 'factory_girl_rails', "4.6.0"
-  gem 'forgery'
   gem 'email_spec', '2.0.0'
   gem 'byebug', '8.2.2'
   gem 'rspec_junit_formatter', '0.2.3'
@@ -193,3 +191,5 @@ gem 'ruby-saml', '~> 1.3.0'
 gem 'combine_pdf'
 gem 'recurring_select', :git => 'https://github.com/brianweiner/recurring_select'
 gem 'simple_calendar', :git => 'https://github.com/harshared/simple_calendar'
+gem 'factory_girl_rails', "4.6.0"
+gem 'forgery'

@@ -392,25 +392,7 @@ end
 
   describe ".notify_employer_when_employee_terminate_coverage" do
     let(:enrollment) { double("HbxEnrollment", effective_on: double("effective_on", year: double), applied_aptc_amount: 0) }
-    it "should trigger notify_employer_when_employee_terminate_coverage job in queue" do
-      allow(enrollment).to receive(:is_shop?).and_return(true)
-      allow(enrollment).to receive(:enrollment_kind).and_return('health')
-      allow(enrollment).to receive_message_chain("census_employee.present?").and_return(true)
-      allow(enrollment).to receive_message_chain("census_employee.id.to_s").and_return("8728346")
-      ActiveJob::Base.queue_adapter = :test
-      ActiveJob::Base.queue_adapter.enqueued_jobs = []
-      helper.notify_employer_when_employee_terminate_coverage(enrollment)
-      queued_job = ActiveJob::Base.queue_adapter.enqueued_jobs.find do |job_info|
-        job_info[:job] == ShopNoticesNotifierJob
-      end
-      expect(queued_job[:args]).to eq ["8728346", 'notify_employer_when_employee_terminate_coverage']
-    end
-  end
-
-  describe ".notify_employee_confirming_coverage_termination" do
-    let(:enrollment) { double("HbxEnrollment", effective_on: double("effective_on", year: double), applied_aptc_amount: 0) }
-    let(:census_employee) {FactoryGirl.create(:census_employee)}
-    it "should trigger notify_employee_confirming_coverage_termination job in queue" do
+    before :each do
       allow(enrollment).to receive(:is_shop?).and_return(true)
       allow(enrollment).to receive(:coverage_kind).and_return("health")
       allow(enrollment).to receive(:enrollment_kind).and_return('health')
@@ -418,11 +400,51 @@ end
       allow(enrollment).to receive_message_chain("census_employee.id.to_s").and_return("8728346")
       ActiveJob::Base.queue_adapter = :test
       ActiveJob::Base.queue_adapter.enqueued_jobs = []
+    end
+
+    it "should trigger notify_employer_when_employee_terminate_coverage job in queue" do
+      helper.notify_employer_when_employee_terminate_coverage(enrollment)
+      queued_job = ActiveJob::Base.queue_adapter.enqueued_jobs.find do |job_info|
+        job_info[:job] == ShopNoticesNotifierJob
+      end
+      expect(queued_job[:args]).to eq ["8728346", 'notify_employer_when_employee_terminate_coverage']
+    end
+
+    it "should trigger notify_employee_confirming_coverage_termination job in queue" do
       helper.notify_employee_confirming_coverage_termination(enrollment)
       queued_job = ActiveJob::Base.queue_adapter.enqueued_jobs.find do |job_info|
         job_info[:job] == ShopNoticesNotifierJob
       end
-      expect(queued_job[:args]).to eq ["8728346", 'notify_employee_confirming_coverage_termination']
+      expect(queued_job[:args]).to eq ["8728346", 'notify_employee_confirming_coverage_termination'] 
     end
   end
+
+  describe "#initial_employee_plan_selection_confirmation_notice" do
+    let!(:employer_profile1) { create(:employer_with_planyear, plan_year_state: 'active', start_on: start_on)}
+    let!(:employer_profile2) { create(:employer_with_planyear, plan_year_state: 'active', start_on: start_on)}
+    let!(:start_on) { TimeKeeper.date_of_record.beginning_of_month }
+    let!(:benefit_group) { employer_profile1.published_plan_year.benefit_groups.first}
+    let!(:organization1) { employer_profile1.organization }
+    let!(:organization2) { employer_profile2.organization }
+    let!(:census_employee){
+      employee = FactoryGirl.create :census_employee, employer_profile: employer_profile1
+      employee.add_benefit_group_assignment benefit_group, benefit_group.start_on
+      employee
+    }
+    let!(:family) { FactoryGirl.create(:family, :with_primary_family_member) }
+    let!(:hbx_enrollment) { FactoryGirl.build(:hbx_enrollment, household: family.active_household, benefit_group_assignment_id: benefit_group.benefit_group_assignments.first.id, benefit_group_id: benefit_group.id, effective_on: start_on)}
+
+    it "should receive binder_paid action" do
+      ActiveJob::Base.queue_adapter = :test
+      ActiveJob::Base.queue_adapter.enqueued_jobs = []
+      census_employee.active_benefit_group_assignment.update_attributes(hbx_enrollment_id: hbx_enrollment.id)
+      hbx_enrollment.save!
+      helper.initial_employee_plan_selection_confirmation([organization1.id, organization2.id])
+      queued_job = ActiveJob::Base.queue_adapter.enqueued_jobs.find do |job_info|
+        job_info[:job] == ShopNoticesNotifierJob
+      end
+      expect(queued_job[:args]).to eq [census_employee.id.to_s, 'initial_employee_plan_selection_confirmation']
+    end
+  end
+
 end

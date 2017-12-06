@@ -540,8 +540,6 @@ module ApplicationHelper
   def notify_employer_when_employee_terminate_coverage(hbx_enrollment)
     if hbx_enrollment.is_shop? && hbx_enrollment.census_employee.present?
       ShopNoticesNotifierJob.perform_later(hbx_enrollment.census_employee.id.to_s, "notify_employer_when_employee_terminate_coverage")
-    elsif hbx_enrollment.coverage_kind == "dental"
-      ShopNoticesNotifierJob.perform_later(hbx_enrollment.census_employee.id.to_s, "notify_employee_confirming_dental_coverage_termination")
     end
   end
 
@@ -660,4 +658,21 @@ module ApplicationHelper
   def load_captcha_widget?
     !Rails.env.test?
   end
+
+  def initial_employee_plan_selection_confirmation(organization_ids)
+    begin
+      organization_ids.each do |org_id|
+        census_employees = Organization.find(org_id).employer_profile.census_employees.active
+        census_employees.each do |ce|
+          if ce.active_benefit_group_assignment.hbx_enrollment.present? && ce.active_benefit_group_assignment.hbx_enrollment.effective_on == Organization.find(org_id).employer_profile.active_plan_year.start_on
+            ShopNoticesNotifierJob.perform_later(ce.id.to_s, "initial_employee_plan_selection_confirmation")
+          end
+        end
+      end
+    rescue Exception => e
+      puts "Unable to send Employee Open Enrollment begin notice to #{ce.full_name}" unless Rails.env.test?
+      Rails.logger.error["Unable to deliver initial_employee_plan_selection_confirmation due to #{e}"]
+    end
+  end
+
 end
