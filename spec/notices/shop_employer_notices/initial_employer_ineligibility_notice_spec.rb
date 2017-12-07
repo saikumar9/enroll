@@ -1,7 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe ShopEmployerNotices::InitialEmployerIneligibilityNotice do
-  let(:start_on) { TimeKeeper.date_of_record.beginning_of_month + 1.month - 1.year}
+  let(:start_on) {
+    effective_date = TimeKeeper.date_of_record.beginning_of_month + 1.month - 1.year
+    if effective_date.yday == 1
+      effective_date + 1.month
+    else
+      effective_date
+    end
+  }
   let!(:employer_profile){ create :employer_profile}
   let!(:person){ create :person}
   let!(:plan_year) { FactoryBot.create(:plan_year, employer_profile: employer_profile, start_on: start_on, :aasm_state => 'active' ) }
