@@ -28,7 +28,7 @@ RSpec.describe Insured::GroupSelectionHelper, :type => :helper do
     context "with active employee role" do
       let(:person) { FactoryBot.create(:person, :with_employee_role) }
       before do
-        allow(person).to receive(:has_active_employee_role?).and_return(true) 
+        allow(person).to receive(:has_active_employee_role?).and_return(true)
       end
 
       it "should have active employee role but no benefit group" do
@@ -36,11 +36,11 @@ RSpec.describe Insured::GroupSelectionHelper, :type => :helper do
       end
 
     end
-    
+
     context "with active employee role and benefit group" do
       let(:person) { FactoryBot.create(:person, :with_employee_role) }
       before do
-        allow(person).to receive(:has_active_employee_role?).and_return(true) 
+        allow(person).to receive(:has_active_employee_role?).and_return(true)
         allow(person).to receive(:has_employer_benefits?).and_return(true)
       end
 
@@ -56,17 +56,17 @@ RSpec.describe Insured::GroupSelectionHelper, :type => :helper do
     context "with active consumer role" do
       let(:person) { FactoryBot.create(:person, :with_consumer_role, :with_employee_role) }
       before do
-        allow(person).to receive(:has_active_employee_role?).and_return(true) 
+        allow(person).to receive(:has_active_employee_role?).and_return(true)
       end
       it "should have both active consumer and employee role" do
         expect(subject.can_shop_both_markets?(person)).not_to be_truthy
       end
     end
-    
+
     context "with active consumer role" do
       let(:person) { FactoryBot.create(:person, :with_consumer_role, :with_employee_role) }
       before do
-        allow(person).to receive(:has_active_employee_role?).and_return(true) 
+        allow(person).to receive(:has_active_employee_role?).and_return(true)
         allow(person).to receive(:has_employer_benefits?).and_return(true)
       end
       it "should have both active consumer and employee role" do
@@ -141,7 +141,7 @@ RSpec.describe Insured::GroupSelectionHelper, :type => :helper do
       let(:person) { FactoryBot.create(:person) }
       let(:employee_role) { FactoryBot.create(:employee_role, person: person, employer_profile: organization.employer_profile, census_employee_id: census_employee.id)}
       let(:family) { FactoryBot.create(:family, :with_primary_family_member, person: person)}
-      let(:organization) { FactoryBot.create(:organization, :with_active_and_renewal_plan_years)}
+      let(:organization) { FactoryBot.create(:organization_with_plans, :with_active_and_renewal_plan_years)}
       let(:qle_kind) { FactoryBot.create(:qualifying_life_event_kind, :effective_on_event_date) }
       let(:census_employee) { FactoryBot.create(:census_employee, employer_profile: organization.employer_profile)}
       let(:sep){

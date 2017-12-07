@@ -370,7 +370,7 @@ end
 Given(/(.*) Employer for (.*) exists with active and expired plan year/) do |kind, named_person|
   person = people[named_person]
   FactoryBot.create(:rating_area, zip_code: "01002", county_name: "Franklin", rating_area: Settings.aca.rating_areas.first)
-  organization = FactoryBot.create :organization, :with_expired_and_active_plan_years, legal_name: person[:legal_name], dba: person[:dba], fein: person[:fein]
+  organization = FactoryBot.create :organization_with_plans, :with_expired_and_active_plan_years, legal_name: person[:legal_name], dba: person[:dba], fein: person[:fein]
   organization.employer_profile.update_attributes(profile_source: (kind.downcase == 'conversion' ? kind.downcase : 'self_serve'), registered_on: TimeKeeper.date_of_record)
   owner = FactoryBot.create :census_employee, :owner, employer_profile: organization.employer_profile
   employee = FactoryBot.create :census_employee, employer_profile: organization.employer_profile,
@@ -392,7 +392,7 @@ end
 Given(/(.*) Employer for (.*) exists with active and renewing enrolling plan year/) do |kind, named_person|
   person = people[named_person]
   FactoryBot.create(:rating_area, zip_code: "01002", county_name: "Franklin", rating_area: Settings.aca.rating_areas.first)
-  organization = FactoryBot.create :organization, :with_active_and_renewal_plan_years, legal_name: person[:legal_name], dba: person[:dba], fein: person[:fein]
+  organization = FactoryBot.create :organization_with_plans, :with_active_and_renewal_plan_years, legal_name: person[:legal_name], dba: person[:dba], fein: person[:fein]
   organization.employer_profile.update_attributes(profile_source: (kind.downcase == 'conversion' ? kind.downcase : 'self_serve'), registered_on: TimeKeeper.date_of_record)
   owner = FactoryBot.create :census_employee, :owner, employer_profile: organization.employer_profile
   employee = FactoryBot.create :census_employee, employer_profile: organization.employer_profile,

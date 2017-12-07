@@ -8,7 +8,7 @@ describe ExpireConversionEmployers, dbclean: :after_each do
 
   context "conversion employer" do
     let(:organization) {
-      org = create(:organization, :with_expired_and_active_plan_years)
+      org = create(:organization_with_plans, :with_expired_and_active_plan_years)
       org.employer_profile.update!(profile_source: 'conversion', registered_on: org.employer_profile.active_plan_year.start_on - 3.months)
       org.employer_profile.plan_years.expired.first.update(is_conversion: true)
       org

@@ -754,7 +754,7 @@ describe HbxProfile, "class methods", type: :model do
     let(:coverage_household_members) {double}
     let(:household) {FactoryBot.create(:household, family: family)}
     let(:qle_kind) { FactoryBot.create(:qualifying_life_event_kind, :effective_on_event_date) }
-    let(:organization) { FactoryBot.create(:organization, :with_expired_and_active_plan_years)}
+    let(:organization) { FactoryBot.create(:organization_with_plans, :with_expired_and_active_plan_years)}
     let(:census_employee) { FactoryBot.create :census_employee, employer_profile: organization.employer_profile, dob: TimeKeeper.date_of_record - 30.years, first_name: person.first_name, last_name: person.last_name }
     let(:employee_role) { FactoryBot.create(:employee_role, person: person, census_employee: census_employee, employer_profile: organization.employer_profile)}
     let(:person) { FactoryBot.create(:person)}

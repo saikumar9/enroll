@@ -14,7 +14,7 @@ describe TriggeringAutoRenewalsForSpecificEmployer, dbclean: :after_each do
 
   describe "generating auto-renewals for census employees", dbclean: :after_each do
 
-    let(:organization) { FactoryBot.create :organization, :with_active_and_renewal_plan_years}
+    let(:organization) { FactoryBot.create :organization_with_plans, :with_active_and_renewal_plan_years}
     let(:census_employee) { FactoryBot.create :census_employee, employer_profile: organization.employer_profile, dob: TimeKeeper.date_of_record - 30.years, first_name: person.first_name, last_name: person.last_name }
     let(:employee_role) { FactoryBot.create(:employee_role, person: person, census_employee: census_employee, employer_profile: organization.employer_profile)}
     let(:person) { FactoryBot.create(:person)}

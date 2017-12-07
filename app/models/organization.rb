@@ -1,19 +1,22 @@
-class Organization  
+class Organization
   include CoreModelConcerns::OrganizationConcern
   include BrokerModelConcerns::BrokerOrganizationConcern
+  include ShopModelConcerns::OrganizationShopConcern
+  include PlanModelConcerns::OrganizationPlanConcern
+
   include SetCurrentUser
-  
+  include Mongoid::Versioning
+
   include Acapi::Notifiers
   extend Acapi::Notifiers
-  
+
   extend Mongorder
 
 
   embeds_one :employer_profile, cascade_callbacks: true, validate: true  ##Shop Concern
-  embeds_one :carrier_profile, cascade_callbacks: true, validate: true ## PlanConcern
-  
+
   embeds_many :documents, as: :documentable
-  
+
   accepts_nested_attributes_for :employer_profile, :carrier_profile
 
   # CarrierProfile child model indexes
