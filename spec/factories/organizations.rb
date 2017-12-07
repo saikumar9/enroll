@@ -1,10 +1,15 @@
 FactoryBot.define do
-  factory :organization do
+  factory :organization_with_plans, class: Organization do
     legal_name  "Turner Agency, Inc"
     dba         "Turner Brokers"
     home_page   "http://www.example.com"
-    office_locations  { [FactoryBot.build(:office_location, :primary),
-                         FactoryBot.build(:office_location)] }
+    office_locations  {
+
+      first = FactoryBot.build(:office_location, :primary)
+
+      second = FactoryBot.build(:office_location)
+      [first]
+    }
 
     fein do
       Forgery('basic').text(:allow_lower   => false,
@@ -12,7 +17,7 @@ FactoryBot.define do
                             :allow_numeric => true,
                             :allow_special => false, :exactly => 9)
     end
-
+    
     trait :with_expired_and_active_plan_years do
       before :create do |organization, evaluator|
         organization.employer_profile = FactoryBot.create :employer_profile, organization: organization, registered_on: Date.new(2015,12,1)

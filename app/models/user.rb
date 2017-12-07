@@ -2,9 +2,7 @@ class User
   INTERACTIVE_IDENTITY_VERIFICATION_SUCCESS_CODE = "acc"
   MIN_USERNAME_LENGTH = 8
   MAX_USERNAME_LENGTH = 60
-
-  include Mongoid::Document
-  include Mongoid::Timestamps
+  include CoreModelConcerns::UserConcern
   include Acapi::Notifiers
   include AuthorizationConcern
   include PermissionsConcern

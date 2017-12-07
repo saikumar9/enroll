@@ -15,7 +15,7 @@ describe ExtendingOpenEnrollmentEndDateForEmployers, dbclean: :after_each do
   describe "changing the open_enrollment_end_on date for conversion ER's" do
 
     context "for renewal employer" do
-      let(:organization) { FactoryBot.create(:organization, :with_active_and_renewal_plan_years)}
+      let(:organization) { FactoryBot.create(:organization_with_plans, :with_active_and_renewal_plan_years)}
 
       before(:each) do
         organization.employer_profile.renewing_plan_year.update_attribute(:open_enrollment_end_on, Date.new(2016,11,13))

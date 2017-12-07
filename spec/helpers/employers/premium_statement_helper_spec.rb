@@ -53,7 +53,7 @@ RSpec.describe Employers::PremiumStatementHelper, :type => :helper do
     end
 
     context "when ER has both active & renewal plan years" do
-      let(:organization) { FactoryBot.create(:organization, :with_active_and_renewal_plan_years, employer_profile: employer_profile)}
+      let(:organization) { FactoryBot.create(:organization_with_plans, :with_active_and_renewal_plan_years, employer_profile: employer_profile)}
       before do
         assign(:employer_profile, organization.employer_profile)
       end

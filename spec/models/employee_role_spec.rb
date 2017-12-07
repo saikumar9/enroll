@@ -47,7 +47,7 @@ end
 
 describe ".coverage_effective_on" do
 
-  context 'when both active and renewal benefit groups present' do 
+  context 'when both active and renewal benefit groups present' do
 
     let(:hired_on) { TimeKeeper.date_of_record.beginning_of_month }
 
@@ -91,7 +91,7 @@ describe ".coverage_effective_on" do
 
       it 'should calculate effective date based on active benefit group' do
         expect(employee_role.coverage_effective_on).to eq hired_on
-      end 
+      end
     end
   end
 end
@@ -623,7 +623,7 @@ end
 describe "#benefit_group", dbclean: :after_each do
   subject { EmployeeRole.new(:person => person, :employer_profile => organization.employer_profile, :census_employee => census_employee) }
   let(:person) { FactoryBot.create(:person, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789') }
-  let(:organization) { FactoryBot.create(:organization, :with_active_and_renewal_plan_years)}
+  let(:organization) { FactoryBot.create(:organization_with_plans, :with_active_and_renewal_plan_years)}
   let!(:family) { FactoryBot.create(:family, :with_primary_family_member, person: person)}
   let(:qle_kind) { FactoryBot.create(:qualifying_life_event_kind, :effective_on_event_date) }
   let(:sep){
@@ -661,11 +661,11 @@ describe "#benefit_group", dbclean: :after_each do
 
   context "plan shop through qle and having active & expired plan years" do
 
-    let(:organization) { FactoryBot.create(:organization, :with_expired_and_active_plan_years)}
+    let(:organization) { FactoryBot.create(:organization_with_plans, :with_expired_and_active_plan_years)}
 
     before do
       census_employee.benefit_group_assignments.each do |bga|
-        bga.delete 
+        bga.delete
       end
       active_benefit_group = organization.employer_profile.plan_years.where(aasm_state: "active").first.benefit_groups.first
       expired_benefit_group = organization.employer_profile.plan_years.where(aasm_state: "expired").first.benefit_groups.first
