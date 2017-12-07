@@ -1,0 +1,19 @@
+source 'https://rubygems.org'
+
+# Declare your gem's dependencies in sponsored_applications.gemspec.
+# Bundler will treat runtime dependencies like base dependencies, and
+# development dependencies will be added by default to the :development group.
+gemspec
+#
+# gem 'core_model_concerns', git: 'https://github.com/health-connector/core_model_concerns'
+# gem 'shop_model_concerns', git: 'https://github.com/health-connector/shop_model_concerns'
+gem 'core_model_concerns', path: "~/Work/mass/core_model_concerns"
+#
+gem 'shop_model_concerns', path: "~/Work/mass/shop_model_concerns"
+# Declare any dependencies that are still in development here instead of in
+# your gemspec. These might include edge Rails or gems from your path or
+# Git. Remember to move these dependencies to your gemspec before releasing
+# your gem to rubygems.org.
+
+# To use a debugger
+# gem 'byebug', group: [:development, :test]

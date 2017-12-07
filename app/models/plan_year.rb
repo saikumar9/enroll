@@ -1,7 +1,7 @@
 
 class PlanYear
   include ConfigRatingAreaConcern
-  
+  include ShopModelConcerns::PlanYearConcern
   include Mongoid::Document
   include SetCurrentUser
   include Mongoid::Timestamps
@@ -13,16 +13,6 @@ class PlanYear
   include ModelEvents::PlanYear
 
   embedded_in :employer_profile
-
-  PUBLISHED = %w(published enrolling enrolled active suspended)
-  RENEWING  = %w(renewing_draft renewing_published renewing_enrolling renewing_enrolled renewing_publish_pending)
-  RENEWING_PUBLISHED_STATE = %w(renewing_published renewing_enrolling renewing_enrolled)
-
-  INELIGIBLE_FOR_EXPORT_STATES = %w(draft publish_pending eligibility_review published_invalid canceled renewing_draft suspended terminated application_ineligible renewing_application_ineligible renewing_canceled conversion_expired)
-
-  OPEN_ENROLLMENT_STATE   = %w(enrolling renewing_enrolling)
-  INITIAL_ENROLLING_STATE = %w(publish_pending eligibility_review published published_invalid enrolling enrolled)
-  INITIAL_ELIGIBLE_STATE  = %w(published enrolling enrolled)
 
   # Plan Year time period
   field :start_on, type: Date
@@ -50,9 +40,6 @@ class PlanYear
   # Calculated Fields for DataTable
   field :enrolled_summary, type: Integer, default: 0
   field :waived_summary, type: Integer, default: 0
-
-  # Workflow attributes
-  field :aasm_state, type: String, default: :draft
 
   # SIC code, frozen when the plan year is published,
   # otherwise comes from employer_profile
