@@ -39,6 +39,6 @@ module Eligibility
         benefit_group_assignment.benefit_group.effective_on_for(hired_on)
       end
     end
-
+    
   end
 end

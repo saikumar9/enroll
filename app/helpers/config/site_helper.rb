@@ -28,6 +28,10 @@ module Config::SiteHelper
     site_home_url + "/find-expert"
   end
 
+  def site_home_business_url
+    Settings.site.home_business_url
+  end
+
   def site_home_url
     Settings.site.home_url
   end
@@ -44,10 +48,6 @@ module Config::SiteHelper
     link_to site_home_url, site_home_url
   end
 
-  def site_policies_url
-    Settings.site.policies_url
-  end
-
   def site_help_url
     Settings.site.help_url
   end
@@ -62,6 +62,10 @@ module Config::SiteHelper
 
   def site_nondiscrimination_notice_url
     Settings.site.nondiscrimination_notice_url
+  end
+    
+  def site_policies_url
+    Settings.site.policies_url
   end
 
   def site_faqs_url
@@ -140,10 +144,6 @@ module Config::SiteHelper
     mail_to non_discrimination_email, non_discrimination_email
   end
     
-  def site_employer_application_deadline_link
-    Settings.site.employer_application_deadline_link
-  end
-
   def site_employer_application_deadline_link
     Settings.site.employer_application_deadline_link
   end
