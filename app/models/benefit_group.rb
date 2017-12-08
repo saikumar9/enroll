@@ -72,16 +72,8 @@ class BenefitGroup
 
   #TODO add following attributes: :title,
   validates_presence_of :relationship_benefits, :effective_on_kind, :terminate_on_kind, :effective_on_offset,
-                        :reference_plan_id, :plan_option_kind, :elected_plan_ids
+                        :reference_plan_id, :elected_plan_ids
 
-  validates_uniqueness_of :title
-
-  validates :plan_option_kind,
-    allow_blank: false,
-    inclusion: {
-      in: PLAN_OPTION_KINDS,
-      message: "%{value} is not a valid plan option kind"
-    }
 
   validates :effective_on_kind,
     allow_blank: false,

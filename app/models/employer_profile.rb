@@ -1,8 +1,8 @@
 class EmployerProfile
   include ShopModelConcerns::EmployerProfileConcern
-  
+
   include Config::AcaModelConcern
-  
+
   include SetCurrentUser
   include AASM
   include Acapi::Notifiers
@@ -444,12 +444,6 @@ class EmployerProfile
     def find_by_fein(fein)
       organization = Organization.where(fein: fein).first
       organization.present? ? organization.employer_profile : nil
-    end
-
-    def find_by_broker_agency_profile(broker_agency_profile)
-      raise ArgumentError.new("expected BrokerAgencyProfile") unless broker_agency_profile.is_a?(BrokerAgencyProfile)
-      orgs = Organization.by_broker_agency_profile(broker_agency_profile.id)
-      orgs.collect(&:employer_profile)
     end
 
     def find_by_general_agency_profile(general_agency_profile)

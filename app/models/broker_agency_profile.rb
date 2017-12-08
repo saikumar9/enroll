@@ -4,7 +4,7 @@ class BrokerAgencyProfile
 
   has_many :broker_agency_contacts, class_name: "Person", inverse_of: :broker_agency_contact
   accepts_nested_attributes_for :broker_agency_contacts, reject_if: :all_blank, allow_destroy: true
-  
+
   # has_many employers
   def employer_clients
     return unless (MARKET_KINDS - ["individual"]).include?(market_kind)
@@ -17,40 +17,6 @@ class BrokerAgencyProfile
     return unless (MARKET_KINDS - ["shop"]).include?(market_kind)
     return @family_clients if defined? @family_clients
     @family_clients = Family.by_broker_agency_profile_id(self.id)
-  end
-
-  # has_one primary_broker_role
-  def primary_broker_role=(new_primary_broker_role = nil)
-    if new_primary_broker_role.present?
-      raise ArgumentError.new("expected BrokerRole class") unless new_primary_broker_role.is_a? BrokerRole
-      self.primary_broker_role_id = new_primary_broker_role._id
-    else
-      unset("primary_broker_role_id")
-    end
-    @primary_broker_role = new_primary_broker_role
-  end
-
-  def primary_broker_role
-    return @primary_broker_role if defined? @primary_broker_role
-    @primary_broker_role = BrokerRole.find(self.primary_broker_role_id) unless primary_broker_role_id.blank?
-  end
-
-  # has_many active broker_roles
-  def active_broker_roles
-    # return @active_broker_roles if defined? @active_broker_roles
-    @active_broker_roles = BrokerRole.find_active_by_broker_agency_profile(self)
-  end
-
-  # has_many candidate_broker_roles
-  def candidate_broker_roles
-    # return @candidate_broker_roles if defined? @candidate_broker_roles
-    @candidate_broker_roles = BrokerRole.find_candidates_by_broker_agency_profile(self)
-  end
-
-  # has_many inactive_broker_roles
-  def inactive_broker_roles
-    # return @inactive_broker_roles if defined? @inactive_broker_roles
-    @inactive_broker_roles = BrokerRole.find_inactive_by_broker_agency_profile(self)
   end
 
   # alias for broker_roles
