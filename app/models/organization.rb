@@ -12,12 +12,9 @@ class Organization
 
   extend Mongorder
 
-
-  embeds_one :employer_profile, cascade_callbacks: true, validate: true  ##Shop Concern
-
   embeds_many :documents, as: :documentable
 
-  accepts_nested_attributes_for :employer_profile, :carrier_profile
+  accepts_nested_attributes_for :carrier_profile
 
   # CarrierProfile child model indexes
   index({"carrier_profile._id" => 1}, { unique: true, sparse: true })
@@ -57,8 +54,6 @@ class Organization
          { name: "broker_agency_employer_search_index" })
 
   scope :employer_by_hbx_id,                  ->( employer_id ){ where(hbx_id: employer_id, "employer_profile" => { "$exists" => true }) }
-  scope :by_broker_agency_profile,            ->( broker_agency_profile_id ) { where(:'employer_profile.broker_agency_accounts' => {:$elemMatch => { is_active: true, broker_agency_profile_id: broker_agency_profile_id } }) }
-  scope :by_broker_role,                      ->( broker_role_id ){ where(:'employer_profile.broker_agency_accounts' => {:$elemMatch => { is_active: true, writing_agent_id: broker_role_id                   } }) }
   scope :approved_broker_agencies,            ->{ where("broker_agency_profile.aasm_state" => 'is_approved') }
   scope :broker_agencies_by_market_kind,      ->( market_kind ) { any_in("broker_agency_profile.market_kind" => market_kind) }
   scope :all_employers_by_plan_year_start_on, ->( start_on ){ unscoped.where(:"employer_profile.plan_years.start_on" => start_on)  if start_on.present? }
