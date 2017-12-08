@@ -46,18 +46,8 @@ GIT
       rails (>= 3.0)
 
 GIT
-  remote: https://github.com/prawnpdf/prawn.git
-  revision: 8028ca0cd2aae8c72df9fc4bf16388948423bcb2
-  ref: 8028ca0cd2
-  specs:
-    prawn (1.0.0.rc2)
-      afm
-      pdf-reader (~> 1.2)
-      ruby-rc4
-      ttfunk (~> 1.0.3)
-
-PATH
-  remote: ../broker_model_concerns
+  remote: https://github.com/health-connector/broker_model_concerns
+  revision: b012acb06309c97ca182f12223c74bb6deb02996
   specs:
     broker_model_concerns (0.0.1)
       money-rails (~> 1.3.0)
@@ -68,22 +58,24 @@ PATH
       mongoid_userstamp
       rails (~> 4.2.3)
 
-PATH
-  remote: ../core_model_concerns
+GIT
+  remote: https://github.com/health-connector/core_model_concerns
+  revision: 17e41bc2dcbe41cc2fb1d7b54a1ad96a1c1fb2fe
   specs:
     core_model_concerns (0.0.1)
       forgery
       money-rails (~> 1.3.0)
-      mongo (= 2.1.2)
-      mongoid (= 5.0.1)
+      mongo (~> 2.1.2)
+      mongoid (~> 5.0.1)
       mongoid-autoinc
       mongoid-enum
       mongoid-versioning
       mongoid_userstamp
       rails (~> 4.2.3)
 
-PATH
-  remote: ../location_model_concerns
+GIT
+  remote: https://github.com/health-connector/location_model_concerns
+  revision: 08fde4558a1137c18397323c685c06f363e2dcde
   specs:
     location_model_concerns (0.0.1)
       money-rails (~> 1.3.0)
@@ -94,8 +86,9 @@ PATH
       mongoid_userstamp
       rails (~> 4.2.3)
 
-PATH
-  remote: ../plan_model_concerns
+GIT
+  remote: https://github.com/health-connector/plan_model_concerns
+  revision: 9943fa33a10fd1b4e949f93bfc7b056e03767d33
   specs:
     plan_model_concerns (0.0.1)
       money-rails (~> 1.3.0)
@@ -107,17 +100,29 @@ PATH
       mongoid_userstamp
       rails (~> 4.2.3)
 
-PATH
-  remote: ../shop_model_concerns
+GIT
+  remote: https://github.com/health-connector/shop_model_concerns
+  revision: 6b77f1bba482d6743322943557c886c121d7bea4
   specs:
     shop_model_concerns (0.0.1)
       money-rails (~> 1.3.0)
-      mongo (= 2.1.2)
-      mongoid (= 5.0.1)
+      mongo (~> 2.1.1)
+      mongoid (~> 5.0.1)
       mongoid-autoinc
       mongoid-enum
       mongoid_userstamp
       rails (~> 4.2.3)
+
+GIT
+  remote: https://github.com/prawnpdf/prawn.git
+  revision: 8028ca0cd2aae8c72df9fc4bf16388948423bcb2
+  ref: 8028ca0cd2
+  specs:
+    prawn (1.0.0.rc2)
+      afm
+      pdf-reader (~> 1.2)
+      ruby-rc4
+      ttfunk (~> 1.0.3)
 
 PATH
   remote: components/notifier
@@ -137,6 +142,16 @@ PATH
       virtus (~> 1.0.5)
       wicked_pdf (= 1.0.6)
       wkhtmltopdf-binary-edge (~> 0.12.3.0)
+
+PATH
+  remote: components/sponsored_applications
+  specs:
+    sponsored_applications (0.0.1)
+      aasm (~> 4.8.0)
+      mongoid (~> 5.0.1)
+      mongoid_userstamp
+      rails (~> 4.2.3)
+      slim (= 3.0.8)
 
 PATH
   remote: components/transport_gateway
@@ -851,6 +866,7 @@ DEPENDENCIES
   simple_calendar!
   simplecov (= 0.14.1)
   slim (= 3.0.8)
+  sponsored_applications!
   spring (= 1.6.3)
   sprockets (~> 2.12.3)
   symmetric-encryption (~> 3.6.0)
