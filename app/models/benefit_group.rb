@@ -1,15 +1,11 @@
 class BenefitGroup
-  include Mongoid::Document
-  include Mongoid::Timestamps
+  include ShopModelConcerns::BenefitGroupConcern
   include ::Eligibility::BenefitGroup
   include Config::AcaModelConcern
   include ConfigRatingAreaConcern
 
-  embedded_in :plan_year
-
   attr_accessor :metal_level_for_elected_plan, :carrier_for_elected_plan
 
-  PLAN_OPTION_KINDS = %w(sole_source single_plan single_carrier metal_level)
   EFFECTIVE_ON_KINDS = %w(date_of_hire first_of_month)
   OFFSET_KINDS = [0, 1, 30, 60]
   TERMINATE_ON_KINDS = %w(end_of_month)
@@ -21,8 +17,6 @@ class BenefitGroup
     :child_26_and_over
   ]
 
-  field :title, type: String, default: ""
-  field :description, type: String, default: ""
   field :effective_on_kind, type: String, default: "first_of_month"
   field :terminate_on_kind, type: String, default: "end_of_month"
   field :dental_plan_option_kind, type: String

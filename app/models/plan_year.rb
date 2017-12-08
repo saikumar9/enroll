@@ -1,7 +1,6 @@
 
 class PlanYear
   include ConfigRatingAreaConcern
-  
   include Mongoid::Document
   include SetCurrentUser
   include Mongoid::Timestamps
@@ -11,6 +10,7 @@ class PlanYear
   include Config::AcaModelConcern
   include Concerns::Observable
   include ModelEvents::PlanYear
+  include ShopModelConcerns::PlanYearConcern
 
   embedded_in :employer_profile
 
