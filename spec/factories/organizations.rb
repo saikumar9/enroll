@@ -17,7 +17,7 @@ FactoryBot.define do
                             :allow_numeric => true,
                             :allow_special => false, :exactly => 9)
     end
-    
+
     trait :with_expired_and_active_plan_years do
       before :create do |organization, evaluator|
         organization.employer_profile = FactoryBot.create :employer_profile, organization: organization, registered_on: Date.new(2015,12,1)
@@ -46,42 +46,6 @@ FactoryBot.define do
         renewing_plan_year = FactoryBot.create(:future_plan_year, employer_profile: organization.employer_profile, aasm_state: "renewing_enrolling")
         benefit_group = FactoryBot.create :benefit_group, :with_valid_dental, plan_year: active_plan_year
         renewing_benefit_group = FactoryBot.create :benefit_group, :with_valid_dental, plan_year: renewing_plan_year
-      end
-    end
-  end
-
-  factory :broker_agency, class: Organization do
-    sequence(:legal_name) {|n| "Broker Agency#{n}" }
-    sequence(:dba) {|n| "Broker Agency#{n}" }
-    fein do
-      Forgery('basic').text(:allow_lower   => false,
-                            :allow_upper   => false,
-                            :allow_numeric => true,
-                            :allow_special => false, :exactly => 9)
-    end
-    home_page   "http://www.example.com"
-    office_locations  { [FactoryBot.build(:office_location, :primary),
-                         FactoryBot.build(:office_location)] }
-
-    after(:create) do |organization|
-      FactoryBot.create(:broker_agency_profile, organization: organization)
-    end
-
-    trait :shop_only do
-      after(:create) do |organization|
-        FactoryBot.create(:broker_agency_profile, market_kind: "shop", organization: organization)
-      end
-    end
-
-    trait :ivl_only do
-      after(:create) do |organization|
-        FactoryBot.create(:broker_agency_profile, market_kind: "individual", organization: organization)
-      end
-    end
-
-    trait :both_ivl_and_shop do
-      after(:create) do |organization|
-        FactoryBot.create(:broker_agency_profile, market_kind: "both", organization: organization)
       end
     end
   end

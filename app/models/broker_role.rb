@@ -1,9 +1,6 @@
 class BrokerRole
   include BrokerModelConcerns::BrokerRoleConcern
   include SetCurrentUser
-  include Acapi::Notifiers
-
-  BROKER_UPDATED_EVENT_NAME = "acapi.info.events.broker.updated"
 
   embeds_many :favorite_general_agencies, cascade_callbacks: true
 
@@ -13,10 +10,6 @@ class BrokerRole
 
   def included_in_favorite_general_agencies?(general_agency_profile_id)
     favorite_general_agencies.present? && favorite_general_agencies.map(&:general_agency_profile_id).include?(general_agency_profile_id)
-  end
-
-  def notify_updated
-    notify(BROKER_UPDATED_EVENT_NAME, { :broker_id => self.npn } )
   end
 
   private
