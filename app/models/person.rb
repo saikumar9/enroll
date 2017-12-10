@@ -1,5 +1,6 @@
 class Person
   include CoreModelConcerns::PersonConcern
+  include BrokerModelConcerns::PersonBrokerConcern
   include Config::AcaModelConcern
   include Config::SiteModelConcern
   include SetCurrentUser
@@ -23,18 +24,12 @@ class Person
                 inverse_of: :employer_contacts,
                 index: true
 
-  belongs_to :broker_agency_contact,
-                class_name: "BrokerAgencyProfile",
-                inverse_of: :broker_agency_contacts,
-                index: true
-
   belongs_to :general_agency_contact,
                 class_name: "GeneralAgencyProfile",
                 inverse_of: :general_agency_contacts,
                 index: true
 
   embeds_one :resident_role, cascade_callbacks: true, validate: true
-  embeds_one :broker_role, cascade_callbacks: true, validate: true
   embeds_one :hbx_staff_role, cascade_callbacks: true, validate: true
   #embeds_one :responsible_party, cascade_callbacks: true, validate: true # This model does not exist.
 
@@ -46,27 +41,14 @@ class Person
   embeds_many :employee_roles, cascade_callbacks: true, validate: true
   embeds_many :general_agency_staff_roles, cascade_callbacks: true, validate: true
 
-  embeds_many :emails, cascade_callbacks: true, validate: true
 
-
-
-  accepts_nested_attributes_for :consumer_role, :resident_role, :broker_role, :hbx_staff_role,
+  accepts_nested_attributes_for :consumer_role, :resident_role, :hbx_staff_role,
      :employee_roles, :employer_staff_roles
-
-  accepts_nested_attributes_for :emails, :reject_if => Proc.new { |addy| Email.new(addy).blank? }
 
   validate :no_changing_my_user, :on => :update
 
 
   #after_save :generate_family_search
-
-
-
-  # Broker child model indexes
-  index({"broker_role._id" => 1})
-  index({"broker_role.provider_kind" => 1})
-  index({"broker_role.broker_agency_id" => 1})
-  index({"broker_role.npn" => 1}, {sparse: true, unique: true})
 
   # Employer role index
   index({"employer_staff_roles._id" => 1})
@@ -101,19 +83,10 @@ class Person
   scope :all_employer_staff_roles,    -> { exists(employer_staff_roles: true) }
 
   #scope :all_responsible_party_roles, -> { exists(responsible_party_role: true) }
-  scope :all_broker_roles,            -> { exists(broker_role: true) }
   scope :all_hbx_staff_roles,         -> { exists(hbx_staff_role: true) }
   scope :all_csr_roles,               -> { exists(csr_role: true) }
   scope :all_assister_roles,          -> { exists(assister_role: true) }
 
-  scope :by_broker_role_npn, ->(br_npn) { where("broker_role.npn" => br_npn) }
-
-  scope :broker_role_having_agency, -> { where("broker_role.broker_agency_profile_id" => { "$ne" => nil }) }
-  scope :broker_role_applicant,     -> { where("broker_role.aasm_state" => { "$eq" => :applicant })}
-  scope :broker_role_pending,       -> { where("broker_role.aasm_state" => { "$eq" => :broker_agency_pending })}
-  scope :broker_role_certified,     -> { where("broker_role.aasm_state" => { "$in" => [:active, :broker_agency_pending]})}
-  scope :broker_role_decertified,   -> { where("broker_role.aasm_state" => { "$eq" => :decertified })}
-  scope :broker_role_denied,        -> { where("broker_role.aasm_state" => { "$eq" => :denied })}
   scope :unverified_persons,        -> { where(:'consumer_role.aasm_state' => { "$ne" => "fully_verified" })}
 
   scope :general_agency_staff_applicant,     -> { where("general_agency_staff_roles.aasm_state" => { "$eq" => :applicant })}
