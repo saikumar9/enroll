@@ -9,10 +9,8 @@ module Observers
       :ineligible_initial_application_submitted,
       :ineligible_renewal_application_submitted,
       :open_enrollment_began,
-      :open_enrollment_ended,
       :application_denied,
       :renewal_application_denied,
-      :renewal_employer_open_enrollment_completed
     ]
 
     HBXENROLLMENT_NOTICE_EVENTS = [
@@ -63,6 +61,21 @@ module Observers
             end
           end
         end
+
+        if new_model_event.event_key == :renewal_enrollment_confirmation
+          trigger_notice(recipient: plan_year.employer_profile,  event_object: plan_year, notice_event: "renewal_employer_open_enrollment_completed" )
+            plan_year.employer_profile.census_employees.non_terminated.each do |ce|
+              enrollments = ce.renewal_benefit_group_assignment.hbx_enrollments
+              enrollment = enrollments.select{ |enr| (HbxEnrollment::ENROLLED_STATUSES + HbxEnrollment::RENEWAL_STATUSES).include?(enr.aasm_state) }.sort_by(&:updated_at).last
+              if enrollment.present?
+                trigger_notice(recipient: ce.employee_role, event_object: enrollment, notice_event: "renewal_employee_enrollment_confirmation")
+              end
+            end
+        end
+
+        if PlanYear::DATA_CHANGE_EVENTS.include?(new_model_event.event_key)
+        end
+
       end
     end
 
