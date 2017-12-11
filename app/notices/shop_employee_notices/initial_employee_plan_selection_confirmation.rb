@@ -11,7 +11,7 @@ class ShopEmployeeNotices::InitialEmployeePlanSelectionConfirmation < ShopEmploy
   end
 
   def append_data
-    plan_year = census_employee.employer_profile.active_plan_year
+    plan_year = census_employee.employer_profile.plan_years.where(:aasm_state.in => ["enrolling", "enrolled"]).first
     notice.plan_year = PdfTemplates::PlanYear.new({
                                                       :open_enrollment_start_on => plan_year.open_enrollment_start_on,
                                                       :open_enrollment_end_on => plan_year.open_enrollment_end_on,
