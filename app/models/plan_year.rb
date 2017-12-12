@@ -1384,7 +1384,6 @@ class PlanYear
     end
   end
 
-
   def record_transition
     self.workflow_state_transitions << WorkflowStateTransition.new(
       from_state: aasm.from_state,
