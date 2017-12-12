@@ -4,6 +4,7 @@ PATH
     sponsored_applications (0.0.1)
       aasm (~> 4.8.0)
       mongoid (~> 5.0.1)
+      mongoid_userstamp
       rails (~> 4.2.3)
       slim (= 3.0.8)
 

@@ -17,11 +17,11 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
 
   s.add_dependency "rails", "~> 4.2.3"
-  s.add_dependency "slim", "3.0.8" 
-  s.add_dependency "mongoid", "~> 5.0.1" 
-  s.add_dependency 'aasm', '~> 4.8.0' 
-
-  s.add_development_dependency 'rspec-rails' 
+  s.add_dependency "slim", "3.0.8"
+  s.add_dependency "mongoid", "~> 5.0.1"
+  s.add_dependency 'aasm', '~> 4.8.0'
+  s.add_dependency "mongoid_userstamp"
+  s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'shoulda-matchers'
   s.add_development_dependency 'factory_girl_rails'

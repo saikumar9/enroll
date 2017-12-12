@@ -2,22 +2,13 @@ module SponsoredApplications
   class SponsoredApplication
     include Mongoid::Document
     include Mongoid::Timestamps
+    include ShopModelConcerns::SharedPlanYearConcern
     include AASM
 
     # embedded_in :sponsorable, polymorphic: true
     # has_one :sponsor, as: :sponsorable, class_name: "Organization"
 
     KINDS = [:dc_broker, :mhc_broker, :dc_employer, :mhc_employer, :mhc_conversion_employer, :congress]
-
-    PUBLISHED = %w(published enrolling enrolled active suspended)
-    RENEWING  = %w(renewing_draft renewing_published renewing_enrolling renewing_enrolled renewing_publish_pending)
-    RENEWING_PUBLISHED_STATE = %w(renewing_published renewing_enrolling renewing_enrolled)
-
-    INELIGIBLE_FOR_EXPORT_STATES = %w(draft publish_pending eligibility_review published_invalid canceled renewing_draft suspended terminated application_ineligible renewing_application_ineligible renewing_canceled conversion_expired)
-
-    OPEN_ENROLLMENT_STATE   = %w(enrolling renewing_enrolling)
-    INITIAL_ENROLLING_STATE = %w(publish_pending eligibility_review published published_invalid enrolling enrolled)
-    INITIAL_ELIGIBLE_STATE  = %w(published enrolling enrolled)
 
     # Application type
     field :kind, type: Symbol
@@ -29,9 +20,6 @@ module SponsoredApplications
     field :open_enrollment_term,  type: Range
 
     field :terminated_on, type: Date
-
-    # Workflow status
-    field :aasm_state, type: String, default: :draft
 
     embeds_many :benefit_groups, class_name: "SponsoredApplications::BenefitGroup"
     # embeds_many :workflow_state_transitions, as: :transitional
