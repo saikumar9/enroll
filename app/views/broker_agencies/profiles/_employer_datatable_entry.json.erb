@@ -27,6 +27,10 @@ end
   <%= link_to employer_datatable_entry.legal_name, employers_employer_profile_path(employer_datatable_entry)+"?tab=home" %>
 <% end %>
 
+<% create_quote = capture do %>
+  <%= link_to "Create Quote", sponsored_applications.broker_quote_creation_path(current_user.person.broker_role.broker_agency_profile.id, employer_datatable_entry.id) %>
+<% end %>
+
 {
   "nothing": <%= raw checkbox_column.to_json %>,
   "fein": <%= raw employer_datatable_entry.fein.to_json %>,
@@ -35,5 +39,6 @@ end
   "er_state": <%= raw employer_datatable_entry.aasm_state.humanize.to_json %>,
   "broker": <%= raw broker.to_json %>,
   "general_agency": <%= raw general_agency.to_json %>,
-  "effective_date": <%= raw effective_date.to_json %>
+  "effective_date": <%= raw effective_date.to_json %>,
+  "create_quote": <%= raw create_quote.to_json %>
 }
