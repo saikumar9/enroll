@@ -1,8 +1,6 @@
 class EmployerProfile
   include ShopModelConcerns::EmployerProfileConcern
-
   include Config::AcaModelConcern
-
   include SetCurrentUser
   include Acapi::Notifiers
   extend Acapi::Notifiers

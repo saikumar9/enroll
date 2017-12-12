@@ -1,13 +1,15 @@
 class Employers::BrokerAgencyController < ApplicationController
   include Acapi::Notifiers
   before_action :find_employer
-  before_action :find_borker_agency, :except => [:index, :active_broker]
+  before_action :find_broker_agency, :except => [:index, :active_broker]
   before_action :updateable?, only: [:create, :terminate]
 
   def index
     @filter_criteria = params.permit(:q, :working_hours, :languages => [])
     if @filter_criteria.empty?
       @orgs = Organization.approved_broker_agencies.broker_agencies_by_market_kind(['both', 'shop'])
+      pp "orgs"
+      pp @orgs.count
       @page_alphabets = page_alphabets(@orgs, "legal_name")
 
       if params[:page].present?
@@ -100,16 +102,16 @@ class Employers::BrokerAgencyController < ApplicationController
     rescue Exception => e
        puts "Unable to deliver Broker Notice to #{@employer_profile.broker_agency_profile.legal_name} due to #{e}" unless Rails.env.test?
     end
-  end  
+  end
 
   def broker_hired_confirmation
     begin
          ShopNoticesNotifierJob.perform_later(@employer_profile.id.to_s, "broker_hired_confirmation")
     rescue Exception => e
        puts "Unable to deliver Employer Notice to #{@employer_profile.broker_agency_profile.legal_name} due to #{e}" unless Rails.env.test?
-    end   
+    end
   end
-    
+
   def broker_agency_hired_confirmation
     begin
          ShopNoticesNotifierJob.perform_later(@employer_profile.id.to_s, "broker_agency_hired_confirmation")
@@ -161,7 +163,7 @@ class Employers::BrokerAgencyController < ApplicationController
     @employer_profile = EmployerProfile.find(params["employer_profile_id"])
   end
 
-  def find_borker_agency
+  def find_broker_agency
     id = params[:id] || params[:broker_agency_id]
     @broker_agency_profile = BrokerAgencyProfile.find(id)
   end
