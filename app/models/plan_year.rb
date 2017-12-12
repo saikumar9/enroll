@@ -1232,7 +1232,6 @@ class PlanYear
     self.employer_profile.trigger_notices("initial_employer_ineligibility_notice")
   end
 
-
   def record_transition
     self.workflow_state_transitions << WorkflowStateTransition.new(
       from_state: aasm.from_state,
