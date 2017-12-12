@@ -1,0 +1,4 @@
+hello
+<% current_user.person.broker_role.broker_agency_profile.employer_clients.each do |e| %>
+  <%= e.legal_name %>
+<% end %>

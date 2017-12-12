@@ -134,13 +134,7 @@
         <% end %>
       </li>
 
-      <li role="presentation"<%= menu_tab_class(active_tab, "notices-tab") %> class="tab-second <%=pundit_class HbxProfile, :view_admin_tabs?%>">
 
-        <%= link_to(notifier.notice_kinds_path, "aria-expanded" => "true", "aria-controls" => "notices", "role" => "tab" ) do  %>
-          <span class="hidden-xs">Notices</span>
-          <span class="glyphicon glyphicon-th-list hidden-md hidden-sm hidden-lg" title="Notices"></span>
-        <% end %>
-      </li>
 
       <% if individual_market_is_enabled? %>
       <li role="presentation"<%= menu_tab_class(active_tab, "user-account-tab") %> class="tab-second <%=pundit_class HbxProfile, :view_admin_tabs?%>">

@@ -2,12 +2,14 @@ Rails.application.routes.draw do
 
   mount TransportGateway::Engine,       at: "/transport_gateway"
   mount TransportProfiles::Engine,      at: "/transport_profiles"
-  mount SponsoredApplications::Engine,  at: "/sponsored_applications"
 
   require 'resque/server'
   mount Resque::Server, at: '/jobs'
   devise_for :users, :controllers => { :registrations => "users/registrations", :sessions => 'users/sessions', :passwords => 'users/passwords' }
 
+  authenticate :user do
+    mount SponsoredApplications::Engine, at: "/sponsored_applications"
+  end
 
   get 'check_time_until_logout' => 'session_timeout#check_time_until_logout', :constraints => { :only_ajax => true }
   get 'reset_user_clock' => 'session_timeout#reset_user_clock', :constraints => { :only_ajax => true }
@@ -362,6 +364,7 @@ Rails.application.routes.draw do
       get :msg_to_portal
     end
     resources :profiles, only: [:new, :create, :show, :index, :edit, :update] do
+      resources :employer_prospects
       get :inbox
 
       collection do
