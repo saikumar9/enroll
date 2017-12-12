@@ -7,19 +7,19 @@
 <table class="total_table" border="0">
   <tbody>
   <tr>
-    <td> Dear <%= notice.primary_fullname %>,  </td>
+    <td> Dear <%= notice.primary_fullname.titleize %>,  </td>
   </tr>
   </tbody>
 </table>
 
 <%= render partial: 'notices/shared/paragraph', :locals =>
-                                                  { content: "Congratulations!  Your employer, #{notice.employer_name}, has completed its open enrollment period and has successfully met all eligibility requirements." }%>
+                                                  { content: "Congratulations!  Your employer,<strong> #{notice.employer_name}</strong>, has completed its open enrollment period and has successfully met all eligibility requirements." }%>
 
 <%= render partial: 'notices/shared/paragraph', :locals =>
-                                                  { content: "Your plan selection #{notice.plan.plan_name} will go into effect on #{notice.plan_year.start_on}."} %>
+                                                  { content: "Your plan selection <strong>#{notice.plan.plan_name}</strong> will go into effect on <strong>#{notice.plan_year.start_on}</strong>."} %>
 
 <%= render partial: 'notices/shared/paragraph', :locals =>
-                                                  { content: "Please note that your monthly premium contribution will be #{notice.enrollment.employee_cost}.  Your employer, #{notice.employer_name}, will contribute #{notice.enrollment.responsible_amount} towards your monthly premium."} %>
+                                                  { content: "Please note that your monthly premium contribution will be <strong>#{notice.enrollment.employee_cost}</strong>.  Your employer,<strong> #{notice.employer_name}</strong>, will contribute <strong>#{notice.enrollment.responsible_amount}</strong> towards your monthly premium."} %>
 
 <%= render partial: 'notices/shared/paragraph', :locals =>
                                                   { content: "Thank you for enrolling into employer-sponsored coverage through the Health Connector."} %>
