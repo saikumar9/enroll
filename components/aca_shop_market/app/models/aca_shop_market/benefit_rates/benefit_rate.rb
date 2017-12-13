@@ -2,14 +2,14 @@ module AcaShopMarket
   class BenefitRates::BenefitRate
     include Mongoid::Document
 
-      def initialize(plan, member_provider, benefit_group, reference_plan, max_cont_cache = {})
-        super(plan)
+      def initialize(selected_plan, sponsor, benefit_group, reference_plan, max_cont_cache = {})
+        super(selected_plan)
 
-        @member_provider = member_provider
+        @sponsor = sponsor
         @benefit_group = benefit_group
         @reference_plan = reference_plan
+        @selected_plan = selected_plan
         @max_contribution_cache = max_cont_cache
-        @plan = plan
 
         load_rate_models
       end
@@ -25,7 +25,7 @@ module AcaShopMarket
       def total_employee_cost
       end
 
-      def total_employer_contribution
+      def total_sponsor_contribution
       end
 
       def benefit_rate_for(member)
@@ -34,7 +34,7 @@ module AcaShopMarket
       def employee_cost_for(member)
       end
 
-      def employer_cost_for(member)
+      def sponsor_cost_for(member)
       end
 
       def calculate_total(rate)
@@ -42,10 +42,10 @@ module AcaShopMarket
         model.calculate_rate(rate)
       end
 
-      def max_employer_contribution(member)
+      def max_sponsor_contribution(member)
       end
 
-      def employer_contribution_percent(member)
+      def sponsor_contribution_percent(member)
       end
 
       def reference_plan_cost_for(member)
@@ -74,30 +74,55 @@ module AcaShopMarket
       [:enrolling, :waived_valid, :waived_invalid]
 
 
-      def plan_choices
-        [:health, :dental]
-        [:single_plan, :hsingle_carrier, :metal_level ]
+      def benefit_products
+        [:aca_shop_health, :aca_shop_dental]
+        [:single_plan, :single_carrier, :metal_level]
       end
 
       def rating_factors
         {
-            geographic_rating_area:   "A1",
-            group_enrolled_count:     1,        # participation_rate
-            group_enrolled_factor: 1.022,
-            participation_rate_factor: 0.998,
-            sic_code: 1234,
-            sic_factor: 1.032,
-            participation_rate_percent_minimum: 75,
+          geographic_rating_area:   "A1",
+          group_enrolled_count:     1,        # participation_rate
+          group_enrolled_factor: 1.022,
+          participation_rate_factor: 0.998,
+          sic_code: 1234,
+          sic_factor: 1.032,
         }
+      end
+
+      def is_sponsor_eligible?
+        {
+          is_sponsor_in_good_standing: true,
+          is_sponsor_eligible_to_offer_benefit_product: true,
+          is_sponsor_hq_in_benefit_service_area: "A1",
+          is_sponsor_member_count_range_met: 1..50,
+        }
+
+      def is_application_eligible?
+        {
+          is_reference_plan_designated: true,
+          are_all_members_assigned_to_benefit_group: true,
+          is_open_enrollment_period_valid: true,
+        }
+      end
+
+      def is_enrollment_eligible?
+        {
+          is_participation_rate_percent_minimum_met: 75,
+          is_non_owner_enrollment_participation_minimum_met: 1,
+        }
+      end
+
+      def is_initial_application?
       end
 
 
       def rate_groups
         [ 
           { 
-              group: :employee, 
+              name: :employee, 
               title: "Employee", 
-              member_count: 1,
+              member_count: 1..1,
               employee_relationships: ["self"],
               age_range: 0..0,
               is_offered: true,
@@ -107,21 +132,21 @@ module AcaShopMarket
               sponsor_contribution_currency_maximum:  0.0,
             }, 
           {
-              group: :employee_and_spouse,
+              name: :employee_and_spouse,
               title: "Employee and Spouse",
-              member_count: 2,
+              member_count: 2..2,
               employee_relationships: ["self", "spouse", "ex-spouse", "life_partner", "domestic_partner"],
               age_range: 0..0,
             }, 
           {
-              group: :employee_and_one_other_dependent,
+              name: :employee_and_one_other_dependent,
               title: "Employee and Spouse", 
-              member_count: 2,
+              member_count: 2..2,
               employee_relationships: ["self", "child", "adopted_child", "foster_child", "step_child", "ward", "trustee", "sponsored_dependent", "collateral_dependent" ],
               age_range: 0..0,
             }, 
           {
-              group: :family, 
+              name: :family, 
               title: "Family",
               member_count: 3..20,
               employee_relationships: ["self", "spouse", "ex-spouse", "life_partner", "domestic_partner", "child", "adopted_child", "foster_child", "step_child", "ward", "trustee", "sponsored_dependent", "collateral_dependent"],
