@@ -67,8 +67,8 @@ describe ".coverage_effective_on" do
     let(:open_enrollment_end_on) { open_enrollment_start_on.next_month + 9.days }
 
     let!(:census_employees){
-      FactoryBot.create :census_employee, :owner, employer_profile: employer_profile
-      FactoryBot.create :census_employee, employer_profile: employer_profile, hired_on: hired_on
+      FactoryBot.create :census_employee_with_benefit_group, :owner, employer_profile: employer_profile
+      FactoryBot.create :census_employee_with_benefit_group, employer_profile: employer_profile, hired_on: hired_on
     }
 
     let(:ce) { employer_profile.census_employees.non_business_owner.first }
@@ -713,8 +713,8 @@ describe EmployeeRole do
     }
 
     let!(:family) {
-      FactoryBot.create :census_employee, :owner, employer_profile: employer_profile
-      ce = FactoryBot.create :census_employee, employer_profile: employer_profile
+      FactoryBot.create :census_employee_with_benefit_group, :owner, employer_profile: employer_profile
+      ce = FactoryBot.create :census_employee_with_benefit_group, employer_profile: employer_profile
       person = FactoryBot.create(:person, last_name: ce.last_name, first_name: ce.first_name)
       employee_role = FactoryBot.create(:employee_role, person: person, census_employee: ce, employer_profile: employer_profile)
       employee_role.census_employee.add_benefit_group_assignment current_benefit_group, current_benefit_group.start_on

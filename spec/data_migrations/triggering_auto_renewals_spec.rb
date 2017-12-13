@@ -23,7 +23,7 @@ describe TriggeringAutoRenewals, dbclean: :after_each do
       :open_enrollment_start_on => Date.new(2016,10,12), :open_enrollment_end_on => Date.new(2016, 11, 13), fte_count: 37
       benefit_group = FactoryBot.create :benefit_group, :with_valid_dental, plan_year: active_plan_year
       renewing_benefit_group = FactoryBot.create :benefit_group, :with_valid_dental, plan_year: renewing_plan_year
-      1.times{|i| FactoryBot.create :census_employee, employer_profile: employer_profile, dob: TimeKeeper.date_of_record - 30.years + i.days }
+      1.times{|i| FactoryBot.create :census_employee_with_benefit_group, employer_profile: employer_profile, dob: TimeKeeper.date_of_record - 30.years + i.days }
       employer_profile.census_employees.each do |ce|
         ce.add_benefit_group_assignment benefit_group, benefit_group.start_on
         ce.add_renew_benefit_group_assignment(renewing_benefit_group)

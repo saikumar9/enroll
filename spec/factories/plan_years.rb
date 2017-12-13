@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :plan_year do
-    employer_profile
+    employer_profile { create(:employer_profile_default) }
 
     recorded_rating_area { Settings.aca.rating_areas.first }
     recorded_sic_code { employer_profile.sic_code }
@@ -13,7 +13,7 @@ FactoryBot.define do
   end
 
   factory :next_month_plan_year, class: PlanYear do
-    employer_profile
+    employer_profile { create(:employer_profile_default) }
     start_on { (TimeKeeper.date_of_record).next_month.beginning_of_month }
     end_on { start_on + 1.year - 1.day }
     open_enrollment_start_on { (start_on - 32).beginning_of_month }
@@ -32,7 +32,7 @@ FactoryBot.define do
   end
 
   factory :future_plan_year, class: PlanYear do
-    employer_profile
+    employer_profile { create(:employer_profile_default) }
     start_on { (TimeKeeper.date_of_record + 2.months).beginning_of_month }
     end_on { start_on + 1.year - 1.day }
     open_enrollment_start_on { (start_on - 32).beginning_of_month + Settings.aca.shop_market.initial_application.earliest_start_prior_to_effective_on.day_of_month.days}
@@ -42,7 +42,7 @@ FactoryBot.define do
   end
 
   factory :renewing_plan_year, class: PlanYear do
-    employer_profile
+    employer_profile { create(:employer_profile_default) }
     start_on { (TimeKeeper.date_of_record).next_month.beginning_of_month }
     end_on { start_on + 1.year - 1.day }
     open_enrollment_start_on { (start_on - 32).beginning_of_month + Settings.aca.shop_market.initial_application.earliest_start_prior_to_effective_on.day_of_month.days}
@@ -52,7 +52,7 @@ FactoryBot.define do
   end
 
   factory :plan_year_not_started, class: PlanYear do
-    employer_profile
+    employer_profile { create(:employer_profile_default) }
     start_on { (TimeKeeper.date_of_record - Settings.aca.shop_market.initial_application.earliest_start_prior_to_effective_on.months.months).beginning_of_month }
     end_on { start_on + 1.year - 1.day }
     open_enrollment_start_on { (start_on - 1.month).beginning_of_month }
@@ -68,7 +68,7 @@ FactoryBot.define do
       with_dental false
     end
 
-    employer_profile
+    employer_profile { create(:employer_profile_default) }
     start_on TimeKeeper.date_of_record.beginning_of_month
     end_on { start_on + 1.year - 1.day }
     open_enrollment_start_on { start_on + Settings.aca.shop_market.initial_application.earliest_start_prior_to_effective_on.months.months + Settings.aca.shop_market.initial_application.earliest_start_prior_to_effective_on.day_of_month.days }

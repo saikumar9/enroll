@@ -15,8 +15,8 @@ RSpec.describe Factories::PlanYearRenewalFactory, type: :model, dbclean: :after_
     active_plan_year = FactoryBot.create :plan_year, employer_profile: employer_profile, aasm_state: :active, :start_on => start_on, :end_on => end_on,
     :open_enrollment_start_on => open_enrollment_start_on, :open_enrollment_end_on => open_enrollment_end_on, fte_count: 5
     benefit_group = FactoryBot.create :benefit_group, :with_valid_dental, plan_year: active_plan_year
-    owner = FactoryBot.create :census_employee, :owner, employer_profile: employer_profile
-    2.times{|i| FactoryBot.create :census_employee, employer_profile: employer_profile, dob: TimeKeeper.date_of_record - 30.years + i.days }
+    owner = FactoryBot.create :census_employee_with_benefit_group, :owner, employer_profile: employer_profile
+    2.times{|i| FactoryBot.create :census_employee_with_benefit_group, employer_profile: employer_profile, dob: TimeKeeper.date_of_record - 30.years + i.days }
 
     employer_profile.census_employees.each do |ce|
       ce.add_benefit_group_assignment benefit_group, benefit_group.start_on

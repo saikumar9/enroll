@@ -458,7 +458,7 @@ RSpec.describe SpecialEnrollmentPeriod, :type => :model do
 
   context "is reporting a qle before the employer plan start_date and having an expired plan year" do
     let(:organization) { FactoryBot.create(:organization_with_plans, :with_expired_and_active_plan_years)}
-    let(:census_employee) { FactoryBot.create :census_employee, employer_profile: organization.employer_profile, dob: TimeKeeper.date_of_record - 30.years, first_name: person.first_name, last_name: person.last_name }
+    let(:census_employee) { FactoryBot.create :census_employee_with_benefit_group, employer_profile: organization.employer_profile, dob: TimeKeeper.date_of_record - 30.years, first_name: person.first_name, last_name: person.last_name }
     let(:employee_role) { FactoryBot.create(:employee_role, person: person, census_employee: census_employee, employer_profile: organization.employer_profile)}
     let(:person) { FactoryBot.create(:person)}
     let(:family) { FactoryBot.create(:family, :with_primary_family_member, person: person)}

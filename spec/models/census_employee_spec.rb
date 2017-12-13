@@ -1514,7 +1514,7 @@ RSpec.describe CensusEmployee, type: :model, dbclean: :after_each do
 
     let(:organization) { FactoryBot.create(:organization_with_plans, :with_active_and_renewal_plan_years)}
     let(:census_employee) {
-      ce = FactoryBot.create :census_employee, employer_profile: organization.employer_profile, dob: TimeKeeper.date_of_record - 30.years
+      ce = FactoryBot.create :census_employee_with_benefit_group, employer_profile: organization.employer_profile, dob: TimeKeeper.date_of_record - 30.years
       person = FactoryBot.create(:person, last_name: ce.last_name, first_name: ce.first_name)
       employee_role = FactoryBot.create(:employee_role, person: person, census_employee: ce, employer_profile: organization.employer_profile)
       ce.update_attributes({employee_role: employee_role})

@@ -13,7 +13,7 @@ RSpec.describe Factories::EmploymentRelationshipFactory, type: :model, dbclean: 
     :open_enrollment_start_on => Date.new(calendar_year, 4, 1), :open_enrollment_end_on => Date.new(calendar_year, 4, 10), fte_count: 5
     benefit_group = FactoryBot.create :benefit_group, plan_year: active_plan_year, effective_on_kind: "date_of_hire"
     renewing_benefit_group = FactoryBot.create :benefit_group, plan_year: renewing_plan_year
-    census_employee = FactoryBot.create :census_employee, employer_profile: employer_profile, dob: TimeKeeper.date_of_record - 30.years, hired_on: Date.new(calendar_year, 3, 12)
+    census_employee = FactoryBot.create :census_employee_with_benefit_group, employer_profile: employer_profile, dob: TimeKeeper.date_of_record - 30.years, hired_on: Date.new(calendar_year, 3, 12)
 
     employer_profile.census_employees.each do |ce|
       ce.add_benefit_group_assignment benefit_group, benefit_group.start_on

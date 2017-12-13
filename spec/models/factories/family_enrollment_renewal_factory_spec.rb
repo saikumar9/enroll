@@ -24,8 +24,8 @@ RSpec.describe Factories::FamilyEnrollmentRenewalFactory, :type => :model do
     let(:employer_profile) { organization.employer_profile }
 
     let!(:build_plan_years_and_employees) {
-      owner = FactoryBot.create :census_employee, :owner, employer_profile: employer_profile
-      employee = FactoryBot.create :census_employee, employer_profile: employer_profile
+      owner = FactoryBot.create :census_employee_with_benefit_group, :owner, employer_profile: employer_profile
+      employee = FactoryBot.create :census_employee_with_benefit_group, employer_profile: employer_profile
 
       benefit_group = FactoryBot.create :benefit_group, plan_year: active_plan_year, reference_plan_id: plan.id
       employee.add_benefit_group_assignment benefit_group, benefit_group.start_on

@@ -2401,7 +2401,7 @@ describe PlanYear, '.update_employee_benefit_packages', type: :model, dbclean: :
   let!(:employer_profile) { create(:employer_with_planyear, plan_year_state: 'active', start_on: start_on)}
   let(:benefit_group) { employer_profile.published_plan_year.benefit_groups.first}
   let!(:census_employee){
-    employee = FactoryBot.create :census_employee, employer_profile: employer_profile
+    employee = FactoryBot.create :census_employee_with_benefit_group, employer_profile: employer_profile
     employee.add_benefit_group_assignment benefit_group, benefit_group.start_on
     employee
   }

@@ -1024,7 +1024,7 @@ describe EmployerProfile, "For General Agency", dbclean: :after_each do
 
   describe "is_attestation_eligible? check before publish plan" do
     context "is_attestation_eligible" do
-      let(:employer_profile) { FactoryBot.create(:employer_profile_default_no_attestation) }
+      let(:employer_profile) { FactoryBot.create(:employer_profile_no_attestation) }
       it "should return false" do
         allow(employer_profile).to receive(:enforce_employer_attestation?).and_return(true)
 
@@ -1097,8 +1097,8 @@ describe EmployerProfile, ".terminate", dbclean: :after_each do
   let(:benefit_group) { employer_profile.published_plan_year.benefit_groups.first}
 
   let!(:census_employees){
-    FactoryBot.create :census_employee, :owner, employer_profile: employer_profile
-    employee = FactoryBot.create :census_employee, employer_profile: employer_profile
+    FactoryBot.create :census_employee_with_benefit_group, :owner, employer_profile: employer_profile
+    employee = FactoryBot.create :census_employee_with_benefit_group, employer_profile: employer_profile
     employee.add_benefit_group_assignment benefit_group, benefit_group.start_on
   }
 

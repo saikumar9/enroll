@@ -17,7 +17,7 @@ describe ChangeStateForPassiveEnrollment, dbclean: :after_each do
       renewing_plan_year = FactoryBot.create :plan_year, employer_profile: employer_profile, aasm_state: :renewing_enrolled, :start_on => Date.new(calendar_year, 4, 1), :end_on => Date.new(calendar_year+1, 3, 31),
       :open_enrollment_start_on => Date.new(calendar_year, 3, 1), :open_enrollment_end_on => Date.new(calendar_year, 3, 10), fte_count: 5
       renewing_benefit_group = FactoryBot.create :benefit_group, :with_valid_dental, plan_year: renewing_plan_year
-      census_employee = FactoryBot.create :census_employee, employer_profile: employer_profile, dob: TimeKeeper.date_of_record - 30.years
+      census_employee = FactoryBot.create :census_employee_with_benefit_group, employer_profile: employer_profile, dob: TimeKeeper.date_of_record - 30.years
       employer_profile.census_employees.each do |census_employee|
         census_employee.add_renew_benefit_group_assignment(renewing_benefit_group)
         person = FactoryBot.create(:person, last_name: census_employee.last_name, first_name: census_employee.first_name)

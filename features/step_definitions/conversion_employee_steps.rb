@@ -7,7 +7,7 @@ Given(/^Multiple Conversion Employers for (.*) exist with active and renewing pl
   secondary_employer_profile = FactoryBot.create :employer_profile, organization: secondary_organization,
                                                            profile_source:'conversion',
                                                            registered_on: TimeKeeper.date_of_record
-  secondary_employee = FactoryBot.create :census_employee, employer_profile: secondary_employer_profile,
+  secondary_employee = FactoryBot.create :census_employee_with_benefit_group, employer_profile: secondary_employer_profile,
                                                             first_name: person[:first_name],
                                                             last_name: person[:last_name],
                                                             ssn: person[:ssn],

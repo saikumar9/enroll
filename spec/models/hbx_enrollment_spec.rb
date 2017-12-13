@@ -755,7 +755,7 @@ describe HbxProfile, "class methods", type: :model do
     let(:household) {FactoryBot.create(:household, family: family)}
     let(:qle_kind) { FactoryBot.create(:qualifying_life_event_kind, :effective_on_event_date) }
     let(:organization) { FactoryBot.create(:organization_with_plans, :with_expired_and_active_plan_years)}
-    let(:census_employee) { FactoryBot.create :census_employee, employer_profile: organization.employer_profile, dob: TimeKeeper.date_of_record - 30.years, first_name: person.first_name, last_name: person.last_name }
+    let(:census_employee) { FactoryBot.create :census_employee_with_benefit_group, employer_profile: organization.employer_profile, dob: TimeKeeper.date_of_record - 30.years, first_name: person.first_name, last_name: person.last_name }
     let(:employee_role) { FactoryBot.create(:employee_role, person: person, census_employee: census_employee, employer_profile: organization.employer_profile)}
     let(:person) { FactoryBot.create(:person)}
     let(:family) { FactoryBot.create(:family, :with_primary_family_member, person: person)}
@@ -997,7 +997,7 @@ describe HbxEnrollment, dbclean: :after_each do
 
   let(:hired_on) { middle_of_prev_year }
   let(:created_at) { middle_of_prev_year }
-  let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group_with_active_assignment, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: created_at, updated_at: created_at, hired_on: hired_on, benefit_group: plan_year.benefit_groups.first) }
+  let(:census_employee) { FactoryBot.create(:census_employee_with_active_assignment, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: created_at, updated_at: created_at, hired_on: hired_on, benefit_group: plan_year.benefit_groups.first) }
 
   let(:employee_role) {
       FactoryBot.create(:employee_role, employer_profile: employer_profile, hired_on: census_employee.hired_on, census_employee_id: census_employee.id)
@@ -1146,7 +1146,7 @@ describe HbxEnrollment, dbclean: :after_each do
     let(:created_at) { middle_of_prev_year }
     let(:updated_at) { middle_of_prev_year }
 
-    let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group_with_active_assignment, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: created_at, updated_at: updated_at, hired_on: hired_on, benefit_group: plan_year.benefit_groups.first) }
+    let(:census_employee) { FactoryBot.create(:census_employee_with_active_assignment, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: created_at, updated_at: updated_at, hired_on: hired_on, benefit_group: plan_year.benefit_groups.first) }
 
     let(:employee_role) {
       FactoryBot.create(:employee_role, employer_profile: employer_profile, hired_on: census_employee.hired_on, census_employee_id: census_employee.id)
@@ -2130,8 +2130,8 @@ describe HbxEnrollment, 'Updating Existing Coverage', type: :model, dbclean: :af
   }
 
   let!(:census_employees){
-    FactoryBot.create :census_employee, :owner, employer_profile: employer_profile
-    employee = FactoryBot.create :census_employee, employer_profile: employer_profile
+    FactoryBot.create :census_employee_with_benefit_group, :owner, employer_profile: employer_profile
+    employee = FactoryBot.create :census_employee_with_benefit_group, employer_profile: employer_profile
     employee.add_benefit_group_assignment current_benefit_group, current_benefit_group.start_on
   }
 
@@ -2481,8 +2481,8 @@ describe HbxEnrollment, '.build_plan_premium', type: :model, dbclean: :after_all
   let(:benefit_group) { employer_profile.published_plan_year.benefit_groups.first}
 
   let!(:census_employees){
-    FactoryBot.create :census_employee, :owner, employer_profile: employer_profile
-    employee = FactoryBot.create :census_employee, employer_profile: employer_profile
+    FactoryBot.create :census_employee_with_benefit_group, :owner, employer_profile: employer_profile
+    employee = FactoryBot.create :census_employee_with_benefit_group, employer_profile: employer_profile
     employee.add_benefit_group_assignment benefit_group, benefit_group.start_on
   }
 

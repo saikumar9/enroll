@@ -20,9 +20,9 @@ RSpec.describe Factories::FamilyEnrollmentCloneFactory, :type => :model do
   let(:coverage_terminated_on) { TimeKeeper.date_of_record.prev_month.end_of_month }
 
   let!(:build_plan_years_and_employees) {
-    owner = FactoryBot.create :census_employee, :owner, employer_profile: employer_profile
+    owner = FactoryBot.create :census_employee_with_benefit_group, :owner, employer_profile: employer_profile
     employee_role = FactoryBot.create :employee_role, employer_profile: employer_profile
-    employee = FactoryBot.create :census_employee, employer_profile: employer_profile
+    employee = FactoryBot.create :census_employee_with_benefit_group, employer_profile: employer_profile
     employee.update(aasm_state: 'cobra_linked', cobra_begin_date: coverage_terminated_on.next_day, coverage_terminated_on: coverage_terminated_on, employee_role_id: employee_role.id)
     employee.add_benefit_group_assignment benefit_group, benefit_group.start_on
   }

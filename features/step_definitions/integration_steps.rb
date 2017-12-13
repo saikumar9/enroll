@@ -272,8 +272,8 @@ Given(/^Employer for (.*) exists with a published health plan year$/) do |named_
   FactoryBot.create(:rating_area, zip_code: "01002", county_name: "Franklin", rating_area: Settings.aca.rating_areas.first)
   organization = FactoryBot.create :organization, legal_name: person[:legal_name], dba: person[:dba], fein: person[:fein]
   employer_profile = FactoryBot.create :employer_profile, organization: organization
-  owner = FactoryBot.create :census_employee, :owner, employer_profile: employer_profile
-  employee = FactoryBot.create :census_employee, employer_profile: employer_profile,
+  owner = FactoryBot.create :census_employee_with_benefit_group, :owner, employer_profile: employer_profile
+  employee = FactoryBot.create :census_employee_with_benefit_group, employer_profile: employer_profile,
     first_name: person[:first_name],
     last_name: person[:last_name],
     ssn: person[:ssn],
@@ -301,8 +301,8 @@ Given(/^Employer for (.*) exists with a published plan year offering health and 
   FactoryBot.create(:rating_area, zip_code: "01002", county_name: "Franklin", rating_area: Settings.aca.rating_areas.first)
   organization = FactoryBot.create :organization, legal_name: person[:legal_name], dba: person[:dba], fein: person[:fein]
   employer_profile = FactoryBot.create :employer_profile, organization: organization
-  owner = FactoryBot.create :census_employee, :owner, employer_profile: employer_profile
-  employee = FactoryBot.create :census_employee, employer_profile: employer_profile,
+  owner = FactoryBot.create :census_employee_with_benefit_group, :owner, employer_profile: employer_profile
+  employee = FactoryBot.create :census_employee_with_benefit_group, employer_profile: employer_profile,
     first_name: person[:first_name],
     last_name: person[:last_name],
     ssn: person[:ssn],
@@ -330,8 +330,8 @@ Given(/(.*) Employer for (.*) exists with active and renewing plan year/) do |ki
   FactoryBot.create(:rating_area, zip_code: "01002", county_name: "Franklin", rating_area: Settings.aca.rating_areas.first)
   organization = FactoryBot.create :organization, legal_name: person[:legal_name], dba: person[:dba], fein: person[:fein]
   employer_profile = FactoryBot.create :employer_profile, organization: organization, profile_source: (kind.downcase == 'conversion' ? kind.downcase : 'self_serve'), registered_on: TimeKeeper.date_of_record
-  owner = FactoryBot.create :census_employee, :owner, employer_profile: employer_profile
-  employee = FactoryBot.create :census_employee, employer_profile: employer_profile,
+  owner = FactoryBot.create :census_employee_with_benefit_group, :owner, employer_profile: employer_profile
+  employee = FactoryBot.create :census_employee_with_benefit_group, employer_profile: employer_profile,
     first_name: person[:first_name],
     last_name: person[:last_name],
     ssn: person[:ssn],
@@ -372,8 +372,8 @@ Given(/(.*) Employer for (.*) exists with active and expired plan year/) do |kin
   FactoryBot.create(:rating_area, zip_code: "01002", county_name: "Franklin", rating_area: Settings.aca.rating_areas.first)
   organization = FactoryBot.create :organization_with_plans, :with_expired_and_active_plan_years, legal_name: person[:legal_name], dba: person[:dba], fein: person[:fein]
   organization.employer_profile.update_attributes(profile_source: (kind.downcase == 'conversion' ? kind.downcase : 'self_serve'), registered_on: TimeKeeper.date_of_record)
-  owner = FactoryBot.create :census_employee, :owner, employer_profile: organization.employer_profile
-  employee = FactoryBot.create :census_employee, employer_profile: organization.employer_profile,
+  owner = FactoryBot.create :census_employee_with_benefit_group, :owner, employer_profile: organization.employer_profile
+  employee = FactoryBot.create :census_employee_with_benefit_group, employer_profile: organization.employer_profile,
     first_name: person[:first_name],
     last_name: person[:last_name],
     ssn: person[:ssn],
@@ -394,8 +394,8 @@ Given(/(.*) Employer for (.*) exists with active and renewing enrolling plan yea
   FactoryBot.create(:rating_area, zip_code: "01002", county_name: "Franklin", rating_area: Settings.aca.rating_areas.first)
   organization = FactoryBot.create :organization_with_plans, :with_active_and_renewal_plan_years, legal_name: person[:legal_name], dba: person[:dba], fein: person[:fein]
   organization.employer_profile.update_attributes(profile_source: (kind.downcase == 'conversion' ? kind.downcase : 'self_serve'), registered_on: TimeKeeper.date_of_record)
-  owner = FactoryBot.create :census_employee, :owner, employer_profile: organization.employer_profile
-  employee = FactoryBot.create :census_employee, employer_profile: organization.employer_profile,
+  owner = FactoryBot.create :census_employee_with_benefit_group, :owner, employer_profile: organization.employer_profile
+  employee = FactoryBot.create :census_employee_with_benefit_group, employer_profile: organization.employer_profile,
     first_name: person[:first_name],
     last_name: person[:last_name],
     ssn: person[:ssn],
