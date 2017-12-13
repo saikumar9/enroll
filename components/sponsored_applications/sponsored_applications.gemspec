@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency "mongoid", "~> 5.0.1"
   s.add_dependency 'aasm', '~> 4.8.0'
   s.add_dependency "mongoid_userstamp"
+
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'shoulda-matchers'

@@ -1,3 +1,5 @@
-class Sponsor
-  
+module SponsoredApplications
+  class Sponsor
+
+  end
 end

@@ -1,8 +1,10 @@
-class SponsorCensusDependent
-  include ShopModelConcerns::CensusDependentConcern
+module SponsoredApplications
+  class SponsorCensusDependent
+    include ShopModelConcerns::CensusDependentConcern
 
-  def self.parent_member_class
-    'SponsorCensusMember'
+    def self.parent_member_class
+      'SponsorCensusMember'
+    end
+
   end
-
 end

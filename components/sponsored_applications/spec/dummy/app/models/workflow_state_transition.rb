@@ -1,0 +1,3 @@
+class WorkflowStateTransition
+  include CoreModelConcerns::WorkflowStateTransitionConcern
+end

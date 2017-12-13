@@ -5,7 +5,7 @@ module SponsoredApplications
     include Mongoid::Userstamp
     include AASM
 
-    field :case_id,     type: Integer, unique: true
+    #field :case_id,     type: Integer, unique: true
     field :aasm_state,  type: String, default: "open"
 
     embeds_many :workflow_state_transitions, as: :transitional
