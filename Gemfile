@@ -9,17 +9,17 @@ gem "notifier",           path: "components/notifier"
 gem "transport_profiles", path: "components/transport_profiles"
 gem 'sponsored_applications', path: 'components/sponsored_applications'
 ## Model Dependencies
-# gem 'core_model_concerns', git: 'https://github.com/health-connector/core_model_concerns'
-# gem 'location_model_concerns', git: 'https://github.com/health-connector/location_model_concerns'
-# gem 'plan_model_concerns', git: 'https://github.com/health-connector/plan_model_concerns'
-# gem 'shop_model_concerns', git: 'https://github.com/health-connector/shop_model_concerns'
-# gem 'broker_model_concerns', git: 'https://github.com/health-connector/broker_model_concerns'
+gem 'core_model_concerns', git: 'https://github.com/health-connector/core_model_concerns'
+gem 'location_model_concerns', git: 'https://github.com/health-connector/location_model_concerns'
+gem 'plan_model_concerns', git: 'https://github.com/health-connector/plan_model_concerns'
+gem 'shop_model_concerns', git: 'https://github.com/health-connector/shop_model_concerns'
+gem 'broker_model_concerns', git: 'https://github.com/health-connector/broker_model_concerns'
 # #
-gem 'core_model_concerns', path: "../core_model_concerns"
-gem 'broker_model_concerns', path: "../broker_model_concerns"
-gem 'shop_model_concerns', path: "../shop_model_concerns"
-gem 'plan_model_concerns', path: "../plan_model_concerns"
-gem 'location_model_concerns', path: "../location_model_concerns"
+# gem 'core_model_concerns', path: "../core_model_concerns"
+# gem 'broker_model_concerns', path: "../broker_model_concerns"
+# gem 'shop_model_concerns', path: "../shop_model_concerns"
+# gem 'plan_model_concerns', path: "../plan_model_concerns"
+# gem 'location_model_concerns', path: "../location_model_concerns"
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
