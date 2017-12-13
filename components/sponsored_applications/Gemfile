@@ -4,19 +4,16 @@ source 'https://rubygems.org'
 # Bundler will treat runtime dependencies like base dependencies, and
 # development dependencies will be added by default to the :development group.
 gemspec
-#
-gem "config", '~> 1.0.0'
-gem 'symmetric-encryption', '~> 3.6.0'
-gem 'forgery'
-# gem 'core_model_concerns', git: 'https://github.com/health-connector/core_model_concerns'
-# gem 'broker_model_concerns', git: 'https://github.com/health-connector/broker_model_concerns'
-# gem 'shop_model_concerns', git: 'https://github.com/health-connector/shop_model_concerns'
-# gem 'location_model_concerns', git: 'https://github.com/health-connector/location_model_concerns'
 
-gem 'core_model_concerns', path: "~/Work/mass/core_model_concerns"
-gem 'broker_model_concerns', path: "~/Work/mass/broker_model_concerns"
-gem 'shop_model_concerns', path: "~/Work/mass/shop_model_concerns"
-gem 'location_model_concerns', path: "~/Work/mass/location_model_concerns"
+gem 'core_model_concerns', git: 'https://github.com/health-connector/core_model_concerns'
+gem 'broker_model_concerns', git: 'https://github.com/health-connector/broker_model_concerns'
+gem 'shop_model_concerns', git: 'https://github.com/health-connector/shop_model_concerns'
+gem 'location_model_concerns', git: 'https://github.com/health-connector/location_model_concerns'
+#
+# gem 'core_model_concerns', path: "~/Work/mass/core_model_concerns"
+# gem 'broker_model_concerns', path: "~/Work/mass/broker_model_concerns"
+# gem 'shop_model_concerns', path: "~/Work/mass/shop_model_concerns"
+# gem 'location_model_concerns', path: "~/Work/mass/location_model_concerns"
 #
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or

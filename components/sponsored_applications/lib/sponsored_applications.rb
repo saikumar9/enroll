@@ -3,6 +3,8 @@ require "sponsored_applications/engine"
 require "mongoid"
 require "mongoid_userstamp"
 require "aasm"
+require "config"
+require "symmetric-encryption"
 
 module SponsoredApplications
   class << self

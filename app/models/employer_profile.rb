@@ -942,10 +942,6 @@ class EmployerProfile
     end
   end
 
-  def build_nested_models
-    build_inbox if inbox.nil?
-  end
-
   def save_associated_nested_models
   end
 
