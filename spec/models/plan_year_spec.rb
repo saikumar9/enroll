@@ -6,7 +6,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
   it { should validate_presence_of :open_enrollment_start_on }
   it { should validate_presence_of :open_enrollment_end_on }
 
-  let!(:employer_profile)               { FactoryBot.create(:employer_profile) }
+  let!(:employer_profile)               { FactoryBot.create(:employer_profile_default) }
   let!(:rating_area)                    { RatingArea.first || FactoryBot.create(:rating_area)  }
   let(:valid_plan_year_start_on)        { TimeKeeper.date_of_record.end_of_month + 1.day + 1.month }
   let(:valid_plan_year_end_on)          { valid_plan_year_start_on + 1.year - 1.day }
@@ -332,7 +332,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
 
   context ".publish" do
 
-    let(:employer_profile) { FactoryBot.create(:employer_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
     let(:calendar_year) { TimeKeeper.date_of_record.year }
     let(:plan_year_start_on) { Date.new(calendar_year, 6, 1) }
     let(:open_enrollment_start_on) { Date.new(calendar_year, 4, 1) }
@@ -469,13 +469,13 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
   end
 
   context 'should return correct benefit group assignments for an employee' do
-    let!(:employer_profile) { FactoryBot.create(:employer_profile) }
+    let!(:employer_profile) { FactoryBot.create(:employer_profile_default) }
     let(:plan_year_start_on) { TimeKeeper.date_of_record.end_of_month + 1.day }
     let(:plan_year_end_on) { TimeKeeper.date_of_record.end_of_month + 1.year }
     let(:open_enrollment_start_on) { TimeKeeper.date_of_record.beginning_of_month }
     let(:open_enrollment_end_on) { open_enrollment_start_on + 12.days }
     let(:effective_date)         { plan_year_start_on }
-    let!(:census_employee) { FactoryBot.create(:census_employee,
+    let!(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group,
                                                   employer_profile: employer_profile
                             ) }
     let!(:plan_year)                     { py = FactoryBot.create(:plan_year,
@@ -555,7 +555,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
       end
 
       context "and at least one employee is present on the roster sans assigned benefit group" do
-        let!(:census_employee_no_benefit_group)   { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+        let!(:census_employee_no_benefit_group)   { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
 
         it "census employee has no benefit group assignment and employer profile is the same as plan year's" do
           expect(census_employee_no_benefit_group.benefit_group_assignments).to eq []
@@ -1115,7 +1115,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
 
           context "and enrollment non-owner participation minimum not met" do
             let(:invalid_non_owner_count) { Settings.aca.shop_market.non_owner_participation_count_minimum - 1 }
-            let!(:owner_census_employee) { FactoryBot.create(:census_employee, :owner, hired_on: (TimeKeeper.date_of_record - 2.years), employer_profile_id: employer_profile.id) }
+            let!(:owner_census_employee) { FactoryBot.create(:census_employee_with_benefit_group, :owner, hired_on: (TimeKeeper.date_of_record - 2.years), employer_profile_id: employer_profile.id) }
             let!(:non_owner_census_families) { FactoryBot.create_list(:census_employee, invalid_non_owner_count, hired_on: (TimeKeeper.date_of_record - 2.years), employer_profile_id: employer_profile.id) }
 
             before do
@@ -1327,7 +1327,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
                                                           start_on: coverage_effective_date,
                                                           end_on: coverage_effective_date + 1.year - 1.day,
                                                           benefit_groups: [benefit_group]) }
-    let!(:employer_profile)         { FactoryBot.create(:employer_profile, plan_years: [plan_year]) }
+    let!(:employer_profile)         { FactoryBot.create(:employer_profile_default, plan_years: [plan_year]) }
 
 
     before do
@@ -1665,7 +1665,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
   end
 
   context "employee_participation_percent" do
-    let(:employer_profile) {FactoryBot.create(:employer_profile)}
+    let(:employer_profile) {FactoryBot.create(:employer_profile_default)}
     let(:plan_year) {FactoryBot.create(:plan_year, employer_profile: employer_profile)}
     it "when fte_count equal 0" do
       allow(plan_year).to receive(:eligible_to_enroll_count).and_return(0)
@@ -1688,17 +1688,17 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
     let!(:blue_collar_benefit_group) { FactoryBot.create(:benefit_group, :premiums_for_2015, title: "blue collar benefit group", plan_year: plan_year) }
     let!(:employer_profile) { plan_year.employer_profile }
     let!(:white_collar_benefit_group) { FactoryBot.create(:benefit_group, :premiums_for_2015, plan_year: plan_year, title: "white collar benefit group") }
-    let!(:blue_collar_large_family_employee) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+    let!(:blue_collar_large_family_employee) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
     let!(:blue_collar_large_family_dependents) { FactoryBot.create_list(:census_dependent, 5, census_employee: blue_collar_large_family_employee) }
-    let!(:blue_collar_small_family_employee) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+    let!(:blue_collar_small_family_employee) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
     let!(:blue_collar_small_family_dependents) { FactoryBot.create_list(:census_dependent, 2, census_employee: blue_collar_small_family_employee) }
-    let!(:blue_collar_no_family_employee) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+    let!(:blue_collar_no_family_employee) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
     let!(:blue_collar_employees) { [blue_collar_large_family_employee, blue_collar_small_family_employee, blue_collar_no_family_employee]}
-    let!(:white_collar_large_family_employee) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+    let!(:white_collar_large_family_employee) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
     let!(:white_collar_large_family_dependents) { FactoryBot.create_list(:census_dependent, 5, census_employee: white_collar_large_family_employee) }
-    let!(:white_collar_small_family_employee) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+    let!(:white_collar_small_family_employee) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
     let!(:white_collar_small_family_dependents) { FactoryBot.create_list(:census_dependent, 2, census_employee: white_collar_small_family_employee) }
-    let!(:white_collar_no_family_employee) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+    let!(:white_collar_no_family_employee) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
     let!(:white_collar_employees) { [white_collar_large_family_employee, white_collar_small_family_employee, white_collar_no_family_employee]}
     #Whoever did these by hand is hardcore.
     let(:estimated_monthly_max_cost) { 2154.18 }
@@ -1738,7 +1738,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
 
   context 'published_plan_years_within_date_range scope' do
 
-    let!(:employer_profile)               { FactoryBot.create(:employer_profile) }
+    let!(:employer_profile)               { FactoryBot.create(:employer_profile_default) }
     let(:valid_fte_count)                 { 5 }
     let(:max_fte_count)                   { HbxProfile::ShopSmallMarketFteCountMaximum }
     let(:invalid_fte_count)               { HbxProfile::ShopSmallMarketFteCountMaximum + 1 }
@@ -1801,8 +1801,8 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
   end
 
   context '.hbx_enrollments_by_month' do
-    let!(:employer_profile)          { FactoryBot.create(:employer_profile) }
-    let!(:census_employee) { FactoryBot.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', hired_on: TimeKeeper.date_of_record) }
+    let!(:employer_profile)          { FactoryBot.create(:employer_profile_default) }
+    let!(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', hired_on: TimeKeeper.date_of_record) }
     let!(:person) { FactoryBot.create(:person, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789') }
 
     let!(:employee_role) {
@@ -1974,7 +1974,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
 
 
   context '.adjust_open_enrollment_date' do
-    let(:employer_profile)          { FactoryBot.create(:employer_profile) }
+    let(:employer_profile)          { FactoryBot.create(:employer_profile_default) }
     let(:calendar_year) { TimeKeeper.date_of_record.year }
     let(:plan_year_start_on) { Date.new(calendar_year, 4, 1) }
     let(:plan_year_end_on) { Date.new(calendar_year + 1, 3, 31) }
@@ -2015,7 +2015,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
     include_context 'MailSpecHelper'
 
     context 'when .is_renewal?' do
-      let(:employer_profile) { FactoryBot.create(:employer_profile) }
+      let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
       let(:calendar_year) { TimeKeeper.date_of_record.year }
       let(:plan_year_start_on) { Date.new(calendar_year, 4, 1) }
       let(:plan_year_end_on) { Date.new(calendar_year + 1, 3, 31) }
@@ -2036,7 +2036,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
       let!(:benefit_group_assignment) { FactoryBot.build(:benefit_group_assignment,
                                                             benefit_group: benefit_group) }
 
-      let!(:census_employee) { FactoryBot.create(:census_employee,
+      let!(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group,
                                                     employer_profile: employer_profile,
                                                     benefit_group_assignments: [benefit_group_assignment]
                               ) }
@@ -2101,7 +2101,7 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
 
   describe PlanYear, "Transitions from active or expired to expired migrations" do
     let(:benefit_group) { FactoryBot.build(:benefit_group) }
-    let!(:employer_profile) { FactoryBot.build(:employer_profile, profile_source: "conversion", registered_on: TimeKeeper.date_of_record)}
+    let!(:employer_profile) { FactoryBot.build(:employer_profile_default, profile_source: "conversion", registered_on: TimeKeeper.date_of_record)}
     let(:valid_plan_year_start_on)        { TimeKeeper.date_of_record - 1.year + 1.month}
     let(:valid_plan_year_end_on)          { valid_plan_year_start_on + 1.year - 1.day }
     let(:valid_open_enrollment_start_on)  { valid_plan_year_start_on.prev_month }
@@ -2180,7 +2180,7 @@ describe PlanYear, "which has the concept of export eligibility" do
     context "an initial employer publishes a valid application and begins open enrollment" do
 
       let(:benefit_group) { FactoryBot.build(:benefit_group) }
-      let!(:employer_profile) { FactoryBot.build(:employer_profile)}
+      let!(:employer_profile) { FactoryBot.build(:employer_profile_default)}
 
       let(:valid_plan_year_start_on)        { Date.new(2016, 11, 1) }
       let(:valid_plan_year_end_on)          { valid_plan_year_start_on + 1.year - 1.day }
@@ -2203,7 +2203,7 @@ describe PlanYear, "which has the concept of export eligibility" do
         py
       end
 
-      let!(:owner) { FactoryBot.create(:census_employee, :owner, hired_on: (TimeKeeper.date_of_record - 2.years), employer_profile_id: employer_profile.id) }
+      let!(:owner) { FactoryBot.create(:census_employee_with_benefit_group, :owner, hired_on: (TimeKeeper.date_of_record - 2.years), employer_profile_id: employer_profile.id) }
       let!(:non_owner) { FactoryBot.create_list(:census_employee, 2, hired_on: (TimeKeeper.date_of_record - 2.years), employer_profile_id: employer_profile.id) }
 
       before do
@@ -2298,7 +2298,7 @@ describe PlanYear, "plan year schedule changes" do
   context "initial employer plan year" do
 
     let(:benefit_group) { FactoryBot.build(:benefit_group) }
-    let!(:employer_profile) { FactoryBot.build(:employer_profile)}
+    let!(:employer_profile) { FactoryBot.build(:employer_profile_default)}
 
     let(:valid_plan_year_start_on)        { Date.new(2016, 11, 1) }
     let(:valid_plan_year_end_on)          { valid_plan_year_start_on + 1.year - 1.day }
@@ -2327,7 +2327,7 @@ describe PlanYear, "plan year schedule changes" do
 
   context "renewing employer plan year" do
 
-    let!(:employer_profile) { FactoryBot.build(:employer_profile)}
+    let!(:employer_profile) { FactoryBot.build(:employer_profile_default)}
 
     let(:plan_year_start_on) { Date.new(2016, 11, 1) }
     let(:plan_year_end_on) { plan_year_start_on + 1.year - 1.day }

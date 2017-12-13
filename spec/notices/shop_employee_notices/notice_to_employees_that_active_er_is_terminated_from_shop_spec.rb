@@ -14,7 +14,7 @@ RSpec.describe ShopEmployeeNotices::NoticeToEmployeesThatActiveErIsTerminatedFro
   let!(:active_benefit_group) { FactoryBot.create(:benefit_group, plan_year: plan_year, title: "Benefits #{plan_year.start_on.year}") }
   let(:benefit_group_assignment)  { FactoryBot.create(:benefit_group_assignment, benefit_group: active_benefit_group, census_employee: census_employee) }
   let(:employee_role) {FactoryBot.create(:employee_role, person: person, employer_profile: employer_profile)}
-  let(:census_employee) { FactoryBot.create(:census_employee, employee_role_id: employee_role.id, employer_profile_id: employer_profile.id) }
+  let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employee_role_id: employee_role.id, employer_profile_id: employer_profile.id) }
   let(:application_event){ double("ApplicationEventKind",{
                             :name =>"Notice to EEs when  ER’s equest termination in advance",
                             :notice_template => 'notices/shop_employee_notices/notice_to_employees_that_active_er_is_terminated_from_shop',

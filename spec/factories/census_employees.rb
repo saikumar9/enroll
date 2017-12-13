@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :census_employee do
+  factory :census_employee_with_benefit_group, class: CensusEmployee do
     first_name "Eddie"
     sequence(:last_name) {|n| "Vedder#{n}" }
     dob "1964-10-23".to_date
@@ -71,7 +71,7 @@ FactoryBot.define do
 
     factory :census_employee_with_active_and_renewal_assignment do
       after(:create) do |census_employee, evaluator|
-        create(:census_employee_with_active_assignment)
+        create(:census_employee_with_benefit_group_with_active_assignment)
         create(:benefit_group_assignment, benefit_group: evaluator.renewal_benefit_group, census_employee: census_employee, is_active: false)
       end
     end

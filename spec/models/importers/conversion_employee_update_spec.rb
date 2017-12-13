@@ -19,7 +19,7 @@ describe Importers::ConversionEmployeeUpdate, :dbclean => :after_each do
     context "and the sponsor employer is found" do
 
 
-      let(:employer_profile) { FactoryBot.create(:employer_profile, profile_source: 'conversion') }
+      let(:employer_profile) { FactoryBot.create(:employer_profile_default, profile_source: 'conversion') }
 
       let(:carrier_profile) { FactoryBot.create(:carrier_profile) }
 
@@ -60,7 +60,7 @@ describe Importers::ConversionEmployeeUpdate, :dbclean => :after_each do
       let(:benefit_group_assignment) { FactoryBot.create(:benefit_group_assignment, census_employee: census_employee, benefit_group: plan_year.benefit_groups.first) }
 
       let(:census_employee) {
-        FactoryBot.create(:census_employee, :employer_profile => employer_profile)
+        FactoryBot.create(:census_employee_with_benefit_group, :employer_profile => employer_profile)
       }
 
       context "and a pre-existing employee record is found" do

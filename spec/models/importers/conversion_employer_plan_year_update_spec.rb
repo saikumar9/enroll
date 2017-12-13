@@ -5,7 +5,7 @@
 #   describe ".save" do
 #     context 'when employer already imported and renewing plan year not published' do
 
-#       let!(:employer_profile)      { FactoryBot.create(:employer_profile, profile_source: 'conversion') }
+#       let!(:employer_profile)      { FactoryBot.create(:employer_profile_default, profile_source: 'conversion') }
 
 #       let!(:carrier_profile) { FactoryBot.create(:carrier_profile) }
 

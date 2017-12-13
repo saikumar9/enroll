@@ -6,7 +6,7 @@ RSpec.describe Insured::FamilyMembersController do
   let(:test_family) { FactoryBot.build(:family, :with_primary_family_member) }
   let(:person) { test_family.primary_family_member.person }
   let(:published_plan_year)  { FactoryBot.build(:plan_year, aasm_state: :published)}
-  let(:employer_profile) { FactoryBot.create(:employer_profile) }
+  let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
   let(:employee_role) { FactoryBot.create(:employee_role, employer_profile: employer_profile, person: person ) }
   let(:employee_role_id) { employee_role.id }
 

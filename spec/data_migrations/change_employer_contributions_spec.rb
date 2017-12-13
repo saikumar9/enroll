@@ -16,7 +16,7 @@ describe ChangeEmployerContributions, dbclean: :after_each do
 
     let(:benefit_group)     { FactoryBot.create(:benefit_group, plan_year: plan_year)}
     let(:plan_year)         { FactoryBot.create(:plan_year, employer_profile: employer_profile) }
-    let(:employer_profile)  { FactoryBot.create(:employer_profile) }
+    let(:employer_profile)  { FactoryBot.create(:employer_profile_default) }
 
     before(:each) do
       allow(ENV).to receive(:[]).with("fein").and_return(employer_profile.parent.fein)

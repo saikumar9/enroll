@@ -10,8 +10,8 @@ describe "shared/_my_portal_links.html.haml" do
     let(:person) { FactoryBot.create(:person, :with_employee_role)}
 
     it "should have one portal link" do
-      all_er_profile = FactoryBot.create(:employer_profile)
-      all_census_ee = FactoryBot.create(:census_employee, employer_profile: all_er_profile)
+      all_er_profile = FactoryBot.create(:employer_profile_default)
+      all_census_ee = FactoryBot.create(:census_employee_with_benefit_group, employer_profile: all_er_profile)
       person.employee_roles.first.census_employee = all_census_ee
       person.employee_roles.first.save!
       sign_in(user)
@@ -27,8 +27,8 @@ describe "shared/_my_portal_links.html.haml" do
     let(:person) { FactoryBot.create(:person, :with_employee_role, :with_employer_staff_role)}
 
     it "should have one portal links and popover" do
-      all_er_profile = FactoryBot.create(:employer_profile)
-      all_census_ee = FactoryBot.create(:census_employee, employer_profile: all_er_profile)
+      all_er_profile = FactoryBot.create(:employer_profile_default)
+      all_census_ee = FactoryBot.create(:census_employee_with_benefit_group, employer_profile: all_er_profile)
       person.employee_roles.first.census_employee = all_census_ee
       person.employee_roles.first.save!
       sign_in(user)
@@ -46,9 +46,9 @@ describe "shared/_my_portal_links.html.haml" do
     let(:person) { FactoryBot.create(:person, :with_employee_role, :with_employer_staff_role)}
 
     it "should have one portal links and popover" do
-      all_er_profile = FactoryBot.create(:employer_profile)
+      all_er_profile = FactoryBot.create(:employer_profile_default)
       all_er_profile.organization.update_attributes(legal_name: 'Second Company') # not always Turner
-      all_census_ee = FactoryBot.create(:census_employee, employer_profile: all_er_profile)
+      all_census_ee = FactoryBot.create(:census_employee_with_benefit_group, employer_profile: all_er_profile)
       EmployerStaffRole.create(person:person, employer_profile_id: all_er_profile.id)
       person.employee_roles.first.census_employee = all_census_ee
       person.employee_roles.first.save!

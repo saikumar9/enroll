@@ -13,7 +13,7 @@ describe EmployeeRole do
     let!(:organization) { FactoryBot.create(:organization) }
 
     context "with an employer profile" do
-      let!(:employer_profile) { FactoryBot.create(:employer_profile, organization: organization) }
+      let!(:employer_profile) { FactoryBot.create(:employer_profile_default, organization: organization) }
 
       context "and two draft plan years exist" do
         let!(:plan_year_a) { FactoryBot.create(:plan_year_not_started, employer_profile: employer_profile) }
@@ -28,7 +28,7 @@ describe EmployeeRole do
           end
 
           context "and we have an employee on the roster" do
-            let!(:census_employee) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+            let!(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
 
             context "and a new employee role is created" do
               let(:employee_role) do

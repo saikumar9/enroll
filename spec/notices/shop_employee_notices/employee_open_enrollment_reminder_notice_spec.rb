@@ -4,7 +4,7 @@ RSpec.describe ShopEmployeeNotices::EmployeeOpenEnrollmentReminderNotice, :dbcle
   let!(:employer_profile){ create :employer_profile, :aasm_state => "active"}
   let!(:person){ create :person}
   let(:employee_role) {FactoryBot.create(:employee_role, person: person, employer_profile: employer_profile)}
-  let(:census_employee) { FactoryBot.create(:census_employee, employee_role_id: employee_role.id, employer_profile_id: employer_profile.id) }
+  let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employee_role_id: employee_role.id, employer_profile_id: employer_profile.id) }
   let(:start_on) { TimeKeeper.date_of_record.beginning_of_month + 2.month - 1.year}
   let(:application_event){ double("ApplicationEventKind",{
                             :name =>'Renewal Open Enrollment available for Employee',

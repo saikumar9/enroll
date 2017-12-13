@@ -34,7 +34,7 @@ let(:employer_profile) { double(id: "valid_id") }
   describe "notify_contact_changed" do
 
     context "notify update" do
-      let(:employer_profile) { FactoryBot.create(:employer_profile) }
+      let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
       let(:employer_staff_role) {FactoryBot.create(:employer_staff_role, person: person, employer_profile_id: employer_profile.id)}
 
       it "notify_contact_changed" do

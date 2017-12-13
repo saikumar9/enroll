@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ShopEmployerNotices::BrokerHiredConfirmationNotice do
   before(:all) do
-    @employer_profile = FactoryBot.create(:employer_profile)
+    @employer_profile = FactoryBot.create(:employer_profile_default)
     @broker_role =  FactoryBot.create(:broker_role, aasm_state: 'active')
     @organization = FactoryBot.create(:broker_agency, legal_name: "agencyone")
     @organization.broker_agency_profile.update_attributes(primary_broker_role: @broker_role)

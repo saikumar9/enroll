@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Employers::BrokerAgencyController do
 
   before(:all) do
-    @employer_profile = FactoryBot.create(:employer_profile)
+    @employer_profile = FactoryBot.create(:employer_profile_default)
 
     @broker_role =  FactoryBot.create(:broker_role, aasm_state: 'active')
     @org1 = FactoryBot.create(:broker_agency, legal_name: "agencyone")

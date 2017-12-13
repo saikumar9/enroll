@@ -255,7 +255,7 @@ RSpec.describe "employers/employer_profiles/my_account/_home_tab.html.erb" do
   end
 
   context "employer profile without current plan year" do
-    let(:employer_profile){ FactoryBot.create(:employer_profile) }
+    let(:employer_profile){ FactoryBot.create(:employer_profile_default) }
 
     before :each do
       allow(view).to receive(:pundit_class).and_return(double("EmployerProfilePolicy", updateable?: true))

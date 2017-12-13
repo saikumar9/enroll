@@ -46,7 +46,7 @@ RSpec.describe Exchanges::HbxProfilesController, dbclean: :after_each do
     let(:person) { double("person")}
     let(:hbx_profile) { double("HbxProfile") }
     let(:hbx_staff_role) { double("hbx_staff_role", permission: FactoryBot.create(:permission))}
-    let(:employer_profile){ FactoryBot.create(:employer_profile, aasm_state: "enrolling") }
+    let(:employer_profile){ FactoryBot.create(:employer_profile_default, aasm_state: "enrolling") }
 
     before(:each) do
       allow(user).to receive(:has_role?).with(:hbx_staff).and_return true

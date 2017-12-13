@@ -7,7 +7,7 @@ describe BenefitGroupAssignment, type: :model do
 
   let(:benefit_group)     { FactoryBot.create(:benefit_group)  }
   let(:employer_profile)  { benefit_group.plan_year.employer_profile }
-  let(:census_employee)   { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+  let(:census_employee)   { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
   let(:start_on)          { benefit_group.plan_year.start_on }
 
   describe ".new" do
@@ -172,7 +172,7 @@ describe BenefitGroupAssignment, type: :model do
             context "and hbx_enrollment is non-matching" do
               let(:other_benefit_group)     { FactoryBot.build(:benefit_group) }
               let(:other_plan_year)         { FactoryBot.build(:plan_year, benefit_group: benefit_group) }
-              let(:other_employer_profile)  { FactoryBot.create(:employer_profile, plan_year: plan_year) }
+              let(:other_employer_profile)  { FactoryBot.create(:employer_profile_default, plan_year: plan_year) }
               let(:other_employee_role)     { FactoryBot.create(:employee_role, employer_profile: employer_profile) }
 
               context "because it has different benefit group" do

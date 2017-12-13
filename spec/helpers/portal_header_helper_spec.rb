@@ -7,8 +7,8 @@ RSpec.describe PortalHeaderHelper, :type => :helper do
     let(:signed_in?){ true }
 
     context "has_employer_staff_role?" do
-      let(:employer_profile){ FactoryBot.build(:employer_profile) }
-      let(:employer_profile2){ FactoryBot.build(:employer_profile) }
+      let(:employer_profile){ FactoryBot.build(:employer_profile_default) }
+      let(:employer_profile2){ FactoryBot.build(:employer_profile_default) }
       let(:employer_staff_role){ FactoryBot.create(:employer_staff_role, aasm_state:'is_closed',:employer_profile_id=>employer_profile.id)}
       let(:employer_staff_role2){ FactoryBot.create(:employer_staff_role,aasm_state:'is_active',:employer_profile_id=>employer_profile2.id)}
       let(:this_person) { FactoryBot.build(:person, :employer_staff_roles => [employer_staff_role, employer_staff_role2]) }

@@ -5,7 +5,7 @@ describe AccessPolicies::EmployeeRole, :dbclean => :after_each do
   let(:user) { FactoryBot.create(:user, person: person)}
   let(:person) {FactoryBot.create(:person, :with_employee_role) }
   let(:controller) { Insured::EmployeeRolesController.new }
-  let(:another_employer) { FactoryBot.create(:employer_profile) }
+  let(:another_employer) { FactoryBot.create(:employer_profile_default) }
 
   context "user's person with id" do
     it "should be ok with the action" do

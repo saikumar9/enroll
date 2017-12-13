@@ -5,7 +5,7 @@ RSpec.describe Employers::EmployerAttestationsController do
 
   describe "GET edit" do
     let(:user) { FactoryBot.create(:user) }
-    let(:employer_profile) { FactoryBot.create(:employer_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
 
     it "should render the edit template" do
       allow(user).to receive(:has_hbx_staff_role?).and_return(true)
@@ -29,7 +29,7 @@ RSpec.describe Employers::EmployerAttestationsController do
     let(:user) { FactoryBot.create(:user) }
     let(:tempfile) { double(path: 'tmp/sample.pdf') }
     let(:file) { double(original_filename: 'sample.pdf', size: 400, tempfile: tempfile) }
-    let(:employer_profile) { FactoryBot.create(:employer_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
 
     before do 
       allow(controller).to receive(:params).and_return({id: employer_profile.id, file: file})

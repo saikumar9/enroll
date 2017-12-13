@@ -14,7 +14,7 @@ describe DisregardTerminationOfCoverageNotice, dbclean: :after_each do
 
   describe "disregard_termination_of_coverage_notice", dbclean: :after_each do
   	let!(:organization) {FactoryBot.create(:organization, fein: "261813097")}
-    let!(:employer_profile)  { FactoryBot.create(:employer_profile, organization: organization) }
+    let!(:employer_profile)  { FactoryBot.create(:employer_profile_default, organization: organization) }
     let!(:person) { FactoryBot.create(:person, hbx_id: "100239") }
 
     before do

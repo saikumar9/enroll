@@ -50,7 +50,7 @@ describe BenefitGroup, "being asked for a group size rating factor" do
 end
 
 describe BenefitGroup, "for a plan year which should estimate the group size" do
-  let(:employer_profile) { build(:employer_profile) }
+  let(:employer_profile) { build(:employer_profile_default) }
   let(:plan_year) { PlanYear.new(:start_on => Date.new(2015, 2, 1), employer_profile: employer_profile) }
 
   let(:census_employees) do
@@ -105,7 +105,7 @@ describe BenefitGroup, "being asked for a composite rating participation rate fa
   let(:enrollment_1) { instance_double(HbxEnrollment, :dental? => false) }
   let(:enrollment_2) { instance_double(HbxEnrollment, :dental? => true) }
   let(:enrollment_3) { instance_double(HbxEnrollment, :dental? => false) }
-  let(:employer_profile) { build(:employer_profile) }
+  let(:employer_profile) { build(:employer_profile_default) }
 
   let(:census_employees) do
     [

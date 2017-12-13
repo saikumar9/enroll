@@ -5,9 +5,9 @@ RSpec.describe "employers/census_employees/show.html.erb" do
   let(:family){ FactoryBot.create(:family, :with_primary_family_member) }
   let(:household){ FactoryBot.create(:household, family: family) }
   let(:person){ Person.new(first_name: "first name", last_name: "last_name", dob: 20.years.ago) }
-  let(:employer_profile) { FactoryBot.create(:employer_profile) }
+  let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
   let(:plan_year){ FactoryBot.create(:plan_year) }
-  let!(:census_employee) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+  let!(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
   let(:relationship_benefit){ RelationshipBenefit.new(relationship: "employee") }
   let(:benefit_group) {BenefitGroup.new(title: "plan name", relationship_benefits: [relationship_benefit], dental_relationship_benefits: [relationship_benefit], plan_year: plan_year )}
   let(:benefit_group_assignment) { BenefitGroupAssignment.new(benefit_group: benefit_group) }
@@ -138,7 +138,7 @@ RSpec.describe "employers/census_employees/show.html.erb" do
     end
     context "when both ee and er have no benefit group assignment" do
       #to make sure census_employee.benefit_group_assignments.last
-      let(:census_employee) { create(:census_employee, first_name: "xz", last_name: "yz") }
+      let(:census_employee) { create(:census_employee_with_benefit_group, first_name: "xz", last_name: "yz") }
       before do
         # to make sure census_employee.active_benefit_group_assignment = nil
         allow(census_employee).to receive(:active_benefit_group_assignment).and_return(nil)
@@ -152,7 +152,7 @@ RSpec.describe "employers/census_employees/show.html.erb" do
    end
 
   context 'with no email linked with census employee' do
-    let(:census_employee) { create(:census_employee, :blank_email, first_name: "xz", last_name: "yz") }
+    let(:census_employee) { create(:census_employee_with_benefit_group, :blank_email, first_name: "xz", last_name: "yz") }
     it "should create a blank email record if there was no email for census employees" do
       expect(census_employee.email).to eq nil
       render template: "employers/census_employees/show.html.erb"
@@ -162,7 +162,7 @@ RSpec.describe "employers/census_employees/show.html.erb" do
     end
 
     it "should return the existing one if email was already present" do
-      census_employee = FactoryBot.create(:census_employee)
+      census_employee = FactoryBot.create(:census_employee_with_benefit_group)
       address = census_employee.email.address
       render template: "employers/census_employees/show.html.erb"
       expect(census_employee.email.kind).to eq 'home'
@@ -277,7 +277,7 @@ RSpec.describe "employers/census_employees/show.html.erb" do
     end
 
     context "Employee status" do
-        let(:census_employee) { FactoryBot.create(:census_employee, aasm_state: "eligible", hired_on: Time.now-15.days, employer_profile: employer_profile) }
+        let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, aasm_state: "eligible", hired_on: Time.now-15.days, employer_profile: employer_profile) }
       before :each do
         census_employee.terminate_employment(TimeKeeper.date_of_record - 10.days) && census_employee.save
         census_employee.coverage_terminated_on = nil
@@ -298,7 +298,7 @@ RSpec.describe "employers/census_employees/show.html.erb" do
     end
 
     context "Hiding Address in CensusEmployee page if linked and populated" do
-      let(:census_employee) { FactoryBot.create(:census_employee, hired_on: Time.now-15.days, employer_profile: employer_profile, employer_profile_id: employer_profile.id) }
+      let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, hired_on: Time.now-15.days, employer_profile: employer_profile, employer_profile_id: employer_profile.id) }
       before :each do
         census_employee.aasm_state="employee_role_linked"
         census_employee.save!

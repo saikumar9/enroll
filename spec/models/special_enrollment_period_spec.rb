@@ -430,7 +430,7 @@ RSpec.describe SpecialEnrollmentPeriod, :type => :model do
     let(:plan_year_start_on) { Date.new(TimeKeeper.date_of_record.year, 04, 01) }
     let(:sep_effective_on) { Date.new(TimeKeeper.date_of_record.year, 02, 01) }
     let!(:published_plan_year) { FactoryBot.create(:plan_year, start_on: plan_year_start_on) }
-    let(:census_employee) { FactoryBot.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', hired_on: Date.new(TimeKeeper.date_of_record.year, 03, 14)) }
+    let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', hired_on: Date.new(TimeKeeper.date_of_record.year, 03, 14)) }
     let(:shop_family)       { FactoryBot.create(:family, :with_primary_family_member)  }
 
     let(:sep){

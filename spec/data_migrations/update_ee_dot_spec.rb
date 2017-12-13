@@ -14,8 +14,8 @@ describe UpdateEeDot, dbclean: :after_each do
 
   describe "updating termination date for an Employee" do
 
-    let(:employer_profile) { FactoryBot.create(:employer_profile)}
-    let(:census_employee) { FactoryBot.create(:census_employee, employer_profile: employer_profile)}
+    let(:employer_profile) { FactoryBot.create(:employer_profile_default)}
+    let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile)}
 
     before(:each) do
       allow(ENV).to receive(:[]).with("id").and_return(census_employee.id)

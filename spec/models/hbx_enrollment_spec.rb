@@ -7,7 +7,7 @@ describe HbxEnrollment do
     let(:blue_collar_employee_count)              { 7 }
     let(:white_collar_employee_count)             { 5 }
     let(:fte_count)                               { blue_collar_employee_count + white_collar_employee_count }
-    let(:employer_profile)                        { FactoryBot.create(:employer_profile) }
+    let(:employer_profile)                        { FactoryBot.create(:employer_profile_default) }
 
     let(:plan_year_start_on)                      { TimeKeeper.date_of_record.next_month.end_of_month + 1.day }
     let(:plan_year_end_on)                        { (plan_year_start_on + 1.year) - 1.day }
@@ -650,7 +650,7 @@ describe HbxEnrollment, dbclean: :after_all do
 
   context "#propogate_waiver", dbclean: :after_each do
     let(:family) { FactoryBot.create(:family, :with_primary_family_member)}
-    let(:census_employee) { FactoryBot.create(:census_employee)}
+    let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group)}
     let(:benefit_group_assignment) { FactoryBot.create(:benefit_group_assignment, benefit_group: benefit_group, census_employee: census_employee) }
     let(:benefit_group) { FactoryBot.create(:benefit_group)}
     let(:enrollment) { FactoryBot.create(:hbx_enrollment, :individual_unassisted, household: family.active_household)}
@@ -962,12 +962,12 @@ end
 
 describe HbxEnrollment, dbclean: :after_each do
 
-  let(:employer_profile)          { FactoryBot.create(:employer_profile) }
+  let(:employer_profile)          { FactoryBot.create(:employer_profile_default) }
 
   let(:calendar_year) { TimeKeeper.date_of_record.year }
 
   let(:middle_of_prev_year) { Date.new(calendar_year - 1, 6, 10) }
-  let(:census_employee) { FactoryBot.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: middle_of_prev_year, updated_at: middle_of_prev_year, hired_on: middle_of_prev_year) }
+  let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: middle_of_prev_year, updated_at: middle_of_prev_year, hired_on: middle_of_prev_year) }
   let(:person) { FactoryBot.create(:person, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789') }
 
   let(:shop_family)       { FactoryBot.create(:family, :with_primary_family_member) }
@@ -997,7 +997,7 @@ describe HbxEnrollment, dbclean: :after_each do
 
   let(:hired_on) { middle_of_prev_year }
   let(:created_at) { middle_of_prev_year }
-  let(:census_employee) { FactoryBot.create(:census_employee_with_active_assignment, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: created_at, updated_at: created_at, hired_on: hired_on, benefit_group: plan_year.benefit_groups.first) }
+  let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group_with_active_assignment, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: created_at, updated_at: created_at, hired_on: hired_on, benefit_group: plan_year.benefit_groups.first) }
 
   let(:employee_role) {
       FactoryBot.create(:employee_role, employer_profile: employer_profile, hired_on: census_employee.hired_on, census_employee_id: census_employee.id)
@@ -1111,7 +1111,7 @@ end
 describe HbxEnrollment, dbclean: :after_each do
 
   context ".can_select_coverage?" do
-    let(:employer_profile)          { FactoryBot.create(:employer_profile) }
+    let(:employer_profile)          { FactoryBot.create(:employer_profile_default) }
 
     let(:calendar_year) { TimeKeeper.date_of_record.year }
 
@@ -1146,7 +1146,7 @@ describe HbxEnrollment, dbclean: :after_each do
     let(:created_at) { middle_of_prev_year }
     let(:updated_at) { middle_of_prev_year }
 
-    let(:census_employee) { FactoryBot.create(:census_employee_with_active_assignment, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: created_at, updated_at: updated_at, hired_on: hired_on, benefit_group: plan_year.benefit_groups.first) }
+    let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group_with_active_assignment, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: created_at, updated_at: updated_at, hired_on: hired_on, benefit_group: plan_year.benefit_groups.first) }
 
     let(:employee_role) {
       FactoryBot.create(:employee_role, employer_profile: employer_profile, hired_on: census_employee.hired_on, census_employee_id: census_employee.id)
@@ -1263,10 +1263,10 @@ describe HbxEnrollment, dbclean: :after_each do
       let(:test_family) { FactoryBot.build(:family, :with_primary_family_member) }
       let(:person) { shop_family.primary_family_member.person }
       let(:published_plan_year)  { FactoryBot.build(:plan_year, aasm_state: :published)}
-      let(:employer_profile) { FactoryBot.create(:employer_profile) }
+      let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
       let(:employee_role) { FactoryBot.create(:employee_role, employer_profile: employer_profile, person: person, census_employee: census_employee ) }
       let(:employee_role_id) { employee_role.id }
-      let(:new_census_employee) { FactoryBot.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', hired_on: middle_of_prev_year, created_at: Date.new(calendar_year, 5, 10), updated_at: Date.new(calendar_year, 5, 10)) }
+      let(:new_census_employee) { FactoryBot.create(:census_employee_with_benefit_group, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', hired_on: middle_of_prev_year, created_at: Date.new(calendar_year, 5, 10), updated_at: Date.new(calendar_year, 5, 10)) }
 
 
       let(:special_enrollment_period) {
@@ -1989,7 +1989,7 @@ context "for cobra", :dbclean => :after_each do
 
   context "future_enrollment_termination_date" do
     let(:employee_role) { FactoryBot.create(:employee_role) }
-    let(:census_employee) { FactoryBot.create(:census_employee) }
+    let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group) }
     let(:coverage_termination_date) { TimeKeeper.date_of_record + 1.months }
 
     it "should return blank if not coverage_termination_pending" do

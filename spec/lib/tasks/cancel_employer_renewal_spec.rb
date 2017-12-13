@@ -7,10 +7,10 @@ describe 'Cancel employer plan year & enrollments', :dbclean => :around_each do
   let(:benefit_group1) { FactoryBot.create(:benefit_group)}
   let(:active_plan_year)  { FactoryBot.build(:plan_year, start_on: TimeKeeper.date_of_record.next_month.beginning_of_month - 1.year, end_on: TimeKeeper.date_of_record.end_of_month, aasm_state: 'active',benefit_groups:[benefit_group]) }
   let(:renewal_plan_year)  { FactoryBot.build(:plan_year,start_on: TimeKeeper.date_of_record.next_month.beginning_of_month + 1.months, end_on: TimeKeeper.date_of_record.next_month.end_of_month+1.year, aasm_state:'renewing_enrolling',benefit_groups:[benefit_group1]) }
-  let(:employer_profile)     { FactoryBot.build(:employer_profile, plan_years: [active_plan_year,renewal_plan_year]) }
+  let(:employer_profile)     { FactoryBot.build(:employer_profile_default, plan_years: [active_plan_year,renewal_plan_year]) }
   let(:organization) { FactoryBot.create(:organization, employer_profile:employer_profile)}
   let(:family) { FactoryBot.build(:family, :with_primary_family_member)}
-  let(:census_employee)   { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+  let(:census_employee)   { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
   let(:employee_role)   { FactoryBot.build(:employee_role, employer_profile: employer_profile )}
   let(:enrollment) { FactoryBot.build(:hbx_enrollment, household: family.active_household, employee_role: census_employee.employee_role)}
   let(:enrollment2) { FactoryBot.build(:hbx_enrollment, household: family.active_household, employee_role: census_employee.employee_role,aasm_state:'auto_renewing')}

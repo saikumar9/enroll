@@ -45,7 +45,7 @@ RSpec.describe Insured::FamiliesController do
   let(:household) { double("HouseHold", hbx_enrollments: hbx_enrollments) }
   let(:addresses) { [double] }
   let(:family_members) { [double("FamilyMember")] }
-  let(:census_employee) { FactoryBot.create(:census_employee)}
+  let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group)}
   let(:employee_roles) { [double("EmployeeRole", :census_employee => census_employee)] }
   let(:resident_role) { FactoryBot.create(:resident_role) }
   let(:consumer_role) { double("ConsumerRole", bookmark_url: "/families/home") }
@@ -132,7 +132,7 @@ RSpec.describe Insured::FamiliesController do
 
       let(:employee_roles) { double }
       let(:employee_role) { FactoryBot.create(:employee_role, bookmark_url: "/families/home") }
-      let(:census_employee) { FactoryBot.create(:census_employee, employee_role_id: employee_role.id) }
+      let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employee_role_id: employee_role.id) }
 
       before :each do
         FactoryBot.create(:announcement, content: "msg for Employee", audiences: ['Employee'])
@@ -234,7 +234,7 @@ RSpec.describe Insured::FamiliesController do
       let(:employee_role) { double("EmployeeRole", bookmark_url: "/families/home") }
       let(:enrollments) { double }
       let(:employee_role2) { FactoryBot.create(:employee_role) }
-      let(:census_employee) { FactoryBot.create(:census_employee, employee_role_id: employee_role2.id) }
+      let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employee_role_id: employee_role2.id) }
 
       before :each do
         sign_in user
@@ -260,7 +260,7 @@ RSpec.describe Insured::FamiliesController do
         let(:waived_hbx) { HbxEnrollment.new(kind: 'employer_sponsored', effective_on: TimeKeeper.date_of_record) }
         let(:display_hbx) { HbxEnrollment.new(kind: 'employer_sponsored', aasm_state: 'coverage_selected', effective_on: TimeKeeper.date_of_record) }
         let(:employee_role) { FactoryBot.create(:employee_role) }
-        let(:census_employee) { FactoryBot.create(:census_employee, employee_role_id: employee_role.id) }
+        let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employee_role_id: employee_role.id) }
         before :each do
           allow(family).to receive(:waivers_for_display).and_return([{"hbx_enrollment"=>{"_id"=>waived_hbx.id}}])
           allow(family).to receive(:active_family_members).and_return(family_members)
@@ -286,7 +286,7 @@ RSpec.describe Insured::FamiliesController do
         let(:waived_hbx) { HbxEnrollment.new(kind: 'employer_sponsored', effective_on: TimeKeeper.date_of_record) }
         let(:display_hbx) { HbxEnrollment.new(kind: 'individual', aasm_state: 'coverage_selected', effective_on: TimeKeeper.date_of_record) }
         let(:employee_role) { FactoryBot.create(:employee_role) }
-        let(:census_employee) { FactoryBot.create(:census_employee, employee_role_id: employee_role.id) }
+        let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employee_role_id: employee_role.id) }
         before :each do
           allow(family).to receive(:waivers_for_display).and_return([{"hbx_enrollment"=>{"_id"=>waived_hbx.id}}])
           allow(family).to receive(:active_family_members).and_return(family_members)

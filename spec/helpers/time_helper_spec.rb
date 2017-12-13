@@ -43,7 +43,7 @@ RSpec.describe TimeHelper, :type => :helper do
   end
 
   describe "set_default_termination_date_value" do
-    let(:employer_profile) {FactoryBot.create(:employer_profile)}
+    let(:employer_profile) {FactoryBot.create(:employer_profile_default)}
     let(:employee_role) {FactoryBot.create(:employee_role, person: person, employer_profile: employer_profile)}
     let(:plan_year) {double("PlanYear")}
     let(:person) { FactoryBot.create(:person) }
@@ -69,7 +69,7 @@ RSpec.describe TimeHelper, :type => :helper do
     let(:person_with_consumer_role) { FactoryBot.create(:person, :with_consumer_role) }
     let(:person_with_employee_role) { FactoryBot.create(:person, :with_employee_role) }
     let(:person) { FactoryBot.create(:person) }
-    let(:employer_profile) {FactoryBot.create(:employer_profile)}
+    let(:employer_profile) {FactoryBot.create(:employer_profile_default)}
     let(:employee_role1) {FactoryBot.create(:employee_role, person: person, employer_profile: employer_profile)}
     let(:plan_year) {double("PlanYear")}
     let(:family) {FactoryBot.create(:family, :with_primary_family_member,person: person)}

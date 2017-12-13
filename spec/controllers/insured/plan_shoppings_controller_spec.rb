@@ -152,13 +152,13 @@ RSpec.describe Insured::PlanShoppingsController, :type => :controller do
     let(:factory_employee_role){FactoryBot.create(:employee_role)}
     let(:qle) { double("Qualifyinglifeeventkind", end_on: Date.today + 1.month, title: "New Job", qle_on: Date.today)}
     let(:hbx_enrollment) { HbxEnrollment.new(plan: factory_plan, employee_role: factory_employee_role, effective_on: 1.month.ago.to_date, benefit_group: factory_benefit_group, kind: "employer_sponsored") }
-    let(:census_employee) { FactoryBot.create(:census_employee) }
+    let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group) }
     let(:plan) { double("Plan") }
     let(:benefit_group) { double("BenefitGroup
 ", is_congress: false) }
     let(:reference_plan) { double("Plan") }
     let(:employee_role) { double("EmployeeRole") }
-    let(:employer_profile) { FactoryBot.create(:employer_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
     let(:options) { { :sep_qle_end_on => qle.end_on.to_s, :sep_qle_title => qle.title, :sep_qle_on => qle.qle_on.to_s }}
 
     before do
@@ -238,7 +238,7 @@ RSpec.describe Insured::PlanShoppingsController, :type => :controller do
     let(:reference_plan) { double("Plan") }
     let(:family) { double("Family") }
     let(:plan_year) { double("PlanYear") }
-    let(:employer_profile) { FactoryBot.create(:employer_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
 
     before do
       allow(user).to receive(:person).and_return(person)

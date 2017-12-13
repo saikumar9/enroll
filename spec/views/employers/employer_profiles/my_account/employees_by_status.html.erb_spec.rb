@@ -1,10 +1,10 @@
 require "rails_helper"
 
 RSpec.describe "employers/employer_profiles/my_account/_employees_by_status.html.erb", dbclean: :before_each do
-  let(:employer_profile) { FactoryBot.create(:employer_profile) }
-  let(:census_employee1) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
-  let(:census_employee2) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
-  let(:census_employee3) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+  let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
+  let(:census_employee1) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
+  let(:census_employee2) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
+  let(:census_employee3) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
   let!(:census_employees) { [census_employee1, census_employee2, census_employee3] }
 
   let(:person) { FactoryBot.create(:person) }

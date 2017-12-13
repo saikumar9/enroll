@@ -38,7 +38,7 @@ end
 describe Forms::BrokerAgencyProfile, ".save", :dbclean => :after_each do
 
   let(:broker_agency_profile) { FactoryBot.create(:broker_agency, fein: "223230323") }
-  let(:employer_profile) { FactoryBot.create(:employer_profile, fein: "333230323") }
+  let(:employer_profile) { FactoryBot.create(:employer_profile_default, fein: "333230323") }
   let(:market_kind) { Settings.aca.market_kinds.include?("individual") ? "individual" : "shop" }
   let(:attributes) { {
     first_name: 'joe',

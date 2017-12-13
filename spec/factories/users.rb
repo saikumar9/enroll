@@ -88,7 +88,7 @@ FactoryBot.define do
 
     after :create do |user, evaluator|
       #person = FactoryBot.create :person, :with_family, :user => user
-      evaluator.organization.employer_profile = FactoryBot.create(:employer_profile,
+      evaluator.organization.employer_profile = FactoryBot.create(:employer_profile_default,
         employee_roles: [ FactoryBot.create(:employee_role, :person => user.person) ],
         organization: evaluator.organization)
       user.person.employer_staff_roles.push FactoryBot.create(:employer_staff_role, employer_profile_id: evaluator.organization.employer_profile.id)

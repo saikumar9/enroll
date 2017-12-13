@@ -7,7 +7,7 @@ RSpec.describe PeopleController do
 
   let(:consumer_role){FactoryBot.build(:consumer_role)}
 
-  let(:census_employee){FactoryBot.build(:census_employee)}
+  let(:census_employee){FactoryBot.build(:census_employee_with_benefit_group)}
   let(:employee_role){FactoryBot.build(:employee_role, :census_employee => census_employee)}
   let(:person) { FactoryBot.create(:person, :with_employee_role) }
 

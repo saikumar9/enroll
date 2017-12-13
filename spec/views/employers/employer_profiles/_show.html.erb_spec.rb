@@ -1,13 +1,13 @@
 require "rails_helper"
 
 RSpec.describe "employers/employer_profiles/_show_profile" do
-  let(:employer_profile) { FactoryBot.create(:employer_profile) }
+  let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
   let(:plan_year) { FactoryBot.create(:plan_year, employer_profile: employer_profile, aasm_state: 'published') }
   let(:benefit_group) { FactoryBot.create(:benefit_group, plan_year: plan_year) }
   let(:plan) { FactoryBot.create(:plan) }
-  let(:census_employee1) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
-  let(:census_employee2) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
-  let(:census_employee3) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+  let(:census_employee1) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
+  let(:census_employee2) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
+  let(:census_employee3) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
   let(:user) { FactoryBot.create(:user) }
 
   before :each do

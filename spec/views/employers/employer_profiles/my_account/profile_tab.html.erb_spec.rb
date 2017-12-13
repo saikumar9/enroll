@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "employers/employer_profiles/my_account/_profile_tab.html.erb" do
-  let(:employer_profile) {FactoryBot.build(:employer_profile)}
+  let(:employer_profile) {FactoryBot.build(:employer_profile_default)}
   let(:person) {FactoryBot.build(:person)}
   let(:organization) {FactoryBot.build(:organization)}
 

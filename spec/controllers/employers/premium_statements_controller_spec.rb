@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Employers::PremiumStatementsController do
   let(:user) { double("User") }
   let(:person) { FactoryBot.create(:person)}
-  let(:employer_profile) { FactoryBot.create(:employer_profile) }
+  let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
   let(:current_plan_year) { double("PlanYear", enrolled: []) }
   let(:subscriber) { double("HbxEnrollmentMember") }
   let(:carrier_profile){ double("CarrierProfile", legal_name: "my legal name") }

@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "employers/plan_years/_delete_benefit_package_modal.html.erb" do
-  let(:employer_profile){ FactoryBot.create(:employer_profile) }
+  let(:employer_profile){ FactoryBot.create(:employer_profile_default) }
   let(:plan_year){ FactoryBot.create(:plan_year, employer_profile: employer_profile) }
   let(:benefit_group){ FactoryBot.create(:benefit_group, plan_year: plan_year) }
 

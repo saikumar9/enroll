@@ -506,7 +506,7 @@ RSpec.describe Organization, dbclean: :after_each do
   describe "notify_legal_name_or_fein_change" do
 
     context "notify update" do
-      let(:employer_profile) { FactoryBot.build(:employer_profile) }
+      let(:employer_profile) { FactoryBot.build(:employer_profile_default) }
       let(:organization) {FactoryBot.create(:organization, employer_profile:employer_profile)}
       let(:changed_fields) { ["legal_name", "version", "updated_at"] }
       let(:changed_fields1) { ["fein", "version", "updated_at"] }
@@ -528,7 +528,7 @@ RSpec.describe Organization, dbclean: :after_each do
   describe "legal_name_or_fein_change_attributes" do
 
     context "changed_attributes" do
-      let(:employer_profile) { FactoryBot.build(:employer_profile) }
+      let(:employer_profile) { FactoryBot.build(:employer_profile_default) }
       let(:organization) {FactoryBot.create(:organization, employer_profile:employer_profile)}
 
       it "legal_name changed_attributes " do
@@ -548,7 +548,7 @@ RSpec.describe Organization, dbclean: :after_each do
   describe "check_legal_name_or_fein_changed?" do
 
     context "legal and fein change" do
-      let(:employer_profile) { FactoryBot.build(:employer_profile) }
+      let(:employer_profile) { FactoryBot.build(:employer_profile_default) }
       let(:organization) {FactoryBot.create(:organization, employer_profile:employer_profile)}
 
       it "return true for legal name update" do
@@ -572,7 +572,7 @@ RSpec.describe Organization, dbclean: :after_each do
       it "should return exact scope match records" do
         ["submitted","approved","pending","denied"].each do |state|
           FactoryBot.create(:organization,
-                             employer_profile: FactoryBot.build(:employer_profile,
+                             employer_profile: FactoryBot.build(:employer_profile_default,
                                                                  employer_attestation:  FactoryBot.build(:employer_attestation,{aasm_state: state})))
         end
         expect(Organization.employer_attestations_submitted[0].employer_profile.employer_attestation.aasm_state).to eq "submitted"

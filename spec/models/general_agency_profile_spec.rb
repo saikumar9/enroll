@@ -140,7 +140,7 @@ RSpec.describe GeneralAgencyProfile, dbclean: :after_each do
 
   describe "instance method", dbclean: :after_each do
     let(:general_agency_profile) { FactoryBot.create(:general_agency_profile) }
-    let(:employer_profile) { FactoryBot.create(:employer_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
     let(:person) { FactoryBot.create(:person, :with_family) }
     let(:general_agency_staff_role) { FactoryBot.create(:general_agency_staff_role, person:person, general_agency_profile_id: general_agency_profile.id) }
 

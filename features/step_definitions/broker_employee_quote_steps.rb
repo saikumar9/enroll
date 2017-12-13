@@ -20,7 +20,7 @@ Given (/^that a broker exists$/) do
   broker :with_family, :broker_with_person, organization: broker_agency
   broker_agency_profile = broker_agency.broker_agency_profile
   broker_agency_account = FactoryBot.create(:broker_agency_account, broker_agency_profile: broker_agency_profile, writing_agent_id: broker_agency_profile.primary_broker_role.id)
-  employer_profile = FactoryBot.create(:employer_profile)
+  employer_profile = FactoryBot.create(:employer_profile_default)
   employer_profile.broker_agency_accounts << broker_agency_account
   employer_profile.save!
 end

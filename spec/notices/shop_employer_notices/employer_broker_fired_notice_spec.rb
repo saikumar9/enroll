@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ShopEmployerNotices::EmployerBrokerFiredNotice do
   before(:all) do
-    @employer_profile = FactoryBot.create(:employer_profile)
+    @employer_profile = FactoryBot.create(:employer_profile_default)
     @broker_role =  FactoryBot.create(:broker_role, aasm_state: 'active')
     @organization = FactoryBot.create(:broker_agency, legal_name: "agencyone")
     @organization.broker_agency_profile.update_attributes(primary_broker_role: @broker_role)
@@ -73,7 +73,7 @@ RSpec.describe ShopEmployerNotices::EmployerBrokerFiredNotice do
   end
 
   describe "append_data" do
-    let(:employer_profile)      { FactoryBot.create(:employer_profile)}
+    let(:employer_profile)      { FactoryBot.create(:employer_profile_default)}
     let(:broker_agency_profile) { FactoryBot.build(:broker_agency_profile) }
     before do
       allow(employer_profile).to receive_message_chain("staff_roles.first").and_return(person)

@@ -26,7 +26,7 @@ RSpec.describe ShopEmployeeNotices::EmployeeTerminationNotice, :dbclean => :afte
   let!(:plan_year) { FactoryBot.create(:plan_year, employer_profile: employer_profile, start_on: start_on, :aasm_state => 'active' ) }
   let!(:active_benefit_group) { FactoryBot.create(:benefit_group, plan_year: plan_year, title: "Benefits #{plan_year.start_on.year}") }
   let(:employee_role) {FactoryBot.create(:employee_role, person: person, employer_profile: employer_profile)}
-  let(:census_employee) { FactoryBot.create(:census_employee, employee_role_id: employee_role.id, employer_profile_id: employer_profile.id,
+  let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employee_role_id: employee_role.id, employer_profile_id: employer_profile.id,
     employment_terminated_on:TimeKeeper.date_of_record.end_of_month,
     coverage_terminated_on:TimeKeeper.date_of_record.end_of_month) }
   let!(:benefit_group_assignment)  { FactoryBot.create(:benefit_group_assignment, benefit_group_id: active_benefit_group.id, census_employee: census_employee, start_on: start_on) }

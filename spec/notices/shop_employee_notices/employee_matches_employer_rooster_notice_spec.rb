@@ -7,7 +7,7 @@ RSpec.describe ShopEmployeeNotices::EmployeeMatchesEmployerRoosterNotice, :dbcle
   let!(:plan_year) { FactoryBot.create(:plan_year, employer_profile: employer_profile, start_on: start_on, :aasm_state => 'draft' ) }
   let!(:active_benefit_group) { FactoryBot.create(:benefit_group, plan_year: plan_year, title: "Benefits #{plan_year.start_on.year}") }
   let(:employee_role) {FactoryBot.create(:employee_role, person: person, employer_profile: employer_profile)}
-  let(:census_employee) { FactoryBot.create(:census_employee, employee_role_id: employee_role.id, employer_profile_id: employer_profile.id) }
+  let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employee_role_id: employee_role.id, employer_profile_id: employer_profile.id) }
   let(:application_event){ double("ApplicationEventKind",{
                             :name =>'Employee must be notified when they successfully match to their employer',
                             :notice_template => 'notices/shop_employee_notices/employee_matches_employer_rooster_notification',

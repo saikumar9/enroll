@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe "shared/census_dependent_fields.html.erb" do
-  let(:employer_profile) { FactoryBot.create(:employer_profile) }
+  let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
   let(:census_employee) { CensusEmployee.new }
 
   before :each do

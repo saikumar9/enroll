@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Employers::PremiumStatementHelper, :type => :helper do
 
   describe "#billing_period_options" do
-    let(:employer_profile) { FactoryBot.create(:employer_profile)}
+    let(:employer_profile) { FactoryBot.create(:employer_profile_default)}
     before do
       assign(:employer_profile, employer_profile)
     end

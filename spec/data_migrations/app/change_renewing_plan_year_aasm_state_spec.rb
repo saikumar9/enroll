@@ -18,14 +18,14 @@ describe ChangeRenewingPlanYearAasmState, dbclean: :after_each do
     let(:benefit_group) { FactoryBot.create(:benefit_group) }
     let(:active_plan_year){ FactoryBot.build(:plan_year,start_on:TimeKeeper.date_of_record.next_month.beginning_of_month - 1.year, end_on:TimeKeeper.date_of_record.end_of_month,aasm_state: "active",benefit_groups:[benefit_group]) }
     let(:plan_year){ FactoryBot.build(:plan_year, aasm_state: "renewing_publish_pending") }
-    let(:employer_profile){ FactoryBot.build(:employer_profile, plan_years: [active_plan_year,plan_year]) }
+    let(:employer_profile){ FactoryBot.build(:employer_profile_default, plan_years: [active_plan_year,plan_year]) }
     let(:organization)  {FactoryBot.create(:organization,employer_profile:employer_profile)}
 #    Somehow this damages the loading order resulting in the census employee not being picked up correctly.
 #    let(:rating_area) { create(:rating_area, county_name: organization.primary_office_location.address.county, zip_code: organization.primary_office_location.address.zip)}
     let(:benefit_group_assignment) { FactoryBot.build(:benefit_group_assignment, benefit_group: benefit_group)}
     let!(:renewal_benefit_group){ FactoryBot.build(:benefit_group, plan_year: plan_year) }
     let(:renewal_benefit_group_assignment) { FactoryBot.build(:benefit_group_assignment, benefit_group: renewal_benefit_group)}
-    let(:census_employee) { FactoryBot.create(:census_employee,employer_profile: employer_profile,:benefit_group_assignments => [benefit_group_assignment,renewal_benefit_group_assignment]) }
+    let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group,employer_profile: employer_profile,:benefit_group_assignments => [benefit_group_assignment,renewal_benefit_group_assignment]) }
 
     before(:each) do
       allow(ENV).to receive(:[]).with("fein").and_return(organization.fein)

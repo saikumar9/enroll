@@ -4,7 +4,7 @@ describe AccessPolicies::EmployerProfile, :dbclean => :after_each do
   subject { AccessPolicies::EmployerProfile.new(user) }
   let(:user) { FactoryBot.create(:user, person: person) }
   let(:controller) { Employers::EmployerProfilesController.new }
-  let(:employer_profile) { FactoryBot.create(:employer_profile) }
+  let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
 
   context "authorize show" do
     context "for an admin user on any employer profile" do
@@ -60,7 +60,7 @@ describe AccessPolicies::EmployerProfile, :dbclean => :after_each do
       let(:person) { FactoryBot.create(:person) }
       let(:broker_role) { FactoryBot.create(:broker_role, person: person) }
       let(:broker_agency_profile) { FactoryBot.create(:broker_agency_profile, primary_broker_role: broker_role) }
-      let(:another_employer_profile) { FactoryBot.create(:employer_profile) }
+      let(:another_employer_profile) { FactoryBot.create(:employer_profile_default) }
 
       it "should redirect you to new" do
         broker_role.save

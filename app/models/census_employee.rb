@@ -11,15 +11,11 @@ class CensusEmployee < CensusMember
 
   require 'roo'
 
-  embeds_many :census_dependents,
-    cascade_callbacks: true,
-    validate: true
-
   embeds_many :benefit_group_assignments,
     cascade_callbacks: true,
     validate: true
 
-  accepts_nested_attributes_for :census_dependents, :benefit_group_assignments
+  accepts_nested_attributes_for :benefit_group_assignments
 
   validate :check_employment_terminated_on
   validate :active_census_employee_is_unique
@@ -607,16 +603,6 @@ class CensusEmployee < CensusMember
 
   def expected_to_enroll_or_valid_waive?
     %w(enroll waive).include?  expected_selection
-  end
-
-  def composite_rating_tier
-    return CompositeRatingTier::EMPLOYEE_ONLY if self.census_dependents.empty?
-    relationships = self.census_dependents.map(&:employee_relationship)
-    if (relationships.include?("spouse") || relationships.include?("domestic_partner"))
-      relationships.many? ? CompositeRatingTier::FAMILY : CompositeRatingTier::EMPLOYEE_AND_SPOUSE
-    else
-      CompositeRatingTier::EMPLOYEE_AND_ONE_OR_MORE_DEPENDENTS
-    end
   end
 
   private

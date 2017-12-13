@@ -5,7 +5,7 @@ RSpec.describe BrokerAgencyAccount, type: :model do
   it { should validate_presence_of :start_on }
   it { should validate_presence_of :is_active }
 
-  let(:employer_profile)      { FactoryBot.create(:employer_profile)}
+  let(:employer_profile)      { FactoryBot.create(:employer_profile_default)}
   let(:broker_agency_profile) { FactoryBot.build(:broker_agency_profile) }
   let(:start_on)              { TimeKeeper.date_of_record }
   let(:writing_agent)         { FactoryBot.build(:broker_role) }

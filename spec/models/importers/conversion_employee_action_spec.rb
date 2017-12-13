@@ -17,7 +17,7 @@ describe Importers::ConversionEmployeeAction, :dbclean => :after_each do
 
   context "where the sponsor employer is found" do
 
-    let(:employer_profile) { FactoryBot.create(:employer_profile, profile_source: 'conversion') }
+    let(:employer_profile) { FactoryBot.create(:employer_profile_default, profile_source: 'conversion') }
 
     let(:carrier_profile) { FactoryBot.create(:carrier_profile) }
 
@@ -65,7 +65,7 @@ describe Importers::ConversionEmployeeAction, :dbclean => :after_each do
       end
 
       let(:census_employee) {
-        FactoryBot.build(:census_employee, :employer_profile => employer_profile)
+        FactoryBot.build(:census_employee_with_benefit_group, :employer_profile => employer_profile)
       }
 
       let(:subject) { ::Importers::ConversionEmployeeAction.new(conversion_employee_props) }
@@ -89,7 +89,7 @@ describe Importers::ConversionEmployeeAction, :dbclean => :after_each do
       end
 
       let(:census_employee) {
-        FactoryBot.create(:census_employee, :employer_profile => employer_profile)
+        FactoryBot.create(:census_employee_with_benefit_group, :employer_profile => employer_profile)
       }
 
       let(:mock_update) { double(:save => true, :warnings => [], :errors => [])}

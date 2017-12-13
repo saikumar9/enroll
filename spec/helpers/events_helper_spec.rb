@@ -30,8 +30,8 @@ describe EventsHelper, "given an address_kind" do
 
     let(:active_plan_year){ FactoryBot.build(:plan_year, aasm_state: "active") }
     let(:renewing_plan_year){ FactoryBot.build(:plan_year, aasm_state: "renewing_enrolling") }
-    let(:employer_profile1){ FactoryBot.create(:employer_profile, plan_years: [active_plan_year]) }
-    let(:employer_profile2){ FactoryBot.create(:employer_profile, plan_years: [renewing_plan_year]) }
+    let(:employer_profile1){ FactoryBot.create(:employer_profile_default, plan_years: [active_plan_year]) }
+    let(:employer_profile2){ FactoryBot.create(:employer_profile_default, plan_years: [renewing_plan_year]) }
 
     it "should return true if employer is initial" do
       expect(subject.is_initial_or_conversion_employer?(employer_profile1)).to eq true
@@ -53,7 +53,7 @@ describe EventsHelper, "given an address_kind" do
   describe "is_renewal_employer?" do
     let(:active_plan_year){ FactoryBot.build(:plan_year, aasm_state: "active") }
     let(:renewing_plan_year){ FactoryBot.build(:plan_year, aasm_state: "renewing_enrolling") }
-    let(:employer_profile){ FactoryBot.create(:employer_profile, plan_years: [renewing_plan_year,active_plan_year]) }
+    let(:employer_profile){ FactoryBot.create(:employer_profile_default, plan_years: [renewing_plan_year,active_plan_year]) }
 
     it "should return true if employer is renewal_employer" do
       expect(subject.is_renewal_employer?(employer_profile)).to eq true
@@ -69,7 +69,7 @@ describe EventsHelper, "given an address_kind" do
   describe "is_new_conversion_employer?" do
     let(:active_plan_year){ FactoryBot.build(:plan_year, aasm_state: "active", is_conversion: true) }
     let(:renewing_plan_year){ FactoryBot.build(:plan_year, aasm_state: "renewing_enrolling") }
-    let(:employer_profile){ FactoryBot.create(:employer_profile, plan_years: [renewing_plan_year,active_plan_year]) }
+    let(:employer_profile){ FactoryBot.create(:employer_profile_default, plan_years: [renewing_plan_year,active_plan_year]) }
 
     it "should return false if employer is not conversion_employer" do
       expect(subject.is_new_conversion_employer?(employer_profile)).to eq false
@@ -85,8 +85,8 @@ describe EventsHelper, "given an address_kind" do
   describe "is_renewing_conversion_employer?" do
     let(:active_plan_year){ FactoryBot.build(:plan_year, aasm_state: "active") }
     let(:renewing_plan_year){ FactoryBot.build(:plan_year, aasm_state: "renewing_enrolling") }
-    let(:employer_profile2){ FactoryBot.create(:employer_profile,profile_source:'conversion', plan_years: [renewing_plan_year,active_plan_year]) }
-    let(:employer_profile1){ FactoryBot.create(:employer_profile,profile_source:'conversion', plan_years: [active_plan_year]) }
+    let(:employer_profile2){ FactoryBot.create(:employer_profile_default,profile_source:'conversion', plan_years: [renewing_plan_year,active_plan_year]) }
+    let(:employer_profile1){ FactoryBot.create(:employer_profile_default,profile_source:'conversion', plan_years: [active_plan_year]) }
 
     it "should return false if conversion employer renewing has only active plan year" do
       expect(subject.is_renewing_conversion_employer?(employer_profile1)).to eq false
@@ -101,7 +101,7 @@ describe EventsHelper, "given an address_kind" do
 
   describe "is_renewal_or_conversion_employer?" do
 
-    let(:employer_profile){ FactoryBot.create(:employer_profile) }
+    let(:employer_profile){ FactoryBot.create(:employer_profile_default) }
 
     it "should return true if employer is renewal employer" do
       allow(subject).to receive(:is_renewal_employer?).with(employer_profile).and_return true
@@ -131,9 +131,9 @@ describe EventsHelper, "given an address_kind" do
     let(:is_conversion) { false }
     let(:active_plan_year){ FactoryBot.build(:plan_year, start_on: TimeKeeper.date_of_record.at_beginning_of_month, aasm_state: "active", is_conversion: is_conversion) }
     let(:renewing_plan_year){ FactoryBot.build(:plan_year,start_on: TimeKeeper.date_of_record.at_beginning_of_month.next_month, aasm_state: "renewing_enrolled") }
-    let(:employer_profile2){ FactoryBot.create(:employer_profile, plan_years: [renewing_plan_year,active_plan_year]) }
+    let(:employer_profile2){ FactoryBot.create(:employer_profile_default, plan_years: [renewing_plan_year,active_plan_year]) }
 
-    let(:employer_profile1){ FactoryBot.create(:employer_profile, plan_years: [active_plan_year]) }
+    let(:employer_profile1){ FactoryBot.create(:employer_profile_default, plan_years: [active_plan_year]) }
 
     before :each do
       allow(PlanYear).to receive(:transmit_employers_immediately?).and_return(false)

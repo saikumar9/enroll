@@ -29,7 +29,7 @@ describe Importers::ConversionEmployeePolicyUpdate, dbclean: :after_each do
     let(:renewal_benefit_group) { employer_profile.renewing_plan_year.benefit_groups.first }
 
     let!(:census_employee) {
-      FactoryBot.create(:census_employee_with_active_and_renewal_assignment, employer_profile: employer_profile, benefit_group: benefit_group, renewal_benefit_group: renewal_benefit_group)
+      FactoryBot.create(:census_employee_with_benefit_group_with_active_and_renewal_assignment, employer_profile: employer_profile, benefit_group: benefit_group, renewal_benefit_group: renewal_benefit_group)
     }
 
     let(:spouse) { FactoryBot.create(:person, dob: TimeKeeper.date_of_record - 30.years, ssn: '555532232') }

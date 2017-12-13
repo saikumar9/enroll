@@ -5,7 +5,7 @@ RSpec.describe "insured/families/_shop_for_plans_widget.html.erb" do
   let(:person) { FactoryBot.build(:person) }
   let(:family) { FactoryBot.build(:family, :with_primary_family_member) }
   let(:employee_role) { FactoryBot.build(:employee_role) }
-  let(:census_employee) { FactoryBot.build(:census_employee) }
+  let(:census_employee) { FactoryBot.build(:census_employee_with_benefit_group) }
   let(:hbx_enrollments) {double}
   let(:hbx_profile) { FactoryBot.create(:hbx_profile) }
   let(:current_user) { FactoryBot.create(:user)}

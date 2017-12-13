@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "employers/employer_profiles/_employer_form.html.erb" do
-  let(:employer_profile) { FactoryBot.create(:employer_profile) }
+  let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
   let(:person) {FactoryBot.build(:person)}
   let(:organization) {FactoryBot.build(:organization)}
 

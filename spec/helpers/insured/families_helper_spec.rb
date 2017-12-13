@@ -59,7 +59,7 @@ RSpec.describe Insured::FamiliesHelper, :type => :helper do
   describe "#show_employer_panel" do
     let(:person) {FactoryBot.build(:person)}
     let(:employee_role) {FactoryBot.build(:employee_role)}
-    let(:census_employee) {FactoryBot.build(:census_employee)}
+    let(:census_employee) {FactoryBot.build(:census_employee_with_benefit_group)}
     let(:person_with_employee_role) {FactoryBot.create(:person, :with_employee_role)}
 
     it "should return false without employee_role" do

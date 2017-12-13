@@ -1,6 +1,6 @@
 require 'rails_helper'
 RSpec.describe "_enrollment_report_widget.html.erb" do
-  let(:employer_profile){FactoryBot.create(:employer_profile)}
+  let(:employer_profile){FactoryBot.create(:employer_profile_default)}
   let(:plan_year){FactoryBot.create(:plan_year, employer_profile: employer_profile)}
 
   context "with active plan year billing date" do

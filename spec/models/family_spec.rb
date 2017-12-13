@@ -776,7 +776,7 @@ describe Family, "enrollment periods", :model, dbclean: :around_each do
     let(:employer_profile) { plan_year.employer_profile }
     let!(:employee_role) { FactoryBot.create(:employee_role, person: person, employer_profile: employer_profile) }
     let!(:census_employee) do
-      ce = FactoryBot.create(:census_employee,
+      ce = FactoryBot.create(:census_employee_with_benefit_group,
         first_name: person.first_name,
         last_name: person.last_name,
         dob: person.dob,
@@ -832,7 +832,7 @@ describe Family, "enrollment periods", :model, dbclean: :around_each do
     let(:employer_profile) { plan_year.employer_profile }
     let!(:employee_role) { FactoryBot.create(:employee_role, person: person, employer_profile: employer_profile) }
     let!(:census_employee) do
-      ce = FactoryBot.create(:census_employee,
+      ce = FactoryBot.create(:census_employee_with_benefit_group,
         first_name: person.first_name,
         last_name: person.last_name,
         dob: person.dob,
@@ -862,7 +862,7 @@ describe Family, "enrollment periods", :model, dbclean: :around_each do
     let(:employer_profile2) { plan_year2.employer_profile }
     let!(:employee_role2) { FactoryBot.create(:employee_role, person: person, employer_profile: employer_profile2) }
     let!(:census_employee2) do
-      ce = FactoryBot.create(:census_employee,
+      ce = FactoryBot.create(:census_employee_with_benefit_group,
         first_name: person.first_name,
         last_name: person.last_name,
         dob: person.dob,
@@ -948,7 +948,7 @@ describe Family, "enrollment periods", :model, dbclean: :around_each do
     let(:employer_profile) { plan_year.employer_profile }
     let!(:employee_role) { FactoryBot.create(:employee_role, person: person, employer_profile: employer_profile) }
     let!(:census_employee) do
-      ce = FactoryBot.create(:census_employee,
+      ce = FactoryBot.create(:census_employee_with_benefit_group,
         first_name: person.first_name,
         last_name: person.last_name,
         dob: person.dob,
@@ -1006,7 +1006,7 @@ describe Family, "enrollment periods", :model, dbclean: :around_each do
     let(:employer_profile) { plan_year.employer_profile }
     let!(:employee_role) { FactoryBot.create(:employee_role, person: person, employer_profile: employer_profile) }
     let!(:census_employee) do
-      ce = FactoryBot.create(:census_employee,
+      ce = FactoryBot.create(:census_employee_with_benefit_group,
         first_name: person.first_name,
         last_name: person.last_name,
         dob: person.dob,
@@ -1036,7 +1036,7 @@ describe Family, "enrollment periods", :model, dbclean: :around_each do
     let(:employer_profile2) { plan_year2.employer_profile }
     let!(:employee_role2) { FactoryBot.create(:employee_role, person: person, employer_profile: employer_profile2) }
     let!(:census_employee2) do
-      ce = FactoryBot.create(:census_employee,
+      ce = FactoryBot.create(:census_employee_with_benefit_group,
         first_name: person.first_name,
         last_name: person.last_name,
         dob: person.dob,

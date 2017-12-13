@@ -4,7 +4,7 @@ describe EmployerProfilePolicy do
   let(:person){FactoryBot.create(:person, user: user)}
   let(:user){FactoryBot.create(:user)}
   let(:hbx_staff_role) { FactoryBot.create(:hbx_staff_role, person: person)}
-  let(:policy){EmployerProfilePolicy.new(user,FactoryBot.create(:employer_profile))}
+  let(:policy){EmployerProfilePolicy.new(user,FactoryBot.create(:employer_profile_default))}
   let(:hbx_profile) {FactoryBot.create(:hbx_profile)}
   Permission.all.delete	
 

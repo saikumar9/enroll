@@ -641,12 +641,12 @@ RSpec.describe Employers::PlanYearsController, :dbclean => :after_each do
   describe "GET employee_costs" do
     let(:plan_year){ double }
     let(:benefit_group) { FactoryBot.create(:benefit_group) }
-    let(:census_employee) { FactoryBot.build(:census_employee) }
+    let(:census_employee) { FactoryBot.build(:census_employee_with_benefit_group) }
     let(:census_employees) { double }
     let(:plan) { double }
     before do
       allow(PlanYear).to receive(:constrain_service_areas?).and_return(false)
-      @employer_profile = FactoryBot.create(:employer_profile)
+      @employer_profile = FactoryBot.create(:employer_profile_default)
       @reference_plan = benefit_group.reference_plan
       Caches::PlanDetails.load_record_cache!
       @census_employees = [census_employee, census_employee]

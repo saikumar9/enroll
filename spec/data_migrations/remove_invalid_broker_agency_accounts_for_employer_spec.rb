@@ -18,7 +18,7 @@ describe RemoveInvalidBrokerAgencyAccountsForEmployer, dbclean: :after_each do
     let(:broker_role) { FactoryBot.create(:broker_role, :aasm_state => 'active', broker_agency_profile: broker_agency_profile) }
     let(:invalid_broker_agency_account) {FactoryBot.create(:broker_agency_account)}
     let(:valid_broker_agency_account) {FactoryBot.create(:broker_agency_account, broker_agency_profile: broker_agency_profile)}
-    let(:employer_profile){ FactoryBot.build(:employer_profile,broker_agency_accounts:[invalid_broker_agency_account,valid_broker_agency_account]) }
+    let(:employer_profile){ FactoryBot.build(:employer_profile_default,broker_agency_accounts:[invalid_broker_agency_account,valid_broker_agency_account]) }
     let(:organization1) {FactoryBot.create(:organization,employer_profile:employer_profile)}
 
     before(:each) do

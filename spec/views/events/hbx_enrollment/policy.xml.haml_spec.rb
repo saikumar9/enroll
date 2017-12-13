@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "events/hbx_enrollment/policy.haml.erb" do
 
   let(:plan) { FactoryBot.build(:plan) }
-  let(:census_employee) { FactoryBot.build(:census_employee, :benefit_group_assignments => [FactoryBot.build(:benefit_group_assignment)]) }
+  let(:census_employee) { FactoryBot.build(:census_employee_with_benefit_group, :benefit_group_assignments => [FactoryBot.build(:benefit_group_assignment)]) }
   let(:employee_role) { FactoryBot.build(:employee_role, census_employee: census_employee) }
   let(:benefit_group_assignment) { employee_role.census_employee.benefit_group_assignments.first }
   let(:benefit_group) { benefit_group_assignment.benefit_group }

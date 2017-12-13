@@ -15,7 +15,7 @@ FactoryBot.define do
     end
   end
 
-  factory :employer_profile do
+  factory :employer_profile_default, class: EmployerProfile do
     organization            { FactoryBot.build(:organization) }
     entity_kind             "c_corporation"
     sic_code "1111"

@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "employers/plan_years/new.html.erb" do
-  let(:employer_profile){FactoryBot.create(:employer_profile)}
+  let(:employer_profile){FactoryBot.create(:employer_profile_default)}
   let(:plan_year){FactoryBot.create(:plan_year, employer_profile: employer_profile)}
 
   before(:each) do

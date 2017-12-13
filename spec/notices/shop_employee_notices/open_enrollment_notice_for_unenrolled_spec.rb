@@ -9,7 +9,7 @@ RSpec.describe ShopEmployeeNotices::OpenEnrollmentNoticeForUnenrolled, :dbclean 
   let!(:renewal_plan_year) { FactoryBot.create(:plan_year, employer_profile: employer_profile, start_on: start_on + 1.year, :aasm_state => 'renewing_draft' ) }
   let!(:renewal_benefit_group) { FactoryBot.create(:benefit_group, plan_year: renewal_plan_year, title: "Benefits #{renewal_plan_year.start_on.year}") }
   let(:employee_role) {FactoryBot.create(:employee_role, person: person, employer_profile: employer_profile)}
-  let(:census_employee) { FactoryBot.create(:census_employee, employee_role_id: employee_role.id, employer_profile_id: employer_profile.id) }
+  let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employee_role_id: employee_role.id, employer_profile_id: employer_profile.id) }
   let(:application_event){ double("ApplicationEventKind",{
                             :name =>'Renewal Open Enrollment available for Employee',
                             :notice_template => 'notices/shop_employee_notices/8c_renewal_open_enrollment_notice_for_unenrolled_employee',

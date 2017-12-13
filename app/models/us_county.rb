@@ -1,4 +1,4 @@
 class UsCounty
-  include LocationModelConcerns::UsCountiesConcerns
+  include LocationModelConcerns::UsCountyConcern
 
 end

@@ -393,7 +393,7 @@ RSpec.describe BrokerAgencies::ProfilesController do
     let(:broker_role) { FactoryBot.create(:broker_role, :aasm_state => 'active', broker_agency_profile: broker_agency_profile) }
     let(:person) { broker_role.person }
     let(:user) { FactoryBot.create(:user, person: person, roles: ['broker']) }
-    let(:employer_profile) { FactoryBot.create(:employer_profile, general_agency_profile: general_agency_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile_default, general_agency_profile: general_agency_profile) }
     before :each do
       sign_in user
       xhr :get, :clear_assign_for_employer, id: broker_agency_profile.id, employer_id: employer_profile.id
@@ -413,7 +413,7 @@ RSpec.describe BrokerAgencies::ProfilesController do
     let(:broker_role) { FactoryBot.create(:broker_role, :aasm_state => 'active', broker_agency_profile: broker_agency_profile) }
     let(:person) { broker_role.person }
     let(:user) { FactoryBot.create(:user, person: person, roles: ['broker']) }
-    let(:employer_profile) { FactoryBot.create(:employer_profile, general_agency_profile: general_agency_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile_default, general_agency_profile: general_agency_profile) }
     context "when general agency is enabled via settings" do
       before do
         Settings.aca.general_agency_enabled = true
@@ -574,8 +574,8 @@ RSpec.describe BrokerAgencies::ProfilesController do
     let(:broker_agency_staff_role) {FactoryBot.create(:broker_agency_staff_role, broker_agency_profile: broker_agency_profile)}
     let(:broker_agency_account) {FactoryBot.create(:broker_agency_account, broker_agency_profile: broker_agency_profile,employer_profile: employer_profile1)}
     let(:broker_agency_account1) {FactoryBot.create(:broker_agency_account, broker_agency_profile: broker_agency_profile,employer_profile: employer_profile2)}
-    let(:employer_profile1) {FactoryBot.create(:employer_profile, organization: organization)}
-    let(:employer_profile2) {FactoryBot.create(:employer_profile, organization: organization1)}
+    let(:employer_profile1) {FactoryBot.create(:employer_profile_default, organization: organization)}
+    let(:employer_profile2) {FactoryBot.create(:employer_profile_default, organization: organization1)}
     let(:hbx_staff_role) {FactoryBot.create(:hbx_staff_role, person: user.person)}
 
     before :each do

@@ -12,7 +12,7 @@ describe Subscribers::DefaultGaChanged do
     let(:person) { FactoryBot.create(:person, :with_broker_role) }
     let(:broker_role) { person.broker_role }
     let(:hbx_id) { person.hbx_id }
-    let(:employer_profile) { FactoryBot.create(:employer_profile, organization: organization) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile_default, organization: organization) }
 
     before :each do
       broker_role.approve

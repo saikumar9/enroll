@@ -127,10 +127,10 @@ module BradyBunch
       )
     end
     let(:mikes_hired_on) {1.year.ago.beginning_of_year.to_date}
-    let!(:mikes_employer) {FactoryBot.build(:employer_profile, organization: mikes_organization)}
+    let!(:mikes_employer) {FactoryBot.build(:employer_profile_default, organization: mikes_organization)}
     let(:mikes_benefit_group_assignments){FactoryBot.build(:benefit_group_assignment)}
     let(:mikes_census_employee) do
-      FactoryBot.build(:census_employee,
+      FactoryBot.build(:census_employee_with_benefit_group,
                         first_name: mike.first_name,  last_name: mike.last_name,
                         dob: mike.dob, address: mike.address, hired_on: mikes_hired_on,
                         employer_profile_id: mikes_employer.id,
@@ -159,7 +159,7 @@ module BradyBunch
       )
     end
     let(:carols_hired_on) {1.year.ago.beginning_of_year.to_date}
-    let(:carols_employer) {FactoryBot.build(:employer_profile)}
+    let(:carols_employer) {FactoryBot.build(:employer_profile_default)}
     let(:carols_organization) do
       FactoryBot.create(:organization,
                          legal_name: "Care Real S Tates",

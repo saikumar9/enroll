@@ -2,10 +2,10 @@ require 'rails_helper'
 
 describe BenefitGroup, dbclean: :after_each do
   context "an employer profile with census_employees exists" do
-    let!(:employer_profile) { FactoryBot.create(:employer_profile)}
+    let!(:employer_profile) { FactoryBot.create(:employer_profile_default)}
     let!(:census_employees) do
       [1,2].collect do
-        FactoryBot.create(:census_employee, employer_profile: employer_profile)
+        FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile)
       end.sort_by(&:id)
     end
     context "and a plan year exists" do
@@ -73,11 +73,11 @@ end
 describe BenefitGroup, "instance methods" do
   let!(:benefit_group)            { FactoryBot.build(:benefit_group) }
   let!(:plan_year)                { FactoryBot.build(:plan_year, benefit_groups: [benefit_group], start_on: Date.new(2015,1,1)) }
-  let!(:employer_profile)         { FactoryBot.create(:employer_profile, plan_years: [plan_year]) }
+  let!(:employer_profile)         { FactoryBot.create(:employer_profile_default, plan_years: [plan_year]) }
   let!(:benefit_group_assignment) { FactoryBot.build(:benefit_group_assignment, benefit_group: benefit_group) }
   let!(:census_employees) do
     [1,2].collect do
-      FactoryBot.create(:census_employee, employer_profile: employer_profile, benefit_group_assignments: [benefit_group_assignment] )
+      FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile, benefit_group_assignments: [benefit_group_assignment] )
     end.sort_by(&:id)
   end
 
@@ -175,7 +175,7 @@ describe BenefitGroup, type: :model do
     let(:plan_year) { FactoryBot.create(:plan_year)}
     let!(:benefit_group_one) { FactoryBot.create(:benefit_group, plan_year: plan_year, title: "1st one") }
     let!(:benefit_group_two) { FactoryBot.create(:benefit_group, plan_year: plan_year, title: "2nd one")}
-    let!(:census_employee) { FactoryBot.create(:census_employee, employer_profile: benefit_group_one.plan_year.employer_profile)}
+    let!(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: benefit_group_one.plan_year.employer_profile)}
 
     it "should have a default benefit group assignment with 1st benefit group" do
       expect(census_employee.benefit_group_assignments.where(benefit_group_id: benefit_group_one.id).size).to eq 1
@@ -217,7 +217,7 @@ end
 
 describe BenefitGroup, type: :model do
 
-  let!(:employer_profile)               { FactoryBot.create(:employer_profile) }
+  let!(:employer_profile)               { FactoryBot.create(:employer_profile_default) }
   let(:valid_plan_year_start_on)        { TimeKeeper.date_of_record.end_of_month + 1.day + 1.month }
   let(:valid_plan_year_end_on)          { valid_plan_year_start_on + 1.year - 1.day }
   let(:valid_open_enrollment_start_on)  { valid_plan_year_start_on.prev_month }
@@ -277,7 +277,7 @@ describe BenefitGroup, type: :model do
 
     context "should build some basic composite tier benefits" do
       subject { create(:benefit_group) }
-      let!(:employee) { create(:census_employee, create_with_spouse: true) }
+      let!(:employee) { create(:census_employee_with_benefit_group, create_with_spouse: true) }
 
       before do
         subject.build_composite_tier_contributions
@@ -642,12 +642,12 @@ describe BenefitGroup, type: :model do
 
     context "contribution amount calculations" do
 
-      let!(:employer_profile) { FactoryBot.create(:employer_profile)}
+      let!(:employer_profile) { FactoryBot.create(:employer_profile_default)}
       let(:start_plan_year) { TimeKeeper.date_of_record.end_of_month + 1.day }
 
       let!(:census_employees) do
         [1,2].collect do
-          FactoryBot.create(:census_employee, employer_profile: employer_profile)
+          FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile)
         end.sort_by(&:id)
       end
 
@@ -685,7 +685,7 @@ describe BenefitGroup, type: :model do
     let(:carrier_one_size_6) { build(:rating_factor_entry, factor_key: 6, factor_value: 1.07) }
     let(:carrier_one_size_10) { build(:rating_factor_entry, factor_key: 10, factor_value: 1.05) }
     let!(:employer_group_size_rating_factor_set) { create(:employer_group_size_rating_factor_set, carrier_profile: carrier_profile_one, rating_factor_entries: [carrier_one_size_3, carrier_one_size_6, carrier_one_size_10], max_integer_factor_key: 10)}
-    let!(:census_employees) { (1..number_of_employees).map { |em| build(:census_employee, expected_selection: 'enroll') } }
+    let!(:census_employees) { (1..number_of_employees).map { |em| build(:census_employee_with_benefit_group, expected_selection: 'enroll') } }
 
     context "group_size_factor_for" do
       context "with small groups" do
@@ -882,7 +882,7 @@ describe BenefitGroup, type: :model do
 
     context "renewing conversion employer" do
       let(:is_conversion) { false }
-      let!(:employer_profile) { FactoryBot.create(:employer_profile, profile_source: 'conversion', registered_on: Date.new(2016, 4, 1)) }
+      let!(:employer_profile) { FactoryBot.create(:employer_profile_default, profile_source: 'conversion', registered_on: Date.new(2016, 4, 1)) }
       let!(:off_exchange_planyear) { FactoryBot.create(:plan_year, employer_profile: employer_profile, start_on: Date.new(2015,7,1), end_on: Date.new(2016,6,30), open_enrollment_start_on: Date.new(2015, 5, 3), open_enrollment_end_on: Date.new(2015, 6, 10), aasm_state: 'active', is_conversion: is_conversion) }
       let!(:offexchange_benefit_group) { FactoryBot.create(:benefit_group, plan_year: off_exchange_planyear, effective_on_kind: "first_of_month", effective_on_offset: 0)}
       let!(:renewing_planyear) { FactoryBot.create(:plan_year, employer_profile: employer_profile, start_on: Date.new(2016,7,1), end_on: Date.new(2017,6,30), open_enrollment_start_on: Date.new(2016, 5, 3), open_enrollment_end_on: Date.new(2016, 6, 13), aasm_state: 'renewing_published') }

@@ -139,7 +139,7 @@ module BradysAfterAll
                                                            start_on: @mikes_plan_year.start_on,
                                                            aasm_state: "initialized"
                                                            )
-      @mikes_census_employee = FactoryBot.create(:census_employee,
+      @mikes_census_employee = FactoryBot.create(:census_employee_with_benefit_group,
                                                    first_name: mike.first_name,  last_name: mike.last_name,
                                                    dob: mike.dob, address: mike.addresses.first, hired_on: mikes_hired_on,
                                                    employer_profile_id: @mikes_employer.id,
@@ -153,7 +153,7 @@ module BradysAfterAll
                                                            start_on: @carols_plan_year.start_on,
                                                            aasm_state: "initialized"
                                                            )
-      @carols_census_employee = FactoryBot.create(:census_employee,
+      @carols_census_employee = FactoryBot.create(:census_employee_with_benefit_group,
                                                     first_name: carol.first_name,  last_name: carol.last_name,
                                                     dob: carol.dob, address: carol.addresses.first, hired_on: carols_hired_on,
                                                     employer_profile_id: @carols_employer.id,
@@ -176,8 +176,8 @@ module BradysAfterAll
     attr_reader :mikes_employer, :carols_employer
     def create_brady_employers
       create_brady_work_organizations
-      @mikes_employer = FactoryBot.build(:employer_profile, organization: mikes_organization)
-      @carols_employer = FactoryBot.build(:employer_profile)
+      @mikes_employer = FactoryBot.build(:employer_profile_default, organization: mikes_organization)
+      @carols_employer = FactoryBot.build(:employer_profile_default)
     end
 
     attr_reader :mikes_organization, :carols_organization

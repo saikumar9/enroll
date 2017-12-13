@@ -19,7 +19,7 @@ describe ChangePlanYearEffectiveDate, dbclean: :after_each do
     let(:plan) { FactoryBot.create(:plan, :with_premium_tables) }
     let(:family) { FactoryBot.create(:family, :with_primary_family_member)}
     let(:enrollment) { FactoryBot.create(:hbx_enrollment, household: family.active_household)}
-    let(:census_employee) { FactoryBot.create(:census_employee, employer_profile_id: plan_year.employer_profile.id, :aasm_state => "eligible") }
+    let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile_id: plan_year.employer_profile.id, :aasm_state => "eligible") }
 
     before(:each) do
       allow(ENV).to receive(:[]).with("fein").and_return(plan_year.employer_profile.parent.fein)

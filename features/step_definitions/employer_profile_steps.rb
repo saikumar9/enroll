@@ -98,14 +98,14 @@ end
 
 Then(/(\w+) is the staff person for an employer$/) do |name|
   person = Person.where(first_name: name).first
-  employer_profile = FactoryBot.create(:employer_profile)
+  employer_profile = FactoryBot.create(:employer_profile_default)
   employer_staff_role = FactoryBot.create(:employer_staff_role, person: person, employer_profile_id: employer_profile.id)
 end
 
 Given(/^Sarah is the staff person for an organization with employer profile and broker agency profile$/) do
   person = Person.where(first_name: "Sarah").first
   organization = FactoryBot.create(:organization)
-  employer_profile = FactoryBot.create(:employer_profile, organization: organization)
+  employer_profile = FactoryBot.create(:employer_profile_default, organization: organization)
   employer_staff_role = FactoryBot.create(:employer_staff_role, person: person, employer_profile_id: employer_profile.id)
   broker_agency_profile = FactoryBot.create(:broker_agency_profile, organization: organization)
 end
@@ -224,7 +224,7 @@ Given /a FEIN for an existing company/ do
   SicCode.where(sic_code: '0111').first || FactoryBot.create(:sic_code, sic_code: "0111")
   @fein = 100000000+rand(10000)
   o=FactoryBot.create(:organization, fein: @fein)
-  @employer_profile= FactoryBot.create(:employer_profile, organization: o)
+  @employer_profile= FactoryBot.create(:employer_profile_default, organization: o)
 end
 
 Given /a FEIN for a new company/ do

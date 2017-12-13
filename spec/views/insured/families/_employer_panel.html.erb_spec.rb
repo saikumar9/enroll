@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "insured/families/_employer_panel.html.erb" do
   let(:person) {FactoryBot.build(:person)}
   let(:employee_role) {FactoryBot.build(:employee_role)}
-  let(:employer_profile) {FactoryBot.build(:employer_profile)}
+  let(:employer_profile) {FactoryBot.build(:employer_profile_default)}
 
   before :each do
     assign(:person, person)

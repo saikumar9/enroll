@@ -15,9 +15,9 @@ describe AddingEmployeeRole, dbclean: :after_each do
   describe "creating new employee role", dbclean: :after_each do
 
     let(:person) { FactoryBot.create(:person, ssn: "009998887")}
-    let(:census_employee) { FactoryBot.create(:census_employee, first_name: person.first_name, last_name: person.last_name,
+    let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, first_name: person.first_name, last_name: person.last_name,
       gender: person.gender, ssn: person.ssn, aasm_state: "eligible")}
-    let(:employer_profile) { FactoryBot.create(:employer_profile)}
+    let(:employer_profile) { FactoryBot.create(:employer_profile_default)}
 
     before(:each) do
       census_employee.update_attribute(:employer_profile_id, employer_profile.id)

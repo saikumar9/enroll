@@ -17,7 +17,7 @@ describe RemoveInvalidBenefitGroupAssignmentForCensusEmployee, dbclean: :after_e
     let!(:benefit_group)     { FactoryBot.create(:benefit_group, plan_year: plan_year, title: "first_one")}
     let!(:employee_role) { FactoryBot.create(:employee_role)}
     let!(:plan_year)         { FactoryBot.create(:plan_year, employer_profile: employee_role.employer_profile) }
-    let(:census_employee) { FactoryBot.create(:census_employee, employer_profile_id: employee_role.employer_profile.id)}
+    let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile_id: employee_role.employer_profile.id)}
 
     before(:each) do
       allow(ENV).to receive(:[]).with("employee_role_id").and_return(employee_role.id.to_s)

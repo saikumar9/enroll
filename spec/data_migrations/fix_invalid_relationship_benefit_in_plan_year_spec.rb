@@ -25,7 +25,7 @@ describe FixInvalidRelationshipBenefitInPlanYear, dbclean: :after_each do
       end
       let!(:active_benefit_group) { FactoryBot.create(:benefit_group,relationship_benefits:relationship_benefits)}
       let(:plan_year)         { FactoryBot.build(:plan_year, benefit_groups: [active_benefit_group]) }
-      let(:employer_profile) { FactoryBot.build(:employer_profile, plan_years: [plan_year]) }
+      let(:employer_profile) { FactoryBot.build(:employer_profile_default, plan_years: [plan_year]) }
       let(:organization)      { FactoryBot.create(:organization, employer_profile: employer_profile)}
 
       it "should return offered false for child_over_26_relationship" do

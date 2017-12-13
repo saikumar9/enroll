@@ -6,7 +6,7 @@ describe CreateNewInitialPlanYearUsingAnother, dbclean: :after_each do
   subject { CreateNewInitialPlanYearUsingAnother.new(given_task_name, double(:current_scope => nil)) }
   let(:benefit_group) { existing_plan_year.benefit_groups.first }
   let(:existing_plan_year) { FactoryBot.create(:custom_plan_year, employer_profile: employer_profile) }
-  let(:employer_profile) { FactoryBot.create(:employer_profile) }
+  let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
   let(:organization) { employer_profile.organization }
   let(:start_on) { "01012017" }
   let!(:rating_area) { FactoryBot.create(:rating_area)  }

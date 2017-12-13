@@ -143,7 +143,7 @@ RSpec.describe Insured::GroupSelectionHelper, :type => :helper do
       let(:family) { FactoryBot.create(:family, :with_primary_family_member, person: person)}
       let(:organization) { FactoryBot.create(:organization_with_plans, :with_active_and_renewal_plan_years)}
       let(:qle_kind) { FactoryBot.create(:qualifying_life_event_kind, :effective_on_event_date) }
-      let(:census_employee) { FactoryBot.create(:census_employee, employer_profile: organization.employer_profile)}
+      let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: organization.employer_profile)}
       let(:sep){
         sep = family.special_enrollment_periods.new
         sep.effective_on_kind = 'date_of_event'

@@ -6,7 +6,7 @@ describe EmployerAttestation, dbclean: :after_each do
 
     let(:start_on) { TimeKeeper.date_of_record.beginning_of_month }
     let(:plan_year) { FactoryBot.create(:plan_year,aasm_state:'active') }
-    let(:employer_profile) { FactoryBot.create(:employer_profile,plan_years:[plan_year] )}
+    let(:employer_profile) { FactoryBot.create(:employer_profile_default,plan_years:[plan_year] )}
     let!(:employer_attestation) { FactoryBot.create(:employer_attestation,employer_profile:employer_profile) }
   
     

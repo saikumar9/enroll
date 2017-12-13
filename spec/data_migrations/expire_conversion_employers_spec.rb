@@ -20,7 +20,7 @@ describe ExpireConversionEmployers, dbclean: :after_each do
 
     let(:benefit_group) { organization.employer_profile.active_plan_year.benefit_groups.first }
     let!(:benefit_group_assignment) { build(:benefit_group_assignment, benefit_group: benefit_group) }
-    let!(:census_employee) { create(:census_employee,
+    let!(:census_employee) { create(:census_employee_with_benefit_group,
       employer_profile: organization.employer_profile,
       benefit_group_assignments: [benefit_group_assignment]
       ) }

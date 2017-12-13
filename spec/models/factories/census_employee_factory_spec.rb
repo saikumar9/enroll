@@ -12,10 +12,10 @@ RSpec.describe Factories::CensusEmployeeFactory, type: :model, dbclean: :after_e
 
   context "When Census Employe don't have benefit group assignment" do
     let(:start_on) { TimeKeeper.date_of_record.next_month.beginning_of_month - 1.year}
-    let!(:employer_profile) { FactoryBot.create(:employer_profile) }
+    let!(:employer_profile) { FactoryBot.create(:employer_profile_default) }
     let!(:plan_year) { FactoryBot.create(:plan_year, employer_profile: employer_profile, start_on: start_on, :aasm_state => 'active' ) }
     let!(:active_benefit_group) { FactoryBot.create(:benefit_group, plan_year: plan_year, title: "Benefits #{plan_year.start_on.year}") }
-    let!(:census_employee) { FactoryBot.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', hired_on: TimeKeeper.date_of_record, employer_profile: employer_profile) }
+    let!(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', hired_on: TimeKeeper.date_of_record, employer_profile: employer_profile) }
     let!(:person) { FactoryBot.create(:person, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789') }
     let!(:shop_family)       { FactoryBot.create(:family, :with_primary_family_member, :person => person) }
     let!(:renewal_plan_year) { FactoryBot.create(:plan_year, employer_profile: employer_profile, start_on: start_on + 1.year, :aasm_state => 'renewing_draft' ) }

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe EmployerProfileAccount, type: :model, dbclean: :after_each do
 
-  let(:employer_profile)        { FactoryBot.create(:employer_profile) }
+  let(:employer_profile)        { FactoryBot.create(:employer_profile_default) }
   let!(:rating_area) { create(:rating_area, county_name: employer_profile.organization.primary_office_location.address.county, zip_code: employer_profile.organization.primary_office_location.address.zip)}
   let!(:hbx_profile) { FactoryBot.create(:hbx_profile, :open_enrollment_coverage_period) }
 
@@ -122,7 +122,7 @@ describe EmployerProfileAccount, type: :model, dbclean: :after_each do
                                             start_on: plan_year.start_on
                                           )}
 
-      let(:census_employee)             { FactoryBot.create(:census_employee,
+      let(:census_employee)             { FactoryBot.create(:census_employee_with_benefit_group,
                                             employer_profile: employer_profile,
                                             benefit_group_assignments: [benefit_group_assignment]
                                           ) }

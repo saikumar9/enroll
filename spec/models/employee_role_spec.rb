@@ -106,7 +106,7 @@ describe EmployeeRole, dbclean: :after_each do
     let(:address) {FactoryBot.build(:address)}
     let(:saved_person) {FactoryBot.create(:person, first_name: "Annie", last_name: "Lennox", addresses: [address])}
     let(:new_person) {FactoryBot.build(:person, first_name: "Carly", last_name: "Simon")}
-    let(:employer_profile) {FactoryBot.create(:employer_profile)}
+    let(:employer_profile) {FactoryBot.create(:employer_profile_default)}
 
     let(:valid_person_attributes) do
       {
@@ -276,7 +276,7 @@ describe EmployeeRole, dbclean: :after_each do
   let(:gender) { "male" }
 
   context "when created" do
-    let(:employer_profile) { FactoryBot.create(:employer_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
 
     let(:person) {
       FactoryBot.create(:person,
@@ -435,8 +435,8 @@ describe EmployeeRole, dbclean: :after_each do
   context "with saved employee roles from multiple employers" do
     let(:match_size)                  { 5 }
     let(:non_match_size)              { 3 }
-    let(:match_employer_profile)      { FactoryBot.create(:employer_profile) }
-    let(:non_match_employer_profile)  { FactoryBot.create(:employer_profile) }
+    let(:match_employer_profile)      { FactoryBot.create(:employer_profile_default) }
+    let(:non_match_employer_profile)  { FactoryBot.create(:employer_profile_default) }
     let!(:match_employee_roles)       { FactoryBot.create_list(:employee_role, 5, employer_profile: match_employer_profile) }
     let!(:non_match_employee_roles)   { FactoryBot.create_list(:employee_role, 3, employer_profile: non_match_employer_profile) }
     let(:first_match_employee_role)   { match_employee_roles.first }
@@ -467,11 +467,11 @@ end
 
 describe EmployeeRole, dbclean: :after_each do
 
-  let(:employer_profile)          { FactoryBot.create(:employer_profile) }
+  let(:employer_profile)          { FactoryBot.create(:employer_profile_default) }
   let(:calendar_year) { TimeKeeper.date_of_record.year }
   let(:middle_of_prev_year) { Date.new(calendar_year - 1, 6, 10) }
 
-  let(:census_employee) { FactoryBot.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: middle_of_prev_year, updated_at: middle_of_prev_year, hired_on: middle_of_prev_year) }
+  let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: middle_of_prev_year, updated_at: middle_of_prev_year, hired_on: middle_of_prev_year) }
   let(:person) { FactoryBot.create(:person, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789') }
 
   let(:employee_role) {
@@ -548,7 +548,7 @@ describe EmployeeRole, dbclean: :after_each do
 
   context ".is_eligible_to_enroll_without_qle?" do
     context 'when new hire open enrollment period available' do
-      let(:census_employee) { FactoryBot.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: (plan_year_start_on + 10.days), updated_at: (plan_year_start_on + 10.days), hired_on: (plan_year_start_on + 10.days)) }
+      let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: (plan_year_start_on + 10.days), updated_at: (plan_year_start_on + 10.days), hired_on: (plan_year_start_on + 10.days)) }
 
       before do
         TimeKeeper.set_date_of_record_unprotected!(plan_year_start_on + 15.days)
@@ -561,7 +561,7 @@ describe EmployeeRole, dbclean: :after_each do
 
 
     context 'when new roster entry enrollment period available' do
-      let(:census_employee) { FactoryBot.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: (plan_year_start_on + 10.days), updated_at: (plan_year_start_on + 10.days), hired_on: middle_of_prev_year) }
+      let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: (plan_year_start_on + 10.days), updated_at: (plan_year_start_on + 10.days), hired_on: middle_of_prev_year) }
 
       before do
         TimeKeeper.set_date_of_record_unprotected!(plan_year_start_on + 15.days)
@@ -573,7 +573,7 @@ describe EmployeeRole, dbclean: :after_each do
     end
 
     context 'when outside new hire enrollment period and employer open enrolment' do
-      let(:census_employee) { FactoryBot.create(:census_employee, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: (plan_year_start_on + 10.days), updated_at: (plan_year_start_on + 10.days), hired_on: (plan_year_start_on + 10.days)) }
+      let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, first_name: 'John', last_name: 'Smith', dob: '1966-10-10'.to_date, ssn: '123456789', created_at: (plan_year_start_on + 10.days), updated_at: (plan_year_start_on + 10.days), hired_on: (plan_year_start_on + 10.days)) }
 
       before do
         TimeKeeper.set_date_of_record_unprotected!(plan_year_start_on + 55.days)
@@ -601,7 +601,7 @@ describe EmployeeRole, dbclean: :after_each do
 
   context "is_cobra_status?" do
     let(:employee_role) { FactoryBot.build(:employee_role) }
-    let(:census_employee) { FactoryBot.build(:census_employee) }
+    let(:census_employee) { FactoryBot.build(:census_employee_with_benefit_group) }
 
     it "should return false when without census_employee" do
       allow(employee_role).to receive(:census_employee).and_return nil
@@ -635,7 +635,7 @@ describe "#benefit_group", dbclean: :after_each do
     sep
   }
 
-  let!(:census_employee) { FactoryBot.create(:census_employee, first_name: person.first_name, last_name: person.last_name,
+  let!(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, first_name: person.first_name, last_name: person.last_name,
                             dob: person.dob, ssn: person.ssn, employer_profile: organization.employer_profile)}
   before do
     allow(family).to receive(:current_sep).and_return sep

@@ -9,7 +9,7 @@ RSpec.describe CarrierProfile, :type => :model, dbclean: :after_each do
       let!(:carrier_profile) { create(:carrier_profile, with_service_areas: 0, issuer_hios_ids: ['99999']) }
       let!(:carrier_service_area_2017) { create(:carrier_service_area, issuer_hios_id: carrier_profile.issuer_hios_ids.first, active_year: '2017') }
       let!(:carrier_service_area_2018) { create(:carrier_service_area, issuer_hios_id: carrier_profile.issuer_hios_ids.first, active_year: '2018') }
-      let!(:employer) { create(:employer_profile) }
+      let!(:employer) { create(:employer_profile_default) }
 
       it "should return the appropriate service area based on year" do
         expect(CarrierProfile.carrier_profile_service_area_pairs_for(employer, '2017' )).to contain_exactly([carrier_profile.id, carrier_service_area_2017.service_area_id])

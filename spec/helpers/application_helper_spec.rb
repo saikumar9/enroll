@@ -81,7 +81,7 @@ RSpec.describe ApplicationHelper, :type => :helper do
 
 
   describe "#enrollment_progress_bar" do
-    let(:employer_profile) { FactoryBot.create(:employer_profile) }
+    let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
     let(:plan_year) { FactoryBot.create(:plan_year, employer_profile: employer_profile) }
 
     it "display progress bar" do
@@ -409,7 +409,7 @@ end
 
   describe ".notify_employee_confirming_coverage_termination" do
     let(:enrollment) { double("HbxEnrollment", effective_on: double("effective_on", year: double), applied_aptc_amount: 0) }
-    let(:census_employee) {FactoryBot.create(:census_employee)}
+    let(:census_employee) {FactoryBot.create(:census_employee_with_benefit_group)}
     it "should trigger notify_employee_confirming_coverage_termination job in queue" do
       allow(enrollment).to receive(:is_shop?).and_return(true)
       allow(enrollment).to receive(:coverage_kind).and_return("health")

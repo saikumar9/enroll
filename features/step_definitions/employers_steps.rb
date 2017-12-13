@@ -74,7 +74,7 @@ end
 And(/^.+ should see a form with a fieldset for Employer information, including: legal name, DBA, fein, entity_kind, broker agency, URL, address, and phone$/) do
   @browser.button(value: /Search Employers/).wait_until_present
   screenshot("employer_portal_employer_search_form")
-  @employer_profile = FactoryBot.create(:employer_profile)
+  @employer_profile = FactoryBot.create(:employer_profile_default)
 
   @browser.text_field(name: "employer_profile[legal_name]").set(@employer_profile.legal_name)
   @browser.text_field(name: "employer_profile[dba]").set(@employer_profile.dba)

@@ -30,7 +30,7 @@ describe Address, "with proper validations" do
 
     let(:person) {Person.new(first_name: "John", last_name: "Doe", gender: "male", dob: "10/10/1974", ssn: "123456789" )}
     let(:address) {FactoryBot.create(:address)}
-    let(:employer){FactoryBot.create(:employer_profile)}
+    let(:employer){FactoryBot.create(:employer_profile_default)}
 
 
     context "accepts all valid values" do

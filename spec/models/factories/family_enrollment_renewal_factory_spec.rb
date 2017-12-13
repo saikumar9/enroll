@@ -200,7 +200,7 @@ RSpec.describe Factories::FamilyEnrollmentRenewalFactory, :type => :model do
     end
 
     context ".renewal_relationship_benefits" do
-      let(:census_employee) {FactoryBot.create(:census_employee)}
+      let(:census_employee) {FactoryBot.create(:census_employee_with_benefit_group)}
       let(:benefit_group_assignment) { FactoryBot.create(:benefit_group_assignment, benefit_group: renewal_benefit_group, census_employee: census_employee)}
       let(:person) { FactoryBot.create(:person)}
       let!(:shop_family) { FactoryBot.create(:family, :with_primary_family_member, :person => person) }

@@ -321,8 +321,8 @@ describe Person, :dbclean => :after_each do
 
       context "has_multiple_active_employers?" do
         let(:person) { FactoryBot.build(:person) }
-        let(:ce1) { FactoryBot.build(:census_employee) }
-        let(:ce2) { FactoryBot.build(:census_employee) }
+        let(:ce1) { FactoryBot.build(:census_employee_with_benefit_group) }
+        let(:ce2) { FactoryBot.build(:census_employee_with_benefit_group) }
 
         it "should return false without census_employees" do
           allow(person).to receive(:active_census_employees).and_return([])
@@ -343,7 +343,7 @@ describe Person, :dbclean => :after_each do
       context "active_census_employees" do
         let(:person) { FactoryBot.build(:person) }
         let(:employee_role) { FactoryBot.build(:employee_role) }
-        let(:ce1) { FactoryBot.build(:census_employee) }
+        let(:ce1) { FactoryBot.build(:census_employee_with_benefit_group) }
 
         it "should get census_employees by active_employee_roles" do
           allow(person).to receive(:active_employee_roles).and_return([employee_role])
@@ -577,7 +577,7 @@ describe Person, :dbclean => :after_each do
   end
 
   describe '#find_all_staff_roles_by_employer_profile' do
-    employer_profile = FactoryBot.build(:employer_profile)
+    employer_profile = FactoryBot.build(:employer_profile_default)
     person = FactoryBot.build(:person)
     FactoryBot.create(:employer_staff_role, person: person, employer_profile_id: employer_profile.id)
     it "should have the same search criteria" do
@@ -1139,7 +1139,7 @@ describe Person, :dbclean => :after_each do
   end
 
   describe ".add_employer_staff_role(first_name, last_name, dob, email, employer_profile)" do
-    let(:employer_profile){FactoryBot.create(:employer_profile)}
+    let(:employer_profile){FactoryBot.create(:employer_profile_default)}
     let(:person_params) {{first_name: Forgery('name').first_name, last_name: Forgery('name').first_name, dob: '1990/05/01'}}
     let(:person1) {FactoryBot.create(:person, person_params)}
 
@@ -1274,8 +1274,8 @@ describe Person, :dbclean => :after_each do
 
   describe "has_active_employee_role_for_census_employee?" do
     let(:person) { FactoryBot.create(:person) }
-    let(:census_employee) { FactoryBot.create(:census_employee) }
-    let(:census_employee2) { FactoryBot.create(:census_employee) }
+    let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group) }
+    let(:census_employee2) { FactoryBot.create(:census_employee_with_benefit_group) }
 
     context "person has no active employee roles" do
       it "should return false" do
@@ -1414,7 +1414,7 @@ describe Person, :dbclean => :after_each do
 
 
   describe "staff_for_employer" do
-    let(:employer_profile) { FactoryBot.build(:employer_profile) }
+    let(:employer_profile) { FactoryBot.build(:employer_profile_default) }
 
     context "employer has no staff roles assigned" do
       it "should return an empty array" do
@@ -1438,7 +1438,7 @@ describe Person, :dbclean => :after_each do
 
 
     context "multiple employers have same person as staff" do
-      let(:employer_profile2) { FactoryBot.build(:employer_profile) }
+      let(:employer_profile2) { FactoryBot.build(:employer_profile_default) }
       let(:person) { FactoryBot.build(:person) }
 
       let(:staff_params1) { {person: person, employer_profile_id: employer_profile.id, aasm_state: :is_active} }

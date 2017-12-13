@@ -71,7 +71,7 @@ describe MoveEnrollmentBetweenTwoAccount, dbclean: :after_each do
     }
     let(:employee_role) {FactoryBot.create(:employee_role,person: family1.family_members[0].person, census_employee:census_employee, employer_profile: benefit_group_assignment.benefit_group.plan_year.employer_profile)}
     let!(:employee_role2) {FactoryBot.create(:employee_role,person: family2.family_members[0].person, census_employee:census_employee, employer_profile: benefit_group_assignment.benefit_group.plan_year.employer_profile)}
-    let(:census_employee){FactoryBot.create(:census_employee)}
+    let(:census_employee){FactoryBot.create(:census_employee_with_benefit_group)}
     let(:benefit_group_assignment) {FactoryBot.create(:benefit_group_assignment,census_employee:census_employee)}
     before do
       coverage_household_member = family1.households.first.coverage_households.first.coverage_household_members.first

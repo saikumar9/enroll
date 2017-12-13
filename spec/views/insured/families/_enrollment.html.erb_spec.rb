@@ -11,7 +11,7 @@ RSpec.describe "insured/families/_enrollment.html.erb" do
   end
 
   context "should display legal_name" do
-    let(:employer_profile) { FactoryBot.build(:employer_profile) }
+    let(:employer_profile) { FactoryBot.build(:employer_profile_default) }
     let(:plan) { FactoryBot.build(:plan) }
     let(:hbx) { HbxEnrollment.new(created_at: TimeKeeper.date_of_record, effective_on: TimeKeeper.date_of_record) }
     before :each do
@@ -66,8 +66,8 @@ RSpec.describe "insured/families/_enrollment.html.erb" do
 
 
     let(:employee_role) { FactoryBot.create(:employee_role) }
-    let(:census_employee) { FactoryBot.create(:census_employee, employee_role_id: employee_role.id)}
-    #let(:employer_profile) { FactoryBot.create(:employer_profile) }
+    let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employee_role_id: employee_role.id)}
+    #let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
     let(:hbx_enrollment) {instance_double("HbxEnrollment", plan: plan, id: "12345", total_premium: 200, kind: 'individual',
                                  subscriber: nil,
                                  covered_members_first_names: ["name"], can_complete_shopping?: false,
@@ -131,7 +131,7 @@ RSpec.describe "insured/families/_enrollment.html.erb" do
     end
 
     context "when outside Employers open enrollment period and not a new hire" do
-      let(:employer_profile) { FactoryBot.create(:employer_profile) }
+      let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
       before :each do
         allow(census_employee.employee_role).to receive(:is_under_open_enrollment?).and_return(false)
         allow(census_employee).to receive(:new_hire_enrollment_period).and_return(TimeKeeper.datetime_of_record - 20.days .. TimeKeeper.datetime_of_record - 10.days)
@@ -185,7 +185,7 @@ RSpec.describe "insured/families/_enrollment.html.erb" do
   context "with consumer_role", dbclean: :before_each do
     let(:plan) {FactoryBot.build(:plan, :created_at =>  TimeKeeper.date_of_record)}
     let(:employee_role) { FactoryBot.create(:employee_role) }
-    let(:census_employee) { FactoryBot.create(:census_employee, employee_role_id: employee_role.id)}
+    let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employee_role_id: employee_role.id)}
     let(:hbx_enrollment) {instance_double("HbxEnrollment", plan: plan, id: "12345", total_premium: 200, kind: 'individual',
                                  covered_members_first_names: ["name"], can_complete_shopping?: false,
                                  enroll_step: 1, subscriber: nil, coverage_terminated?: false,
@@ -231,7 +231,7 @@ RSpec.describe "insured/families/_enrollment.html.erb" do
   context "about covered_members_first_names of hbx_enrollment" do
     let(:plan) {FactoryBot.build(:plan, :created_at => TimeKeeper.date_of_record)}
     let(:employee_role) { FactoryBot.create(:employee_role) }
-    let(:census_employee) { FactoryBot.create(:census_employee, employee_role_id: employee_role.id)}
+    let(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employee_role_id: employee_role.id)}
     let(:hbx_enrollment) {double(plan: plan, id: "12345", total_premium: 200, kind: 'individual',
                                  covered_members_first_names: [], can_complete_shopping?: false,
                                  enroll_step: 1, subscriber: nil, coverage_terminated?: false,

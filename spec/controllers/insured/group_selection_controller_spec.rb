@@ -43,7 +43,7 @@ RSpec.describe Insured::GroupSelectionController, :type => :controller do
   end
 
   context "GET new" do
-    let(:census_employee) {FactoryBot.build(:census_employee)}
+    let(:census_employee) {FactoryBot.build(:census_employee_with_benefit_group)}
     let(:hbx_enrollment_member) { FactoryBot.build(:hbx_enrollment_member) }
     let(:family_member) { FamilyMember.new }
     let(:benefit_group) {FactoryBot.create(:benefit_group)}
@@ -209,7 +209,7 @@ RSpec.describe Insured::GroupSelectionController, :type => :controller do
     let(:benefit_group) {FactoryBot.create(:benefit_group)}
     let(:benefit_group_assignment) {double(update: true)}
     let(:employee_roles){ [double("EmployeeRole")] }
-    let(:census_employee) {FactoryBot.create(:census_employee)}
+    let(:census_employee) {FactoryBot.create(:census_employee_with_benefit_group)}
 
     before do
       allow(coverage_household).to receive(:household).and_return(household)

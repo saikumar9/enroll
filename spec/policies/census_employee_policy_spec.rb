@@ -2,14 +2,14 @@ require "rails_helper"
 
 describe CensusEmployeePolicy do
   subject { described_class }
-  let(:employer_profile){ FactoryBot.create(:employer_profile)}
+  let(:employer_profile){ FactoryBot.create(:employer_profile_default)}
   let(:person) { FactoryBot.create(:person) }
   let(:admin_person) { FactoryBot.create(:person, :with_hbx_staff_role) }
   let(:broker_person) { FactoryBot.create(:person, :with_broker_role) }
 
   permissions :delink? do
     context "already linked" do
-      let(:employee) { FactoryBot.build(:census_employee, employer_profile_id: employer_profile.id, aasm_state: "employee_role_linked") }
+      let(:employee) { FactoryBot.build(:census_employee_with_benefit_group, employer_profile_id: employer_profile.id, aasm_state: "employee_role_linked") }
 
       context "with perosn with appropriate roles" do
         it "grants access when hbx_staff" do
@@ -31,7 +31,7 @@ describe CensusEmployeePolicy do
     end
 
     context "not linked" do
-      let(:employee) { FactoryBot.create(:census_employee, employer_profile_id: employer_profile.id, aasm_state: "eligible") }
+      let(:employee) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile_id: employer_profile.id, aasm_state: "eligible") }
 
       it "denies access when hbx_staff" do
         expect(subject).not_to permit(FactoryBot.create(:user, :hbx_staff, person: admin_person), employee)
@@ -52,7 +52,7 @@ describe CensusEmployeePolicy do
   end
 
   permissions :update? do
-    let(:employee) { FactoryBot.create(:census_employee, employer_profile_id: employer_profile.id, aasm_state: "eligible") }
+    let(:employee) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile_id: employer_profile.id, aasm_state: "eligible") }
 
     context "when is hbx_staff user" do
       let(:user) { FactoryBot.create(:user, :hbx_staff, person: admin_person) }

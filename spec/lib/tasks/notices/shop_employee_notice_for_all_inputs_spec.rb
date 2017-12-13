@@ -4,18 +4,18 @@ include ActiveJob::TestHelper
 Rake::Task.define_task(:environment)
 
 RSpec.describe 'Generate notices to employee by taking hbx_ids, census_ids and event name', :type => :task do
-  let!(:employer_profile) { FactoryBot.create(:employer_profile)}
+  let!(:employer_profile) { FactoryBot.create(:employer_profile_default)}
   let!(:person) { FactoryBot.create(:person)}
   let!(:employee_role) { emp_role = FactoryBot.create(:employee_role, person: person, employer_profile: employer_profile)
                          emp_role.update_attributes(census_employee: census_employee)
                          emp_role}
-  let!(:census_employee) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+  let!(:census_employee) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
 
   let!(:person2) { FactoryBot.create(:person)}
   let!(:employee_role_2) { emp_role = FactoryBot.create(:employee_role, person: person2, employer_profile: employer_profile)
                            emp_role.update_attributes(census_employee: census_employee)
                            emp_role}
-  let!(:census_employee_2) { FactoryBot.create(:census_employee, employer_profile: employer_profile) }
+  let!(:census_employee_2) { FactoryBot.create(:census_employee_with_benefit_group, employer_profile: employer_profile) }
 
   before :each do
     $stdout = StringIO.new

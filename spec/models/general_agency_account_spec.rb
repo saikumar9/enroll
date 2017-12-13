@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe GeneralAgencyAccount, type: :model do
-  let(:employer_profile)      { FactoryBot.create(:employer_profile)}
+  let(:employer_profile)      { FactoryBot.create(:employer_profile_default)}
   let(:general_agency_profile) { FactoryBot.build(:general_agency_profile) }
   let(:start_on)              { TimeKeeper.date_of_record }
 

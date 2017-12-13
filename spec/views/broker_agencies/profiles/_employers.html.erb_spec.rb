@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "broker_agencies/profiles/_employers.html.erb" do
   let(:organization) { FactoryBot.create(:organization) }
   let(:broker_agency_profile) { FactoryBot.create(:broker_agency_profile, organization: organization) }
-  let(:employer_profile) { FactoryBot.create(:employer_profile, organization: organization) }
+  let(:employer_profile) { FactoryBot.create(:employer_profile_default, organization: organization) }
   before :each do
     assign :broker_agency_profile, broker_agency_profile
     assign :employer_profiles, [employer_profile]

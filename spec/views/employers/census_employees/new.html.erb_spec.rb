@@ -7,7 +7,7 @@ describe "employers/census_employees/new.html.erb" do
     @hbx_staff_role = FactoryBot.create(:hbx_staff_role, person: p)
   end
   let(:census_employee) { CensusEmployee.new }
-  let(:employer_profile) { FactoryBot.create(:employer_profile) }
+  let(:employer_profile) { FactoryBot.create(:employer_profile_default) }
 
   before :each do
     sign_in @user
