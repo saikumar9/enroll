@@ -3,12 +3,14 @@ require "rails_helper"
 RSpec.describe "broker_agencies/profiles/edit.html.erb" do
   let(:organization) { FactoryBot.create(:organization) }
   let(:broker_agency_profile) { FactoryBot.create(:broker_agency_profile, organization: organization) }
-
+  let(:user) { create(:user, :hbx_staff) }
   before :each do
     org_form = Forms::BrokerAgencyProfile.find(broker_agency_profile.id)
+    allow(controller).to receive(:current_user) { user }
     assign :organization, org_form
     assign :broker_agency_profile, broker_agency_profile
     assign :id, broker_agency_profile.id
+    assign :provider, FactoryBot.create(:person)
     render template: "broker_agencies/profiles/edit.html.erb"
   end
 
