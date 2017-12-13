@@ -25,7 +25,9 @@ module Effective
         }, :filter => false, :sortable => false
         table_column :actions, :width => '50px', :proc => Proc.new { |row|
           dropdown = [
-           ['Edit', notifier.edit_notice_kind_path(row), 'ajax']
+           ['Edit', notifier.edit_notice_kind_path(row), 'ajax'],
+           ['Download', notifier.download_notice_kind_path(row, format: "pdf"),'static']
+           
           ]
           render partial: 'datatables/shared/dropdown', locals: {dropdowns: dropdown, row_actions_id: "notice_actions_#{row.id}"}, formats: :html
         }, :filter => false, :sortable => false

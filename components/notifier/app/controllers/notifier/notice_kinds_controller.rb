@@ -27,6 +27,19 @@ module Notifier
       render :layout => 'notifier/application'
     end
 
+    def download
+      notice_kind = Notifier::NoticeKind.find(params[:id])
+      notice_kind.generate_pdf_notice
+      respond_to do |format|
+      format.pdf { 
+        send_file "#{Rails.root}/tmp/#{notice_kind.title.titleize.gsub(/\s+/, '_')}.pdf",
+          filename: "#{notice_kind.title.titleize.gsub(/\s+/, '_')}.pdf", 
+          :type => 'application/pdf', 
+          :disposition => 'attachment'
+      }
+      end
+    end
+
     def create
       template = Template.new(notice_params.delete('template'))
       notice_kind = NoticeKind.new(notice_params)

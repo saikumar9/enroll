@@ -4,6 +4,7 @@ Notifier::Engine.routes.draw do
   resources :notice_kinds do
     member do
       get :preview
+      get :download
     end
 
     collection do
