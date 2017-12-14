@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: https://github.com/health-connector/core_model_concerns
-  revision: bf02c2ede059a0ace4a500b8a0c8f3d52c3d428f
+  revision: e76bd7c784ce52d70d5dd948f9514d304229d2de
   specs:
     core_model_concerns (0.0.1)
       forgery
@@ -43,7 +43,7 @@ GIT
 
 GIT
   remote: https://github.com/health-connector/shop_model_concerns
-  revision: 6360b64603f62895d1139b04a838d5095d933cf5
+  revision: d1b090b1a98cc972df42401ed4f92bfd08c49c1c
   specs:
     shop_model_concerns (0.0.1)
       money-rails (~> 1.3.0)

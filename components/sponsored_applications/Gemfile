@@ -10,9 +10,9 @@ gem 'broker_model_concerns', git: 'https://github.com/health-connector/broker_mo
 gem 'shop_model_concerns', git: 'https://github.com/health-connector/shop_model_concerns'
 gem 'location_model_concerns', git: 'https://github.com/health-connector/location_model_concerns'
 #
-# gem 'core_model_concerns', path: "~/Work/mass/core_model_concerns"
+#gem 'core_model_concerns', path: "~/Work/mass/core_model_concerns"
 # gem 'broker_model_concerns', path: "~/Work/mass/broker_model_concerns"
-# gem 'shop_model_concerns', path: "~/Work/mass/shop_model_concerns"
+#gem 'shop_model_concerns', path: "~/Work/mass/shop_model_concerns"
 # gem 'location_model_concerns', path: "~/Work/mass/location_model_concerns"
 #
 # Declare any dependencies that are still in development here instead of in

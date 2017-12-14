@@ -1,10 +1,9 @@
 module SponsoredApplications
-  class SponsorCensusMember
-    include CoreModelConcerns::Behaviors::CensusMemberCoreBehaviors
-    include ShopModelConcerns::Behaviors::CensusDependentBehaviors
-
+  class SponsorCensusMember < SponsorCensusMemberBase
     def self.dependent_class
-      "SponsorCensusDependent"
+      'SponsoredApplications::SponsorCensusDependent'
     end
+    
+    include Behaviors::CensusDependentBehaviors
   end
 end

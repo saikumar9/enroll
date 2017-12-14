@@ -1,10 +1,8 @@
 module SponsoredApplications
-  class SponsorCensusDependent
-    include ShopModelConcerns::CensusDependentConcern
-
+  class SponsorCensusDependent < SponsorCensusMemberBase
     def self.parent_member_class
-      'SponsorCensusMember'
+      'SponsoredApplications::SponsorCensusMember'
     end
-
+    include CensusDependentConcern
   end
 end
