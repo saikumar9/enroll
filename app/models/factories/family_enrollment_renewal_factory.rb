@@ -62,7 +62,7 @@ module Factories
           census_employee.trigger_model_event(:employee_coverage_passively_waived, {event_object: renewing_plan_year}) unless disable_notifications
         end
       rescue Exception => e
-        puts "Error found for #{census_employee.full_name} while creating renewals -- #{e.inspect}" unless Rails.env.test?
+        "Error found for #{census_employee.full_name} while creating renewals -- #{e.inspect}" unless Rails.env.test?
       end
 
       return family
@@ -261,5 +261,5 @@ module Factories
     end
   end
 
-  class FamilyEnrollmentRenewalFactoryError < StandardError; end
+class FamilyEnrollmentRenewalFactoryError < StandardError; end
 end

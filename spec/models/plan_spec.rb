@@ -135,6 +135,11 @@ RSpec.describe Plan, dbclean: :after_each do
       it "should return only vertical plans" do
         expect(Plan.check_plan_offerings_for_single_carrier).to contain_exactly(vertical_plan, regular_plan)
       end
+
+      it "should check for field for filtering available or not" do
+        is_expected.to have_attributes(:frozen_plan_year => nil)
+      end
+
     end
 
     context "renewal_plan_mapping filter by date" do
