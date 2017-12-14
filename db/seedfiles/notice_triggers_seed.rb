@@ -323,6 +323,28 @@ shop_notice_triggers = [
     #   ]
     # },
 
+     {
+        hbx_id: 'SHOP_M015',
+        title: 'Notice of Low Enrollment - Action Needed',
+        description: 'Notifies all the employers who doesnt meet minimum participation requirement',
+        resource_name: 'employer',
+        event_name: 'low_enrollment_notice_for_employer',
+        notice_triggers: [
+          {
+            name: 'Low Enrollment Notice',
+            notice_template: 'notices/shop_employer_notices/low_enrollment_notice_for_employer',
+            notice_builder: 'ShopEmployerNotices::LowEnrollmentNotice',
+            mpi_indicator: 'SHOP_M015',
+            notice_trigger_element_group: {
+              market_places: ['shop'],
+              primary_recipients: ["employer"],
+              primary_recipient_delivery_method: ["secure_message"],
+              secondary_recipients: []
+            }
+          }
+        ]
+      },
+
     # {
     #   hbx_id: 'SHOP16',
     #   title: 'Application to Offer Group Health Coverage in DC Health Link',
@@ -519,28 +541,6 @@ shop_notice_triggers = [
     #     }
     #   ]
     # },
-
-  {
-    hbx_id: 'SHOP_M015',
-    title: 'Notice of Low Enrollment - Action Needed',
-    description: 'Notifies all the employers who doesnt meet minimum participation requirement',
-    resource_name: 'employer',
-    event_name: 'low_enrollment_notice_for_employer',
-    notice_triggers: [
-      {
-        name: 'Low Enrollment Notice',
-        notice_template: 'notices/shop_employer_notices/low_enrollment_notice_for_employer',
-        notice_builder: 'ShopEmployerNotices::LowEnrollmentNotice',
-        mpi_indicator: 'SHOP_M015',
-        notice_trigger_element_group: {
-          market_places: ['shop'],
-          primary_recipients: ["employer"],
-          primary_recipient_delivery_method: ["secure_message"],
-          secondary_recipients: []
-        }
-      }
-    ]
-  },
 
     # {
     #   hbx_id: 'SHOP28',
@@ -741,6 +741,7 @@ shop_notice_triggers = [
         ]
     },
 
+
     {
         hbx_id: 'SHOP_M039',
         title: 'Employee Terminating coverage',
@@ -916,6 +917,7 @@ shop_notice_triggers = [
             }
         ]
     },
+    
     {
       hbx_id: 'SHOP_M070',
       title: 'Employee Enrollment Confirmation',
@@ -938,28 +940,6 @@ shop_notice_triggers = [
       ]
     },
     {
-        hbx_id: 'SHOP_M029',
-        title: 'Confirmation Of Election To Waive Coverage',
-        description: 'Employee waiver confirmation',
-        resource_name: 'employee_role',
-        event_name: 'employee_waiver_notice',
-        notice_triggers: [
-            {
-                name: 'Notice to employee after they select a plan Annual Open Enrollment',
-                notice_template: 'notices/shop_employee_notices/employee_waiver_confirmation_notification',
-                notice_builder: 'ShopEmployeeNotices::EmployeeWaiverConfirmNotice',
-                mpi_indicator: 'SHOP_M029',
-                notice_trigger_element_group: {
-                    market_places: ['shop'],
-                    primary_recipients: ["employee"],
-                    primary_recipient_delivery_method: ["secure_message"],
-                    secondary_recipients: []
-                }
-            }
-        ]
-    },
-
-    {
         hbx_id: 'SHOP_M040',
         title: 'CONFIRMATION OF ELECTION TO TERMINATE COVERAGE',
         description: 'Employee Terminating coverage after QLE',
@@ -981,7 +961,6 @@ shop_notice_triggers = [
         ]
     },
     {
-
         hbx_id: 'SHOP_M041',
         title: 'Notice Confirmation for Group termination due to ER advance request',
         description: 'Group termination confirmation for advance request',
@@ -1023,6 +1002,28 @@ shop_notice_triggers = [
             }
         ]
     },
+
+    {
+        hbx_id: 'SHOP_M029',
+        title: 'Confirmation Of Election To Waive Coverage',
+        description: 'Employee waiver confirmation',
+        resource_name: 'employee_role',
+        event_name: 'employee_waiver_notice',
+        notice_triggers: [
+            {
+                name: 'Notice to employee after they select a plan Annual Open Enrollment',
+                notice_template: 'notices/shop_employee_notices/employee_waiver_confirmation_notification',
+                notice_builder: 'ShopEmployeeNotices::EmployeeWaiverConfirmNotice',
+                mpi_indicator: 'SHOP_M029',
+                notice_trigger_element_group: {
+                    market_places: ['shop'],
+                    primary_recipients: ["employee"],
+                    primary_recipient_delivery_method: ["secure_message"],
+                    secondary_recipients: []
+                }
+            }
+        ]
+    },
     
     {                
         hbx_id: 'SHOP59',
@@ -1046,28 +1047,6 @@ shop_notice_triggers = [
             }
         ]
     },        
-
-    {
-        hbx_id: 'SHOP_M040',
-        title: 'CONFIRMATION OF ELECTION TO TERMINATE COVERAGE',
-        description: 'Employee Terminating coverage after QLE',
-        resource_name: 'employer',
-        event_name: 'notify_employee_confirming_coverage_termination',
-        notice_triggers: [
-            {
-                name: 'Notice to employer when employee terminates coverage',
-                notice_template: 'notices/shop_employee_notices/employee_terminating_coverage',
-                notice_builder: 'ShopEmployeeNotices::EmployeeTerminatingCoverage',
-                mpi_indicator: 'SHOP_M040',
-                notice_trigger_element_group: {
-                    market_places: ['shop'],
-                     primary_recipients: ["employer"],
-                    primary_recipient_delivery_method: ["secure_message"],
-                    secondary_recipients: []
-                }
-            }
-        ]
-    },
 
     {
         hbx_id: 'SHOP_M040',
@@ -1132,6 +1111,28 @@ shop_notice_triggers = [
                 }
             }
         ]
+    },
+ 
+    {
+      hbx_id: 'SHOP_M070',
+      title: 'Employee Enrollment Confirmation',
+      description: 'Employee selects a plan during annual open enrollment OE is still close and final confirmation',
+      resource_name: 'employee_role',
+      event_name: 'initial_employee_plan_selection_confirmation',
+      notice_triggers: [
+        {
+            name: 'Notice to employee after they select a plan Annual Open Enrollment',
+            notice_template: 'notices/shop_employee_notices/initial_employee_plan_selection_confirmation',
+            notice_builder: 'ShopEmployeeNotices::InitialEmployeePlanSelectionConfirmation',
+            mpi_indicator: 'SHOP_M070',
+            notice_trigger_element_group: {
+                market_places: ['shop'],
+                primary_recipients: ["employee"],
+                primary_recipient_delivery_method: ["secure_message"],
+                secondary_recipients: []
+            }
+        }
+      ]
     }
 ]
 
