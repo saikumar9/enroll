@@ -31,5 +31,43 @@ module SponsoredApplications
       end
     end
 
+    context "given an array of members" do
+      let(:census_members) {
+        [
+          {
+            first_name: "Joe",
+            middle_name:  "L",
+            last_name: "Example",
+            name_sfx: '',
+            dob: Date.today - 30.years,
+            gender: 'male',
+            ssn: '123456789',
+            employee_relationship: 'employee',
+            census_dependents: [
+              {
+                first_name: "Jane",
+                middle_name:  '',
+                last_name: "Example",
+                name_sfx: '',
+                dob: Date.today - 31.years,
+                gender: 'female',
+                ssn: '987654321',
+                employee_relationship: 'spouse'
+              }
+            ]
+          }
+        ]
+      }
+      let(:subject) { SponsorCensusMemberBuilder.new(census_members) }
+
+      it "creates dependents along with the census member" do
+        result = subject.sponsor_census_members.first
+        expect(result).to be_kind_of(SponsorCensusMember)
+        expect(result.full_name).to match(/Joe L Example/)
+        expect(result.census_dependents.count).to eq(1)
+        expect(result.census_dependents.first).to be_kind_of(SponsorCensusDependent)
+      end
+    end
+
   end
 end
