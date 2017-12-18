@@ -1134,7 +1134,7 @@ shop_notice_triggers = [
             }
         ]
     },
- 
+
     {
       hbx_id: 'SHOP_M070',
       title: 'Employee Enrollment Confirmation',

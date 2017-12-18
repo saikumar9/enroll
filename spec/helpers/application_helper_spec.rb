@@ -418,4 +418,4 @@ end
       expect(queued_job[:args]).to eq ["8728346", 'notify_employee_confirming_coverage_termination'] 
     end
   end
-end        
+end
