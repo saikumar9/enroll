@@ -4,6 +4,9 @@ module SponsoredBenefits
     class Organization
       include Mongoid::Document
       include Mongoid::Timestamps
+      include Mongoid::Versioning
+
+      store_in collection: 'organizations'
 
       PROFILE_KINDS = [:plan_design_profile, :employer_profile, :broker_agency_profile, :general_agency_profile]
 
@@ -44,7 +47,6 @@ module SponsoredBenefits
       # User or Person ID who created/updated
       field :updated_by, type: BSON::ObjectId
 
-
       embeds_many :office_locations, class_name: "SponsoredBenefits::Organizations::OfficeLocation", cascade_callbacks: true, validate: true
 
       embeds_one :broker_agency_profile, cascade_callbacks: true, validate: true
@@ -54,21 +56,26 @@ module SponsoredBenefits
       accepts_nested_attributes_for :office_locations, :broker_agency_profile, :carrier_profile, :hbx_profile
       # accepts_nested_attributes_for :office_locations, :employer_profile, :broker_agency_profile, :carrier_profile, :hbx_profile, :general_agency_profile
 
-      validates_presence_of :legal_name, :fein, :office_locations
+      validates_presence_of :legal_name, :office_locations
 
-      validates :fein,
-        length: { is: 9, message: "%{value} is not a valid FEIN" },
-        numericality: true,
-        uniqueness: true
 
       validate :office_location_kinds
 
-      index({ hbx_id: 1 }, { unique: true })
       index({ legal_name: 1 })
       index({ dba: 1 }, {sparse: true})
-      index({ fein: 1 }, { unique: true })
       index({ is_active: 1 })
 
+      def _type=(val)
+      end
+
+      def general_agency_profile
+      end
+
+      def employer_profile
+      end
+
+      def documents
+      end
       # CarrierProfile child model indexes
       index({"carrier_profile._id" => 1}, { unique: true, sparse: true })
 
@@ -186,6 +193,10 @@ module SponsoredBenefits
           random_fein = (["00"] + 7.times.map{rand(10)} ).join
           break random_fein unless Organization.where(:fein => random_fein).count > 0
         end
+      end
+
+      def updated_by_id=(val)
+
       end
 
       def generate_hbx_id
@@ -388,6 +399,7 @@ module SponsoredBenefits
       end
 
       class << self
+
         def employer_profile_renewing_starting_on(date_filter)
           employer_profile_renewing_coverage.employer_profile_plan_year_start_on(date_filter)
         end

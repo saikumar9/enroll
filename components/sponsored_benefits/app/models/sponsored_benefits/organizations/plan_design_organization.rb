@@ -3,7 +3,7 @@ module SponsoredBenefits
   module Organizations
     class PlanDesignOrganization < Organization
 
-      belongs_to :broker_agency_profile, class_name: "SponsoredBenefits::Organizations::BrokerAgencyProfile", foreign_key: 'customer_profile_id'
+      belongs_to :broker_agency_profile, class_name: "SponsoredBenefits::Organizations::BrokerAgencyProfile", inverse_of: :plan_design_organization
 
       # Plan design owner profile type & ID
       field :owner_profile_id,    type: BSON::ObjectId
@@ -19,7 +19,7 @@ module SponsoredBenefits
       field :entity_kind, type: String
 
 
-      embeds_one :plan_design_profile #, class_name: "SponsoredBenefits::Organizations::AcaShopCcaEmployerProfile"
+      embeds_one :plan_design_profile, class_name: "SponsoredBenefits::Organizations::AcaShopCcaEmployerProfile"
 
     end
   end
