@@ -30,7 +30,7 @@ module Concerns::Observable
         end
       end
     end
-  end
+  end  
 
   class_methods do
 
@@ -42,7 +42,6 @@ module Concerns::Observable
       if observers.none?{|k, v| k.is_a?(observer.class)}
         observers[observer] = func
       end
-
       observers
     end
 

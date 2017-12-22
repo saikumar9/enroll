@@ -63,7 +63,7 @@ module Config::SiteHelper
   def site_nondiscrimination_notice_url
     Settings.site.nondiscrimination_notice_url
   end
-    
+
   def site_policies_url
     Settings.site.policies_url
   end
@@ -162,5 +162,9 @@ module Config::SiteHelper
 
   def site_document_verification_checklist_url
     Settings.site.document_verification_checklist_url
+  end
+
+  def site_invoice_bill_url
+    Settings.site.invoice_bill_url
   end
 end
