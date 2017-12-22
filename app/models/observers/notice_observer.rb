@@ -62,7 +62,6 @@ module Observers
 
         if PlanYear::DATA_CHANGE_EVENTS.include?(new_model_event.event_key)
         end
-
       end
     end
 

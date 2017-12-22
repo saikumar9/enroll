@@ -11,7 +11,7 @@ module ModelEvents
       :ineligible_renewal_application_submitted,
       :open_enrollment_began,
       :application_denied,
-      :renewal_application_denied,
+      :renewal_application_denied
     ]
 
     DATA_CHANGE_EVENTS = [
@@ -91,6 +91,7 @@ module ModelEvents
         if new_date.day == Settings.aca.shop_market.renewal_application.application_submission_soft_deadline - 2
           is_renewal_plan_year_first_reminder_before_soft_dead_line = true
         end
+
         # renewal_application with enrolling state, reached open-enrollment end date with minimum participation and non-owner-enrolle i.e 15th of month
         if new_date.day == Settings.aca.shop_market.renewal_application.publish_due_day_of_month
           is_renewal_employer_open_enrollment_completed = true
