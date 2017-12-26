@@ -76,6 +76,14 @@ module Config::SiteHelper
     Settings.site.short_name
   end
 
+  def site_registration_path(resource_name, params)
+    if Settings.site.registration_path.present? && ENV['AWS_ENV'] == 'prod'
+       Settings.site.registration_path
+    else
+      new_registration_path(resource_name, :invitation_id => params[:invitation_id])
+    end
+  end
+
   def site_long_name
     Settings.site.long_name
   end
