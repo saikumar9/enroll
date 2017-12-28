@@ -30,15 +30,17 @@ module SponsoredBenefits
     embeds_one :address, class_name: "SponsoredBenefits::Locations::Address"
     accepts_nested_attributes_for :address, reject_if: :all_blank, allow_destroy: true
 
-    embeds_one :email
+    embeds_one :email, class_name: "SponsoredBenefits::Email"
     accepts_nested_attributes_for :email, allow_destroy: true
 
     validates_presence_of :first_name, :last_name, :dob, :employee_relationship
+  
+    validates :gender, presence: true, unless: :plan_design_model?
+    validates :gender, allow_blank: true, inclusion: { in: GENDER_KINDS, message: "must be selected" }
 
-    validates :gender,
-      allow_blank: false,
-      inclusion: { in: GENDER_KINDS, message: "must be selected" }
-
+    def plan_design_model?
+      self.is_a?(SponsoredBenefits::CensusMembers::PlanDesignCensusEmployee) || _parent.is_a?(SponsoredBenefits::CensusMembers::PlanDesignCensusEmployee)
+    end
 
     def full_name
       [first_name, middle_name, last_name, name_sfx].compact.join(" ")

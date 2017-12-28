@@ -25,6 +25,10 @@ module SponsoredBenefits
 
       accepts_nested_attributes_for :census_dependents
 
+      embeds_many :benefit_group_assignments, as: :benefit_assignable,
+      cascade_callbacks: true,
+      validate: true
+
       validates_presence_of :dob
 
       validate :active_census_employee_is_unique
@@ -46,6 +50,7 @@ module SponsoredBenefits
       end
 
       def no_duplicate_census_dependent_ssns
+        return if ssn.blank?
         dependents_ssn = census_dependents.map(&:ssn).select(&:present?)
         if dependents_ssn.uniq.length != dependents_ssn.length ||
           dependents_ssn.any?{|dep_ssn| dep_ssn==self.ssn}
@@ -54,6 +59,7 @@ module SponsoredBenefits
       end
 
       def active_census_employee_is_unique
+        return if ssn.blank?
         potential_dups = self.class.by_ssn(ssn).by_sponsorship_id(benefit_sponsorship_id)
         if potential_dups.detect { |dup| dup.id != self.id  }
           message = "Employee with this identifying information is already active. "\
