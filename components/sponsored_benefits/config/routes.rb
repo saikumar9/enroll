@@ -16,9 +16,17 @@ SponsoredBenefits::Engine.routes.draw do
     end
 
     resources :plan_design_organizations do
-      resources :plan_design_proposals
+      resources :plan_design_proposals do
+        resources :contributions, controller: 'plan_design_proposals/contributions', only: [:index]
+      end
       resources :carriers, controller: 'plan_design_proposals/carriers', only: [:index]
       resources :plans, controller: 'plan_design_proposals/plans', only: [:index]
+    end
+
+    resources :plan_design_proposals, only: [:destroy, :create] do
+      resources :contributions, controller: 'plan_design_proposals/contributions', only: [:index]
+      resources :plan_selections, controller: 'plan_design_proposals/plan_selections', only: [:new]
+      post :publish
     end
 
     resource :office_locations do

@@ -3,12 +3,11 @@ require_dependency "sponsored_benefits/application_controller"
 module SponsoredBenefits
   class CensusMembers::PlanDesignCensusEmployeesController < ApplicationController
     include DataTablesAdapter
-    
+
     before_action :load_plan_design_proposal
     before_action :load_plan_design_census_employee, only: [:show, :edit, :update, :destroy]
 
     def index
-      @plan_design_census_employees = @benefit_application.plan_design_census_employees
     end
 
     def show
@@ -25,6 +24,8 @@ module SponsoredBenefits
 
     def edit
       @census_employee = SponsoredBenefits::CensusMembers::PlanDesignCensusEmployee.find(params.require(:id))
+      @census_employee.build_email if @census_employee.email.blank?
+      @census_employee.build_address if @census_employee.address.blank?
 
       respond_to do |format|
         format.js { render "edit" }
@@ -69,7 +70,7 @@ module SponsoredBenefits
 
     def bulk_employee_upload
       @census_employee_import = SponsoredBenefits::Forms::PlanDesignCensusEmployeeImport.new({file: params.require(:file), proposal: @plan_design_proposal})
-      
+
       respond_to do |format|
         if @census_employee_import.save
           format.html { redirect_to :back, :flash => { :success => "Roster uploaded successfully."} }

@@ -7,7 +7,10 @@ module SponsoredBenefits
       include Searchable
       include Autocomplete
 
-      EMPLOYMENT_ACTIVE_STATES = %w(eligible cobra_eligible)
+      EMPLOYMENT_ACTIVE_STATES = %w(eligible employee_role_linked employee_termination_pending newly_designated_eligible newly_designated_linked cobra_eligible cobra_linked cobra_termination_pending)
+      EMPLOYMENT_TERMINATED_STATES = %w(employment_terminated cobra_terminated rehired)
+      EMPLOYMENT_ACTIVE_ONLY = %w(eligible employee_role_linked employee_termination_pending newly_designated_eligible newly_designated_linked)
+      COBRA_STATES = %w(cobra_eligible cobra_linked cobra_terminated cobra_termination_pending)
 
       field :is_business_owner, type: Boolean, default: false
       field :hired_on, type: Date
@@ -25,7 +28,7 @@ module SponsoredBenefits
 
       accepts_nested_attributes_for :census_dependents
 
-      embeds_many :benefit_group_assignments, as: :benefit_assignable,
+      embeds_many :benefit_group_assignments, as: :benefit_assignable, class_name: "SponsoredBenefits::CensusMembers::BenefitGroupAssignment",
       cascade_callbacks: true,
       validate: true
 
@@ -41,8 +44,11 @@ module SponsoredBenefits
       scope :by_employer_profile_id,    ->(employer_profile_id) { where(employer_profile_id: employer_profile_id) }
       scope :by_sponsorship_id,    ->(benefit_sponsorship_id) { where(benefit_sponsorship_id: benefit_sponsorship_id) }
       scope :by_ssn,    ->(ssn) { where(encrypted_ssn: SponsoredBenefits::CensusMembers::CensusMember.encrypt_ssn(ssn)) }
-      scope :active,            ->{ any_in(aasm_state: EMPLOYMENT_ACTIVE_STATES) }
 
+      scope :active,            ->{ any_in(aasm_state: EMPLOYMENT_ACTIVE_STATES) }
+      scope :terminated,        ->{ any_in(aasm_state: EMPLOYMENT_TERMINATED_STATES) }
+      scope :by_cobra,          ->{ any_in(aasm_state: COBRA_STATES) }
+      scope :active_alone,      ->{ any_in(aasm_state: EMPLOYMENT_ACTIVE_ONLY) }
 
       def initialize(*args)
         super(*args)
@@ -121,9 +127,32 @@ module SponsoredBenefits
         if employer_profile.present?
           employer_profile.benefit_sponsorships.each do |sponsorship|
             @benefit_application = sponsorship.benefit_applications.detect{|application| application.id  == benefit_application_id}
-          end          
+          end
         end
         @benefit_application
+      end
+
+      def is_cobra_status?
+        false
+      end
+
+      def expected_to_enroll?
+        ## placeholder, todo: implement
+        true
+      end
+
+      def expected_to_enroll_or_valid_waive?
+        true
+      end
+      
+      def composite_rating_tier
+        return ::CompositeRatingTier::EMPLOYEE_ONLY if self.census_dependents.empty?
+        relationships = self.census_dependents.map(&:employee_relationship)
+        if (relationships.include?("spouse") || relationships.include?("domestic_partner"))
+          relationships.many? ? ::CompositeRatingTier::FAMILY : ::CompositeRatingTier::EMPLOYEE_AND_SPOUSE
+        else
+          ::CompositeRatingTier::EMPLOYEE_AND_ONE_OR_MORE_DEPENDENTS
+        end
       end
 
       aasm do
@@ -148,6 +177,10 @@ module SponsoredBenefits
 
         def find_by_benefit_sponsor(sponsor)
           unscoped.where(benefit_sponsorship_id: sponsor._id).order_name_asc
+        end
+
+        def find_all_by_benefit_group(benefit_group)
+          unscoped.where("benefit_group_assignments.benefit_group_id" => benefit_group._id)
         end
 
         def find_all_by_employer_profile(employer_profile)

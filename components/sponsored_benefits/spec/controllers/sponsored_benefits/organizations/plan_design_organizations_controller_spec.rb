@@ -29,6 +29,50 @@ module SponsoredBenefits
     let(:datatable) { double(:datatable) }
     let(:sic_codes) { double(:sic_codes) }
 
+    let(:valid_attributes) {
+      {
+        "legal_name"  =>  "Some Name",
+        "dba"         =>  "",
+        "entity_kind" =>  "",
+        "sic_code"    =>  "0116",
+        "office_locations_attributes" =>
+              {"0"=>
+                  { "address_attributes" =>
+                      { "kind"      =>  "primary",
+                        "address_1" =>  "",
+                        "address_2" =>  "",
+                        "city"      =>  "",
+                        "state"     =>  "",
+                        "zip"       =>  "01001",
+                        "county"    =>  "Hampden"
+                      },
+                    "phone_attributes" =>
+                      { "kind"      =>  "phone main",
+                        "area_code" =>  "",
+                        "number"    =>  "",
+                        "extension" =>  ""
+                      }
+                  }
+        }
+      }
+    }
+
+    let(:invalid_attributes) {
+      {
+        "legal_name"  =>  nil,
+        "sic_code"    =>  nil,
+        "office_locations_attributes" =>
+              {"0"=>
+                  { "address_attributes" =>
+                      { "kind"      =>  "primary",
+                        "zip"       =>  "01001",
+                        "county"    =>  "Hampden"
+                      }
+                  }
+        }
+      }
+    }
+
     before do
       allow(subject).to receive(:current_person).and_return(current_person)
       allow(current_person).to receive(:broker_role).and_return(broker_role)
@@ -78,41 +122,6 @@ module SponsoredBenefits
             allow(active_user).to receive(:has_hbx_staff_role?).and_return( role == :with_hbx_staff_role ? true : false)
           end
 
-          let(:valid_attributes) {
-            {
-              "legal_name"  =>  "Some Name",
-              "dba"         =>  "",
-              "entity_kind" =>  "",
-              "sic_code"    =>  "0116",
-              "office_locations_attributes" =>
-                    {"0"=>
-                        { "address_attributes" =>
-                            { "kind"      =>  "primary",
-                              "address_1" =>  "",
-                              "address_2" =>  "",
-                              "city"      =>  "",
-                              "state"     =>  "",
-                              "zip"       =>  "01001",
-                              "county"    =>  "Hampden"
-                            },
-                          "phone_attributes" =>
-                            { "kind"      =>  "phone main",
-                              "area_code" =>  "",
-                              "number"    =>  "",
-                              "extension" =>  ""
-                            }
-                        }
-              },
-              "broker_agency_id" => broker_agency_profile.id
-            }
-          }
-
-          let(:invalid_attributes) {
-            {
-              "legal_name"  =>  "Some Name"
-            }
-          }
-
           context "with valid params" do
             it "creates a new Organizations::PlanDesignOrganization" do
               expect {
@@ -152,30 +161,24 @@ module SponsoredBenefits
           before do
             allow(BrokerAgencyProfile).to receive(:find).with(broker_agency_profile.id).and_return(broker_agency_profile)
             allow(SponsoredBenefits::Organizations::BrokerAgencyProfile).to receive(:find_or_initialize_by).with(:fein).and_return("223232323")
+            allow(subject).to receive(:get_sic_codes).and_return(sic_codes)
             allow(active_user).to receive(:has_hbx_staff_role?).and_return( role == :with_hbx_staff_role ? true : false)
           end
 
-          let(:valid_attributes) {
-            {
-              "legal_name"  =>  "Some New Name",
-            }
-          }
-
-          let(:invalid_attributes) {
-            {
-              "legal_name"  =>  nil
-            }
-          }
-
           context "with valid params" do
+            let(:updated_valid_attributes) {
+              valid_attributes["legal_name"] = "Some New Name"
+              valid_attributes
+            }
+
             it "updates Organizations::PlanDesignOrganization" do
               expect {
-                patch :update, { organization: valid_attributes, id: plan_design_organization.id, format: 'js' }, valid_session
+                patch :update, { organization: updated_valid_attributes, id: plan_design_organization.id, format: 'js' }, valid_session
               }.to change { plan_design_organization.reload.legal_name }.to('Some New Name')
             end
 
             it "redirects to employers_organizations_broker_agency_profile_path(broker_agency_profile)" do
-              patch :update, { organization: valid_attributes, id: plan_design_organization.id, format: 'js' }, valid_session
+              patch :update, { organization: updated_valid_attributes, id: plan_design_organization.id, format: 'js' }, valid_session
               expect(subject).to redirect_to(employers_organizations_broker_agency_profile_path(broker_agency_profile))
             end
 
@@ -193,13 +196,79 @@ module SponsoredBenefits
               }.not_to change { plan_design_organization.reload.legal_name }
             end
 
-            it "renders the update view" do
+            it "renders edit with flash error" do
               patch :update, { organization: invalid_attributes, id: plan_design_organization.id, format: 'js' }, valid_session
               expect(response).to render_template(:edit)
+            end
+          end
+
+          context "with params missing office_location_attributes" do
+            let(:params_missing_ol_attrs) {
+              valid_attributes.delete "office_locations_attributes"
+              valid_attributes
+            }
+
+            it "does not update Organizations::PlanDesignOrganization" do
+              expect {
+                patch :update, { organization: params_missing_ol_attrs, id: plan_design_organization.id, format: 'js' }, valid_session
+              }.not_to change { plan_design_organization.reload.legal_name }
+            end
+
+            it "redirects to employers_organizations_broker_agency_profile_path(broker_agency_profile) with flash error" do
+              patch :update, { organization: params_missing_ol_attrs, id: plan_design_organization.id, format: 'js' }, valid_session
+               expect(subject).to redirect_to(employers_organizations_broker_agency_profile_path(broker_agency_profile))
+               expect(flash[:error]).to match(/Prospect Employer must have one Primary Office Location./)
             end
           end
         end
       end
     end
+
+    describe "DELETE #destroy" do
+      USER_ROLES.each do |role|
+        context "for user #{role}" do
+          let(:broker_agency_profile) { double(id: "12345") }
+
+          before do
+            allow(BrokerAgencyProfile).to receive(:find).with(broker_agency_profile.id).and_return(broker_agency_profile)
+          end
+
+          context "when attempting to delete plan design organizations without existing quotes" do
+            let!(:plan_design_organization) { create(:plan_design_organization, customer_profile_id: '1', owner_profile_id: broker_agency_profile.id,
+                                                                                legal_name: 'ABC Company', sic_code: '0197' ) }
+
+            it "destroys the requested plan_design_organization" do
+              expect {
+                delete :destroy, {:id => plan_design_organization.to_param}, valid_session
+              }.to change(SponsoredBenefits::Organizations::PlanDesignOrganization, :count).by(-1)
+            end
+
+            it "redirects to employers_organizations_broker_agency_profile_path(broker_agency_profile)" do
+              delete :destroy, {:id => plan_design_organization.to_param}, valid_session
+              expect(response).to redirect_to(employers_organizations_broker_agency_profile_path(broker_agency_profile))
+            end
+          end
+
+          context "when attempting to delete plan design organizations with existing quotes" do
+            let!(:plan_design_organization) { create(:plan_design_organization, customer_profile_id: '1', owner_profile_id: '12345',
+                                                      plan_design_proposals: [ plan_design_proposal ], sic_code: '0197' ) }
+            let(:plan_design_proposal) { build(:plan_design_proposal) }
+
+            it "does not destroy the requested plan_design_organization" do
+              expect {
+                delete :destroy, {:id => plan_design_organization.to_param}, valid_session
+              }.to change(SponsoredBenefits::Organizations::PlanDesignOrganization, :count).by(0)
+            end
+
+            it "redirects to employers_organizations_broker_agency_profile_path(broker_agency_profile)" do
+              delete :destroy, {:id => plan_design_organization.to_param}, valid_session
+              expect(response).to redirect_to(employers_organizations_broker_agency_profile_path(broker_agency_profile))
+            end
+          end
+
+        end
+      end
+    end
+
   end
 end

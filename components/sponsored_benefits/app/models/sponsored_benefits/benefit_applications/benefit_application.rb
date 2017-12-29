@@ -7,6 +7,7 @@ module SponsoredBenefits
       embedded_in :benefit_sponsorship, class_name: "SponsoredBenefits::BenefitSponsorships::BenefitSponsorship"
 
       delegate :sic_code, to: :benefit_sponsorship
+      delegate :rating_area, to: :benefit_sponsorship
      ### Deprecate -- use effective_period attribute
       # field :start_on, type: Date
       # field :end_on, type: Date
@@ -31,7 +32,7 @@ module SponsoredBenefits
 
       # has_one :rosterable, as: :rosterable
 
-      embeds_many :benefit_groups, cascade_callbacks: true
+      embeds_many :benefit_groups, class_name: "SponsoredBenefits::BenefitApplications::BenefitGroup", cascade_callbacks: true
 
       # embeds_many :benefit_packages, as: :benefit_packageable, class_name: "SponsoredBenefits::BenefitPackages::BenefitPackage"
       # accepts_nested_attributes_for :benefit_packages
@@ -66,13 +67,22 @@ module SponsoredBenefits
       end
 
       def effective_period=(new_effective_period)
-        effective_range = SponsoredBenefits.tidy_date_range(new_effective_period, :effective_period)
-        write_attribute(:effective_period, effective_range) unless effective_range.blank?
+        ## this method does not exist so I am not sure what the intention is
+        # effective_range = SponsoredBenefits.tidy_date_range(new_effective_period, :effective_period)
+        write_attribute(:effective_period, new_effective_period) unless new_effective_period.blank?
       end
 
       def open_enrollment_period=(new_open_enrollment_period)
-        open_enrollment_range = SponsoredBenefits.tidy_date_range(new_open_enrollment_period, :open_enrollment_period)
+        #open_enrollment_range = SponsoredBenefits.tidy_date_range(new_open_enrollment_period, :open_enrollment_period)
         write_attribute(:open_enrollment_period, open_enrollment_range) unless open_enrollment_range.blank?
+      end
+
+      def start_on
+        effective_period.begin
+      end
+
+      def end_on
+        effective_period.end
       end
 
       def open_enrollment_begin_on
@@ -86,7 +96,6 @@ module SponsoredBenefits
       def open_enrollment_completed?
         open_enrollment_period.blank? ? false : (::TimeKeeper.date_of_record > open_enrollment_period.end)
       end
-
 
       # Application meets criteria necessary for sponsored group to shop for benefits
       def is_open_enrollment_eligible?
@@ -134,11 +143,11 @@ module SponsoredBenefits
         # Attribute Map
         start_on                        = enrollment_period.begin
         end_on                          = enrollment_period.end
-        open_enrollment_period_start_on = open_enrollment_period.begin 
+        open_enrollment_period_start_on = open_enrollment_period.begin
         open_enrollment_period_end_on   = open_enrollment_period.end
 
         # CCA-specific attributes (move to subclass)
-        recorded_sic_code               = "" 
+        recorded_sic_code               = ""
         recorded_rating_area            = ""
 
         # TODO: BenefitGroups and CensusEmployee BenefitGroupAssigments use IDs for association.  Ruby clone creates a
@@ -160,12 +169,12 @@ module SponsoredBenefits
             end
           end
 
-          # list << 
+          # list <<
 
         end
 
-        ::PlanYear.new( start_on: start_on, 
-                        end_on: end_on, 
+        ::PlanYear.new( start_on: start_on,
+                        end_on: end_on,
                         open_enrollment_period_start_on: open_enrollment_period_start_on,
                         open_enrollment_period_end_on: open_enrollment_period_end_on,
                         benefit_groups: cloned_benefit_groups,
