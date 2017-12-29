@@ -17,7 +17,8 @@ module SponsoredBenefits
         ensure_proposal
         ensure_profile
         ensure_sic_zip_county
-        ensure_benefit_group
+        # Commented out due to validation errors. Benefit group needs be initialized during plan comparision.
+        # ensure_benefit_group
       end
 
       def assign_wrapper_attributes(attrs = {})
@@ -82,7 +83,7 @@ module SponsoredBenefits
 
       def ensure_benefit_group
         sponsorship = @profile.benefit_sponsorships.first
-        application = sponsorship.benefit_applications.first
+        application = sponsorship.benefit_applications.first        
         application.benefit_groups.build
         application.benefit_groups.first.build_relationship_benefits
         application.benefit_groups.first.build_composite_tier_contributions
@@ -93,13 +94,46 @@ module SponsoredBenefits
 
         if @proposal.persisted?
           @proposal.assign_attributes(title: @title)
-          @proposal.profile.benefit_sponsorships.first.assign_attributes(initial_enrollment_period: initial_enrollment_period, annual_enrollment_period_begin_month: @effective_date.month)
         else
           profile = SponsoredBenefits::Organizations::AcaShopCcaEmployerProfile.new({sic_code: @sic_code})
           @proposal = @plan_design_organization.plan_design_proposals.build({title: @title, profile: profile})
-          @proposal.profile.benefit_sponsorships.first.assign_attributes({initial_enrollment_period: initial_enrollment_period, annual_enrollment_period_begin_month: @effective_date.month})
         end
-        @proposal.save
+
+        sponsorship = @proposal.profile.benefit_sponsorships.first
+        sponsorship.assign_attributes({initial_enrollment_period: initial_enrollment_period, annual_enrollment_period_begin_month: @effective_date.month})
+        if sponsorship.present?
+          enrollment_dates = BenefitApplications::BenefitApplication.enrollment_timetable_by_effective_date(@effective_date)
+          benefit_application = (sponsorship.benefit_applications.first || sponsorship.benefit_applications.build)
+          benefit_application.effective_period= enrollment_dates[:effective_period]
+          benefit_application.open_enrollment_period= enrollment_dates[:open_enrollment_period]
+        end
+
+        @proposal.save!
+      end
+
+      def to_h
+        unless @effective_date.is_a? Date
+          effective_date = Date.strptime(@effective_date, "%Y-%m-%d")
+        else
+          effective_date = @effective_date
+        end
+        sponsorship = @profile.benefit_sponsorships.first
+        {
+          title: "Copy of #{@proposal.title}",
+          effective_date: @effective_date,
+          profile: [
+            benefit_sponsorship: [
+              initial_enrollment_period: effective_date..(effective_date.next_year.prev_day),
+              annual_enrollment_period_begin_month: effective_date.month,
+              benefit_market: sponsorship.benefit_market,
+              contact_method: sponsorship.contact_method,
+              benefit_application: [
+                effective_period: effective_date..(effective_date.next_year.prev_day),
+                open_enrollment_period: TimeKeeper.date_of_record..effective_date,
+              ]
+            ]
+          ]
+        }
       end
     end
   end
