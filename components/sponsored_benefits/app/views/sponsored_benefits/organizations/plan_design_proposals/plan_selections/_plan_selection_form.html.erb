@@ -36,7 +36,7 @@
         <h3 class="panel-title">Employer Contributions</h3>
       </div>
       <div class="panel-body">
-        <p>Specify contribution levels for each enrolle type.</p>
+        <p>Specify contribution levels for each enrollee type.</p>
         <%= f.fields_for :profile, f.object.profile do |pr| %>
           <%= pr.fields_for :benefit_sponsorship, pr.object.benefit_sponsorships.first do |s| %>
             <%= s.fields_for :benefit_application, s.object.benefit_applications.first do |ba| %>
@@ -95,12 +95,28 @@
         <div class="col-md-3">
           <h3>Employee Costs</h3>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-7">
           <br />
           <p>Details of the minimum, maximum and reference costs for your members are shown below.  Values are based on the Benefit Package Type, Contribution Amounts and Reference Plan you have chosen above.</p>
         </div>
-        <div class="employee-costs"></div>
+        <div class="col-md-2">
+          <br />
+          <a class="text-center employee-details-text" data-toggle="collapse" href="#collapseExample" aria-expanded="true" >Show Details</a>
+        </div>
+        <div class="collapse" id="collapseExample">
+          <div class="employee-costs"></div>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  $('.employee-details-text').click(function() {
+    if ($(this).text() == "Show Details") {
+        $(this).text("Hide Details");
+    } else {
+        $(this).text("Show Details");
+    };
+  });
+</script>
