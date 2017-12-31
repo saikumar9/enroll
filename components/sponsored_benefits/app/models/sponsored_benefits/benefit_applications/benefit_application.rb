@@ -70,12 +70,12 @@ module SponsoredBenefits
 
       def effective_period=(new_effective_period)
         effective_range = SponsoredBenefits.tidy_date_range(new_effective_period, :effective_period)
-        write_attribute(:effective_period, new_effective_period) unless new_effective_period.blank?
+        write_attribute(:effective_period, effective_range) unless effective_range.blank?
       end
 
       def open_enrollment_period=(new_open_enrollment_period)
         open_enrollment_range = SponsoredBenefits.tidy_date_range(new_open_enrollment_period, :open_enrollment_period)
-        write_attribute(:open_enrollment_period, new_open_enrollment_period) unless new_open_enrollment_period.blank?
+        write_attribute(:open_enrollment_period, open_enrollment_range) unless open_enrollment_range.blank?
       end
 
       def start_on
@@ -224,6 +224,20 @@ module SponsoredBenefits
 
 
       class << self
+        def calculate_start_on_dates
+          start_on = if TimeKeeper.date_of_record.day > open_enrollment_minimum_begin_day_of_month(true)
+            TimeKeeper.date_of_record.beginning_of_month + Settings.aca.shop_market.open_enrollment.maximum_length.months.months
+          else
+            TimeKeeper.date_of_record.prev_month.beginning_of_month + Settings.aca.shop_market.open_enrollment.maximum_length.months.months
+          end
+
+          end_on = TimeKeeper.date_of_record - Settings.aca.shop_market.initial_application.earliest_start_prior_to_effective_on.months.months
+          dates = (start_on..end_on).select {|t| t == t.beginning_of_month}
+        end
+
+        def calculate_start_on_options
+          calculate_start_on_dates.map {|date| [date.strftime("%B %Y"), date.to_s(:db) ]}
+        end
 
         def enrollment_timetable_by_effective_date(effective_date)
           effective_date            = effective_date.to_date.beginning_of_month
