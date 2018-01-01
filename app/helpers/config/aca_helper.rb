@@ -137,5 +137,9 @@ module Config::AcaHelper
   def site_broker_enabled?
    Settings.site.broker_enabled
   end
+   
+  def site_broker_claim_quoting_enabled?
+   Settings.site.broker_claim_quoting_enabled
+  end
 
 end

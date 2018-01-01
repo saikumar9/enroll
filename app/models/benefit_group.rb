@@ -359,11 +359,11 @@ class BenefitGroup
       build_composite_tier_contributions
       estimate_composite_rates
     end
-    targeted_census_employees.active.expected_to_enroll.collect do |ce|
-      pcd = if self.sole_source? && (!plan.dental?)
-        CompositeRatedPlanCostDecorator.new(plan, self, effective_composite_tier(ce), ce.is_cobra_status?)
+    targeted_census_employees_participation.collect do |ce|
+      if plan_option_kind == 'sole_source'
+        pcd = CompositeRatedPlanCostDecorator.new(plan, self, effective_composite_tier(ce), ce.is_cobra_status?)
       else
-        PlanCostDecorator.new(plan, ce, self, reference_plan)
+        pcd = PlanCostDecorator.new(plan, ce, self, reference_plan)
       end
       pcd.total_employer_contribution
     end.sum
@@ -373,10 +373,10 @@ class BenefitGroup
     rp = coverage_kind == "dental" ? dental_reference_plan : reference_plan
     return 0 if targeted_census_employees.count > 100
     targeted_census_employees_participation.collect do |ce|
-      pcd = if self.sole_source? && (!rp.dental?)
-        CompositeRatedPlanCostDecorator.new(rp, self, effective_composite_tier(ce), ce.is_cobra_status?)
+      if plan_option_kind == 'sole_source'
+        pcd = CompositeRatedPlanCostDecorator.new(reference_plan, self, effective_composite_tier(ce), ce.is_cobra_status?)
       else
-        PlanCostDecorator.new(rp, ce, self, rp)
+        pcd = PlanCostDecorator.new(rp, ce, self, rp)
       end
       pcd.total_employee_cost
     end

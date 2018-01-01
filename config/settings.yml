@@ -30,6 +30,7 @@ site:
   s3_prefix: "mhc"
   broker_quoting_enabled: false
   broker_enabled: false
+  broker_claim_quoting_enabled: true
   use_default_devise_path: true
   plan_options_title_for_ma: true
   create_routes: ['/insured/employee/privacy','/employers/employer_profiles/new']
