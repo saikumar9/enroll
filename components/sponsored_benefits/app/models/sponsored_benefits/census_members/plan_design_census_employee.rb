@@ -21,18 +21,16 @@ module SponsoredBenefits
       field :benefit_sponsorship_id, type: BSON::ObjectId
 
       has_many :census_survivors, class_name: "SponsoredBenefits::CensusMembers::CensusSurvivor"
-
       embeds_many :census_dependents, as: :census_dependent, class_name: "SponsoredBenefits::CensusMembers::CensusDependent",
-      cascade_callbacks: true,
-      validate: true
-
+                    cascade_callbacks: true,
+                    validate: true
       accepts_nested_attributes_for :census_dependents
 
       embeds_many :benefit_group_assignments, as: :benefit_assignable, class_name: "SponsoredBenefits::CensusMembers::BenefitGroupAssignment",
-      cascade_callbacks: true,
-      validate: true
+                    cascade_callbacks: true,
+                    validate: true
 
-      validates_presence_of :dob
+      validates_presence_of :benefit_sponsorship_id, :dob
 
       validate :active_census_employee_is_unique
       validate :check_census_dependents_relationship
@@ -41,9 +39,14 @@ module SponsoredBenefits
 
       before_save :allow_nil_ssn_updates_dependents
 
-      scope :by_employer_profile_id,    ->(employer_profile_id) { where(employer_profile_id: employer_profile_id) }
-      scope :by_sponsorship_id,    ->(benefit_sponsorship_id) { where(benefit_sponsorship_id: benefit_sponsorship_id) }
-      scope :by_ssn,    ->(ssn) { where(encrypted_ssn: SponsoredBenefits::CensusMembers::CensusMember.encrypt_ssn(ssn)) }
+      index({benefit_sponsorship_id: 1, ssn: 1}, {sparse: true})
+
+      scope :by_benefit_sponsorship,  ->(benefit_sponsorship) { where(benefit_sponsorship_id: benefit_sponsorship._id) }
+
+      # scope :by_sponsorship_id,       ->(benefit_sponsorship_id) { where(benefit_sponsorship_id: benefit_sponsorship_id) }
+      # scope :by_employer_profile_id,  ->(employer_profile_id) { where(employer_profile_id: employer_profile_id) }
+
+      scope :by_ssn,                  ->(ssn) { where(encrypted_ssn: SponsoredBenefits::CensusMembers::CensusMember.encrypt_ssn(ssn)) }
 
       scope :active,            ->{ any_in(aasm_state: EMPLOYMENT_ACTIVE_STATES) }
       scope :terminated,        ->{ any_in(aasm_state: EMPLOYMENT_TERMINATED_STATES) }
@@ -66,7 +69,8 @@ module SponsoredBenefits
 
       def active_census_employee_is_unique
         return if ssn.blank?
-        potential_dups = self.class.by_ssn(ssn).by_sponsorship_id(benefit_sponsorship_id)
+        potential_dups = self.class.where(benefit_sponsorship_id: benefit_sponsorship_id, ssn: ssn)
+        # potential_dups = self.class.by_ssn(ssn).by_sponsorship_id(benefit_sponsorship_id)
         if potential_dups.detect { |dup| dup.id != self.id  }
           message = "Employee with this identifying information is already active. "\
           "Update or terminate the active record before adding another."
@@ -109,15 +113,9 @@ module SponsoredBenefits
       end
 
       def employer_profile=(new_employer_profile)
-        raise ArgumentError.new("expected EmployerProfile") unless new_employer_profile.is_a?(SponsoredBenefits::Organizations::PlanDesignProfile)
+        raise ArgumentError.new("expected EmployerProfile") unless new_employer_profile.is_a?(SponsoredBenefits::Organizations::AcaShopCcaEmployerProfile)
         self.employer_profile_id = new_employer_profile._id
         @employer_profile = new_employer_profile
-      end
-
-      def benefit_application=(benefit_application)
-        raise ArgumentError.new("expected Benefit Application") unless benefit_application.is_a?(SponsoredBenefits::BenefitApplications::BenefitApplication)
-        self.benefit_application_id = benefit_application._id
-        @benefit_application = benefit_application
       end
 
       def employer_profile
@@ -125,22 +123,19 @@ module SponsoredBenefits
         @employer_profile = Organizations::PlanDesignProfile.find(self.employer_profile_id) unless self.employer_profile_id.blank?
       end
 
+      def benefit_sponsorship=(benefit_sponsorship)
+        raise ArgumentError.new("expected Benefit Sponsorship") unless benefit_sponsorship.is_a?(SponsoredBenefits::BenefitSponsorships::BenefitSponsorship)
+        self.benefit_sponsorship_id = benefit_sponsorship._id
+        @benefit_sponsorship = benefit_sponsorship
+      end
+
       def benefit_sponsorship
-        SponsoredBenefits::BenefitSponsorships::BenefitSponsorship.find(self.benefit_sponsorship_id)
+        return @benefit_sponsorship if defined? @benefit_sponsorship
+        @benefit_sponsorship = SponsoredBenefits::BenefitSponsorships::BenefitSponsorship.find(self.benefit_sponsorship_id)
       end
 
       def plan_design_proposal
         benefit_sponsorship.benefit_sponsorable.plan_design_proposal
-      end
-
-      def benefit_application
-        return @benefit_application if defined? @benefit_application
-        if employer_profile.present?
-          employer_profile.benefit_sponsorships.each do |sponsorship|
-            @benefit_application = sponsorship.benefit_applications.detect{|application| application.id  == benefit_application_id}
-          end
-        end
-        @benefit_application
       end
 
       def is_cobra_status?
