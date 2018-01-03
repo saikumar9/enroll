@@ -152,7 +152,7 @@ function planSelected() {
   if (reference_plan_id != "" && reference_plan_id != undefined){
     $('.health-plan-design .selected-plan').show();
     calcEmployerContributions();
-    $(this).siblings('input').attr('checked', true);
+    $(this).siblings('input').prop('checked', true);
   };
 
   clearComparisons();
@@ -287,7 +287,7 @@ function formatRadioButtons() {
   $('.fa-circle-o').each(function() {
     $(this).click(function() {
       input = $(this).closest('div').find('input');
-      input.attr('checked', true)
+      input.prop('checked', true)
     });
   })
 }
@@ -394,7 +394,6 @@ function saveProposalAndCopy(event) {
         },
         error: function(data) {
           resp = $.parseJSON(data.responseText);
-          console.log(resp);
         }
       });
     });
@@ -418,6 +417,10 @@ function saveProposalAndPublish(event) {
         type: 'POST',
         success: function(data) {
           window.location.href = data.url;
+        },
+        error: function(data) {
+          var resp = $.parseJSON(data.responseText);
+          window.location.href = resp.url;
         }
       });
     });
