@@ -1,0 +1,10 @@
+<% case selected_carrier_level %>
+<% when 'single_plan' %>
+  $('#singlePlanCarrierList').html("<%= escape_javascript(render partial: 'carriers_list', locals: { carrier_names: @carrier_names, search_level: selected_carrier_level, active_year: active_year }) %>");
+<% when 'sole_source' %>
+  $('#soleSourceCarrierList').html("<%= escape_javascript(render partial: 'carriers_list', locals: { carrier_names: @carrier_names, search_level: selected_carrier_level, active_year: active_year }) %>");
+<% when 'single_carrier' %>
+  $('#singleCarrierCarrierList').html("<%= escape_javascript(render partial: 'carriers_list', locals: { carrier_names: @carrier_names, search_level: selected_carrier_level, active_year: active_year }) %>");
+<% when 'metal_level' %>
+  $('#metalLevelCarrierList').html("<%= escape_javascript(render partial: 'carriers_list', locals: { carrier_names: @carrier_names, search_level: selected_carrier_level, active_year: active_year }) %>")
+<% end %>
