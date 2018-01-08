@@ -2,7 +2,7 @@ $(document).on('click', '.health-plan-design .nav-tabs li label', fetchCarriers)
 $(document).on('change', '.health-plan-design .nav-tabs li input', carrierSelected);
 $(document).on('click', '.reference-plan input[type=radio] + label', planSelected);
 $(document).on('slideStop', '#new_forms_plan_design_proposal .benefits-fields .slider', setSliderDisplayVal);
-$(document).on('click', '.plan_design_proposals .checkbox', calcEmployerContributions);
+$(document).on('click', '.plan_design_proposals .checkbox', calcPlanDesignContributions);
 // $(document).on('change', '#new_forms_plan_design_proposal input.premium-storage-input', reconcileSliderAndInputVal);
 $(document).on('click', ".health-plan-design li:has(label.elected_plan)", attachEmployerHealthContributionShowHide);
 
@@ -10,7 +10,7 @@ $(document).on('click', '.reference-plan input[type=checkbox]', comparisonPlans)
 $(document).on('click', '#clear-comparison', clearComparisons);
 $(document).on('click', '#view-comparison', viewComparisons);
 $(document).on('click', '#hide-detail-comparisons', hideDetailComparisons);
-
+$(document).on('click', '.plan-type-filters .plan-search-option', sortPlans);
 
 $(document).on('submit', '#new_forms_plan_design_proposal', preventSubmitPlanDesignProposal);
 $(document).on('click', '#reviewPlanDesignProposal', saveProposalAndNavigateToReview);
@@ -21,6 +21,7 @@ $(document).on('click', '#publishPlanDesignProposal', saveProposalAndPublish);
 $(document).on('click', '#downloadReferencePlanDetailsButton', checkIfSbcIncluded);
 
 $(document).on('ready', pageInit);
+$(document).on('page:load', pageInit);
 
 function pageInit() {
   if ($("#reference_plan_id").val() != '') {
@@ -151,7 +152,7 @@ function planSelected() {
 
   if (reference_plan_id != "" && reference_plan_id != undefined){
     $('.health-plan-design .selected-plan').show();
-    calcEmployerContributions();
+    calcPlanDesignContributions();
     $(this).siblings('input').prop('checked', true);
   };
 
@@ -177,7 +178,7 @@ function planSelected() {
 function setSliderDisplayVal(slideEvt) {
   $(this).closest('.form-group').find('.hidden-param').val(slideEvt.value).attr('value', slideEvt.value);
   $(this).closest('.form-group').find('.slide-label').text(slideEvt.value + "%");
-  calcEmployerContributions();
+  calcPlanDesignContributions();
 }
 
 function toggleSliders(plan_kind) {
@@ -190,7 +191,7 @@ function toggleSliders(plan_kind) {
   }
 }
 
-function calcEmployerContributions() {
+function calcPlanDesignContributions() {
   data = buildBenefitGroupParams();
 
   if (proposalIsInvalid(data)) {
@@ -279,7 +280,9 @@ function initSlider() {
   $('.benefits-fields .slider').bootstrapSlider({
     formatter: function(value) {
       return 'Contribution Percentage: ' + value + '%';
-    }
+    },
+    max: 100,
+    min: 0
   });
 }
 
@@ -297,9 +300,19 @@ function preventSubmitPlanDesignProposal(event) {
 }
 
 function disableActionButtons() {
+  var minimum_employee_contribution = $("#employer_min_employee_contribution").val();
+  var minimum_family_contribution = $("#employer_min_family_contribution").val();
   data = buildBenefitGroupParams();
   if (proposalIsInvalid(data)){
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    });
     $('.plan_design_proposals .save-action').attr('disabled', 'disabled');
+    $('.plan_design_proposals .sq-btn-grp').attr({
+     'data-toggle': "tooltip",
+     'data-placement': "top",
+      'data-title':"Employer premium contribution for Family Health Plans must be at least" + minimum_family_contribution + "%, and Employee Only Health Plans must be at least " + minimum_employee_contribution + "%"
+   })
   }
 }
 
@@ -516,4 +529,44 @@ function removeA(arr) {
         }
     }
     return arr;
+}
+
+function sortPlans() {
+  var $box = $(this).children('input').first();
+
+  if ($box.is(":checked")) {
+    // the name of the box is retrieved using the .attr() method
+    // as it is assumed and expected to be immutable
+    var group = "input:checkbox[data-search-type='" + $box.data("search-type") + "']";
+    // the checked state of the group/box on the other hand will change
+    // and the current value is retrieved using .prop() method
+    $(group).prop("checked", false);
+    $box.prop("checked", true);
+  } else {
+    $box.prop("checked", false);
+  }
+
+  var plans = $('.reference-plan');
+  var search_types = {};
+
+  $('.plan-search-option input').each(function(index) {
+    var option = $(this);
+    var option_is_checked = option.prop('checked');
+    if (option_is_checked) {
+      search_types[option.data('search-type').replace(/_/,'-')] = option.val();
+    }
+  });
+  plans.parent().removeClass('hidden');
+  plans.each(function(index) {
+    var plan = $(this);
+    var plan_matches = [];
+    Object.keys(search_types).forEach(function(item) {
+      var plan_value = plan.data(item);
+      plan_matches.push((search_types[item].toString() === plan_value.toString()));
+    });
+    if(plan_matches.every(function(option){ return option; })) {
+    } else {
+      plan.parent().addClass('hidden');
+    }
+  });
 }
