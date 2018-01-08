@@ -4,14 +4,13 @@ Notifier::Engine.routes.draw do
   resources :notice_kinds do
     member do
       get :preview
-      get :download
     end
 
     collection do
-      get :download_notices
       get :get_tokens
       get :get_placeholders
       post :delete_notices
+      post :download_notices
       post :upload_notices
     end
   end

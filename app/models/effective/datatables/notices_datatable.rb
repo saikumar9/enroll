@@ -4,8 +4,8 @@ module Effective
       datatable do
 
         bulk_actions_column do
-          bulk_action 'Delete', notifier.delete_notices_notice_kinds_path, data: { confirm: "This will remove selected notices. Are you sure?", no_turbolink: true }
-          # bulk_action 'Download', notifier.download_notices_notice_kinds_path, target: '_blank'
+          bulk_action 'Delete', notifier.delete_notices_notice_kinds_path, data: { confirm: "Are you sure you want to delete selected notice(s) events?", no_turbolink: true }
+          bulk_action 'Download', notifier.download_notices_notice_kinds_path, data: { confirm: "Are you sure you want to download slected notice(s)?", no_turbolink: true }
         end
 
         table_column :mpi_indicator, :proc => Proc.new { |row|
@@ -25,9 +25,7 @@ module Effective
         }, :filter => false, :sortable => false
         table_column :actions, :width => '50px', :proc => Proc.new { |row|
           dropdown = [
-           ['Edit', notifier.edit_notice_kind_path(row), 'ajax'],
-           ['Download', notifier.download_notice_kind_path(row, format: "pdf"),'static']
-           
+           ['Edit', notifier.edit_notice_kind_path(row), 'ajax']
           ]
           render partial: 'datatables/shared/dropdown', locals: {dropdowns: dropdown, row_actions_id: "notice_actions_#{row.id}"}, formats: :html
         }, :filter => false, :sortable => false

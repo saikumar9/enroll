@@ -27,19 +27,6 @@ module Notifier
       render :layout => 'notifier/application'
     end
 
-    def download
-      notice_kind = Notifier::NoticeKind.find(params[:id])
-      notice_kind.generate_pdf_notice
-      respond_to do |format|
-      format.pdf { 
-        send_file "#{Rails.root}/tmp/#{notice_kind.title.titleize.gsub(/\s+/, '_')}.pdf",
-          filename: "#{notice_kind.title.titleize.gsub(/\s+/, '_')}.pdf", 
-          :type => 'application/pdf', 
-          :disposition => 'attachment'
-      }
-      end
-    end
-
     def create
       template = Template.new(notice_params.delete('template'))
       notice_kind = NoticeKind.new(notice_params)
@@ -85,9 +72,7 @@ module Notifier
     end
 
     def download_notices
-      # notices = Notifier::NoticeKind.where(:id.in => params['ids'])
-
-      send_data Notifier::NoticeKind.to_csv, 
+      send_data Notifier::NoticeKind.to_csv(params['ids']),
         :filename => "notices_#{TimeKeeper.date_of_record.strftime('%m_%d_%Y')}.csv",
         :disposition => 'attachment',
         :type => 'text/csv'
