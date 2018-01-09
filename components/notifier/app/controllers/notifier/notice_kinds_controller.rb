@@ -1,6 +1,7 @@
 module Notifier
   class NoticeKindsController < Notifier::ApplicationController
 
+
     before_action :check_hbx_staff_role
     
     layout 'notifier/single_column'
@@ -132,7 +133,7 @@ module Notifier
     private
 
     def check_hbx_staff_role
-      if current_user.blank? || !current_user.has_hbx_staff_role?
+      unless current_user.present? && current_user.has_hbx_staff_role?
         redirect_to main_app.root_path, :flash => { :error => "You must be an HBX staff member" }
       end
     end
