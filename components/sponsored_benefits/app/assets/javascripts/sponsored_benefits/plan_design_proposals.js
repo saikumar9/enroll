@@ -18,7 +18,9 @@ $(document).on('click', '#submitPlanDesignProposal', saveProposal);
 $(document).on('click', '#copyPlanDesignProposal', saveProposalAndCopy);
 $(document).on('click', '#publishPlanDesignProposal', saveProposalAndPublish);
 
-$(document).on('click', '#downloadReferencePlanDetailsButton', checkIfSbcIncluded);
+$(document).on('click', '#downloadReferencePlanDetailsButton.plan-not-saved', checkIfSbcIncluded);
+$(document).on('click', '#downloadReferencePlanDetailsButton.plan-saved', sendPdf);
+
 
 $(document).on('ready', pageInit);
 $(document).on('page:load', pageInit);
@@ -83,22 +85,34 @@ function setSBC(plan) {
   }
 }
 
+function sendPdf(event) {
+  $(this).addClass('plan-not-saved');
+  $(this).removeClass('plan-saved');
+  window.location.href = $(this).attr('href');
+}
 
 function checkIfSbcIncluded(event) {
-  var data = buildBenefitGroupParams();
-  if (proposalIsInvalid(data)) {
-    // handle error messaging
-    return;
-  } else {
-    url = $("#benefit_groups_url").val();
-    $.ajax({
-      type: "POST",
-      data: data,
-      url: url
-    }).done(function(){
-      // Something
-    });
-  }
+  var elem_id = $(this).attr('id');
+  var obj = $('#'+elem_id);
+  if(obj.hasClass('plan-not-saved')) {
+      event.preventDefault();
+      var data = buildBenefitGroupParams();
+      if (proposalIsInvalid(data)) {
+        // handle error messaging
+        return;
+      } else {
+        url = $("#benefit_groups_url").val();
+        $.ajax({
+          type: "POST",
+          data: data,
+          url: url
+        }).done(function(){
+          obj.removeClass('plan-not-saved');
+          obj.addClass('plan-saved');
+          obj.click();
+        });
+      }
+    }
 }
 
 function displayActiveCarriers() {
@@ -297,10 +311,10 @@ function disableActionButtons() {
       $('[data-toggle="tooltip"]').tooltip()
     });
     $('.plan_design_proposals .save-action').attr('disabled', 'disabled');
-    $('.plan_design_proposals .sq-btn-grp').attr({
+    $('.plan_design_proposals .plan-selection-button-group').attr({
      'data-toggle': "tooltip",
      'data-placement': "top",
-      'data-title':"Employer premium contribution for Family Health Plans must be at least" + minimum_family_contribution + "%, and Employee Only Health Plans must be at least " + minimum_employee_contribution + "%"
+      'data-title':"Employer premium contribution for Family Health Plans must be at least " + minimum_family_contribution + "%, and Employee Only Health Plans must be at least " + minimum_employee_contribution + "%"
    })
   }
 }
