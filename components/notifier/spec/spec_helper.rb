@@ -13,13 +13,12 @@
 # it.
 #
 
-require File.expand_path("../dummy/config/environment", __FILE__)
+require File.expand_path("../spec/dummy/config/environment", __FILE__)
 require 'shoulda/matchers'
 require 'database_cleaner'
 require 'capybara/rails'
 require 'capybara/rspec'
 require 'factory_girl_rails'
-require 'pry'
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
@@ -102,4 +101,5 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 =end
+  config.include FactoryGirl::Syntax::Methods
 end
