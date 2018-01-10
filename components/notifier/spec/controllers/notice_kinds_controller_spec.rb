@@ -73,10 +73,10 @@ RSpec.describe Notifier::NoticeKindsController, :type => :controller do
         expect(response).to have_http_status(:success)
         expect(response).to render_template('new')
       end
-
-
     end
   end
+
+
 
 
 

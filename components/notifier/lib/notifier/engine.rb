@@ -11,6 +11,12 @@ module Notifier
     #   ApplicationController.helper(ActionView::Helpers::ApplicationHelper)
     # end
 
+    # this might be able to move it to rails_helper.rb but need to understand engine path how it will works
+    initializer 'Notifier.factories', after: 'factory_girl.set_factory_paths' do
+      factories_location = File.expand_path('../../../spec/factories', __FILE__)
+      FactoryGirl.definition_file_paths.unshift(factories_location) if defined?(FactoryGirl)
+    end
+
     config.generators do |g|
       g.orm :mongoid 
       g.template_engine :slim
