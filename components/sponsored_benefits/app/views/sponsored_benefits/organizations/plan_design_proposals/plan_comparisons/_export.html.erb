@@ -1,4 +1,4 @@
-<%= wicked_pdf_stylesheet_link_tag "pdf" -%>
+<%= stylesheet_link_tag  wicked_pdf_asset_base64("pdf") %>
 <div class="container-fluid">
   <h3 style='text-align:center'>Plan Comparison Chart</h3>
   <div class="mygrid-wrapper-div">
@@ -53,21 +53,15 @@
             <th colspan="1"> COINSURANCE </th>
           <% end %>
         </tr>
-        <%= render partial: "plan_visit_types", locals: {qhps: qhps} %>
+        <%= render partial: "sponsored_benefits/organizations/plan_design_proposals/plan_comparisons/plan_visit_types", locals: {qhps: qhps} %>
         <tr>
           <th></th>
           <% qhps.each do |qhp|%>
-           <% if qhp.plan.sbc_document.present? %>
             <th colspan="2">
               <div class="plan_comparison">
-                <% key, bucket = get_key_and_bucket(qhp.plan.sbc_document.identifier) %>
-                <% link_text = qhp.plan.coverage_kind == 'health' ? "Summary of Benefits and Coverage" : 'Plan Summary' %>
-                <%= link_to link_text, main_app.broker_agencies_broker_role_quotes_root_url(@broker_agency_profile.primary_broker_role_id) + main_app.document_download_path(bucket, key) +
-                                                  "?content_type=application/pdf&filename=#{qhp.plan.name.gsub(/[^0-9a-z]/i,'')}.
-                                                  pdf&disposition=inline" %>
+                <%= render partial: "shared/plan_shoppings/sbc_link", locals: { plan: qhp.plan } %>
               </div>
             </th>
-            <%end%>
           <% end %>
         </tr>
     </table>

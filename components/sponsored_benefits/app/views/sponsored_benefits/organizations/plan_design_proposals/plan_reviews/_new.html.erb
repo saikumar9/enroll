@@ -48,7 +48,7 @@
         <br />
         <div class="col-md-4 no-pd">
           <p class="th-gray">Employer Estimated Maximum Monthly Cost</p>
-          <h3 class="text-center">$<%= @employer_contribution_amount %></h3>
+          <h3 class="text-center"><%= number_to_currency(@employer_contribution_amount) %></h3>
         </div>
         <div class="col-md-8">
           <table class="table borderless">
@@ -60,8 +60,8 @@
               </tr>
               <tr>
                 <td style="width:490px">Total Estimated Monthly Cost for Plan Participants</td>
-                <td style="width:200px">$<%= @min_employee_cost %></td>
-                <td style="width:200px">$<%= @max_employee_cost %></td>
+                <td style="width:200px"><%= number_to_currency(@min_employee_cost) %></td>
+                <td style="width:200px"><%= number_to_currency(@max_employee_cost) %></td>
               </tr>
             </tbody>
           </table>
@@ -75,6 +75,18 @@
     <a><i class="fa fa-info-circle" aria-hidden="true"></i> Note: Your monthly cost is based on final employee enrollment.</a>
   </div>
   <br /><br />
+  <% unless @benefit_group.sole_source? %>
+    <div class="col-md-12 no-pd">
+      <div class="panel panel-default">
+        <div class="panel-heading custom-heading">
+          <h3 class="panel-title">Employee Costs</h3>
+        </div>
+        <div class="panel-body">
+          <%= render 'sponsored_benefits/organizations/plan_design_proposals/shared/benefit_group_cost_summary', benefit_group: @benefit_group %>
+        </div>
+      </div>
+    </div>
+  <% end %>
   <div class="col-md-12 no-pd">
     <div class="panel panel-default">
       <div class="panel-heading custom-heading">
@@ -93,9 +105,9 @@
   </div>
   <div class="col-md-7 col-md-offset-5 sq-btn-grp">
     <%= link_to "Download PDF", sponsored_benefits.organizations_plan_design_proposal_plan_reviews_path(@plan_design_proposal), id: "submitPlanDesignProposal", class:'btn btn-default' %>
-    <%= link_to "Update Roster", sponsored_benefits.edit_organizations_plan_design_organization_plan_design_proposal_path(@plan_design_organization, @plan_design_proposal), class:'btn btn-primary save-action' %>
-    <%= link_to "Select Health Benefits", sponsored_benefits.new_organizations_plan_design_proposal_plan_selection_path(@plan_design_proposal), class:'btn btn-primary save-action' %>
-    <%= link_to "Publish Quote", sponsored_benefits.organizations_plan_design_proposal_publish_path(@plan_design_proposal), method: :post, class:'btn btn-primary save-action' %>
+    <%= link_to "Update Roster", sponsored_benefits.edit_organizations_plan_design_organization_plan_design_proposal_path(@plan_design_organization, @plan_design_proposal), class:'btn btn-primary' %>
+    <%= link_to "Select Health Benefits", sponsored_benefits.new_organizations_plan_design_proposal_plan_selection_path(@plan_design_proposal), class:'btn btn-primary' %>
+    <%= link_to "Publish Quote", sponsored_benefits.organizations_plan_design_proposal_publish_path(@plan_design_proposal), method: :post, class:'btn btn-primary' %>
     <div class="success-message"></div>
   </div>
 </div>

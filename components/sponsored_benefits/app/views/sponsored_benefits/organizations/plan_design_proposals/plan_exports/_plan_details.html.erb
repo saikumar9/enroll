@@ -1,10 +1,9 @@
-<!-- <%= wicked_pdf_stylesheet_link_tag "application" -%> -->
-<%= wicked_pdf_stylesheet_link_tag "sponsored_benefits/application" -%>
+<%= stylesheet_link_tag wicked_pdf_asset_base64("plan_review_pdf") %>
 
 <div class="container plan-details-export">
   <div class="row">
     <div class="panel col-xs-12">
-      <h1>Quote Name: <%= plan_design_proposal.title %></h1>
+      <h1 class="main-title">Quote Name: <%= plan_design_proposal.title %></h1>
       <h5>Claim Code: <% plan_design_proposal.claim_code %></h5>
       <h5>Effective Date: <%= plan_design_proposal.effective_date.strftime('%d %B %Y') %></h5>
 
@@ -13,7 +12,7 @@
   </div>
   <div class="row">
     <div class="panel col-xs-12">
-      <table class="proposal-roster-table">
+      <table class="table table-striped">
         <tr>
           <th>First Name</th>
           <th>Last Name</th>
@@ -40,21 +39,23 @@
   <div class="row">
     <div class="panel col-xs-12">
       <h5>Coverage Year: <%= sponsorship.initial_enrollment_period_to_s %></h5>
-      <table class="reference-plan-table">
+      <table class="table table-striped">
         <tr>
           <th>Reference Plan</th>
           <th>Carrier</th>
           <th>Type</th>
           <th>Metal Level</th>
-          <th>Plans By</th>
+          <th>Offering By</th>
         </tr>
-        <tr>
-          <td><%= @plan.name %></td>
-          <td><%= @plan.carrier_profile.legal_name %></td>
-          <td><%= @plan.plan_type %></td>
-          <td><%= @plan.metal_level %></td>
-          <td><%= @benefit_group.plan_option_kind.humanize %></td>
-        </tr>
+        <tbody>
+          <tr>
+            <td><%= @plan.name %></td>
+            <td><%= @plan.carrier_profile.legal_name %></td>
+            <td><%= @plan.plan_type.upcase %></td>
+            <td><%= @plan.metal_level.capitalize %></td>
+            <td><%= Settings.plan_option_titles.send(@benefit_group.plan_option_kind.to_sym) %></td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </div>
@@ -65,25 +66,26 @@
       <% else %>
         <%= render 'sponsored_benefits/organizations/plan_design_proposals/shared/employee_composite_costs', benefit_group: @benefit_group %>
       <% end %>
+      <br />
       <!--Health Estimated Cost: start-->
       <div class="panel benefitgroup col-xs-12 referenceplan home est">
         <div class="plan-details">
           <div class="col-xs-4">
             <div class="row">
-              <span>Employer Estimated Maximum Monthly Cost</span>
-              <h2><%= number_to_currency(@benefit_group.monthly_employer_contribution_amount) %></h2>
+              <span><b>Employer Estimated Maximum Monthly Cost</b></span>
+              <h2 class="main-title emp-cost"><%= number_to_currency(@benefit_group.monthly_employer_contribution_amount) %></h2>
             </div>
           </div>
-          <div class="col-xs-8">
+          <div class="col-xs-8 monthly-cost">
             <div class="row">
-              <table>
+              <table class="table table-striped">
                 <tr>
                   <th colspan="2"></th>
                   <th>Min</th>
                   <th>Max</th>
                 </tr>
                 <tr>
-                  <td colspan="2">Total Estimated Monthly Cost for Plan Participants</td>
+                  <td colspan="2"><b>Total Estimated Monthly Cost for Plan Participants</b></td>
                   <td><%= number_to_currency(@benefit_group.monthly_min_employee_cost) %></td>
                   <td><%= number_to_currency(@benefit_group.monthly_max_employee_cost) %></td>
                 </tr>
@@ -95,6 +97,6 @@
     </div>
   </div>
   <% if sbc_included %>
-    <%= render 'sponsored_benefits/organizations/plan_design_proposals/plan_comparisons/comparison_table', qhps: @qhps %>
+    <%= render 'sponsored_benefits/organizations/plan_design_proposals/plan_comparisons/export', qhps: @qhps, single_plan_displayed: true %>
   <% end %>
 </div>
