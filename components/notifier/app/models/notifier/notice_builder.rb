@@ -18,6 +18,7 @@ module Notifier
       builder.resource = resource
       builder.payload = payload
       builder.append_contact_details
+
       template.data_elements.each do |element|
         elements = element.split('.')
         date_element = elements.detect{|ele| Notifier::MergeDataModels::EmployerProfile::DATE_ELEMENTS.any?{|date| ele.match(/#{date}/i).present?}}
@@ -31,6 +32,7 @@ module Notifier
         element_retriver = elements.reject{|ele| ele == recipient_klass_name.to_s}.join('_')
         builder.instance_eval(element_retriver)
       end
+
       builder.merge_model
     end
 
@@ -187,7 +189,7 @@ module Notifier
       if notice.save
         notice
       else
-        # LOG ERROR
+        @error = "unable to build document for #{receiver.hbx_id}"
       end
     end
 
