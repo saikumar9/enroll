@@ -29,7 +29,6 @@ module Notifier
     end
 
     def create
-      binding.pry
       template = Template.new(notice_params.delete('template'))
       notice_kind = NoticeKind.new(notice_params)
       notice_kind.template = template
@@ -48,7 +47,6 @@ module Notifier
     end
 
     def update
-      binding.pry
       notice_kind = Notifier::NoticeKind.find(params['id'])
       notice_kind.update_attributes(notice_params)
 

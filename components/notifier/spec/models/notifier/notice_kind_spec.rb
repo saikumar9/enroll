@@ -99,17 +99,29 @@ module Notifier
         expect(notice_kind.recipient_klass_name).to eq :employer_profile
       end
     end
-    
 
+    describe 'model state transisitions' do
+      let!(:notice_instance) { FactoryGirl.build(:notifier_notice_kind) }
 
+      it 'validate state transitions' do
+        expect(notice_instance).to have_state(:draft)
+        expect(notice_instance).not_to have_state(:published)
+        expect(notice_instance).not_to have_state(:archived)
+        expect(notice_instance).not_to allow_event(:publish)
+        expect(notice_instance).to transition_from(:published).to(:archived).on_event(:archive)
+      end
+    end
 
+    describe '.record_transition' do
+      let!(:notice_kind) { FactoryGirl.build(:notifier_notice_kind, aasm_state: 'published') }
+      let!(:wst_instance) { WorkflowStateTransition.new }
 
-
-
-
-
-
-
-
+      it 'should invoke record_transition method on event triggered' do
+         allow(WorkflowStateTransition).to receive(:new).with(from_state: :published, to_state: :archived).and_return(wst_instance)
+         notice_kind.archive! if notice_kind.may_archive?
+         expect(notice_kind.workflow_state_transitions).to eq [wst_instance]
+      end
+    end
   end
 end
+
