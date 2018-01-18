@@ -3,5 +3,5 @@ When(/^the Hbx Admin clicks on the Ma logo link$/) do
 end
 
 Then(/^it should redirect to Ma Health connector website$/) do
-  expect(page).to have_content("Welcome to Health Connector for Business")
+  expect(page).to have_content("Health Connector for Business")
 end
