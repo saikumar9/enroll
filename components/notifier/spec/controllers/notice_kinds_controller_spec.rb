@@ -77,6 +77,87 @@ RSpec.describe Notifier::NoticeKindsController, :type => :controller do
   end
 
 
+  describe 'Get # edit' do
+    let!(:person) { FactoryGirl.create(:person) }
+    let!(:user) { FactoryGirl.create(:user, :hbx_staff, person: person) }
+    let!(:user_wth_no_person) { FactoryGirl.create(:user) }
+    context 'invoke edit action' do
+      it 'should assign notice_kind' do
+        sign_in(user)
+        allow(Notifier::NoticeKind).to receive(:find).with("rspec").and_return("notice_kind")
+        get :edit, id: "rspec", :format => 'js'
+       expect(response).to render_template('edit')
+      end
+    end
+  end
+
+  describe 'Post Create' do
+    let!(:person) { FactoryGirl.create(:person) }
+    let!(:user) { FactoryGirl.create(:user, :hbx_staff, person: person) }
+    let!(:user_wth_no_person) { FactoryGirl.create(:user) }
+    let!(:valid_params) { val = FactoryGirl.attributes_for(:notifier_notice_kind)
+                          val.merge!("template" => {"raw_body"=>"<p>Rspec-template-body-goes-here</p>\r\n"})
+    }
+
+    context 'with valid attributes' do
+      it 'should create new notice_kind' do
+        sign_in(user)
+        expect{
+          post :create, notice_kind: valid_params
+        }.to change(Notifier::NoticeKind, :count).by(1)
+      end
+
+      it 'should create new notice_kind and redirect' do
+        sign_in(user)
+        post :create, notice_kind: valid_params
+        expect(flash[:notice]).to match /Notice created successfully/
+        expect(response).to redirect_to(notice_kinds_url)
+      end
+    end
+
+    context 'with invalid attributes' do
+      let!(:notice_kind) { FactoryGirl.create(:notifier_notice_kind) }
+      let!(:invalid_attributes) { { 'notice_kind' => { 'notice_number': notice_kind.notice_number}}
+      }
+      it 'should not create new notice kind' do
+        sign_in(user)
+        expect { post :create, notice_kind: invalid_attributes }.not_to change(Notifier::NoticeKind, :count)
+      end
+
+      it 'should render index view' do
+        sign_in(user)
+        post :create, notice_kind: invalid_attributes
+        expect(response).to render_template 'index'
+      end
+
+    end
+
+  end
+
+  describe 'PUT update' do
+    let!(:person) { FactoryGirl.create(:person) }
+    let!(:user) { FactoryGirl.create(:user, :hbx_staff, person: person) }
+    let!(:user_wth_no_person) { FactoryGirl.create(:user) }
+    let!(:notice_kind) { FactoryGirl.create(:notifier_notice_kind) }
+
+    let!(:valid_params) { val = FactoryGirl.attributes_for(:notifier_notice_kind)
+                          val.merge!("template" => {"raw_body" => "<p>Rspec-template-body-goes-here</p>\r\n"})
+    }
+
+    it 'should update the template raw body' do
+      sign_in(user)
+      put :update, id: notice_kind.id.to_s, notice_kind: valid_params
+      expect(response).to redirect_to(notice_kinds_url)
+      expect(notice_kind.title).to eq valid_params[:title]
+      expect(flash[:notice]).to match /Notice content updated successfully/
+    end
+  end
+
+
+
+
+
+
 
 
 
