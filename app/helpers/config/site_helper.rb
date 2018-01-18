@@ -104,10 +104,6 @@ module Config::SiteHelper
     Settings.site.make_their_premium_payments_online
   end  
 
-  def site_main_web_address_business
-    Settings.site.main_web_address_business
-  end
-
   def health_care_website
       Settings.site.health_care_website
   end
