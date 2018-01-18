@@ -36,7 +36,7 @@ module Notifier
       let(:stubbed_object) { Notifier::MergeDataModels::Enrollment.stubbed_object}
 
       it 'returns self' do
-        klass = Class.new { include Virtus }
+        klass = Class.new { include Virtus.model }
         ['coverage_start_on', 'plan_name', 'employer_responsible_amount', 'employee_responsible_amount'].each do |type|
           expect(klass.attribute(stubbed_object[type.to_sym])).to be(klass)
         end

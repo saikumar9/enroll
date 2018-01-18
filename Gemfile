@@ -81,7 +81,7 @@ gem 'devise', '>= 3.5.4'
 gem "pundit", '~> 1.0.1'
 
 # will provide fast group premium plan fetch
-gem 'redis-rails'
+gem "redis-rails", github: 'redis-store/redis-rails'
 
 gem 'kaminari'
 

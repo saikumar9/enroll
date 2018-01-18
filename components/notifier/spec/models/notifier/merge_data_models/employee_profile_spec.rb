@@ -65,7 +65,7 @@ module Notifier
         let(:stubbed_object) { Notifier::MergeDataModels::EmployeeProfile.stubbed_object}
 
         it 'returns self' do
-          klass = Class.new { include Virtus }
+          klass = Class.new { include Virtus.model}
           ['notice_date', 'first_name', 'last_name', 'employer_name', 'date_of_hire', 'earliest_coverage_begin_date', 'new_hire_oe_start_date', 'new_hire_oe_end_date'].each do |type|
             expect(klass.attribute(stubbed_object[type.to_sym])).to be(klass)
           end

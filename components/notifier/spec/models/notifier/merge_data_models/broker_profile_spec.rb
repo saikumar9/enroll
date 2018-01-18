@@ -46,7 +46,7 @@ module Notifier
       let(:stubbed_object) { Notifier::MergeDataModels::BrokerProfile.stubbed_object}
 
       it 'returns self' do
-        klass = Class.new { include Virtus }
+        klass = Class.new { include Virtus.model }
         ['notice_date', 'first_name', 'last_name', 'broker_agency_name', 'assignment_date', 'employer_name', 'employer_poc_firstname', 'employer_poc_lastname'].each do |type|
           expect(klass.attribute(stubbed_object[type.to_sym])).to be(klass)
         end
