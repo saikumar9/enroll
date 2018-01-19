@@ -102,7 +102,7 @@ module Config::SiteHelper
 
   def site_make_their_premium_payments_online
     Settings.site.make_their_premium_payments_online
-  end  
+  end
 
   def health_care_website
       Settings.site.health_care_website
