@@ -82,6 +82,7 @@ module Notifier
     end
 
     def upload_notices
+      # implement logic around when no file is choosen
       notices = Roo::Spreadsheet.open(params[:file].tempfile.path)
       @errors = []
 
