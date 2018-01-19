@@ -7,7 +7,7 @@ gem 'rails', '4.2.7.1'
 gem "transport_gateway",  path: "components/transport_gateway"
 gem "notifier",           path: "components/notifier"
 gem "transport_profiles", path: "components/transport_profiles"
-
+gem "sponsored_benefits", path: "components/sponsored_benefits"
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 
@@ -81,7 +81,7 @@ gem 'devise', '>= 3.5.4'
 gem "pundit", '~> 1.0.1'
 
 # will provide fast group premium plan fetch
-gem "redis-rails", github: 'redis-store/redis-rails'
+gem 'redis-rails'
 
 gem 'kaminari'
 
@@ -159,7 +159,8 @@ group :development, :test do
   gem 'byebug', '8.2.2'
   gem 'rspec_junit_formatter', '0.2.3'
   gem "parallel_tests"
-  gem 'rspec-virtus'
+
+  gem 'puma'
 end
 
 group :test do
@@ -177,6 +178,7 @@ group :test do
   gem 'warden'
   gem 'fakeredis', :require => 'fakeredis/rspec'
   gem 'rspec-instafail'
+  gem 'rspec-virtus'
 end
 
 group :production do

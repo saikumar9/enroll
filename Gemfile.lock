@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/redis-store/redis-rails.git
-  revision: 3bd2792eee8fa81024e9c402b43d34ee0600f29b
-  specs:
-    redis-rails (5.0.2)
-      redis-actionpack (>= 3.0, < 6)
-      redis-activesupport (>= 3.0, < 6)
-
-GIT
   remote: https://github.com/aq1018/mongoid-history.git
   revision: 1c69841f823d7ebf69fb2145d307d60b1500b89c
   branch: master
@@ -82,6 +74,18 @@ PATH
       virtus (~> 1.0.5)
       wicked_pdf (= 1.0.6)
       wkhtmltopdf-binary-edge (~> 0.12.3.0)
+
+PATH
+  remote: components/sponsored_benefits
+  specs:
+    sponsored_benefits (0.0.1)
+      aasm (~> 4.8.0)
+      config
+      mongoid (~> 5.0.1)
+      rails (~> 4.2.7.1)
+      roo (~> 2.1.0)
+      slim (= 3.0.8)
+      symmetric-encryption (~> 3.6.0)
 
 PATH
   remote: components/transport_gateway
@@ -485,6 +489,7 @@ GEM
     pry-stack_explorer (0.4.9.2)
       binding_of_caller (>= 0.7)
       pry (>= 0.9.11)
+    puma (3.11.0)
     pundit (1.0.1)
       activesupport (>= 3.0.0)
     rack (1.6.8)
@@ -539,6 +544,10 @@ GEM
       redis (~> 3.0, >= 3.0.4)
     redis-rack (2.0.4)
       rack (>= 1.5, < 3)
+      redis-store (>= 1.2, < 2)
+    redis-rails (5.0.2)
+      redis-actionpack (>= 5.0, < 6)
+      redis-activesupport (>= 5.0, < 6)
       redis-store (>= 1.2, < 2)
     redis-store (1.4.1)
       redis (>= 2.2, < 5)
@@ -771,6 +780,7 @@ DEPENDENCIES
   pry-rails
   pry-remote
   pry-stack_explorer
+  puma
   pundit (~> 1.0.1)
   railroady (~> 1.5.2)
   rails (= 4.2.7.1)
@@ -778,7 +788,7 @@ DEPENDENCIES
   recaptcha (= 4.3.1)
   recurring_select!
   redcarpet (= 3.4.0)
-  redis-rails!
+  redis-rails
   resque
   roo (~> 2.1.0)
   rspec-instafail
@@ -793,6 +803,7 @@ DEPENDENCIES
   simple_calendar!
   simplecov (= 0.14.1)
   slim (= 3.0.8)
+  sponsored_benefits!
   spring (= 1.6.3)
   sprockets (~> 2.12.3)
   symmetric-encryption (~> 3.6.0)
