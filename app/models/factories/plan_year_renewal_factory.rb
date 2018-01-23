@@ -23,9 +23,9 @@ module Factories
           @employer_profile.force_enroll!
         end
 
-        validate_employer_profile
-
         @active_plan_year = @employer_profile.active_plan_year
+
+        validate_employer_profile
 
         @plan_year_start_on = @active_plan_year.end_on + 1.day
         @plan_year_end_on   = @active_plan_year.end_on + 1.year
@@ -81,11 +81,11 @@ module Factories
         raise PlanYearRenewalFactoryError, "Employer #{@employer_profile.legal_name} already renewed"
       end
 
-      unless PlanYear::PUBLISHED.include? @employer_profile.active_plan_year.aasm_state
+      unless PlanYear::PUBLISHED.include? @active_plan_year.aasm_state
         raise PlanYearRenewalFactoryError, "Renewals require an existing, published Plan Year"
       end
 
-      unless TimeKeeper.date_of_record <= @employer_profile.active_plan_year.end_on
+      unless TimeKeeper.date_of_record <= @active_plan_year.end_on
         raise PlanYearRenewalFactoryError, "Renewal time period has expired.  You must submit a new application"
       end
     end
@@ -97,10 +97,10 @@ module Factories
       elsif active_group.plan_option_kind == "metal_level"
         Plan.by_active_year(start_on_year).shop_market.health_coverage.by_metal_level(active_group.reference_plan.metal_level).and(hios_id: /-01/).map(&:id)
       elsif active_group.plan_option_kind == "sole_source"        
-        reference_plan_id = Plan.find(active_group.reference_plan_id).renewal_plan_id
-        plans = [reference_plan_id]
+        renewal_reference_plan = Plan.find(active_group.reference_plan_id).renewal_plan(@renewal_plan_year.start_on)
+        plans = [renewal_reference_plan.id]
       else
-        Plan.where(:id.in => active_group.elected_plan_ids).map(&:renewal_plan_id)
+        Plan.where(:id.in => active_group.elected_plan_ids).collect{|plan| plan.renewal_plan(@renewal_plan_year.start_on)}.compact.map(&:id)
       end
     end
 
@@ -112,7 +112,7 @@ module Factories
     def clone_benefit_group(active_group)
       index = @active_plan_year.benefit_groups.index(active_group) + 1
       new_year = @active_plan_year.start_on.year + 1
-      renewal_plan = Plan.find(active_group.reference_plan_id).renewal_plan
+      renewal_plan = Plan.find(active_group.reference_plan_id).renewal_plan(@renewal_plan_year.start_on)
 
       if renewal_plan.blank?
         raise PlanYearRenewalFactoryError, "Unable to find renewal for referenence plan: Id #{active_group.reference_plan.id} Year #{active_group.reference_plan.active_year} Hios #{active_group.reference_plan.hios_id}"

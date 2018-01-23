@@ -1,14 +1,23 @@
 Rails.application.routes.draw do
 
-  mount TransportGateway::Engine, at: "/transport_gateway"
+  mount TransportGateway::Engine,       at: "/transport_gateway"
+  mount TransportProfiles::Engine,      at: "/transport_profiles"
+  mount SponsoredBenefits::Engine,      at: "/sponsored_benefits"
   mount Notifier::Engine, at: "/notifier"
-  # mount RocketJobMissionControl::Engine => 'rocketjob'
-  mount TransportProfiles::Engine, at: "/transport_profiles"
 
   require 'resque/server'
   mount Resque::Server, at: '/jobs'
   devise_for :users, :controllers => { :registrations => "users/registrations", :sessions => 'users/sessions', :passwords => 'users/passwords' }
 
+  namespace :uis do
+    resources :bootstrap3_examples do
+      collection do
+        get :index
+        get :components
+        get :getting_started
+      end
+    end
+  end
 
   get 'check_time_until_logout' => 'session_timeout#check_time_until_logout', :constraints => { :only_ajax => true }
   get 'reset_user_clock' => 'session_timeout#reset_user_clock', :constraints => { :only_ajax => true }

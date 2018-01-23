@@ -391,6 +391,13 @@ module ApplicationHelper
     image_tag("logo/carrier/#{carrier_name.parameterize.underscore}.jpg", width: options[:width]) # Displays carrier logo (Delta Dental => delta_dental.jpg)
   end
 
+  def display_carrier_pdf_logo(plan, options = {:width => 50})
+    return "" if !plan.carrier_profile.legal_name.extract_value.present?
+    carrier_name = plan.carrier_profile.legal_name.extract_value
+    image_tag(wicked_pdf_asset_base64("logo/carrier/#{carrier_name.parameterize.underscore}.jpg"), width: options[:width]) # Displays carrier logo (Delta Dental => delta_dental.jpg)
+  end
+
+
   def dob_in_words(age, dob)
     return age if age > 0
     time_ago_in_words(dob)
@@ -659,5 +666,15 @@ module ApplicationHelper
 
   def load_captcha_widget?
     !Rails.env.test?
+  end
+
+  def exchange_icon_path(icon)
+    site_key = Settings.site.key
+    
+    if site_key.blank? || site_key.to_sym == :dchbx
+      "icons/#{icon}"
+    else
+      "icons/#{site_key}-#{icon}"
+    end     
   end
 end

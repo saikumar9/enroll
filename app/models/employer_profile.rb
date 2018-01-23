@@ -138,6 +138,7 @@ class EmployerProfile
 
   # for broker agency
   def hire_broker_agency(new_broker_agency, start_on = today)
+    SponsoredBenefits::Organizations::BrokerAgencyProfile.assign_employer(broker_agency: new_broker_agency, employer: self, office_locations: parent.office_locations) if organization
     start_on = start_on.to_date.beginning_of_day
     if active_broker_agency_account.present?
       terminate_on = (start_on - 1.day).end_of_day
@@ -147,8 +148,13 @@ class EmployerProfile
     @broker_agency_profile = new_broker_agency
   end
 
+  def has_active_state?
+    ACTIVE_STATES.include?(self.aasm_state)
+  end
+
   def fire_broker_agency(terminate_on = today)
     return unless active_broker_agency_account
+    SponsoredBenefits::Organizations::BrokerAgencyProfile.unassign_broker(broker_agency: active_broker_agency_account.broker_agency_profile, employer: self) if organization
     active_broker_agency_account.end_on = terminate_on
     active_broker_agency_account.is_active = false
     active_broker_agency_account.save!
@@ -300,12 +306,26 @@ class EmployerProfile
     plan_years.reduce([]) { |set, py| set << py if py.aasm_state == "draft" }
   end
 
+  def plan_years_with_drafts_statuses
+    plan_years.draft.size > 0
+  end
+
   def is_conversion?
     self.profile_source.to_s == "conversion"
   end
 
   def is_converting?
     self.is_conversion? && published_plan_year.present? && published_plan_year.is_conversion
+  end
+
+  # It will check whether employer is regular or convesion
+  # It will add additional check on conversion employers with plan year is in PlanYear::RENEWING
+  #
+  # @return [Boolean]
+  #  @return true if employer is conversion employer && plan year is renewal related states
+  #  @return false other wise
+  def is_converting_with_renewal_state?
+    is_converting? && PlanYear::RENEWING.include?(published_plan_year.aasm_state)
   end
 
   def find_plan_year_by_effective_date(target_date)
@@ -650,19 +670,31 @@ class EmployerProfile
         employer_enroll_factory.date = new_date
 
         organizations_for_plan_year_begin(new_date).each do |organization|
-          employer_enroll_factory.employer_profile = organization.employer_profile
-          employer_enroll_factory.begin
+          begin
+            puts "START START FOR #{organization.legal_name} - #{Time.now}"
+            employer_enroll_factory.employer_profile = organization.employer_profile
+            employer_enroll_factory.begin
+            puts "PROCESSED START FOR #{organization.legal_name} - #{Time.now}"
+          rescue Exception => e
+            Rails.logger.error { "Error found for employer - #{organization.legal_name} during plan year begin" }
+          end
         end
 
         organizations_for_plan_year_end(new_date).each do |organization|
-          employer_enroll_factory.employer_profile = organization.employer_profile
-          employer_enroll_factory.end
+          begin
+            puts "START END FOR #{organization.legal_name} - #{Time.now}"
+            employer_enroll_factory.employer_profile = organization.employer_profile
+            employer_enroll_factory.end
+            puts "PROCESSED END FOR #{organization.legal_name} - #{Time.now}"
+          rescue Exception => e
+            Rails.logger.error { "Error found for employer - #{organization.legal_name} during plan year end" }
+          end
         end
 
         if new_date.day == Settings.aca.shop_market.renewal_application.force_publish_day_of_month
           organizations_for_force_publish(new_date).each do |organization|
             plan_year = organization.employer_profile.plan_years.where(:aasm_state => 'renewing_draft').first
-            plan_year.force.publish!
+            plan_year.force_publish!
           end
         end
 
@@ -679,7 +711,7 @@ class EmployerProfile
             begin
               organization.employer_profile.trigger_notices("initial_employer_first_reminder_to_publish_plan_year")
             rescue Exception => e
-              puts "Unable to send first reminder notice to publish plan year to #{organization.legal_name} due to following error {e}"
+              Rails.logger.error { "Unable to send first reminder notice to publish plan year to #{organization.legal_name} due to following error #{e}" }
             end
           end
         elsif (new_date.next_day).day == Settings.aca.shop_market.initial_application.advertised_deadline_of_month
@@ -687,7 +719,7 @@ class EmployerProfile
             begin
               organization.employer_profile.trigger_notices("initial_employer_second_reminder_to_publish_plan_year")
             rescue Exception => e
-              puts "Unable to send second reminder notice to publish plan year to #{organization.legal_name} due to following errors {e}"
+              Rails.logger.error { "Unable to send second reminder notice to publish plan year to #{organization.legal_name} due to following error #{e}" }
             end
           end
         else
@@ -697,7 +729,7 @@ class EmployerProfile
               begin
                 organization.employee_profile.trigger_notices("initial_employer_final_reminder_to_publish_plan_year")
               rescue Exception => e
-                puts "Unable to send final reminder notice to publish plan year to #{organization.legal_name} due to following errors {e}"
+                Rails.logger.error { "Unable to send final reminder notice to publish plan year to #{organization.legal_name} due to following error #{e}" }
               end
             end
           end

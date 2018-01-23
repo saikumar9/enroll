@@ -331,12 +331,15 @@ Given(/(.*) Employer for (.*) exists with active and renewing plan year/) do |ki
   organization = FactoryGirl.create :organization, legal_name: person[:legal_name], dba: person[:dba], fein: person[:fein]
   employer_profile = FactoryGirl.create :employer_profile, organization: organization, profile_source: (kind.downcase == 'conversion' ? kind.downcase : 'self_serve'), registered_on: TimeKeeper.date_of_record
   owner = FactoryGirl.create :census_employee, :owner, employer_profile: employer_profile
+  employee_role = FactoryGirl.create(:employee_role, employer_profile: organization.employer_profile)
+  owner.update_attributes!(employee_role_id: employee_role.id)
   employee = FactoryGirl.create :census_employee, employer_profile: employer_profile,
     first_name: person[:first_name],
     last_name: person[:last_name],
     ssn: person[:ssn],
     dob: person[:dob_date],
     email: FactoryGirl.build(:email, address: person[:email])
+
 
   earliest_enrollment_available = TimeKeeper.date_of_record.next_month.beginning_of_month
 
@@ -360,7 +363,7 @@ Given(/(.*) Employer for (.*) exists with active and renewing plan year/) do |ki
   employee.add_renew_benefit_group_assignment renewal_benefit_group
 
   employee_role = FactoryGirl.create(:employee_role, employer_profile: organization.employer_profile)
-  employee.update_attributes(employee_role_id: employee_role.id)
+  employee.update_attributes!(employee_role_id: employee_role.id)
 
   FactoryGirl.create(:qualifying_life_event_kind, market_kind: "shop")
   FactoryGirl.create(:qualifying_life_event_kind, :effective_on_event_date, market_kind: "shop")
@@ -466,7 +469,7 @@ When(/^(.+) creates? a new employer profile with (.+)$/) do |named_person, prima
   fill_in 'organization[number]', :with => '5551212'
   fill_in 'organization[extension]', :with => '22332'
 
-  find('.interaction-click-control-confirm').click
+  find('.interaction-click-control-save').click
 end
 
 When(/^(.*) logs on to the (.*)?/) do |named_person, portal|
@@ -557,7 +560,8 @@ When(/^.+ go(?:es)? to register as an employee$/) do
 end
 
 Then(/^.+ should see the employee search page$/) do
-  wait_for_ajax(5)
+  wait_for_ajax(2, 2)
+  sleep(1)
   expect(find('.interaction-field-control-person-first-name')).to be_visible
   screenshot("employer_search")
 end

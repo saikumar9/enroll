@@ -13,7 +13,8 @@ Given(/^Multiple Conversion Employers for (.*) exist with active and renewing pl
                                                             ssn: person[:ssn],
                                                             dob: person[:dob_date]
 
-
+ employee_role = FactoryGirl.create(:employee_role, employer_profile: secondary_employer_profile)
+ secondary_employee.update_attributes!(employee_role_id: employee_role.id)
 
   open_enrollment_start_on = TimeKeeper.date_of_record
   open_enrollment_end_on = open_enrollment_start_on.end_of_month + 13.days
@@ -265,7 +266,7 @@ When(/Employee select a past qle date/) do
   screenshot("past_qle_date")
   fill_in "qle_date", :with => (TimeKeeper.date_of_record - 5.days).strftime("%m/%d/%Y")
   within '#qle-date-chose' do
-    click_link "CONTINUE"
+    find('.interaction-click-control-continue').click
   end
 end
 
@@ -273,7 +274,7 @@ When(/Employee select a qle date based on expired plan year/) do
   screenshot("past_qle_date")
   fill_in "qle_date", :with => (TimeKeeper.date_of_record - 30.days).strftime("%m/%d/%Y")
   within '#qle-date-chose' do
-    click_link "CONTINUE"
+    find('.interaction-click-control-continue').click
   end
 end
 

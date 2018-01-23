@@ -8,6 +8,8 @@ class CensusEmployee < CensusMember
   include Config::AcaModelConcern
   include ::Eligibility::CensusEmployee
   include ::Eligibility::EmployeeBenefitPackages
+  include Concerns::Observable
+  include ModelEvents::CensusEmployee
 
   require 'roo'
 
@@ -247,11 +249,6 @@ class CensusEmployee < CensusMember
     ["coverage_selected", "coverage_waived"].include?(active_benefit_group_assignment.aasm_state)
   end
 
-  def email_address
-    return nil unless email.present?
-    email.address
-  end
-
   def terminate_employment(employment_terminated_on)
     begin
       terminate_employment!(employment_terminated_on)
@@ -289,7 +286,7 @@ class CensusEmployee < CensusMember
     if employment_terminated_on < TimeKeeper.date_of_record
       if may_terminate_employee_role?
         terminate_employee_role!
-        perform_employer_plan_year_count
+        # perform_employer_plan_year_count
       else
         message = "Error terminating employment: unable to terminate employee role for: #{self.full_name}"
         Rails.logger.error { message }
@@ -474,7 +471,7 @@ class CensusEmployee < CensusMember
         begin
           Invitation.invite_future_employee_for_open_enrollment!(ce)
         rescue Exception => e
-          puts "Unable to deliver open enrollment notice to #{ce.full_name} due to --- #{e}" unless Rails.env.test?
+          (Rails.logger.error { "Unable to deliver open enrollment notice to #{ce.full_name} due to --- #{e}" }) unless Rails.env.test?
         end
       end
     end
@@ -485,7 +482,7 @@ class CensusEmployee < CensusMember
         begin
           census_employee.terminate_employment(census_employee.employment_terminated_on)
         rescue Exception => e
-          puts "Error while terminating cesus employee - #{census_employee.full_name} due to -- #{e}" unless Rails.env.test?
+          (Rails.logger.error { "Error while terminating cesus employee - #{census_employee.full_name} due to -- #{e}" }) unless Rails.env.test?
         end
       end
     end
@@ -496,7 +493,7 @@ class CensusEmployee < CensusMember
         begin
           employee.rebase_new_designee! if employee.may_rebase_new_designee?
         rescue Exception => e
-          puts "Error while rebasing newly designated cesus employee - #{employee.full_name} due to #{e}" unless Rails.env.test?
+          (Rails.logger.error { "Error while rebasing newly designated cesus employee - #{employee.full_name} due to #{e}" }) unless Rails.env.test?
         end
       end
     end
@@ -507,7 +504,7 @@ class CensusEmployee < CensusMember
         begin
           census_employee.terminate_employee_role!
         rescue Exception => e
-          puts "Error while terminating future scheduled cesus employee - #{census_employee.full_name} due to #{e}" unless Rails.env.test?
+          (Rails.logger.error { "Error while terminating future scheduled cesus employee - #{census_employee.full_name} due to #{e}" }) unless Rails.env.test?
         end
       end
     end
@@ -525,7 +522,7 @@ class CensusEmployee < CensusMember
             next if (ce.new_hire_enrollment_period.cover?(date) || ce.new_hire_enrollment_period.first > date)
             ShopNoticesNotifierJob.perform_later(ce.id.to_s, "employee_open_enrollment_reminder")
           rescue Exception => e
-            puts "Unable to deliver open enrollment reminder notice to #{ce.full_name} due to #{e}" unless Rails.env.test?
+            (Rails.logger.error { "Unable to deliver open enrollment reminder notice to #{ce.full_name} due to #{e}" }) unless Rails.env.test?
           end
         end
       end
@@ -666,29 +663,69 @@ class CensusEmployee < CensusMember
   end
 
   def self.to_csv
-    attributes = %w{employee_name dob hired status renewal_benefit_package benefit_package enrollment_status termination_date}
+
+    columns = [
+      "Family ID # (to match family members to the EE & each household gets a unique number)(optional)",
+      "Relationship (EE, Spouse, Domestic Partner, or Child)",
+      "Last Name",
+      "First Name",
+      "Middle Name or Initial (optional)",
+      "Suffix (optional)",
+      "Email Address",
+      "SSN / TIN (Required for EE & enter without dashes)",
+      "Date of Birth (MM/DD/YYYY)",
+      "Gender",
+      "Date of Hire",
+      "Date of Termination (optional)",
+      "Is Business Owner?",
+      "Benefit Group (optional)",
+      "Plan Year (Optional)",
+      "Address Kind(Optional)",
+      "Address Line 1(Optional)",
+      "Address Line 2(Optional)",
+      "City(Optional)",
+      "State(Optional)",
+      "Zip(Optional)"
+    ]
 
     CSV.generate(headers: true) do |csv|
-      csv << attributes
-
+      csv << (["#{Settings.site.long_name} Employee Census Template"] +  6.times.collect{ "" } + [Date.new(2016,10,26)] + 5.times.collect{ "" } + ["1.1"])
+      csv << %w(employer_assigned_family_id employee_relationship last_name first_name  middle_name name_sfx  email ssn dob gender  hire_date termination_date  is_business_owner benefit_group plan_year kind  address_1 address_2 city  state zip)
+      csv << columns
       all.each do |census_employee|
-        data = [
-          "#{census_employee.first_name} #{census_employee.middle_name} #{census_employee.last_name} ",
-          census_employee.dob,
-          census_employee.hired_on,
-          census_employee.aasm_state.humanize.downcase,
-          census_employee.renewal_benefit_group_assignment.try(:benefit_group).try(:title)
-        ]
-
-        if active_assignment = census_employee.active_benefit_group_assignment
-          data += [
-            active_assignment.benefit_group.title,
-            "dental: #{ d = active_assignment.try(:hbx_enrollments).detect{|enrollment| enrollment.coverage_kind == 'dental'}.try(:aasm_state).try(:humanize).try(:downcase)} health: #{ active_assignment.try(:hbx_enrollments).detect{|enrollment| enrollment.coverage_kind == 'health'}.try(:aasm_state).try(:humanize).try(:downcase)}"
+        ([census_employee] + census_employee.census_dependents.to_a).each do |census_member|
+          values = [
+            census_member.employer_assigned_family_id,
+            census_member.relationship_string,
+            census_member.last_name,
+            census_member.first_name,
+            census_member.middle_name,
+            census_member.name_sfx,
+            census_member.email_address,
+            census_member.ssn,
+            census_member.dob.strftime("%m/%d/%Y"),
+            census_member.gender
           ]
-        else
-          data += [nil, nil]
+
+          if census_member.is_a?(CensusEmployee)
+            values += [
+              census_member.hired_on.present? ? census_member.hired_on.strftime("%m/%d/%Y") : "",
+              census_member.employment_terminated_on.present? ? census_member.employment_terminated_on.strftime("%m/%d/%Y") : "",
+              census_member.is_business_owner ? "yes" : "no"
+            ]
+          else
+            values += ["", "", "no"]
+          end
+
+          values += 2.times.collect{ "" }
+          if census_member.address.present?
+            values += census_member.address.to_a
+          else
+            values += 6.times.collect{ "" }
+          end
+
+          csv << values
         end
-        csv << (data + [census_employee.coverage_terminated_on])
       end
     end
   end
@@ -745,6 +782,12 @@ class CensusEmployee < CensusMember
 
   def show_plan_end_date?
     is_inactive? && coverage_terminated_on.present?
+  end
+
+  def is_included_in_participation_rate?
+    return true if coverage_terminated_on.nil?
+    return false if active_benefit_group_assignment.nil?
+    coverage_terminated_on >= active_benefit_group_assignment.start_on
   end
 
   def enrollments_for_display
