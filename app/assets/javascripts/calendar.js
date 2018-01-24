@@ -85,6 +85,8 @@ function setCalendarCheckbox() {
       $($('input#calendar_names')).first().click();
     }
   }
+  
+  // Need to clear local storage when browser window is closed
 }
 function getCalendarEvents() {
   var calendarId = localStorage.getItem('calendarId');
