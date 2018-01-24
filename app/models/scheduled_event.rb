@@ -9,6 +9,9 @@ class ScheduledEvent
   field :one_time, type: Boolean, default: true
   field :recurring_rules, type: Hash
   field :offset_rule, type: Integer, default: 0
+  field :author_id, type: Integer, default: 0
+  field :calendar_id, type: String
+  field :color, type: String
 
   embeds_many :event_exceptions
 
@@ -56,7 +59,7 @@ class ScheduledEvent
       schedule(start_time).occurrences(end_date).map do |val|
         val = val + offset_rule.day + 1.day if val.saturday?
         val = val + offset_rule.day if val.sunday?
-        ScheduledEvent.new(id: id, event_name: event_name, start_time: val, one_time: false)
+        ScheduledEvent.new(id: id, event_name: event_name, start_time: val, one_time: false, color:color)
       end
     end
   end

@@ -1,0 +1,12 @@
+class Calendar
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  
+  field :name, type: String
+  field :organization, type: String
+  field :is_published, type: Boolean, default: false
+  field :author_id, type: Integer, default: 0
+  
+  
+  embeds_many :scheduled_events
+end

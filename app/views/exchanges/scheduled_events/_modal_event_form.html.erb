@@ -1,0 +1,51 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">Create Event</h4>
+  </div>
+  <div class="modal-body">
+    
+    <div class="form-group">
+      <label for="inputEmail3" class="col-sm-2 control-label">Date</label>
+      <div class="col-sm-5">
+        <%= f.text_field :start_time, class: "date-picker form-control", placeholder: 'Start Date' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-offset-2 col-sm-5">
+        <% types = ScheduledEvent::EVENT_TYPES; types = types.rotate %>
+        <%= f.select :type, options_for_select(types.map {|a| [a.to_s.humanize, a.to_s]}, f.object.type), {include_blank: "SELECT EVENT TYPE"}, required: true, id: 'selected_scheduled_event_type' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-offset-2 col-sm-5" id="scheduled_event">
+          <%= f.select :event_name, options_for_select(ScheduledEvent::SYSTEM_EVENTS.map { |s| [s.humanize, s] }, f.object.event_name), include_blank: "SELECT EVENT", required: true %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="inputEmail3" class="col-sm-2 control-label">Recuring</label>
+      <div class="col-sm-5">
+        <%= f.select_recurring :recurring_rules, nil, allow_blank: true %>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="inputEmail3" class="col-sm-2 control-label">Color</label>
+      <div class="col-sm-5">
+        <%= f.color_field :color %>
+      </div>
+    </div>
+    
+    <%= f.hidden_field :calendar_id %>
+    
+    <%= f.hidden_field :author_id, value: current_user.id  %>
+    
+  </div>
+  <div class="modal-footer">
+    <%= f.submit class:'btn btn-primary'%>
+    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+  </div>
+</div>

@@ -16,12 +16,25 @@ class Exchanges::ScheduledEventsController < ApplicationController
       @flash_message = 'Event successfully created'
       @flash_type = 'success'
       @calendar_events = load_calendar_events
+      @available_calendars = Calendar.all
+      redirect_to main_app.exchanges_scheduled_events_path
     else
       @flash_message = scheduled_event.errors.values.flatten.to_sentence
       @flash_type = 'error'
       @scheduled_event = scheduled_event
       render :new
     end
+  end
+  
+  def create_calendar
+    @new_calendar = Calendar.new(calendar_params)
+    if @new_calendar.save!
+      @available_calendars = Calendar.all
+    else
+      @flash_message = @new_calendar.errors.values.flatten.to_sentence
+      @flash_type = 'error'
+    end
+    redirect_to main_app.exchanges_scheduled_events_path
   end
 
   def edit
@@ -57,7 +70,10 @@ class Exchanges::ScheduledEventsController < ApplicationController
   end
 
   def index
-    @calendar_events = load_calendar_events
+    @available_calendars = Calendar.all
+    @new_calendar = Calendar.new()
+    @scheduled_event = ScheduledEvent.new
+    @fcevents = load_calendar_events.map{|event| {title:event.event_name.gsub('_',' ').titleize,start:event.start_time,all_day:true, class:event.type, one_time:event.one_time,recurring_rules:event.recurring_rules} }
   end
 
   def destroy
@@ -89,11 +105,19 @@ class Exchanges::ScheduledEventsController < ApplicationController
     end
     @calendar_events = load_calendar_events
   end
+  
+  def get_calendar_events
+    calendar_events = ScheduledEvent.where(calendar_id:params[:id])
+    @available_calendars = Calendar.all
+    @new_calendar = Calendar.new()
+    render json: calendar_events.map {|event| {title:event.event_name.gsub('_',' ').titleize,start:event.start_time,all_day:true, one_time:event.one_time,recurring_rules:event.recurring_rules,color:event.color} }
+    
+  end
 
   private
 
     helper_method :scheduled_event, :scheduled_events
-
+    
     def load_calendar_events
       scheduled_events.flat_map do |e|
         if params.key?("start_date")
@@ -105,7 +129,11 @@ class Exchanges::ScheduledEventsController < ApplicationController
     end
 
     def scheduled_event_params
-      params.require(:scheduled_event).permit(:type, :event_name, :start_time, :recurring_rules, :one_time, :offset_rule)
+      params.require(:scheduled_event).permit(:type, :event_name, :start_time, :recurring_rules, :one_time, :offset_rule, :author_id, :calendar_id, :color)
+    end
+    
+    def calendar_params
+      params.require(:calendar).permit(:name, :organization, :author_id)
     end
 
     def scheduled_event

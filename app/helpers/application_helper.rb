@@ -677,4 +677,9 @@ module ApplicationHelper
       "icons/#{site_key}-#{icon}"
     end     
   end
+  
+  def calendar_color_picker(i)
+    colors = ["#ff4d4d","#ffa64d","#70db70","#4da6ff","#ff4da6","#d2a679","#94b8b8","#70dbdb"]
+    colors[i]
+  end
 end

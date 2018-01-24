@@ -76,8 +76,10 @@ Rails.application.routes.draw do
     resources :scheduled_events do
       collection do
         get 'current_events'
+        post 'create_calendar'
         get 'delete_current_event'
         get 'list'
+        get 'get_calendar_events'
       end
     end
 
