@@ -288,24 +288,8 @@ class Organization
         if (filters[:sole_source_only]) ## Only sole source carriers requested
           next carrier_names unless org.carrier_profile.offers_sole_source?  # skip carrier unless it is a sole source provider
         end
-        if (filters[:active_year])
-          carrier_plans = Plan.valid_shop_health_plans("carrier", org.carrier_profile.id, filters[:active_year])
-        else
-          carrier_plans = Plan.valid_shop_health_plans("carrier", org.carrier_profile.id)
-        end
-
-        if (filters[:selected_carrier_level])
-          case filters[:selected_carrier_level]
-          when 'single_carrier'
-            carrier_plans.select! { |plan| plan.is_vertical }
-          when 'metal_level'
-            carrier_plans.select! { |plan| plan.is_horizontal }
-          when 'sole_source'
-            carrier_plans.select! { |plan| plan.is_sole_source }
-          end
-        end
-        carrier_names[org.carrier_profile.id.to_s] = org.carrier_profile.legal_name if carrier_plans.any?
-        carrier_names
+        carrier_names[org.carrier_profile.id.to_s] = org.carrier_profile.legal_name if Plan.valid_shop_health_plans("carrier", org.carrier_profile.id).present?
+        Hash[carrier_names.sort_by{|a,b| b.downcase }]
       end
     end
   end
@@ -360,7 +344,7 @@ class Organization
           end
         end
         carrier_names[org.carrier_profile.id.to_s] = org.carrier_profile.legal_name if carrier_plans.any?
-        carrier_names
+        Hash[carrier_names.sort_by{|a,b| b.downcase }]
       end
     end
   end
@@ -566,3 +550,4 @@ class Organization
 
   end
 end
+
