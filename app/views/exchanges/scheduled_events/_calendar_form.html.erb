@@ -7,9 +7,16 @@
   </div>
   <div class="modal-body">
     <div class="form-group">
-      <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
+      <label for="name" class="col-sm-2 control-label">Name</label>
       <div class="col-sm-10">
         <%= f.text_field :name, class:'form-control', placeholder:'Enter Calendar Name' %>
+      </div>
+    </div>
+    <br />
+    <div class="form-group">
+      <label for="color" class="col-sm-2 control-label">Color</label>
+      <div class="col-sm-5">
+        <%= f.color_field :color %>
       </div>
     </div>
     <%= f.hidden_field :author_id, value: current_user.id  %>

@@ -56,7 +56,7 @@ class Exchanges::CalendarsController < ApplicationController
   private
 
   def calendar_params
-    params.require(:calendart).permit(:name, :organization, :is_published, :author_id)
+    params.require(:calendar).permit(:name, :organization, :is_published, :author_id, :color)
   end
 
 end

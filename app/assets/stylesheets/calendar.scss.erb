@@ -2,9 +2,39 @@
   .fc-widget-content {
     background:$primary-white;
   }
+  .fc-widget-header {
+    background:$mhc-dark-blue;
+  }
+  .fc-day-header {
+    text-transform: uppercase;
+    font-weight: 400;
+    border:none;
+    background:$mhc-dark-blue;
+    color:$primary-white;
+  }
+  .fc-state-highlight {
+    opacity: 0;
+    border: none;
+  }
+  td.fc-day {
+    background: rgba(54, 25, 25, .00004);
+  }
+  .fc-today {
+    background:none;
+  }
+  .fc-today .fc-day-number {
+    background:#c56c24;
+    color:$primary-white;
+    border-radius:40px;
+    padding: 3px 6px 3px 5px;
+    font-weight: 300;
+  }
+  .fc td, .fc th {
+    border:1px solid #000;
+  }
 }
 
-input#scheduled_event_color[type="color" i] {
+input#calendar_color[type="color" i] {
     -webkit-appearance: square-button;
     width: 44px;
     height: 23px;

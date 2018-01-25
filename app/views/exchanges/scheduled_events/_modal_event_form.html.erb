@@ -1,7 +1,7 @@
 <div class="modal-content">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h4 class="modal-title">Create Event</h4>
+    <h4 class="modal-title" id="calendar-event-title"></h4>
   </div>
   <div class="modal-body">
     
@@ -31,13 +31,7 @@
         <%= f.select_recurring :recurring_rules, nil, allow_blank: true %>
       </div>
     </div>
-    
-    <div class="form-group">
-      <label for="inputEmail3" class="col-sm-2 control-label">Color</label>
-      <div class="col-sm-5">
-        <%= f.color_field :color %>
-      </div>
-    </div>
+    <%= f.hidden_field :color %>
     
     <%= f.hidden_field :calendar_id %>
     

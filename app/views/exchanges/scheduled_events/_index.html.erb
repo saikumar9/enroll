@@ -3,20 +3,19 @@
     <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#createCalendar">Create Calendar</button>
   </div>
   <div class="col-md-3">
+    <h5>Calendars</h5>
     <% @available_calendars.each_with_index do |calendar, i| %>
     <label class="list-container">
       <%= calendar.name %>
-      <%= check_box_tag 'calendar_names', 'calendar_names', false, data: { id:calendar.id.to_s, name:calendar.name, color:calendar_color_picker(i) }  %>
+      <%= check_box_tag 'calendar_names', 'calendar_names', false, data: { id:calendar.id.to_s, name:calendar.name, color:calendar.color }  %>
       <span class="checkmark"></span>
     </label>
     <% end %>
-    <br />
-    <div class="events-menu col-md-3"></div>
   </div>
   
   <div class="col-md-9">
     <% if @available_calendars.size == 0 %>
-    Create a calendar to enter events
+    <h3 class="text-center">Create a calendar to enter events</h3>
     <% else %>
     <div id="calendar"></div>
     <% end %>

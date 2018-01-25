@@ -73,7 +73,6 @@ class Exchanges::ScheduledEventsController < ApplicationController
     @available_calendars = Calendar.all
     @new_calendar = Calendar.new()
     @scheduled_event = ScheduledEvent.new
-    @fcevents = load_calendar_events.map{|event| {title:event.event_name.gsub('_',' ').titleize,start:event.start_time,all_day:true, class:event.type, one_time:event.one_time,recurring_rules:event.recurring_rules} }
   end
 
   def destroy
@@ -110,8 +109,7 @@ class Exchanges::ScheduledEventsController < ApplicationController
     calendar_events = ScheduledEvent.where(calendar_id:params[:id])
     @available_calendars = Calendar.all
     @new_calendar = Calendar.new()
-    render json: calendar_events.map {|event| {title:event.event_name.gsub('_',' ').titleize,start:event.start_time,all_day:true, one_time:event.one_time,recurring_rules:event.recurring_rules,color:event.color} }
-    
+    render json: calendar_events.map {|event| {title:event.event_name.gsub('_',' ').titleize,start:event.start_time,all_day:true, one_time:event.one_time,recurring_rules:event.recurring_rules,color:event.color,id:event.id} }
   end
 
   private
@@ -133,7 +131,7 @@ class Exchanges::ScheduledEventsController < ApplicationController
     end
     
     def calendar_params
-      params.require(:calendar).permit(:name, :organization, :author_id)
+      params.require(:calendar).permit(:name, :organization, :author_id, :color)
     end
 
     def scheduled_event

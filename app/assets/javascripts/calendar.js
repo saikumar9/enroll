@@ -1,14 +1,7 @@
-//$(document).on('click','.interaction-click-control-calendar',calendarInit)
-$(document).on('click','#calendar_names',loadEvents)
+$(document).on('click','#calendar_names',calEvents)
+
 selectedCalID = [];
-calendarEvents = [];
-
-function loadCalendar() {
-  setTimeout(function() {
-    calendarInit();
-  },250);
-}
-
+myEvents = [];
 
 function calendarInit() {
   $('#calendar').fullCalendar({
@@ -21,11 +14,21 @@ function calendarInit() {
     height: 630,
     selectable: true,
     select: function(start, end) {
-      var calendarId = $('input[type="checkbox"]#calendar_names:checked').data('id');
-      var startTime = moment(start).format('L');
-      $('#eventModal').modal('show');
-      $('input#scheduled_event_start_time').val(moment(start).format('L'));
-      $('#scheduled_event_calendar_id').val(calendarId);
+      if ($('input#calendar_names:checked').length > 1 ) {
+        alert("Only one calendar can be selected to create new event")
+      } else if ($('input#calendar_names:checked').length < 1 ) {
+        alert("Please select calendar to enter an event for")
+      } else {
+        var calendarId = $('input[type="checkbox"]#calendar_names:checked').data('id');
+        var eventColor = $('input[type="checkbox"]#calendar_names:checked').data('color');
+        var startTime = moment(start).format('L');
+        var eventTitle = $('input[type="checkbox"]#calendar_names:checked').data('name');
+        $('#eventModal').modal('show');
+        $('input#scheduled_event_start_time').val(moment(start).format('L'));
+        $('#scheduled_event_calendar_id').val(calendarId);
+        $('#scheduled_event_color').val(eventColor);
+        $('#calendar-event-title').text('Event for '+eventTitle);
+      }
     }
   })
   
@@ -35,30 +38,31 @@ function calendarInit() {
     var checkbox = $(this).find('input');
     span.css('background-color',color);
   })
-  
-  setTimeout(function(){
-    setCalendarCheckbox()
-  },200);
 }
 
-function loadEvents() {
-  // Sets color for calendar header
-  var color = $(this).data('color');
-  setCalendarHeader(color);
-  // Prevents multiple selections
-  $('input[type="checkbox"]#calendar_names').not(this).prop("checked", false);
-  // Ensures atleast one checkbox is selected
-  if (!$(this).is(':checked')) {
-    $(this).prop("checked", true);
+function checkMyEvents() {
+  if (localStorage.myEvents) {
+    events = localStorage.getItem('myEvents');
+    events = JSON.parse(events);
+    events.map((e)=> {
+      $('[data-id~='+e+']').prop('checked', true);
+      myEvents.push(e)
+    });
+    myCalendarEvents(events);
   }
-  // Gets id from selected checkbox
-  getSelectedCheckboxID($(this));
-  // Loads events into calendar
-  getCalendarEvents()
 }
 
-function setCalendarHeader(color) {
-  $('.fc-widget-header').css('background', color)
+function calEvents() {
+  $(this).each(function() {
+    if ($(this).is(':checked')) {
+      myEvents.push($(this).data('id'))
+    } else {
+      removeA(myEvents, $(this).data('id'))
+    }
+    localStorage.setItem("myEvents",JSON.stringify(myEvents));
+    var selectedEvents = JSON.parse(localStorage.getItem("myEvents"));
+    myCalendarEvents(selectedEvents);
+  });
 }
 
 function getSelectedCheckboxID(element) {
@@ -72,38 +76,45 @@ function resetSelectCalID() {
   localStorage.removeItem("calendarId");
 }
 
-function resetCalendarEvents() {
-  calendarEvents = []
+function setCalendarCheckbox() {
+  if ($('input#calendar_names')) {
+    $('input#calendar_names').last().click();
+  }
 }
 
-function setCalendarCheckbox() {
-  if (localStorage.calendarId) {
-    // Sets calendar ID to be used on refreshes
-    $('[data-id~='+localStorage.calendarId+']').click();
-  } else {
-    if ($('input#calendar_names')) {
-      $($('input#calendar_names')).first().click();
+function myCalendarEvents(events) {
+  // Clears events from calendar
+  $('#calendar').fullCalendar('removeEvents');
+  // Prevents duplicate events from being passed
+  events = $.unique(events);
+  events.map((e)=> {
+    // Fetches data from controller
+    $.ajax({
+      type: "GET",
+      dataType:'script',
+      url: "/exchanges/scheduled_events/get_calendar_events?id="+e,
+      success: function(data) {
+        // Add events to calendar
+        $('#calendar').fullCalendar('renderEvents', JSON.parse(data), true)
+      }
+    });
+  });
+}
+
+// removes item from array
+function removeA(arr) {
+  var what, a = arguments, L = a.length, ax;
+  while (L > 1 && arr.length) {
+    what = a[--L];
+    while ((ax= arr.indexOf(what)) !== -1) {
+      arr.splice(ax, 1);
     }
   }
-  
-  // Need to clear local storage when browser window is closed
+  return arr;
 }
-function getCalendarEvents() {
-  var calendarId = localStorage.getItem('calendarId');
-  resetCalendarEvents();
-  // Fetches data from controller
-  $.ajax({
-    type: "GET",
-    dataType:'script',
-    url: "/exchanges/scheduled_events/get_calendar_events?id="+calendarId,
-    success: function(data) {
-      // Clears events from calendar
-      $('#calendar').fullCalendar('removeEvents')
-      // Add events to calendar
-      $('#calendar').fullCalendar('renderEvents', JSON.parse(data), true)
-      calendarEvents.push(JSON.parse(data));
-    }
-  });
-  
-}
+
+// Removes items from localStorage when leaving page
+$( window ).unload(function() {
+  resetSelectCalID()
+});
 
