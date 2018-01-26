@@ -31,15 +31,27 @@ Gem::Specification.new do |s|
   s.add_dependency "roo", "~> 2.1.0"
   s.add_dependency 'aasm', '~> 4.8.0'
   s.add_dependency 'acapi'
+  s.add_dependency 'devise', '~> 3.5.4'
+  s.add_dependency 'pundit', '~> 1.0.1'
 
+  
+  s.test_files = Dir["spec/**/*"]
+
+  s.add_development_dependency 'cucumber-rails'
   s.add_development_dependency 'rspec-rails' 
   s.add_development_dependency 'shoulda-matchers'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'database_cleaner'
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'factory_girl_rails'
+  s.add_development_dependency 'poltergeist'
+  s.add_development_dependency 'capybara-screenshot'
+  s.add_development_dependency 'warden'
   s.add_development_dependency 'pry'
-  s.test_files = Dir["spec/**/*"]
+  s.add_development_dependency 'forgery'
+
+
+
   # s.add_development_dependency 'pry-rails'
   # s.add_development_dependency 'pry-stack_explorer'
   # s.add_development_dependency 'pry-byebug'
