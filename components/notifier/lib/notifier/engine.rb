@@ -5,6 +5,10 @@ require "wicked_pdf"
 require "ckeditor"
 require "mongoid"
 require "devise"
+require 'acapi'
+require 'virtus'
+require 'aasm'
+require 'redcarpet'
 
 module Notifier
   class Engine < ::Rails::Engine
