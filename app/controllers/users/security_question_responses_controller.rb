@@ -51,7 +51,7 @@ class Users::SecurityQuestionResponsesController < ApplicationController
                  else
                    SecurityQuestion.visible.not_in(:_id => question_ids)
                  end
-    render partial: 'users/security_question_responses/filter_security_questions', locals: { security_questions: @questions, index: params[:index] }
+    render partial: 'users/security_question_responses/filter_security_questions', locals: { security_questions: @questions, index: params[:index], selected: params[:selected] }
   end
 
   private

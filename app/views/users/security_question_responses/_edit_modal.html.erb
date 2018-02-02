@@ -13,7 +13,7 @@
 
               <div class="question-wrapper" data-question-index='1'>
                 <div class="question-wrapper-1">
-                  <%= render partial: 'users/security_question_responses/filter_security_questions', locals: { security_questions: @security_questions, index: 1 } %>
+                  <%= render partial: 'users/security_question_responses/filter_security_questions', locals: { security_questions: @security_questions, index: 1, selected: nil } %>
                 </div>
                 <div class="input-wrapper">
                   <%= f.text_field :question_answer, name: "security_question_responses[][question_answer]", required: true %>
@@ -22,16 +22,16 @@
 
               <div class="question-wrapper" data-question-index='2'>
                 <div class="question-wrapper-2">
-                  <%= render partial: 'users/security_question_responses/filter_security_questions', locals: { security_questions: @security_questions, index: 2 } %>
-                </div>
-                <div class="input-wrapper">
-                  <%= f.text_field :question_answer, name: "security_question_responses[][question_answer]", required: true %>
-                </div>
+                  <%= render partial: 'users/security_question_responses/filter_security_questions', locals: { security_questions: @security_questions, index: 2, selected: nil } %>
               </div>
+              <div class="input-wrapper">
+                <%= f.text_field :question_answer, name: "security_question_responses[][question_answer]", required: true %>
+              </div>
+            </div>
 
               <div class="question-wrapper" data-question-index='3'>
                 <div class="question-wrapper-3">
-                  <%= render partial: 'users/security_question_responses/filter_security_questions', locals: { security_questions: @security_questions, index: 3 } %>
+                  <%= render partial: 'users/security_question_responses/filter_security_questions', locals: { security_questions: @security_questions, index: 3, selected: nil } %>
                 </div>
                 <div class="input-wrapper">
                   <%= f.text_field :question_answer, name: "security_question_responses[][question_answer]", required: true %>
