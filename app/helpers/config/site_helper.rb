@@ -64,6 +64,10 @@ module Config::SiteHelper
     Settings.site.nondiscrimination_notice_url
   end
 
+  def site_privacy_policy_url
+    Settings.site.privacy_policy_url
+  end
+
   def site_policies_url
     Settings.site.policies_url
   end
