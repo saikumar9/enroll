@@ -1,14 +1,23 @@
 <% if @pdf_loaded.nil? %>
-  <%= wicked_pdf_stylesheet_link_tag "pdf" %>
+  <%= stylesheet_link_tag wicked_pdf_asset_base64("pdf") %>
+  <style>
+    table.compare-table {
+      width: 100%;
+    }
+  </style>
 <% end %>
 <div class="container-fluid">
-  <h3 style='text-align:center'>Plan Comparison Chart</h3>
+  <% if qhps.length > 1 %>
+    <h3 style='text-align:center'>Plan Comparison Chart</h3>
+  <% else %>
+    <h3 style='text-align:center'>Plan Details Chart</h3>
+  <% end %>
   <div class="mygrid-wrapper-div">
    <table class="table bordered compare-table", border = "1", style="font-size:11px;" id="compare_plans_table">
         <tr>
           <th class="row-title">Plans</th>
           <% qhps.each do |qhp|%>
-            <th colspan="2" style="text-align: center; vertical-align:middle; border: none; padding: 0;" class='movable'><%= display_carrier_logo(::Maybe.new(qhp.plan), { width: 80, pdf: true }) %></th>
+            <th colspan="2" style="text-align: center; vertical-align:middle; border: none; padding: 0;" class='movable'><%= display_carrier_pdf_logo(::Maybe.new(qhp.plan), { width: 80, pdf: true }) %></th>
           <% end %>
         </tr>
         <tr>
