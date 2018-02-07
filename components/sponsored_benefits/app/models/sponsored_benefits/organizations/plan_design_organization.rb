@@ -57,7 +57,7 @@ module SponsoredBenefits
 
       scope :draft_proposals,     -> { where(:'plan_design_proposals.aasm_state' => 'draft')}
 
-      scope :datatable_search,    -> (query) { self.where({"$or" => ([{"legal_name" => Regexp.compile(Regexp.escape(query), true)}, 
+      scope :datatable_search,    -> (query) { self.where({"$or" => ([{"legal_name" => Regexp.compile(Regexp.escape(query), true)},
                                                                       {"fein" => Regexp.compile(Regexp.escape(query), true)}])}) }
 
 
@@ -68,6 +68,11 @@ module SponsoredBenefits
 
       def broker_agency_profile
         ::BrokerAgencyProfile.find(owner_profile_id)
+      end
+
+      def sic_code
+        return employer_profile.sic_code if employer_profile.present?
+        self[:sic_code]
       end
 
       # TODO Move this method to BenefitMarket Model
