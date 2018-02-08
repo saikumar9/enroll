@@ -37,7 +37,6 @@ module SponsoredBenefits
       validates_uniqueness_of :owner_profile_id, :scope => :sponsor_profile_id, unless: Proc.new { |pdo| pdo.sponsor_profile_id.nil? }
       validates_uniqueness_of :sponsor_profile_id, :scope => :owner_profile_id, unless: Proc.new { |pdo| pdo.sponsor_profile_id.nil? }
 
-
       index({"owner_profile_id" => 1})
       index({"sponsor_profile_id" => 1})
       index({"has_active_broker_relationship" => 1})
@@ -74,6 +73,15 @@ module SponsoredBenefits
         return employer_profile.sic_code if employer_profile.present?
         self[:sic_code]
       end
+
+      def primary_office_location_from_employer
+        return employer_profile.primary_office_location if employer_profile.present?
+        primary_office_location_from_organization
+      end
+
+      alias_method :primary_office_location_from_organization, :primary_office_location
+      alias_method :primary_office_location, :primary_office_location_from_employer
+
 
       # TODO Move this method to BenefitMarket Model
       def service_areas_available_on(date)

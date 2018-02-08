@@ -56,15 +56,23 @@ module SponsoredBenefits
     end
 
     describe "Organization with no customer" do
-      let!(:plan_design_organization) { create(:plan_design_organization,
+      let(:primary_office_location) { build(:sponsored_benefits_office_location, :primary) }
+      let(:plan_design_organization) { create(:plan_design_organization,
         owner_profile_id: "5678",
         legal_name: "ABC Company",
-        sic_code: "0345" )
-      }
+        sic_code: "0345",
+        office_locations: [primary_office_location]
+      )}
 
       describe '.sic_code' do
         it "returns a sic_code" do
           expect(plan_design_organization.sic_code).to eq('0345')
+        end
+      end
+
+      describe '.primary_office_location' do
+        it "returns the office location" do
+          expect(plan_design_organization.primary_office_location).to eq(primary_office_location)
         end
       end
     end
@@ -74,18 +82,28 @@ module SponsoredBenefits
       let(:start_on) { (TimeKeeper.date_of_record + 2.months).beginning_of_month}
       let(:plan_year) { double(start_on: start_on)}
       let(:census_employees) { double(non_terminated: [])}
-      let(:employer_profile) { double(active_plan_year: plan_year, census_employees: census_employees, sic_code: "0345")}
+      let(:employer_profile) { double(active_plan_year: plan_year, census_employees: census_employees, sic_code: "0345", primary_office_location: employer_primary_office_location)}
+      let(:org_primary_office_location) { build(:sponsored_benefits_office_location, :primary) }
+      let(:employer_primary_office_location) { build(:sponsored_benefits_office_location, :primary) }
 
       let!(:plan_design_organization) { create(:plan_design_organization,
         owner_profile_id: "5678",
         legal_name: "ABC Company",
-        sic_code: "0345" )
+        sic_code: "0345",
+        office_locations: [org_primary_office_location]
+        )
       }
 
       let(:calculated_dates) { SponsoredBenefits::BenefitApplications::BenefitApplication.calculate_start_on_dates }
 
       before do
         allow(plan_design_organization).to receive(:employer_profile).and_return(employer_profile)
+      end
+
+      describe '.primary_office_location' do
+        it 'returns the employers office location' do
+          expect(plan_design_organization.primary_office_location).to eq(employer_primary_office_location)
+        end
       end
 
       describe '.sic_code' do
