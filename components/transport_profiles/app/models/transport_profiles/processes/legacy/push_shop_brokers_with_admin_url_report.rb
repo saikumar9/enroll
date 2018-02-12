@@ -8,12 +8,5 @@ module TransportProfiles
       add_step(TransportProfiles::Steps::RouteTo.new(:aca_shop_analytics_outbound, report_file_name, gateway))
       add_step(TransportProfiles::Steps::DeleteFile.new(report_file_name, gateway))
     end
-
-    def self.used_endpoints
-      [
-        :aca_shop_analytics_archive,
-        :aca_shop_analytics_outbound
-      ]
-    end
   end
 end

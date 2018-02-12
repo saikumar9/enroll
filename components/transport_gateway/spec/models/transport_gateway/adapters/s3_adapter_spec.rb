@@ -300,7 +300,7 @@ module TransportGateway
       end
 
       let(:tempfile) do
-        instance_double(Tempfile, :binmode => true)
+        instance_double(Tempfile)
       end
 
       let(:s3_credential_options) do
