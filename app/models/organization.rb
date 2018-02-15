@@ -397,13 +397,13 @@ class Organization
     statement_date = commission_statement_date(file_path) rescue nil
     org = by_commission_statement_filename(file_path) rescue nil
     if statement_date && org && !commission_statement_exist?(statement_date,org)
-      doc_uri = Aws::S3Storage.save(file_path, "commission_statements", file_name)
+      doc_uri = Aws::S3Storage.save(file_path, "commission-statements", file_name)
       if doc_uri
         document = Document.new
         document.identifier = doc_uri
         document.date = statement_date
         document.format = 'application/pdf'
-        document.subject = 'commission_statement'
+        document.subject = 'commission-statement'
         document.title = File.basename(file_path)
         org.documents << document
         logger.debug "associated commission statement #{file_path} with the Organization"
@@ -462,12 +462,12 @@ class Organization
     Date.strptime(date_string, "%m%d%Y")
   end
 
-  # Expects file_path string with file_name format /hbx_id_mmddyyyy_commission_NUM-NUM_R.pdf
-  # Returns Organization
-  # added to decouple functionality from similar method with invoice flow
+  # Expects file_path string with file_name format /npm_nfpinternalid_mmddyyyy_commission_NUM-NUM_R.pdf
+  # returns organization associated with broker_profile_id
   def self.by_commission_statement_filename(file_path)
-    hbx_id = File.basename(file_path).split("_")[0]
-    Organization.where(hbx_id: hbx_id).first
+    npn = File.basename(file_path).split("_")[0]
+    broker_profile_id = BrokerRole.find_by_npn(npn).broker_agency_profile_id
+    BrokerAgencyProfile.get_organization_from_broker_profile_id(broker_profile_id)
   end
 
   def office_location_kinds
