@@ -24,7 +24,7 @@ module Effective
         }, :sortable => false, :filter => false
 
         table_column :terminated_on, :proc => Proc.new { |row|
-          row.employment_terminated_on || "Active"
+          row.employment_terminated_on.strftime("%m/%d/%Y") if row.employment_terminated_on.present?
         }, :sortable => false, :filter => false, :visible => true 
 
         table_column :status, :proc => Proc.new { |row|
