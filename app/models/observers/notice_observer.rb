@@ -64,7 +64,7 @@ module Observers
           return true if plan_year.benefit_groups.any?{|bg| bg.is_congress?}
           if (plan_year.application_eligibility_warnings.include?(:primary_office_location) || plan_year.application_eligibility_warnings.include?(:fte_count))
             begin
-              trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year.employer_profile, notice_event: "initial_employer_denial")
+              trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "initial_employer_denial")
             rescue Exception => e
               Rails.logger.error { "Unable to deliver employer initial denial notice for #{plan_year.employer_profile.organization.legal_name} due to #{e}" }
             end
