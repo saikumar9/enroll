@@ -55,6 +55,7 @@ module TransportGateway
       end
       
       source_stream = Tempfile.new('tgw_sftp_adapter_dl')
+      source_stream.binmode
 
       begin
         Net::SFTP.start(target_uri.host, @user, default_options.merge(credential_options)) do |sftp|
