@@ -317,7 +317,27 @@ RSpec.describe ApplicationHelper, :type => :helper do
       expect(helper.show_default_ga?(general_agency_profile, broker_agency_profile)).to eq false
     end
   end
+   describe "#show_oop_pdf_link" , dbclean: :after_each do
+       context 'valid aasm_state' do
+         it "should return true" do
+           PlanYear::PUBLISHED.each do |state|
+             expect(helper.show_oop_pdf_link(state)).to be true
+           end
 
+          PlanYear::RENEWING_PUBLISHED_STATE.each do |state|
+             expect(helper.show_oop_pdf_link(state)).to be true
+           end
+         end
+       end
+
+        context 'invalid aasm_state' do
+          it "should return false" do
+            ["draft", "renewing_draft"].each do |state|
+              expect(helper.show_oop_pdf_link(state)).to be false
+            end
+          end
+        end
+     end
 
 
   describe "find_plan_name", dbclean: :after_each do
@@ -391,8 +411,30 @@ end
   end
 
   describe ".notify_employer_when_employee_terminate_coverage" do
+    let(:published_benefit_group_assignment) { double(hbx_enrollments: hbx_enrollments)}
+    let(:census_employee) { double(published_benefit_group_assignment: published_benefit_group_assignment) }
+    let(:enrollment) { double("HbxEnrollment", effective_on: double("effective_on", year: double), applied_aptc_amount: 0, census_employee: census_employee, coverage_kind: 'health') }
+    let(:hbx_enrollments) { [double(coverage_kind: 'health', aasm_state: 'coverage_termination_pending')] }
+
+    it "should trigger notify_employer_when_employee_terminate_coverage job in queue" do
+      allow(enrollment).to receive(:is_shop?).and_return(true)
+      allow(enrollment).to receive(:enrollment_kind).and_return('health')
+      allow(enrollment).to receive_message_chain("census_employee.present?").and_return(true)
+      allow(enrollment).to receive_message_chain("census_employee.id.to_s").and_return("8728346")
+      ActiveJob::Base.queue_adapter = :test
+      ActiveJob::Base.queue_adapter.enqueued_jobs = []
+      helper.notify_employer_when_employee_terminate_coverage(enrollment)
+      queued_job = ActiveJob::Base.queue_adapter.enqueued_jobs.find do |job_info|
+        job_info[:job] == ShopNoticesNotifierJob
+      end
+      expect(queued_job[:args]).to eq ["8728346", 'notify_employer_when_employee_terminate_coverage']
+    end
+  end
+
+  describe ".notify_employee_confirming_coverage_termination" do
     let(:enrollment) { double("HbxEnrollment", effective_on: double("effective_on", year: double), applied_aptc_amount: 0) }
-    before :each do
+    let(:census_employee) {FactoryGirl.create(:census_employee)}
+    it "should trigger notify_employee_confirming_coverage_termination job in queue" do
       allow(enrollment).to receive(:is_shop?).and_return(true)
       allow(enrollment).to receive(:coverage_kind).and_return("health")
       allow(enrollment).to receive(:enrollment_kind).and_return('health')
@@ -400,22 +442,11 @@ end
       allow(enrollment).to receive_message_chain("census_employee.id.to_s").and_return("8728346")
       ActiveJob::Base.queue_adapter = :test
       ActiveJob::Base.queue_adapter.enqueued_jobs = []
-    end
-
-    it "should trigger notify_employer_when_employee_terminate_coverage job in queue" do
-      helper.notify_employer_when_employee_terminate_coverage(enrollment)
-      queued_job = ActiveJob::Base.queue_adapter.enqueued_jobs.find do |job_info|
-        job_info[:job] == ShopNoticesNotifierJob
-      end
-      expect(queued_job[:args]).to eq ["8728346", 'notify_employer_when_employee_terminate_coverage']
-    end
-
-    it "should trigger notify_employee_confirming_coverage_termination job in queue" do
       helper.notify_employee_confirming_coverage_termination(enrollment)
       queued_job = ActiveJob::Base.queue_adapter.enqueued_jobs.find do |job_info|
         job_info[:job] == ShopNoticesNotifierJob
       end
-      expect(queued_job[:args]).to eq ["8728346", 'notify_employee_confirming_coverage_termination'] 
+      expect(queued_job[:args]).to eq ["8728346", 'notify_employee_confirming_coverage_termination']
     end
   end
 end
