@@ -301,8 +301,8 @@ Given(/^(.*)Employer for (.*) exists with a published health plan year$/) do |ki
     [0..5].each do |size|
       factor_set.rating_factor_entries.new(factor_key: size, factor_value: 1.0)
     end
-    group_size_factors.save!
   end
+  group_size_factors.save!
   employee.add_benefit_group_assignment benefit_group, benefit_group.start_on
   FactoryGirl.create(:qualifying_life_event_kind, market_kind: "shop")
   Caches::PlanDetails.load_record_cache!
@@ -331,8 +331,8 @@ Given(/^Employer for (.*) exists with a published plan year offering health and 
     [0..5].each do |size|
       factor_set.rating_factor_entries.new(factor_key: size, factor_value: 1.0)
     end
-    group_size_factors.save!
   end
+  group_size_factors.save!
   employee.add_benefit_group_assignment benefit_group, benefit_group.start_on
   Caches::PlanDetails.load_record_cache!
 end
