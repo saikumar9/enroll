@@ -204,6 +204,9 @@ aca:
       new_enrollment_transmit_on: 16
       update_transmit_day_of_week: "friday"
 
+    broker_agency_profile:
+      minimum_commission_statement_year: 2017
+
     transmit_employers_immediately: false
     transmit_scheduled_employers: true
     employer_transmission_day_of_month: 26
