@@ -19,7 +19,7 @@
                                                   { content: "Your plan selection <strong>#{notice.plan.plan_name}</strong> will go into effect on <strong>#{notice.plan_year.start_on}</strong>."} %>
 
 <%= render partial: 'notices/shared/paragraph', :locals =>
-                                                  { content: "Please note that your monthly premium contribution will be <strong>#{notice.enrollment.employee_cost}</strong>.  Your employer,<strong> #{notice.employer_name}</strong>, will contribute <strong>#{notice.enrollment.responsible_amount}</strong> towards your monthly premium."} %>
+                                                  { content: "Please note that your monthly premium contribution will be  <strong>#{number_to_currency(notice.enrollment.employee_cost)}</strong>.  Your employer,<strong> #{notice.employer_name}</strong>, will contribute <strong>#{number_to_currency(notice.enrollment.responsible_amount)}</strong> towards your monthly premium."} %>
 
 <%= render partial: 'notices/shared/paragraph', :locals =>
                                                   { content: "Thank you for enrolling into employer-sponsored coverage through the Health Connector."} %>
