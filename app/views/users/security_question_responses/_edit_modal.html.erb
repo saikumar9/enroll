@@ -3,17 +3,17 @@
     <% @security_questions = SecurityQuestion.visible %>
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="securityQuestionModalLabel">Please helps us secure your account</h4>
+        <h4 class="modal-title" id="securityQuestionModalLabel"><%= l10n("users.security_questions_responses.secure_your_account") %></h4>
       </div>
       <%= form_for [:user, current_user.security_question_responses.build], url: { controller: "users/security_question_responses", action: action, user_id: current_user.id, method: method }, name: "user_security_question_responses[]", remote: true do |f| %>
           <div class="modal-body">
-            <p>Please take a moment to provide security responses for three choices from our available options</p>
-            <p>These questions help us confirm your identity if you forget your password, or if your account behaves suspiciously and is locked.</p>
+            <p><%= l10n("users.security_questions_responses.respond_for_three_questions") %></p>
+            <p><%= l10n("users.security_questions_responses.questions_will_help_us_confirm") %></p>
             <div class="modal-questions-container">
 
               <div class="question-wrapper" data-question-index='1'>
                 <div class="question-wrapper-1">
-                  <%= render partial: 'users/security_question_responses/filter_security_questions', locals: { security_questions: @security_questions, index: 1 } %>
+                  <%= render partial: 'users/security_question_responses/filter_security_questions', locals: { security_questions: @security_questions, index: 1, selected: nil } %>
                 </div>
                 <div class="input-wrapper">
                   <%= f.text_field :question_answer, name: "security_question_responses[][question_answer]", required: true %>
@@ -22,16 +22,16 @@
 
               <div class="question-wrapper" data-question-index='2'>
                 <div class="question-wrapper-2">
-                  <%= render partial: 'users/security_question_responses/filter_security_questions', locals: { security_questions: @security_questions, index: 2 } %>
-                </div>
-                <div class="input-wrapper">
-                  <%= f.text_field :question_answer, name: "security_question_responses[][question_answer]", required: true %>
-                </div>
+                  <%= render partial: 'users/security_question_responses/filter_security_questions', locals: { security_questions: @security_questions, index: 2, selected: nil } %>
               </div>
+              <div class="input-wrapper">
+                <%= f.text_field :question_answer, name: "security_question_responses[][question_answer]", required: true %>
+              </div>
+            </div>
 
               <div class="question-wrapper" data-question-index='3'>
                 <div class="question-wrapper-3">
-                  <%= render partial: 'users/security_question_responses/filter_security_questions', locals: { security_questions: @security_questions, index: 3 } %>
+                  <%= render partial: 'users/security_question_responses/filter_security_questions', locals: { security_questions: @security_questions, index: 3, selected: nil } %>
                 </div>
                 <div class="input-wrapper">
                   <%= f.text_field :question_answer, name: "security_question_responses[][question_answer]", required: true %>
