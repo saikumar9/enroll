@@ -22,7 +22,8 @@ module ModelEvents
         :renewal_plan_year_publish_dead_line,
         :initial_employer_first_reminder_to_publish_plan_year,
         :initial_employer_second_reminder_to_publish_plan_year,
-        :initial_employer_final_reminder_to_publish_plan_year
+        :initial_employer_final_reminder_to_publish_plan_year,
+        :low_enrollment_notice_for_employer
     ]
 
     def notify_on_save
@@ -118,6 +119,10 @@ module ModelEvents
           is_initial_employer_second_reminder_to_publish_plan_year = true
         elsif new_date.day == Settings.aca.shop_market.initial_application.publish_due_day_of_month - 2 # 2 days prior to publish deadline of month i.e., 13th of the month
           is_initial_employer_final_reminder_to_publish_plan_year = true
+        end
+
+        if new_date.day == Settings.aca.shop_market.renewal_application.monthly_open_enrollment_end_on - 2
+          is_low_enrollment_notice_for_employer = true
         end
 
         DATA_CHANGE_EVENTS.each do |event|
