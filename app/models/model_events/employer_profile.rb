@@ -3,7 +3,8 @@ module ModelEvents
 
     REGISTERED_EVENTS = [
       :initial_employer_denial,
-      :initial_employee_plan_selection_confirmation
+      :initial_employee_plan_selection_confirmation,
+      :welcome_notice_to_employer
     ]
 
     def trigger_model_event(event_name, event_options = {})

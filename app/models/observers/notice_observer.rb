@@ -98,6 +98,13 @@ module Observers
           end
         end
       end
+
+      if EmployerProfile::REGISTERED_EVENTS.include?(new_model_event.event_key)
+        employer_profile = new_model_event.klass_instance
+        if new_model_event.event_key == :welcome_notice_to_employer
+          trigger_notice(recipient: employer_profile, event_object: employer_profile, notice_event: "welcome_notice_to_employer")
+        end
+      end
     end
 
     def hbx_enrollment_update(new_model_event)
