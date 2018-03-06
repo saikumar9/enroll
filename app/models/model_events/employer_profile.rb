@@ -2,7 +2,8 @@ module ModelEvents
   module EmployerProfile
 
     REGISTERED_EVENTS = [
-      :initial_employer_denial
+      :initial_employer_denial,
+      :initial_employee_plan_selection_confirmation
     ]
 
     def trigger_model_event(event_name, event_options = {})
@@ -10,7 +11,7 @@ module ModelEvents
         notify_observers(ModelEvent.new(event_name, self, event_options))
       end
     end
-  
+
   #  def notify_on_save
 
   #   if !persisted?

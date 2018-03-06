@@ -1338,24 +1338,21 @@ describe EmployerProfile, "initial employers enrolled plan year state", dbclean:
   end
 end
 
-describe EmployerProfile, ".initial_employee_plan_selection_confirmation", dbclean: :after_each do
-  let!(:start_on) { TimeKeeper.date_of_record.beginning_of_month }
-  let!(:employer_profile) { create(:employer_with_planyear, plan_year_state: 'enrolled', start_on: start_on)}
-  let!(:benefit_group) { employer_profile.published_plan_year.benefit_groups.first}
-  let!(:organization) { employer_profile.organization }
-  let!(:census_employee){
-    employee = FactoryGirl.create :census_employee, employer_profile: employer_profile
-    employee.add_benefit_group_assignment benefit_group, benefit_group.start_on
-    employee
-  }
-  let!(:family) { FactoryGirl.create(:family, :with_primary_family_member) }
-  let!(:hbx_enrollment) { FactoryGirl.build(:hbx_enrollment, household: family.active_household, benefit_group_assignment_id: benefit_group.benefit_group_assignments.first.id, benefit_group_id: benefit_group.id, effective_on: start_on)}
-
-  it "should trigger notice" do
-    expect(EmployerProfile).to receive(:initial_employee_plan_selection_confirmation)
-    EmployerProfile.update_status_to_binder_paid([organization.id])
+describe EmployerProfile, "update_status_to_binder_paid", dbclean: :after_each do
+  let!(:new_plan_year){ FactoryGirl.build(:plan_year, :aasm_state => "enrolled") }
+  let!(:employer_profile){ FactoryGirl.create(:employer_profile, plan_years: [new_plan_year]) }
+  let!(:organization){ employer_profile.organization }
+  it "should update employer profile aasm state to binder_paid" do
+    EmployerProfile.update_status_to_binder_paid([employer_profile.organization.id])
+    employer_profile.reload
+    expect(employer_profile.aasm_state).to eq 'binder_paid'
   end
-
+  it "should trigger notice" do
+    allow(Organization).to receive(:find).and_return(organization)
+    allow(organization).to receive(:employer_profile).and_return(employer_profile)
+    expect(organization.employer_profile).to receive(:trigger_shop_notices)
+    EmployerProfile.update_status_to_binder_paid([employer_profile.organization.id])
+  end
 end
 
 # describe "#advance_day" do
