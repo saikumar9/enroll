@@ -199,7 +199,7 @@ aca:
     broker_agency_profile:
       minimum_commission_statement_year: 2017
 
-    transmit_employers_immediately: false
+  transmit_employers_immediately: false
     transmit_scheduled_employers: true
     employer_transmission_day_of_month: 26
 
