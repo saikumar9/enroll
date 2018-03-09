@@ -466,7 +466,7 @@ class Organization
     Date.strptime(date_string, "%m%d%Y")
   end
 
-  # Expects file_path string with file_name format /npm_nfpinternalid_mmddyyyy_commission_NUM-NUM_R.pdf
+  # Expects file_path string with file_name format /npn_nfpinternalid_mmddyyyy_commission_NUM-NUM_R.pdf
   # returns organization associated with broker_profile_id
   def self.by_commission_statement_filename(file_path)
     npn = File.basename(file_path).split("_")[0]
