@@ -70,7 +70,7 @@ RSpec.describe Employers::BrokerAgencyController do
       end
 
       it "should be a success" do
-        allow(@employer_profile).to receive(:trigger_shop_notices)
+        post :create, employer_profile_id: @employer_profile.id, broker_role_id: @broker_role2.id, broker_agency_id: @org2.broker_agency_profile.id
         expect(flash[:notice]).to eq("Your broker has been notified of your selection and should contact you shortly. You can always call or email them directly. If this is not the broker you want to use, select 'Change Broker'.")
         expect(response).to redirect_to(employers_employer_profile_path(@employer_profile, tab:'brokers'))
       end
@@ -85,6 +85,7 @@ RSpec.describe Employers::BrokerAgencyController do
 
       it 'should trigger broker_hired_notice_to_broker notice' do
         expect(controller).to receive(:trigger_notice_observer).once.ordered.with(@broker_role2, @employer_profile,"broker_hired_notice_to_broker")
+        expect(controller).to receive(:trigger_notice_observer).once.ordered.with(@broker_role2.broker_agency_profile, @employer_profile,"broker_agency_hired_confirmation")
         post :create, employer_profile_id: @employer_profile.id, broker_role_id: @broker_role2.id, broker_agency_id: @org2.broker_agency_profile.id
       end
     end
