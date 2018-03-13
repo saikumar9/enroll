@@ -160,8 +160,7 @@ module Config::SiteHelper
     Settings.site.invoice_bill_url
   end
 
-  def check_upcoming_dates?
-    Settings.aca.shop_market.initial_application.earliest_start_prior_to_effective_on.months == -2
-  end 
-
+  def number_of_months_application_can_be_made_in_advance
+    Settings.aca.shop_market.initial_application.earliest_start_prior_to_effective_on.months.abs
+  end
 end

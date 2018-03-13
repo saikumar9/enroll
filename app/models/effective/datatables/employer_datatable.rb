@@ -109,17 +109,15 @@ module Effective
       end
 
       def nested_filter_definition
-        @next_30_day = TimeKeeper.date_of_record.next_month.beginning_of_month
-        @next_60_day = @next_30_day.next_month
-        @next_90_day = @next_60_day.next_month
         upcoming_dates = [
-              {scope: @next_30_day, label: @next_30_day },
-              {scope: @next_60_day, label: @next_60_day }
-              #{scope: "employer_profile_plan_year_start_on('#{@next_60_day})'", label: @next_60_day },
-              #{scope: "employer_profile_plan_year_start_on('#{@next_90_day})'",  label: @next_90_day },
+          { 
+           scope: TimeKeeper.date_of_record.next_month.beginning_of_month, 
+           label: TimeKeeper.date_of_record.next_month.beginning_of_month 
+          }
         ]
-        unless check_upcoming_dates?
-          upcoming_dates.insert(2, {scope: @next_90_day, label: @next_90_day })
+        (number_of_months_application_can_be_made_in_advance-1).times do |n|
+          next_month = upcoming_dates.last[:scope].next_month
+          upcoming_dates.append({ scope: next_month, label: next_month})
         end
 
         filters = {

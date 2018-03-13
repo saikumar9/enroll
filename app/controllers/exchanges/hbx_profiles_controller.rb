@@ -3,7 +3,6 @@ class Exchanges::HbxProfilesController < ApplicationController
   include DataTablesSearch
   include Pundit
   include SepAll
-  include Config::SiteHelper
 
   before_action :modify_admin_tabs?, only: [:binder_paid, :transmit_group_xml]
   before_action :check_hbx_staff_role, except: [:request_help, :show, :assister_index, :family_index, :update_cancel_enrollment, :update_terminate_enrollment]
@@ -79,11 +78,6 @@ class Exchanges::HbxProfilesController < ApplicationController
   end
 
   def employer_invoice
-    # Dynamic Filter values for upcoming 30, 60, 90 days renewals
-    @next_30_day = TimeKeeper.date_of_record.next_month.beginning_of_month
-    @next_60_day = @next_30_day.next_month
-    @next_90_day = @next_60_day.next_month unless check_upcoming_dates?
-
     @datatable = Effective::Datatables::EmployerDatatable.new
 
     respond_to do |format|
@@ -93,12 +87,6 @@ class Exchanges::HbxProfilesController < ApplicationController
 
 
 def employer_poc
-
-    # Dynamic Filter values for upcoming 30, 60, 90 days renewals
-    @next_30_day = TimeKeeper.date_of_record.next_month.beginning_of_month
-    @next_60_day = @next_30_day.next_month
-    @next_90_day = @next_60_day.next_month unless check_upcoming_dates?
-
     @datatable = Effective::Datatables::EmployerDatatable.new
     render '/exchanges/hbx_profiles/employer_poc'
  #   respond_to do |format|
