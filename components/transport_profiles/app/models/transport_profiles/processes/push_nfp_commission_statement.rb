@@ -18,10 +18,7 @@ module TransportProfiles
       # full_path e.g., "/var/folders/np/kldmqqn90n10kb866pvdf4_00000gn/T/d20180308-87937-yqzxaw/12345678_030118_commision_12-12_R.pdf"
       # directory e.g., "/var/folders/np/kldmqqn90n10kb866pvdf4_00000gn/T/d20180308-87937-yqzxaw"
       route.on_success do |file_uri, uri, process_context|
-        #TODO this is where I locally update the document models
-        #directory = process_context.get(:temp_dir).first
-        #full_path = file_uri.path
-        #commission_statement = full_path.split(directory)[1]
+        # this is where we store references to the commission statements in the embedded document models of the organization
         commission_statement = File.basename(file_uri.path)
         statement_date = Date.strptime(commission_statement.split('_')[1], "%m%d%Y") rescue nil
         org = Organization.by_commission_statement_filename(commission_statement) rescue nil
@@ -29,7 +26,7 @@ module TransportProfiles
           doc_uri = generate_s3_uri("commission-statements", commission_statement.split('/')[1])
           document = Document.new
           #using the uri generated from the Transport Gateway
-          document.identifier = uri
+          document.identifier = uri.to_s
           document.date = statement_date
           document.format = 'application/pdf'
           document.subject = 'commission-statement'
