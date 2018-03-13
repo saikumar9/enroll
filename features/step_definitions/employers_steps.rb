@@ -311,7 +311,7 @@ When(/^.+ go[es]+ to the benefits tab I should see plan year information$/) do
 end
 
 When(/^I go to MY Health Connector tab$/) do
- find('.interaction-click-control-my-health-connector').click
+ click_link "#{Settings.site.short_name}"
  wait_for_ajax
   expect(page).to have_content('My Health Benefits Program')
 end
