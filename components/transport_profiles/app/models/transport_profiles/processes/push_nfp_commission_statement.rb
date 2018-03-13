@@ -2,7 +2,7 @@ module TransportProfiles
   class Processes::PushNfpCommissionStatement < Processes::Process
 
     def initialize(report_file_name, gateway)
-      super("Distribute system generated reports to defined data stores", gateway)
+      super("Upload broker commission statements from NFP to S3", gateway)
 
       @report_file_name = report_file_name
       # Need to place in the proper bucket based on the environment context
@@ -19,15 +19,17 @@ module TransportProfiles
       # directory e.g., "/var/folders/np/kldmqqn90n10kb866pvdf4_00000gn/T/d20180308-87937-yqzxaw"
       route.on_success do |file_uri, uri, process_context|
         #TODO this is where I locally update the document models
-        directory = process_context.get(:temp_dir).first
-        full_path = file_uri.path
-        commission_statement = full_path.split(directory)[1]
+        #directory = process_context.get(:temp_dir).first
+        #full_path = file_uri.path
+        #commission_statement = full_path.split(directory)[1]
+        commission_statement = File.basename(file_uri.path)
         statement_date = Date.strptime(commission_statement.split('_')[1], "%m%d%Y") rescue nil
         org = Organization.by_commission_statement_filename(commission_statement) rescue nil
         if statement_date && org && !Organization.commission_statement_exist?(statement_date, org)
           doc_uri = generate_s3_uri("commission-statements", commission_statement.split('/')[1])
           document = Document.new
-          document.identifier = doc_uri
+          #using the uri generated from the Transport Gateway
+          document.identifier = uri
           document.date = statement_date
           document.format = 'application/pdf'
           document.subject = 'commission-statement'
