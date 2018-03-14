@@ -643,26 +643,26 @@ shop_notice_triggers = [
     # },
 
   {
-        hbx_id: 'SHOP58',
-        title: "Notice To Initial Employer's No Binder Payment Received",
-        description: 'When an initial employer misses the binder payment deadline, this is sent the day after the binder payment deadline.',
-        resource_name: 'employer',
-        event_name: 'initial_employer_no_binder_payment_received',
-        notice_triggers: [
-            {
-                name: ' Initial Employer No Binding Payment Received',
-                notice_template: 'notices/shop_employer_notices/notice_to_employer_no_binder_payment_received',
-                notice_builder: 'ShopEmployerNotices::NoticeToEmployerNoBinderPaymentReceived',
-                mpi_indicator: 'SHOP_M058',
-                notice_trigger_element_group: {
-                    market_places: ['shop'],
-                    primary_recipients: ["employer"],
-                    primary_recipient_delivery_method: ["secure_message"],
-                    secondary_recipients: []
-                }
-            }
-        ]
-    },
+    hbx_id: 'SHOP33',
+    title: 'Special Enrollment Period Denial',
+    description: 'EE SEP Requested by Employee outside of allowable time frame',
+    resource_name: 'employee_role',
+    event_name: 'sep_request_denial_notice',
+    notice_triggers: [
+      {
+        name: 'Denial of SEP Requested by EE outside of allowable time frame',
+        notice_template: 'notices/shop_employee_notices/sep_request_denial_notice',
+        notice_builder: 'ShopEmployeeNotices::SepRequestDenialNotice',
+        mpi_indicator: 'SHOP_M033',
+        notice_trigger_element_group: {
+          market_places: ['shop'],
+          primary_recipients: ["employee"],
+          primary_recipient_delivery_method: ["secure_message"],
+          secondary_recipients: []
+        }
+      }
+    ]
+  },
 
     {
         hbx_id: 'SHOP32',
