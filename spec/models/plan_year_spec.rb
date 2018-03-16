@@ -1600,12 +1600,6 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
   end
 
   context "map binder_payment_due_date" do
-    it "in interval of map using shop_enrollment_timetable" do
-      if Settings.aca.state_abbreviation == "MA"
-        binder_payment_due_date = PlanYear.map_binder_payment_due_date_by_start_on(Date.new(TimeKeeper.date_of_record.year,9,1))
-        expect(binder_payment_due_date).to eq Date.new(TimeKeeper.date_of_record.year,8,Settings.aca.shop_market.binder_payment_due_on)
-      end
-    end
 
     it "out of map" do
       binder_payment_due_date = PlanYear.map_binder_payment_due_date_by_start_on(Date.new(2019,9,1))

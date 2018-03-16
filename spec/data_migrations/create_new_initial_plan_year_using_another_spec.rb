@@ -27,13 +27,6 @@ describe CreateNewInitialPlanYearUsingAnother, dbclean: :around_each do
         plan_year.fte_count = 3
         allow(plan_year).to receive(:application_errors).and_return({})
       end
-
-      if Settings.aca.state_abbreviation == "MA"
-        it "sets the plan year in enrolling state" do
-          enrolling_plan_year = subject.force_publish!(benefit_group.plan_year)
-          expect(enrolling_plan_year.enrolling?).to be true
-        end
-      end
     end
 
     context "plan_year.application_errors present" do
