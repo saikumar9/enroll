@@ -1457,7 +1457,6 @@ shop_notice_triggers = [
                     secondary_recipients: []
                 }
             }
-          }
         ]
     },
     
