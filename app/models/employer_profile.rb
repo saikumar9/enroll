@@ -11,6 +11,7 @@ class EmployerProfile
   include Config::AcaModelConcern
   include Concerns::Observable
   include ModelEvents::EmployerProfile
+  include ApplicationHelper
 
   embedded_in :organization
   attr_accessor :broker_role_id
@@ -164,7 +165,7 @@ class EmployerProfile
     active_broker_agency_account.save!
     employer_broker_fired
     notify_broker_terminated
-    broker_fired_confirmation_to_broker
+    trigger_notice_observer(active_broker_agency_account.broker_agency_profile.primary_broker_role, self, "broker_fired_confirmation_to_broker")
     broker_agency_fired_confirmation
   end
 
@@ -174,10 +175,6 @@ class EmployerProfile
 
   def broker_agency_fired_confirmation
     trigger_notices("broker_agency_fired_confirmation")
-  end
-
-  def broker_fired_confirmation_to_broker
-    trigger_notices('broker_fired_confirmation_to_broker')
   end
 
   def employer_broker_fired
