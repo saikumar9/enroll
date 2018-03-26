@@ -296,8 +296,7 @@ shop_notice_triggers = [
     #     }
     #   ]
     # },
-=======
->>>>>>> code-refactor-21881
+
     # {
     #   hbx_id: 'SHOP3B',
     #   title: 'Plan Offerings Finalized',
