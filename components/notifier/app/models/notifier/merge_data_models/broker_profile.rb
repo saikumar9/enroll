@@ -27,7 +27,7 @@ module Notifier
         employer_poc_firstname: 'David',
         employer_poc_lastname: 'Samules'
         })
-      notice.mailing_address = Notifier::MergeDataModels::Address.new
+      notice.mailing_address = Notifier::MergeDataModels::Address.stubbed_object
       notice
     end
 
