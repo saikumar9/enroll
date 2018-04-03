@@ -1,5 +1,6 @@
 class Employers::EmployerProfilesController < Employers::EmployersController
   include Config::AcaConcern
+  include ApplicationHelper
 
   before_action :find_employer, only: [:show, :show_profile, :destroy, :inbox,
                                        :bulk_employee_upload, :bulk_employee_upload_form, :download_invoice, :export_census_employees, :link_from_quote, :new_document, :upload_document, :generate_checkbook_urls]
@@ -208,7 +209,7 @@ class Employers::EmployerProfilesController < Employers::EmployersController
           # flash[:notice] = 'Your Employer Staff application is pending'
           render action: 'show_pending'
         else
-          welcome_employer_profile if @organization.employer_profile.present?
+          trigger_notice_observer(@organization.employer_profile, @organization.employer_profile,"notify_employer_for_account_creation")
           redirect_to employers_employer_profile_path(@organization.employer_profile, tab: 'home')
         end
       end
