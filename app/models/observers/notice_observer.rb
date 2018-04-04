@@ -25,11 +25,16 @@ module Observers
           trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "initial_employer_application_approval")
         end
 
+        if new_model_event.event_key == :zero_employees_on_roster
+          trigger_zero_employees_on_roster_notice(plan_year)
+        end
+
         if new_model_event.event_key == :renewal_employer_open_enrollment_completed
           trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "renewal_employer_open_enrollment_completed")
         end
 
         if new_model_event.event_key == :renewal_application_submitted
+          trigger_zero_employees_on_roster_notice(plan_year)
           trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "renewal_application_published")
         end
 
@@ -39,6 +44,11 @@ module Observers
 
         if new_model_event.event_key == :renewal_application_autosubmitted
           trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "plan_year_auto_published")
+          trigger_zero_employees_on_roster_notice(plan_year)
+        end
+
+        if new_model_event.event_key == :initial_application_submitted
+          trigger_zero_employees_on_roster_notice(plan_year)
         end
 
         if new_model_event.event_key == :ineligible_renewal_application_submitted
@@ -218,6 +228,12 @@ module Observers
           trigger_initial_employer_publish_remainder("initial_employer_final_reminder_to_publish_plan_year")
         end
 
+      end
+    end
+
+    def trigger_zero_employees_on_roster_notice(plan_year)
+      if !plan_year.benefit_groups.any?{|bg| bg.is_congress?} && plan_year.employer_profile.census_employees.active.count < 1
+        trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "zero_employees_on_roster_notice")
       end
     end
 

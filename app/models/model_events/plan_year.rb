@@ -12,7 +12,8 @@ module ModelEvents
       # :open_enrollment_began, #not being used
       :application_denied,
       :renewal_application_denied,
-      :initial_employer_denial
+      :initial_employer_denial,
+      :zero_employees_on_roster
     ]
 
     DATA_CHANGE_EVENTS = [
@@ -74,6 +75,10 @@ module ModelEvents
 
         if is_transition_matching?(to: :publish_pending, from: :draft, event: :force_publish)
           is_initial_employer_denial = true
+        end
+
+        if is_transition_matching?(to: :published, from: :draft, event: :force_publish)
+          is_zero_employees_on_roster = true
         end
 
         # TODO -- encapsulated notify_observers to recover from errors raised by any of the observers
