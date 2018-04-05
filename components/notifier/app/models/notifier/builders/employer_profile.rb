@@ -3,6 +3,7 @@ module Notifier
     include Notifier::Builders::PlanYear
     include Notifier::Builders::Broker
     include Notifier::Builders::Enrollment
+    include Notifier::Builders::HbxEnrollment
 
     attr_accessor :employer_profile, :merge_model, :payload
     
