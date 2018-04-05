@@ -1319,7 +1319,6 @@ class PlanYear
     end
   end
 
-
   def initial_employer_open_enrollment_completed
     #also check if minimum participation and non owner conditions are met by ER.
     benefit_groups.each do |bg|
