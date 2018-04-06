@@ -556,27 +556,6 @@ shop_notice_triggers = [
     #   ]
     # },
 
-  {
-    hbx_id: 'SHOP33',
-    title: 'Special Enrollment Period Denial',
-    description: 'EE SEP Requested by Employee outside of allowable time frame',
-    resource_name: 'employee_role',
-    event_name: 'sep_request_denial_notice',
-    notice_triggers: [
-      {
-        name: 'Denial of SEP Requested by EE outside of allowable time frame',
-        notice_template: 'notices/shop_employee_notices/sep_request_denial_notice',
-        notice_builder: 'ShopEmployeeNotices::SepRequestDenialNotice',
-        mpi_indicator: 'SHOP_M033',
-        notice_trigger_element_group: {
-          market_places: ['shop'],
-          primary_recipients: ["employee"],
-          primary_recipient_delivery_method: ["secure_message"],
-          secondary_recipients: []
-        }
-      }
-    ]
-  },
 
     {
         hbx_id: 'SHOP32',
@@ -941,27 +920,6 @@ shop_notice_triggers = [
   #     }
   #   ]
   # },
-  # {
-  #   hbx_id: 'SHOP35',
-  #   title: 'Special Enrollment Period Denial',
-  #   description: 'EE SEP Requested by Employee outside of allowable time frame',
-  #   resource_name: 'employee_role',
-  #   event_name: 'sep_request_denial_notice',
-  #   notice_triggers: [
-  #     {
-  #       name: 'Denial of SEP Requested by EE outside of allowable time frame',
-  #       notice_template: 'notices/shop_employee_notices/sep_request_denial_notice',
-  #       notice_builder: 'ShopEmployeeNotices::SepRequestDenialNotice',
-  #       mpi_indicator: 'MPI_SHOP35',
-  #               notice_trigger_element_group: {
-  #                   market_places: ['shop'],
-  #                   primary_recipients: ["employer"],
-  #                   primary_recipient_delivery_method: ["secure_message"],
-  #                   secondary_recipients: []
-  #               }
-  #           }
-  #       ]
-  #   },
 
     {
         hbx_id: 'SHOP_M068',
@@ -984,52 +942,7 @@ shop_notice_triggers = [
             }
         ]
     },
-<<<<<<< HEAD
-    
-=======
-    {
-        hbx_id: 'SHOP_M053',
-        title: 'EE Ineligibility Notice – Terminated from Roster',
-        description: 'Employee must be notified when they are terminated from an ER roster that they are no longer eligible to enroll in coverage with that ER, effective DOT',
-        resource_name: 'employee_role',
-        event_name: 'employee_termination_notice',
-        notice_triggers: [
-          {
-                name: 'Employee Termination Notice',
-                notice_template: 'notices/shop_employee_notices/employee_termination_notice',
-                notice_builder: 'ShopEmployeeNotices::EmployeeTerminationNotice',
-                mpi_indicator: 'SHOP_M053',
-                notice_trigger_element_group: {
-                    market_places: ['shop'],
-                    primary_recipients: ["employee"],
-                    primary_recipient_delivery_method: ["secure_message"],
-                    secondary_recipients: []
-                }
-            }
-        ]
-    },
-    {
-        hbx_id: 'SHOP_M040',
-        title: 'CONFIRMATION OF ELECTION TO TERMINATE COVERAGE',
-        description: 'Employee Terminating coverage after QLE',
-        resource_name: 'employer',
-        event_name: 'notify_employee_confirming_coverage_termination',
-        notice_triggers: [
-            {
-                name: 'Notice to employer when employee terminates coverage',
-                notice_template: 'notices/shop_employee_notices/employee_terminating_coverage',
-                notice_builder: 'ShopEmployeeNotices::EmployeeTerminatingCoverage',
-                # used unique MPI indicator with two event names
-                mpi_indicator: 'SHOP_M040',
-                notice_trigger_element_group: {
-                    market_places: ['shop'],
-                     primary_recipients: ["employer"],
-                    primary_recipient_delivery_method: ["secure_message"],
-                    secondary_recipients: []        }
-            }
-        ]
-    },
->>>>>>> code_refactor_21900
+
     {
         hbx_id: 'SHOP_M041',
         title: 'Notice Confirmation for Group termination due to ER advance request',

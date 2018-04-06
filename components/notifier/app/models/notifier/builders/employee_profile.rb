@@ -6,7 +6,7 @@ module Notifier
     include Notifier::Builders::Enrollment
     include Notifier::Builders::HbxEnrollment
 
-    attr_accessor :employee_role, :merge_model, :payload
+    attr_accessor :employee_role, :merge_model, :payload, :qle_title, :qle_event_on, :qle_reporting_deadline
 
     def initialize
       data_object = Notifier::MergeDataModels::EmployeeProfile.new
@@ -14,6 +14,7 @@ module Notifier
       data_object.broker = Notifier::MergeDataModels::Broker.new
       data_object.enrollment = Notifier::MergeDataModels::Enrollment.new
       data_object.plan_year = Notifier::MergeDataModels::PlanYear.new
+      data_object.qle = Notifier::MergeDataModels::QualifyingLifeEventKind.new
       @merge_model = data_object
     end
 
@@ -72,6 +73,39 @@ module Notifier
 
     def employer_profile
       employee_role.employer_profile
+    end
+
+    def qle
+      return @qle if defined? @qle
+      if payload['event_object_kind'].constantize == QualifyingLifeEventKind
+        @qle = QualifyingLifeEventKind.find(payload['event_object_id'])
+      end
+    end
+
+    def qle_title
+      merge_model.qle.title = qle.blank? ? payload[:qle_title] : qle.title
+    end
+
+    def qle_start_on
+      return if qle.blank?
+      merge_model.qle.start_on = qle.start_on
+    end
+
+    def qle_end_on
+      return if qle.blank?
+      merge_model.qle.end_on = qle.end_on
+    end
+
+    def qle_event_on
+      merge_model.qle.event_on = qle.blank? ? payload[:qle_event_on] : qle.event_on
+    end
+
+    def qle_reported_on
+      merge_model.qle.reported_on = qle.updated_at
+    end
+
+    def qle_reporting_deadline
+      merge_model.qle.reporting_deadline = qle.blank? ? payload[:qle_reporting_deadline] : qle.reporting_deadline
     end
   end
 end

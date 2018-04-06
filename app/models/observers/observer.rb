@@ -2,14 +2,15 @@ module Observers
   class Observer
     include Acapi::Notifiers
 
-    def trigger_notice(recipient:, event_object:, notice_event:)
+    def trigger_notice(recipient:, event_object:, notice_event:, notice_params: nil)
       resource_mapping = Notifier::ApplicationEventMapper.map_resource(recipient.class)
       event_name = Notifier::ApplicationEventMapper.map_event_name(resource_mapping, notice_event)
       log("OBSERVER NOTICE EVENT: #{event_name}, event_object_kind: #{event_object.class.to_s}, event_object_id: #{event_object.id.to_s}", {:severity => 'info'})
       notify(event_name, {
         resource_mapping.identifier_key => recipient.send(resource_mapping.identifier_method).to_s,
         :event_object_kind => event_object.class.to_s,
-        :event_object_id => event_object.id.to_s
+        :event_object_id => event_object.id.to_s,
+        :notice_params => notice_params
       })
     end
 
