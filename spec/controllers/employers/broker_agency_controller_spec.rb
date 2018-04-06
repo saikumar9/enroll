@@ -86,6 +86,7 @@ RSpec.describe Employers::BrokerAgencyController do
       it 'should trigger broker_hired_notice_to_broker notice' do
         expect(controller).to receive(:trigger_notice_observer).once.ordered.with(@broker_role2, @employer_profile,"broker_hired_notice_to_broker")
         expect(controller).to receive(:trigger_notice_observer).once.ordered.with(@broker_role2.broker_agency_profile, @employer_profile,"broker_agency_hired_confirmation")
+        expect_any_instance_of(EmployerProfile).to receive(:trigger_shop_notices).with("broker_hired_confirmation_to_employer")
         post :create, employer_profile_id: @employer_profile.id, broker_role_id: @broker_role2.id, broker_agency_id: @org2.broker_agency_profile.id
       end
     end
