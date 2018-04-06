@@ -3,6 +3,7 @@ module ModelEvents
 
     REGISTERED_EVENTS = [
       :renewal_application_created,
+      :initial_application_submitted,
       :initial_employer_application_approval,
       :renewal_application_submitted,
       :renewal_application_autosubmitted,
@@ -42,6 +43,10 @@ module ModelEvents
 
         if is_transition_matching?(to: :renewing_publish_pending, from: :renewing_draft, event: [:publish, :force_publish])
           is_ineligible_renewal_application_submitted = true
+        end
+
+        if is_transition_matching?(to: [:published, :enrolling], from: :draft, event: :publish)
+          is_initial_application_submitted = true
         end
 
         if is_transition_matching?(to: [:published, :enrolling], from: :draft, event: :publish)
