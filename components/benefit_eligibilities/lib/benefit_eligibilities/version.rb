@@ -1,0 +1,3 @@
+module BenefitEligibilities
+  VERSION = "0.0.1"
+end
