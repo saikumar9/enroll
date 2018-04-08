@@ -1,4 +1,4 @@
-]module BenefitEligibilities
+module BenefitEligibilities
   module MAGI
     class CHIPWaitingPeriod < BenefitEligibilities::Ruleset
       input "Applicant CHIP Prelim Indicator", "Preliminary CHIP Eligibility", "Char(1)", %w(Y N)

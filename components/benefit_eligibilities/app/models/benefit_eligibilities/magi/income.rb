@@ -1,4 +1,4 @@
-include IncomeThreshold
+include BenefitEligibilities::IncomeThreshold
 
 module BenefitEligibilities
   module MAGI
@@ -31,7 +31,7 @@ module BenefitEligibilities
       output    "Calculated Income as Percentage of FPL", "Integer"
 
       def run(context)
-        context.extend IncomeThreshold
+        context.extend BenefitEligibilities::IncomeThreshold
         super context
       end
 

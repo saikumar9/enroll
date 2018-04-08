@@ -1,6 +1,7 @@
 module BenefitEligibilities
   class RuleContext
-    include ActiveModel::SerializerSupport
+    # include ActiveModel::SerializerSupport
+    include ActiveModel::Serializers
     extend ActiveModel::Naming
 
     attr_reader :config, :input, :output, :current_date

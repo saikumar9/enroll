@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", "~> 4.2.7.1"
 
   s.add_dependency 'activerecord-nulldb-adapter'
-  s.add_dependency "active_model_serializers"
+  s.add_dependency "active_model_serializers", '~> 0.10.0'
   s.add_dependency 'nokogiri'
 
   # s.add_dependency "gon"

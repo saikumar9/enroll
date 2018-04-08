@@ -3,19 +3,19 @@ module BenefitEligibilities
     include ApplicationComponents
     
     def read_configs!
-      config = MedicaidEligibilityApi::Application.options[:state_config]
+      config = BenefitEligibilities::Application.options[:state_config]
       if config[@state]
         @config = config[:default].merge(config[@state])
       else
         @config = config[:default]
       end
-      @config.merge!(MedicaidEligibilityApi::Application.options[:system_config])
+      @config.merge!(BenefitEligibilities::Application.options[:system_config])
     end
 
     def read_json!
       @state = @json_application["State"]
       if @json_application["Application Year"]
-        unless MedicaidEligibilityApi::Application.options[:state_config][:default][:FPL].keys.include?(@json_application["Application Year"].to_s)
+        unless BenefitEligibilities::Application.options[:state_config][:default][:FPL].keys.include?(@json_application["Application Year"].to_s)
           raise "Invalid application year"
         end
         @application_year = @json_application["Application Year"]
@@ -273,7 +273,7 @@ module BenefitEligibilities
         if input[:required] || (input[:required_if] && attributes[input[:required_if]] == input[:required_if_value])
           raise "Input missing required variable #{input[:name]}"
         elsif input[:default]
-          if MedicaidEligibilityApi::Application.options[:system_config]["Allow Blank Booleans"] 
+          if BenefitEligibilities::Application.options[:system_config]["Allow Blank Booleans"] 
             return input[:default]
           else
             raise "Input missing variable #{input[:name]}"

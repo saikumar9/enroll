@@ -83,7 +83,7 @@ module BenefitEligibilities
         det_json["Indicator"] = app.outputs["Medicaid Residency Indicator"]
         if app.outputs["Medicaid Residency Indicator"] == 'N'
           det_json["Ineligibility Code"] = app.outputs["Medicaid Residency Ineligibility Reason"]
-          det_json["Ineligibility Reason"] = MedicaidEligibilityApi::Application.options[:ineligibility_reasons][det_json["Ineligibility Code"]]
+          det_json["Ineligibility Reason"] = BenefitEligibilities::Application.options[:ineligibility_reasons][det_json["Ineligibility Code"]]
         end
         app_json["Determinations"]["Residency"] = det_json
 
@@ -92,7 +92,7 @@ module BenefitEligibilities
           det_json["Indicator"] = app.outputs["Applicant #{det[:name]} Indicator"]
           if app.outputs["Applicant #{det[:name]} Indicator"] == 'N'
             det_json["Ineligibility Code"] = app.outputs["#{det[:name]} Ineligibility Reason"]
-            det_json["Ineligibility Reason"] = MedicaidEligibilityApi::Application.options[:ineligibility_reasons][det_json["Ineligibility Code"]]
+            det_json["Ineligibility Reason"] = BenefitEligibilities::Application.options[:ineligibility_reasons][det_json["Ineligibility Code"]]
           end
           app_json["Determinations"][det[:name]] = det_json
         end
@@ -102,7 +102,7 @@ module BenefitEligibilities
           det_json["Indicator"] = app.outputs["APTC Referral Indicator"]
           if app.outputs["APTC Referral Indicator"] == 'N'
             det_json["Ineligibility Code"] = app.outputs["APTC Referral Ineligibility Reason"]
-            det_json["Ineligibility Reason"] = MedicaidEligibilityApi::Application.options[:ineligibility_reasons][det_json["Ineligibility Code"]]
+            det_json["Ineligibility Reason"] = BenefitEligibilities::Application.options[:ineligibility_reasons][det_json["Ineligibility Code"]]
           end
           app_json["Determinations"]["APTC Referral"] = det_json
         end  

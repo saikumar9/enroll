@@ -15,7 +15,7 @@ module BenefitEligibilities
       config "Refugee Medical Assistance Threshold", "State Configuration", "Hash"
 
       def run(context)
-        context.extend IncomeThreshold
+        context.extend BenefitEligibilities::IncomeThreshold
         super context
       end
 

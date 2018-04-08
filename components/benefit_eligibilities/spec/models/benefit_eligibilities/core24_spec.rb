@@ -4,7 +4,7 @@ module BenefitEligibilities
 	RSpec.describe "Test cases for all Core 24 Json files" do
 
 		def get_response(file)
-			binding.pry
+			# binding.pry
 			jsonfile = File.open(file).read
 			json_response = Application.new(jsonfile, 'application/json')
 			@json_response = JSON.parse(json_response.to_json) 
