@@ -546,7 +546,7 @@ describe EmployerProfile, "Class methods", dbclean: :after_each do
       employer.save
       employers_with_broker7 = EmployerProfile.find_by_broker_agency_profile(broker_agency_profile7)
       employer = Organization.find(employer.organization.id).employer_profile
-      expect_any_instance_of(EmployerProfile).to receive(:trigger_notice_observer).exactly(2).times
+      expect_any_instance_of(EmployerProfile).to receive(:trigger_notice_observer).exactly(3).times
       employer.hire_broker_agency(broker_agency_profile)
       employer.save
     end
