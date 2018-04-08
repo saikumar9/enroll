@@ -22,7 +22,7 @@ module BenefitEligibilities
 				end
 			end
 
-			it "Compares Medicaid Eligibilty " do
+			it "Compares Medicaid Eligibility " do
 				@json_response["Applicants"].each_with_index do |applicant, index|
 					expect(applicant['Medicaid Eligible']).to eq @person[index][:MedicaidEligible]
 				end
@@ -34,9 +34,9 @@ module BenefitEligibilities
 				end
 			end
 
-			it "Compares APTC Referal" do
+			it "Compares APTC Referral" do
 				@json_response["Applicants"].each_with_index do |applicant, index|
-					expect(applicant['Determinations']['APTC Referral']['Indicator']).to eq @person[index][:APTCReferal]
+					expect(applicant['Determinations']['APTC Referral']['Indicator']).to eq @person[index][:APTCReferral]
 				end
 			end
 				
@@ -56,7 +56,7 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-1-UA-012.json')
 				@person = []
 
-				@person << { FPL: 84, MAGI: 10000, MedicaidEligible: 'N', APTCReferal: 'Y'}
+				@person << { FPL: 84, MAGI: 10000, MedicaidEligible: 'N', APTCReferral: 'Y'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -68,14 +68,14 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-8-MAGI_IA_UA-004.json')
 				@person = []
 
-				@person << {FPL: 240, MAGI: 88348, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << {FPL: 407, MAGI: 81939, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << {FPL: 407, MAGI: 81939, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << {FPL: 240, MAGI: 88348, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << {FPL: 0, MAGI: 0, MedicaidEligible: 'Y', APTCReferal: 'N'}
-				@person << {FPL: 0, MAGI: 0, MedicaidEligible: 'Y', APTCReferal: 'N'}
-				@person << {FPL: 0, MAGI: 0, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << {FPL: 0, MAGI: 0, MedicaidEligible: 'Y', APTCReferal: 'N'}
+				@person << {FPL: 240, MAGI: 88348, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << {FPL: 407, MAGI: 81939, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << {FPL: 407, MAGI: 81939, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << {FPL: 240, MAGI: 88348, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << {FPL: 0, MAGI: 0, MedicaidEligible: 'Y', APTCReferral: 'N'}
+				@person << {FPL: 0, MAGI: 0, MedicaidEligible: 'Y', APTCReferral: 'N'}
+				@person << {FPL: 0, MAGI: 0, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << {FPL: 0, MAGI: 0, MedicaidEligible: 'Y', APTCReferral: 'N'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -86,12 +86,12 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-6-MAGI_NONMAGI-008.json')
 				@person = []
 				
-				@person	<< { FPL: 176,  MAGI: 57546,  MedicaidEligible: 'Y', APTCReferal: 'N'}
-				@person << { FPL: 176,  MAGI: 57546,  MedicaidEligible: 'Y', APTCReferal: 'N'}
-				@person << { FPL: 176,  MAGI: 57546,  MedicaidEligible: 'Y', APTCReferal: 'N'}
-				@person << { FPL: 176,  MAGI: 57546,  MedicaidEligible: 'Y', APTCReferal: 'N'}
-				@person << { FPL: 0,    MAGI: 0,      MedicaidEligible: 'Y', APTCReferal: 'N'}
-				@person << { FPL: 51,   MAGI: 6100,   MedicaidEligible: 'Y', APTCReferal: 'N'}
+				@person	<< { FPL: 176,  MAGI: 57546,  MedicaidEligible: 'Y', APTCReferral: 'N'}
+				@person << { FPL: 176,  MAGI: 57546,  MedicaidEligible: 'Y', APTCReferral: 'N'}
+				@person << { FPL: 176,  MAGI: 57546,  MedicaidEligible: 'Y', APTCReferral: 'N'}
+				@person << { FPL: 176,  MAGI: 57546,  MedicaidEligible: 'Y', APTCReferral: 'N'}
+				@person << { FPL: 0,    MAGI: 0,      MedicaidEligible: 'Y', APTCReferral: 'N'}
+				@person << { FPL: 51,   MAGI: 6100,   MedicaidEligible: 'Y', APTCReferral: 'N'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -102,7 +102,7 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/APTC-1-IA-50.json')
 				@person = []
 
-				@person << { FPL: 229, MAGI: 27000, MedicaidEligible: 'N', APTCReferal: 'Y'}
+				@person << { FPL: 229, MAGI: 27000, MedicaidEligible: 'N', APTCReferral: 'Y'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -113,8 +113,8 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/APTC-2-IA-UA-60-67-WEEKLY.json')
 				@person = []
 
-				@person << { FPL: 282, MAGI: 44979, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person	<< { FPL: 282, MAGI: 44979, MedicaidEligible: 'N', APTCReferal: 'Y'}
+				@person << { FPL: 282, MAGI: 44979, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person	<< { FPL: 282, MAGI: 44979, MedicaidEligible: 'N', APTCReferral: 'Y'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -125,9 +125,9 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/APTC-3-IA-Med-40-45-16-BIWEEKLY.json')
 				@person = []
 
-				@person << { FPL: 282, MAGI: 56728, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 282, MAGI: 56728, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 282, MAGI: 56728, MedicaidEligible: 'Y', APTCReferal: 'N'}
+				@person << { FPL: 282, MAGI: 56728, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 282, MAGI: 56728, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 282, MAGI: 56728, MedicaidEligible: 'Y', APTCReferral: 'N'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -138,9 +138,9 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/APTC-3-IA-Medicaid-45-50-22.json')
 				@person = []
 
-				@person << { FPL: 320, MAGI: 64448, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 320, MAGI: 64448, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 320, MAGI: 64448, MedicaidEligible: 'N', APTCReferal: 'Y'}
+				@person << { FPL: 320, MAGI: 64448, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 320, MAGI: 64448, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 320, MAGI: 64448, MedicaidEligible: 'N', APTCReferral: 'Y'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -151,9 +151,9 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/APTC-3-IA-Medicaid-55-45-15-BIWEEKLY.json')
 				@person = []
 
-				@person << {FPL: 356, MAGI: 71714, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << {FPL: 356, MAGI: 71714, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << {FPL: 356, MAGI: 71714, MedicaidEligible: 'N', APTCReferal: 'Y'}
+				@person << {FPL: 356, MAGI: 71714, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << {FPL: 356, MAGI: 71714, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << {FPL: 356, MAGI: 71714, MedicaidEligible: 'N', APTCReferral: 'Y'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -165,7 +165,7 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-2-IA-008.json')
 				@person = []
 
-				@person << { FPL: 222, MAGI: 35495, MedicaidEligible: 'N', APTCReferal: 'Y'}
+				@person << { FPL: 222, MAGI: 35495, MedicaidEligible: 'N', APTCReferral: 'Y'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -176,8 +176,8 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-2-IA-009.json')
 				@person = []
 
-				@person << { FPL: 222, MAGI: 35496, MedicaidEligible: 'N', APTCReferal: 'Y' }
-				@person << { FPL: 222, MAGI: 35496, MedicaidEligible: 'N', APTCReferal: 'Y' }
+				@person << { FPL: 222, MAGI: 35496, MedicaidEligible: 'N', APTCReferral: 'Y' }
+				@person << { FPL: 222, MAGI: 35496, MedicaidEligible: 'N', APTCReferral: 'Y' }
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -188,8 +188,8 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-2-MAGI-010.json')
 				@person = []
 
-				@person << { FPL: 75, MAGI: 12000, MedicaidEligible: 'Y', APTCReferal: 'N', EmergencyMedicaid: 'N' }
-				@person << { FPL: 75, MAGI: 12000, MedicaidEligible: 'Y', APTCReferal: 'N', EmergencyMedicaid: 'N' }
+				@person << { FPL: 75, MAGI: 12000, MedicaidEligible: 'Y', APTCReferral: 'N', EmergencyMedicaid: 'N' }
+				@person << { FPL: 75, MAGI: 12000, MedicaidEligible: 'Y', APTCReferral: 'N', EmergencyMedicaid: 'N' }
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -200,8 +200,8 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-2-MAGI-010-nonrefugee.json')
 				@person = []
 
-				@person << { FPL: 75, MAGI: 12000, MedicaidEligible: 'N', APTCReferal: 'Y', EmergencyMedicaid: 'Y' }
-				@person << { FPL: 75, MAGI: 12000, MedicaidEligible: 'N', APTCReferal: 'Y', EmergencyMedicaid: 'Y' }
+				@person << { FPL: 75, MAGI: 12000, MedicaidEligible: 'N', APTCReferral: 'Y', EmergencyMedicaid: 'Y' }
+				@person << { FPL: 75, MAGI: 12000, MedicaidEligible: 'N', APTCReferral: 'Y', EmergencyMedicaid: 'Y' }
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -213,7 +213,7 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-2-MAGI-011.json')
 				@person = []
 
-				@person << { FPL: 62, MAGI: 10000, MedicaidEligible: 'Y', APTCReferal: 'N', EmergencyMedicaid: 'N' }
+				@person << { FPL: 62, MAGI: 10000, MedicaidEligible: 'Y', APTCReferral: 'N', EmergencyMedicaid: 'N' }
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -224,7 +224,7 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-2-MAGI-029.json')
 				@person = []
 
-				@person << { FPL: 63, MAGI: 10141, MedicaidEligible: 'Y', APTCReferal: 'N', EmergencyMedicaid: 'N' }
+				@person << { FPL: 63, MAGI: 10141, MedicaidEligible: 'Y', APTCReferral: 'N', EmergencyMedicaid: 'N' }
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -235,8 +235,8 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-2-MAGI-030.json')
 				@person = []
 
-				@person << { FPL: 86, MAGI: 10154, MedicaidEligible: 'Y', APTCReferal: 'N', EmergencyMedicaid: 'N'}
-				@person << { FPL: 25, MAGI: 3046, MedicaidEligible: 'Y', APTCReferal: 'N', EmergencyMedicaid: 'N'}
+				@person << { FPL: 86, MAGI: 10154, MedicaidEligible: 'Y', APTCReferral: 'N', EmergencyMedicaid: 'N'}
+				@person << { FPL: 25, MAGI: 3046, MedicaidEligible: 'Y', APTCReferral: 'N', EmergencyMedicaid: 'N'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -248,8 +248,8 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-2-MAGI-UA-011.json')
 				@person = []
 
-				@person << { FPL: 125, MAGI: 20000, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 125, MAGI: 20000, MedicaidEligible: 'N', APTCReferal: 'Y'}
+				@person << { FPL: 125, MAGI: 20000, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 125, MAGI: 20000, MedicaidEligible: 'N', APTCReferral: 'Y'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -260,9 +260,9 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-3-IA-010.json')
 				@person = []
 
-				@person << { FPL: 277, MAGI: 55732, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 277, MAGI: 55732, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 277, MAGI: 55732, MedicaidEligible: 'N', APTCReferal: 'Y'}
+				@person << { FPL: 277, MAGI: 55732, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 277, MAGI: 55732, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 277, MAGI: 55732, MedicaidEligible: 'N', APTCReferral: 'Y'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -274,9 +274,9 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-3-MAGI-020.json')
 				@person = []
 
-				@person << { FPL: 201, MAGI: 40540, MedicaidEligible: 'Y', APTCReferal: 'N'}
-				@person << { FPL: 201, MAGI: 40540, MedicaidEligible: 'Y', APTCReferal: 'N'}
-				@person << { FPL: 201, MAGI: 40540, MedicaidEligible: 'N', APTCReferal: 'Y'}
+				@person << { FPL: 201, MAGI: 40540, MedicaidEligible: 'Y', APTCReferral: 'N'}
+				@person << { FPL: 201, MAGI: 40540, MedicaidEligible: 'Y', APTCReferral: 'N'}
+				@person << { FPL: 201, MAGI: 40540, MedicaidEligible: 'N', APTCReferral: 'Y'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -288,9 +288,9 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-3-MAGI-021.json')
 				@person = []
 
-				@person << { FPL: 187, MAGI: 45552, MedicaidEligible: 'Y', APTCReferal:'N'}
-				@person << { FPL: 187, MAGI: 45552, MedicaidEligible: 'Y', APTCReferal:'N'}
-				@person << { FPL: 187, MAGI: 45552, MedicaidEligible: 'Y', APTCReferal:'N'}
+				@person << { FPL: 187, MAGI: 45552, MedicaidEligible: 'Y', APTCReferral:'N'}
+				@person << { FPL: 187, MAGI: 45552, MedicaidEligible: 'Y', APTCReferral:'N'}
+				@person << { FPL: 187, MAGI: 45552, MedicaidEligible: 'Y', APTCReferral:'N'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -301,9 +301,9 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-3-MAGI-022.json')
 				@person = []
 
-				@person << { FPL: 84, MAGI: 16900, MedicaidEligible: 'Y', APTCReferal: 'N', EmergencyMedicaid: 'N'}
-				@person << { FPL: 84, MAGI: 16900, MedicaidEligible: 'Y', APTCReferal: 'N', EmergencyMedicaid: 'N'}
-				@person << { FPL: 84, MAGI: 16900, MedicaidEligible: 'Y', APTCReferal: 'N', EmergencyMedicaid: 'N'}
+				@person << { FPL: 84, MAGI: 16900, MedicaidEligible: 'Y', APTCReferral: 'N', EmergencyMedicaid: 'N'}
+				@person << { FPL: 84, MAGI: 16900, MedicaidEligible: 'Y', APTCReferral: 'N', EmergencyMedicaid: 'N'}
+				@person << { FPL: 84, MAGI: 16900, MedicaidEligible: 'Y', APTCReferral: 'N', EmergencyMedicaid: 'N'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -314,9 +314,9 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-3-MAGI_IA-013.json')
 				@person = []
 
-				@person << { FPL: 353, MAGI: 70931, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 353, MAGI: 70931, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 62, MAGI: 10000, MedicaidEligible: 'Y', APTCReferal: 'N'}
+				@person << { FPL: 353, MAGI: 70931, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 353, MAGI: 70931, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 62, MAGI: 10000, MedicaidEligible: 'Y', APTCReferral: 'N'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -328,9 +328,9 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-3-MAGI_UA-008.json')
 				@person = []
 
-				@person << { FPL: 252, MAGI: 50662, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 252, MAGI: 50662, MedicaidEligible: 'Y', APTCReferal: 'N'}
-				@person << { FPL: 252, MAGI: 50662, MedicaidEligible: 'Y', APTCReferal: 'N'}
+				@person << { FPL: 252, MAGI: 50662, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 252, MAGI: 50662, MedicaidEligible: 'Y', APTCReferral: 'N'}
+				@person << { FPL: 252, MAGI: 50662, MedicaidEligible: 'Y', APTCReferral: 'N'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -342,10 +342,10 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-4-MAGI-06.json')
 				@person = []
 
-				@person << { FPL: 318, MAGI: 50713, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 254, MAGI: 40567, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 254, MAGI: 40567, MedicaidEligible: 'Y', APTCReferal: 'N'}
-				@person << { FPL: 318, MAGI: 50713, MedicaidEligible: 'Y', APTCReferal: 'N'}
+				@person << { FPL: 318, MAGI: 50713, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 254, MAGI: 40567, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 254, MAGI: 40567, MedicaidEligible: 'Y', APTCReferral: 'N'}
+				@person << { FPL: 318, MAGI: 50713, MedicaidEligible: 'Y', APTCReferral: 'N'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -357,9 +357,9 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-4-MAGI_IA-007.json')
 				@person = []
 
-				@person << { FPL: 431, MAGI: 50787, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 0, MAGI: 0, MedicaidEligible: 'Y', APTCReferal: 'N'}
-				@person << { FPL: 0, MAGI: 0, MedicaidEligible: 'Y', APTCReferal: 'N'}
+				@person << { FPL: 431, MAGI: 50787, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 0, MAGI: 0, MedicaidEligible: 'Y', APTCReferral: 'N'}
+				@person << { FPL: 0, MAGI: 0, MedicaidEligible: 'Y', APTCReferral: 'N'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -371,10 +371,10 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-4-MAGI_UA-009.json')
 				@person = []
 
-				@person << { FPL: 318, MAGI: 50713, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 159, MAGI: 25355, MedicaidEligible: 'Y', APTCReferal: 'N'}
-				@person << { FPL: 212, MAGI: 25000, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 161, MAGI: 25713, MedicaidEligible: 'Y', APTCReferal: 'N'}
+				@person << { FPL: 318, MAGI: 50713, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 159, MAGI: 25355, MedicaidEligible: 'Y', APTCReferral: 'N'}
+				@person << { FPL: 212, MAGI: 25000, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 161, MAGI: 25713, MedicaidEligible: 'Y', APTCReferral: 'N'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -386,10 +386,10 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-4-UA-001.json')
 				@person = []
 
-				@person << { FPL: 429, MAGI: 86200, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 429, MAGI: 86200, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 0, MAGI: 0, MedicaidEligible: 'Y', APTCReferal: 'N'}
-				@person << { FPL: 429, MAGI: 86200, MedicaidEligible: 'N', APTCReferal: 'Y'}
+				@person << { FPL: 429, MAGI: 86200, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 429, MAGI: 86200, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 0, MAGI: 0, MedicaidEligible: 'Y', APTCReferral: 'N'}
+				@person << { FPL: 429, MAGI: 86200, MedicaidEligible: 'N', APTCReferral: 'Y'}
 			end
 
 			it_behaves_like "Core 24 tests"
@@ -400,11 +400,11 @@ module BenefitEligibilities
 				@json_response = get_response('spec/models/benefit_eligibilities/core24_json_files/QA-CORE-5-MAGI_IA-010.json')
 				@person = []
 
-				@person << { FPL: 318, MAGI: 50708, MedicaidEligible: 'N', APTCReferal: 'Y'}
-				@person << { FPL: 126, MAGI: 25333, MedicaidEligible: 'Y', APTCReferal: 'N'}
-				@person << { FPL: 126, MAGI: 25333, MedicaidEligible: 'Y', APTCReferal: 'N'}
-				@person << { FPL: 318, MAGI: 50708, MedicaidEligible: 'Y', APTCReferal: 'N'}
-				@person << { FPL: 267, MAGI: 76041, MedicaidEligible: 'Y', APTCReferal: 'N'}
+				@person << { FPL: 318, MAGI: 50708, MedicaidEligible: 'N', APTCReferral: 'Y'}
+				@person << { FPL: 126, MAGI: 25333, MedicaidEligible: 'Y', APTCReferral: 'N'}
+				@person << { FPL: 126, MAGI: 25333, MedicaidEligible: 'Y', APTCReferral: 'N'}
+				@person << { FPL: 318, MAGI: 50708, MedicaidEligible: 'Y', APTCReferral: 'N'}
+				@person << { FPL: 267, MAGI: 76041, MedicaidEligible: 'Y', APTCReferral: 'N'}
 			end
 
 			it_behaves_like "Core 24 tests"

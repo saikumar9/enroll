@@ -1,6 +1,5 @@
 module BenefitEligibilities
   class RuleContext
-    # include ActiveModel::SerializerSupport
     include ActiveModel::Serializers
     extend ActiveModel::Naming
 
