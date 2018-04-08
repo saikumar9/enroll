@@ -2,7 +2,6 @@ module ModelEvents
   module EmployerProfile
 
     REGISTERED_EVENTS = [
-      :initial_employer_denial,
       :initial_employee_plan_selection_confirmation,
       :welcome_notice_to_employer,
       :broker_hired_confirmation_to_employer

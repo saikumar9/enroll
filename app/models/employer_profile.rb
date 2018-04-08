@@ -1180,7 +1180,7 @@ class EmployerProfile
 
   def validate_and_send_denial_notice
     if !is_primary_office_local? || !(is_zip_outside?)
-      self.trigger_model_event(:initial_employer_denial)
+      self.trigger_notices('initial_employer_denial')
     end
   end
 
