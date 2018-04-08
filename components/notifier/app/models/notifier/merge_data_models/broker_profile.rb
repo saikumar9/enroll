@@ -11,8 +11,8 @@ module Notifier
     attribute :mailing_address, MergeDataModels::Address
 
     attribute :broker_agency_name, String
-    attribute :assignment_date, Date
     attribute :termination_date, Date
+    attribute :assignment_date, String
     attribute :employer_name, String
     attribute :employer_poc_firstname, String
     attribute :employer_poc_lastname, String
