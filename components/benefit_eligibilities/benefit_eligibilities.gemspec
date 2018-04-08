@@ -8,10 +8,12 @@ Gem::Specification.new do |s|
   s.name        = "benefit_eligibilities"
   s.version     = BenefitEligibilities::VERSION
   s.authors     = ["Dan Thomas"]
-  s.email       = ["dan.thomas@dc.gov"]
+  s.email       = ["dan@ideacrew.com"]
   s.homepage    = "https://github.com/dchbx"
-  s.summary     = "Summary of BenefitEligibilities."
-  s.description = "Description of BenefitEligibilities."
+  s.summary     = "A Medicaid eligibility rules engine that makes determinations using an applicant household's " + \
+                  "Modified Adjusted Gross Income (MAGI) and other eligibility criteria"
+  s.description = "Rails engine implementation of HHSIDEAlab's medicaid_eligibility project: " + \
+                  "https://github.com/HHSIDEAlab/medicaid_eligibility  Copyright (c) 2013, BlueLabs LLC.  All rights reserved"
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
@@ -27,13 +29,6 @@ Gem::Specification.new do |s|
   # s.add_dependency "httparty"
   # s.add_dependency 'ci_reporter_rspec'
   # s.add_dependency "rails_12factor"
-
-  # gem "font-awesome-rails"
-  # gem "uglifier"
-
-  # s.add_dependency "mongoid", "~> 5.0.1"
-  # s.add_dependency 'mongoid-multitenancy', '~> 1.2'
-
 
   s.add_development_dependency "rspec-rails"
   s.add_development_dependency 'shoulda-matchers'
