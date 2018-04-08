@@ -25,6 +25,11 @@ module Observers
           trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "initial_employer_application_approval")
         end
 
+        if new_model_event.event_key == :initial_application_submitted
+          trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "initial_application_submitted")
+          trigger_zero_employees_on_roster_notice(plan_year)
+        end
+
         if new_model_event.event_key == :zero_employees_on_roster
           trigger_zero_employees_on_roster_notice(plan_year)
         end
@@ -44,10 +49,6 @@ module Observers
 
         if new_model_event.event_key == :renewal_application_autosubmitted
           trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "plan_year_auto_published")
-          trigger_zero_employees_on_roster_notice(plan_year)
-        end
-
-        if new_model_event.event_key == :initial_application_submitted
           trigger_zero_employees_on_roster_notice(plan_year)
         end
 
