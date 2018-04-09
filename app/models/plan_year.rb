@@ -868,8 +868,8 @@ class PlanYear
     state :published,         :after_enter => :accept_application     # Plan is finalized. Employees may view benefits, but not enroll
     state :published_invalid, :after_enter => :decline_application    # Non-compliant plan application was forced-published
 
+    state :enrolled,  :after_enter => :ratify_enrollment # Published plan open enrollment has ended and is eligible for coverage,
     state :enrolling, :after_enter => :send_employee_invites          # Published plan has entered open enrollment
-    state :enrolled,  :after_enter => [:ratify_enrollment, :initial_employer_open_enrollment_completed] # Published plan open enrollment has ended and is eligible for coverage,
     #   but effective date is in future
     state :application_ineligible, :after_enter => :deny_enrollment   # Application is non-compliant for enrollment
     state :expired              # Non-published plans are expired following their end on date
@@ -1297,15 +1297,6 @@ class PlanYear
     if (application_eligibility_warnings.include?(:primary_office_location) || application_eligibility_warnings.include?(:fte_count))
       self.employer_profile.trigger_notices("initial_employer_denial")
     end
-  end
-
-  def initial_employer_open_enrollment_completed
-    #also check if minimum participation and non owner conditions are met by ER.
-    benefit_groups.each do |bg|
-      bg.finalize_composite_rates
-    end
-    return true if benefit_groups.any?{|bg| bg.is_congress?}
-    self.employer_profile.trigger_notices("initial_employer_open_enrollment_completed")
   end
 
   def renewal_successful
