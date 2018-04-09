@@ -54,6 +54,8 @@ describe 'ModelEvents::InitialEmployerNoBinderPaymentReceived' do
           "employer_profile.plan_year.current_py_start_date",
           "employer_profile.plan_year.binder_payment_due_date",
           "employer_profile.plan_year.monthly_employer_contribution_amount",
+          "employer_profile.plan_year.next_available_start_date",
+          "employer_profile.plan_year.next_application_deadline",
           "employer_profile.broker.primary_fullname",
           "employer_profile.broker.organization",
           "employer_profile.broker.phone",
@@ -69,6 +71,7 @@ describe 'ModelEvents::InitialEmployerNoBinderPaymentReceived' do
     } }
     let(:subject) { Notifier::NoticeKind.new(template: template, recipient: recipient) }
     let(:merge_model) { subject.construct_notice_object }
+    let(:next_available_start_date) {PlanYear.calculate_start_on_options.first.last.to_date}
 
     before do
       allow(subject).to receive(:resource).and_return(employer_profile)
@@ -84,12 +87,20 @@ describe 'ModelEvents::InitialEmployerNoBinderPaymentReceived' do
       expect(merge_model.notice_date).to eq TimeKeeper.date_of_record.strftime('%m/%d/%Y')
     end
 
+    it "should return next available start date" do
+      expect(merge_model.plan_year.next_available_start_date).to eq next_available_start_date
+    end
+
+    it "should return next application deadline" do
+      expect(merge_model.plan_year.next_application_deadline).to eq Date.new(next_available_start_date.year, next_available_start_date.prev_month.month, Settings.aca.shop_market.initial_application.advertised_deadline_of_month)
+    end
+
     it "should return employer name" do
       expect(merge_model.employer_name).to eq employer_profile.legal_name
     end
 
-    it "should return employer name" do
-      expect(merge_model.plan_year.monthly_employer_contribution_amount).to eq active_benefit_group.monthly_employer_contribution_amount
+    it "should return monthly employer contribution" do
+      expect(merge_model.plan_year.monthly_employer_contribution_amount).to eq ActiveSupport::NumberHelper.number_to_currency(active_benefit_group.monthly_employer_contribution_amount)
     end
 
     it "should return plan year start date" do
