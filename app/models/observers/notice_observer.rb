@@ -191,6 +191,12 @@ module Observers
             if !org.employer_profile.binder_paid?
               py = org.employer_profile.plan_years.where(:aasm_state.in => PlanYear::INITIAL_ENROLLING_STATE).first
               trigger_notice(recipient: org.employer_profile, event_object: py, notice_event: "initial_employer_no_binder_payment_received")
+              #Notice to employee that there employer misses binder payment
+              org.employer_profile.census_employees.active.each do |ce|
+                begin
+                  trigger_notice(recipient: ce.employee_role, event_object: py, notice_event: "notice_to_ee_that_er_plan_year_will_not_be_written")
+                end
+              end
             end
           end
         end

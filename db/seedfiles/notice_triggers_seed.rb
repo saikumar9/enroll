@@ -918,50 +918,6 @@ shop_notice_triggers = [
             }
         ]
     },
-    {                
-        hbx_id: 'SHOP_M053',
-        title: 'EE Ineligibility Notice – Terminated from Roster',
-        description: 'Employee must be notified when they are terminated from an ER roster that they are no longer eligible to enroll in coverage with that ER, effective DOT',
-        resource_name: 'employee_role',
-        event_name: 'employee_termination_notice',
-        notice_triggers: [
-          {
-            name: 'Employee Termination Notice',
-            notice_template: 'notices/shop_employee_notices/employee_termination_notice',
-            notice_builder: 'ShopEmployeeNotices::EmployeeTerminationNotice',
-            mpi_indicator: 'SHOP_M053',
-            notice_trigger_element_group: {
-                  market_places: ['shop'],
-                  primary_recipients: ["employee"],
-                  primary_recipient_delivery_method: ["secure_message"],
-                  secondary_recipients: []
-                }
-            }
-        ]
-    },
-    
-    {                
-        hbx_id: 'SHOP59',
-        title: 'Termination of Employer’s Health Coverage Offered Through The Health Connector',
-        description: 'When an initial group misses the binder payment deadline this notice is sent to employees to let them know the group will not be offering coverage',
-        resource_name: 'employee_role',
-        event_name: 'ee_ers_plan_year_will_not_be_written_notice', 
-        notice_triggers: [
-          {
-                name: " Notice to EEs that ER’s plan year will not be written",
-                notice_template: 'notices/shop_employee_notices/termination_of_employers_health_coverage',
-                notice_builder: 'ShopEmployeeNotices::TerminationOfEmployersHealthCoverage',
-                mpi_indicator: 'SHOP_M059',
-                notice_trigger_element_group: {
-                    market_places: ['shop'],
-                    primary_recipients: ["employee"],
-                    primary_recipient_delivery_method: ["secure_message"],
-                    secondary_recipients: []
-
-                }
-            }
-        ]
-    },        
 
   # {
   #   hbx_id: 'SHOP_D092',
