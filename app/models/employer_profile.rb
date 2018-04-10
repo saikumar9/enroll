@@ -797,8 +797,8 @@ class EmployerProfile
           plan_year.terminate! if plan_year.may_terminate?
         end
 
-        if aca_transmit_scheduled_employers
-          if (new_date.prev_day.mday + 1) == aca_employer_transmission_day_of_month
+        if aca_shop_market_transmit_scheduled_employers
+          if (new_date.prev_day.mday + 1) == aca_shop_market_employer_transmission_day_of_month
             transmit_scheduled_employers(new_date)
           end
         end
@@ -1079,7 +1079,7 @@ class EmployerProfile
   def self.update_status_to_binder_paid(organization_ids)
     organization_ids.each do |id|
       if org = Organization.find(id)
-        org.employer_profile.update_attribute(:aasm_state, "binder_paid")
+        org.employer_profile.binder_credited!
       end
     end
   end
