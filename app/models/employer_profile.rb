@@ -91,7 +91,6 @@ class EmployerProfile
     allow_blank: false
 
   after_initialize :build_nested_models
-  after_save :save_associated_nested_models
 
   scope :active,      ->{ any_in(aasm_state: ACTIVE_STATES) }
   scope :inactive,    ->{ any_in(aasm_state: INACTIVE_STATES) }
@@ -1246,9 +1245,6 @@ class EmployerProfile
 
   def build_nested_models
     build_inbox if inbox.nil?
-  end
-
-  def save_associated_nested_models
   end
 
   def save_inbox

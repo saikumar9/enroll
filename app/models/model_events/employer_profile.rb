@@ -33,7 +33,7 @@ module ModelEvents
   #       is_benefit_period_start = true
   #     end
 
-  #     # TODO: 
+  #     # TODO:
   #     # is_benefit_application_eligible_change  = false
   #     # old_benefit_application_eligible_change = ""
 
@@ -42,7 +42,7 @@ module ModelEvents
   #     # is_benefit_period_started           = false
   #     # old_benefit_period                  = ""
 
-  #     # is_broker_agency_change            = false 
+  #     # is_broker_agency_change            = false
   #     # old_broker_agency               = ""
 
   #     # is_general_agent_change            = false
@@ -62,7 +62,7 @@ module ModelEvents
 
   #     # yield persists instance at this point
   #     yield
-  #     # set flag that instance has changed state so Obervers are notified 
+  #     # set flag that instance has changed state so Obervers are notified
   #     changed
 
   #     # TODO -- encapsulated notify_observers to recover from errors raised by any of the observers
