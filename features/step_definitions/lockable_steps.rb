@@ -1,7 +1,9 @@
 Then(/^there are (\d+) preloaded (.*?) user accounts$/) do |num, status|
-  (0...num.to_i).each do |int|
-    user = FactoryGirl.create(:user, :with_family)
-    user.lock! if status.eql?('locked')
+  if Settings.aca.state_abbreviation = "MA"
+    (0...num.to_i).each do |int|
+      user = FactoryGirl.create(:user, :with_family)
+      user.lock! if status.eql?('locked')
+    end
   end
 end
 

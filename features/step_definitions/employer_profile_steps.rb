@@ -235,7 +235,9 @@ Given(/^(\w+) enters Employer Information/) do |name|
   fill_in 'organization[legal_name]', :with => Forgery('name').company_name
   fill_in 'organization[dba]', :with => Forgery('name').company_name
   fill_in 'organization[fein]', :with => @fein
-  select_from_chosen '0111', from: 'Select Industry Code'
+  if Settings.aca.state_abbreviation == "MA"
+    select_from_chosen '0111', from: 'Select Industry Code'
+  end
 
   find('.selectric-interaction-choice-control-organization-entity-kind').click
   find(:xpath, "//div[@class='selectric-scroll']/ul/li[contains(text(), 'C Corporation')]").click

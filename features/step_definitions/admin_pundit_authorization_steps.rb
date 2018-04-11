@@ -3,7 +3,7 @@ Then(/^ the Hbx Admin should see the list of primary applicants and an Action bu
 end
 
 When(/^the Hbx Admin clicks on the Action button$/) do
-  click_button('Actions')
+  find_button('Actions').trigger('click')
 end
 
 Then(/^the Add SEP option should be enabled$/) do
@@ -15,12 +15,28 @@ Then(/^the Add SEP option should be disabled$/) do
   find_link('Add SEP')['disabled'].should == 'disabled'
 end
 
-Then(/^the Cancel Enrollment option should be enabled$/) do
-  find_link('Cancel Enrollment')['data-remote'].should == nil
+if Settings.aca.state_abbreviation == "DC"
+  Then(/^the Cancel Enrollment option should be enabled$/) do
+    find_link('Cancel Enrollment')['data-remote'].should == "true"
+  end
 end
 
-Then(/^the Terminate Enrollment option should be enabled$/) do
-  find_link('Terminate Enrollment')['data-remote'].should == nil
+if Settings.aca.state_abbreviation == "MA"
+  Then(/^the Cancel Enrollment option should be enabled$/) do
+    find_link('Cancel Enrollment')['data-remote'].should == nil
+  end
+end
+
+if Settings.aca.state_abbreviation == "DC"
+  Then(/^the Terminate Enrollment option should be enabled$/) do
+    find_link('Terminate Enrollment')['data-remote'].should == "true"
+  end
+end
+
+if Settings.aca.state_abbreviation == "MA"
+  Then(/^the Terminate Enrollment option should be enabled$/) do
+    find_link('Terminate Enrollment')['data-remote'].should == nil
+  end
 end
 
 Then(/^the Cancel Enrollment option should be disabled$/) do

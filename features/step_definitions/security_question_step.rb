@@ -1,3 +1,4 @@
+if Settings.aca.security_questions = "true"
 def question_attrs
   { title: 'Updated security question', visible: false }
 end
@@ -80,4 +81,5 @@ end
 
 Then 'I have landed on employer profile page' do
   page.should(have_content("Thank you for logging into your #{Settings.site.short_name} employer account."))
+end
 end

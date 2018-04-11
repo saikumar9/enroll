@@ -8,7 +8,7 @@ Then(/^.+ should see fein$/) do
 end
 
 Then(/^.+ clicks on the broker$/) do
-  click_link "Acarehouse Inc"
+  page.find_link('Acarehouse Inc').trigger('click')
 end
 
 When(/^Hbx Admin clicks on the Fake broker$/) do

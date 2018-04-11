@@ -14,7 +14,7 @@ Feature: Employer Profile
     When I go to the Profile tab
     When Employer goes to the benefits tab I should see plan year information
     And Employer should see a button to create new plan year
-    And Employer should be able to enter sole source plan year, benefits, relationship benefits for employer
+    And Employer should be able to enter plan year, benefits, relationship benefits for employer
     And Employer should see a success message after clicking on create plan year button
 
   Scenario: Initial employer tries to submit application without uploading attestation

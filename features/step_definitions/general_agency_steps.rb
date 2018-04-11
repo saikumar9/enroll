@@ -8,7 +8,9 @@ When(/^.+ visit the main portal$/) do
 end
 
 Then(/^.+ should not see the New General Agency form/) do
-  expect(page).not_to have_content('General Agency')
+  if Settings.aca.state_abbreviation == "MA"
+    expect(page).not_to have_content('General Agency')
+  end
 end
 
 Then(/^.+ should see the New General Agency form/) do

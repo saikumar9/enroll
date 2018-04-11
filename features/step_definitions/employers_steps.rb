@@ -26,7 +26,7 @@ Then(/^.+ should see an initial fieldset to enter my name, ssn and dob$/) do
 end
 
 Then(/^.+ uploads an attestation document/) do
-  if (Settings.aca.enforce_employer_attestation.to_s == "true")
+  if Settings.aca.state_abbreviation == "MA"
     find('.interaction-click-control-documents').click
     wait_for_ajax
     find('.interaction-click-control-upload').click
@@ -290,11 +290,13 @@ And(/^.+ should see the census family is successfully rehired message$/) do
 end
 
 And(/^Employer can( not)? see the important documents needed$/) do |negate|
-  if negate
-    expect(page).not_to have_content('Important Documents Needed')
-    # page.should_not have_content('Important Documents Needed')
-  else
-    expect(page).to have_content('Important Documents Needed')
+  if Settings.aca.state_abbreviation == "MA"
+    if negate
+      expect(page).not_to have_content('Important Documents Needed')
+      # page.should_not have_content('Important Documents Needed')
+    else
+      expect(page).to have_content('Important Documents Needed')
+    end
   end
 end
 

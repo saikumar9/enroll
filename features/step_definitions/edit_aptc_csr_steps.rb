@@ -5,6 +5,11 @@ end
 
 When(/^Hbx Admin clicks on Families link$/) do
   click_link "Families"
+  if Settings.aca.state_abbreviation = "DC"
+    wait_for_ajax
+    find(:xpath, "//*[@id='myTab']/li[2]/ul/li[1]/a/span[1]", :wait => 10).click
+    wait_for_ajax
+  end
 end
 
 Then(/^Hbx Admin should see an Edit APTC \/ CSR link$/) do
@@ -12,5 +17,5 @@ Then(/^Hbx Admin should see an Edit APTC \/ CSR link$/) do
 end
 
 Then(/^Hbx Admin should not see an Edit APTC \/ CSR link$/) do
-  expect(page).to_not have_text("Edit APTC / CSR")
+  find_link("Edit APTC / CSR")['disabled'].should == 'disabled'
 end

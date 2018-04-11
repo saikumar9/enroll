@@ -1,7 +1,5 @@
 Then(/^Hbx Admin should see the list of primary applicants and an Action button$/) do
-  within('.effective-datatable') do
-    expect(page).to have_css('.dropdown-toggle', count: 1)
-  end
+  find_button('Actions').visible?
 end
 
 Then(/^Hbx Admin should see the list of user accounts and an Action button$/) do
@@ -12,9 +10,7 @@ end
 
 # FIXME: Make this take a 'for' argument, that way we can select which user
 When(/^Hbx Admin clicks on the Action button$/) do
-  within('.effective-datatable') do
-    find_all('.dropdown-toggle', :wait => 10).last.click
-  end
+  find_button('Actions').trigger("click")
 end
 
 # FIXME: Make this take a 'for' argument, that way we can select which user

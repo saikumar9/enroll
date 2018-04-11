@@ -469,7 +469,9 @@ When(/^(.+) creates? a new employer profile with (.+)$/) do |named_person, prima
   fill_in 'organization[legal_name]', :with => employer[:legal_name]
   fill_in 'organization[dba]', :with => employer[:dba]
   fill_in 'organization[fein]', :with => employer[:fein]
-  select_from_chosen '0111', from: 'Select Industry Code'
+  if Settings.aca.state_abbreviation == "MA"
+    select_from_chosen '0111', from: 'Select Industry Code'
+  end
 
   find('.selectric-interaction-choice-control-organization-entity-kind').click
   find(:xpath, "//div[@class='selectric-scroll']/ul/li[contains(text(), 'C Corporation')]").click
@@ -888,19 +890,29 @@ When(/^.+ clicks? to add the first employee$/) do
 end
 
 When(/^(?:(?!General).)+ clicks? on the ((?:(?!General|Staff).)+) tab$/) do |tab_name|
-  find(:xpath, "//li[contains(., '#{tab_name}')]", :wait => 10).click
+  binding.pry
+  if !(Settings.aca.state_abbreviation == "DC" && tab_name == "User Accounts")
+    find(:xpath, "//li[contains(., '#{tab_name}')]", :wait => 10).click
+  end
   wait_for_ajax
+  if Settings.aca.state_abbreviation == "DC"
+    find(:xpath, "//*[@id='myTab']/li[2]/ul/li[1]/a/span[1]", :wait => 10).click
+    wait_for_ajax
+  end
+  # if Settings.aca.state_abbreviation == "DC"
+  #   find(:xpath, "//*[@id='myTab']/li[2]/ul/li[1]/a/span[1]", :wait => 10).click
+  #   wait_for_ajax
+  # end
 end
 
 When(/^(?:(?!General).)+ clicks? on the ((?:(?!General|Staff).)+) dropdown$/) do |tab_name|
-  find(".#{tab_name.downcase}-dropdown").click
+  find(:xpath, "//*[@id='myTab']/li[6]/a", :wait => 10).click
   wait_for_ajax
 end
 
 When(/^(?:(?!General).)+ clicks? on the ((?:(?!General|Staff).)+) option$/) do |tab_name|
   find(".interaction-click-control-#{tab_name.downcase.gsub(' ','-')}").click
   wait_for_ajax
-  find('#myTabContent').trigger('click')
 end
 
 When(/^.+ clicks? on the tab for (.+)$/) do |tab_name|
@@ -1003,7 +1015,7 @@ And(/I should not see any plan which premium is 0/) do
 end
 
 And(/^.+ clicks on the link of New Employee Paper Application$/) do
-  find('.new_employee_paper_application').click
+  find('.new_employee_paper_application').trigger('click')
 end
 
 Then (/HBX admin start new employee enrollment/) do

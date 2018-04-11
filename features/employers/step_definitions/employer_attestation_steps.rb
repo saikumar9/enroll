@@ -134,7 +134,7 @@ end
 
 def enter_plan_year_info
   wait_for_ajax(2,2)
-  find(:xpath, "//p[@class='label'][contains(., 'SELECT START ON')]", :wait => 3).click
+  find(:xpath, "//p[@class='label'][contains(., 'SELECT START ON')]").click
   effective_on_year = TimeKeeper.date_of_record - HbxProfile::ShopOpenEnrollmentBeginDueDayOfMonth - Settings.aca.shop_market.initial_application.earliest_start_prior_to_effective_on.months.months
   find(:xpath, "//li[@data-index='1'][contains(., '#{(effective_on_year).year}')]", :wait => 5).click
 
@@ -171,20 +171,39 @@ And(/^.+ should be able to enter sole source plan year, benefits, relationship b
 end
 
 And(/^.+ should be able to enter plan year, benefits, relationship benefits for employer$/) do
-  enter_plan_year_info
+  wait_for_ajax(2,2)
+  binding.pry
+  find(:xpath, "//p[@class='label'][contains(., 'SELECT START ON')]").click
+  binding.pry
+  start = (TimeKeeper.date_of_record - HbxProfile::ShopOpenEnrollmentBeginDueDayOfMonth + Settings.aca.shop_market.open_enrollment.maximum_length.months.months).beginning_of_month.year
+  find(:xpath, "//li[@data-index='1'][contains(., '#{start}')]").click
 
-  find(:xpath, '//li/label[@for="plan_year_benefit_groups_attributes_0_plan_option_kind_single_carrier"]').click
+  screenshot("employer_add_plan_year")
+  find('.interaction-field-control-plan-year-fte-count').click
+
+  fill_in "plan_year[fte_count]", :with => "35"
+
+  fill_in "plan_year[pte_count]", :with => "15"
+  fill_in "plan_year[msp_count]", :with => "3"
+
+  find('.interaction-click-control-continue').click
+
+  # Benefit Group
+  fill_in "plan_year[benefit_groups_attributes][0][title]", :with => "Silver PPO Group"
+
+  find('.interaction-choice-control-plan-year-start-on').click
+  find('li.interaction-choice-control-plan-year-start-on-1').click
+
+  find(:xpath, '//li/label[@for="plan_year_benefit_groups_attributes_0_plan_option_kind_single_plan"]').click
   wait_for_ajax
-  find('.carriers-tab a').click
-  wait_for_ajax
-  find('.reference-plans label').click
-  wait_for_ajax
+  find('.single-plan-tab a').click
+  wait_for_ajax(10,2)
+  page.first('.reference-plans label').click
+  wait_for_ajax(10,2)
   fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][0][premium_pct]", :with => 50
   fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][1][premium_pct]", :with => 50
   fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][2][premium_pct]", :with => 50
   fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][3][premium_pct]", :with => 50
-
-  wait_for_ajax
   find('.interaction-click-control-create-plan-year').trigger('click')
 end
 
