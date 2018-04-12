@@ -7,7 +7,14 @@ module ModelEvents
       :employee_coverage_passive_renewal_failed
     ]
 
+    OTHER_EVENTS = [
+      :employee_notice_for_employee_terminated_from_roster
+    ]
+
     def notify_on_save
+      if is_transition_matching?(to: [:employment_terminated, :employee_termination_pending], from: [:eligible, :employee_role_linked, :newly_designated_eligible, :newly_designated_linked], event: [:terminate_employee_role, :schedule_employee_termination])
+        is_employee_notice_for_employee_terminated_from_roster = true
+      end
     end
 
     def is_transition_matching?(from: nil, to: nil, event: nil)
