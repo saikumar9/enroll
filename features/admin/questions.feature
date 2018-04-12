@@ -1,3 +1,4 @@
+@ma
 Feature: Add, Edit and Delete security questions
 
   Scenario: Hbx Admin can add new security question

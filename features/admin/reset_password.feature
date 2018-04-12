@@ -1,7 +1,7 @@
 Feature: Reset password of user
  In order to reset password of the user
  User should have the role of an admin
-
+  @ma
   Scenario: Admin can reset password of the user if has permission
     Given Hbx Admin exists
     When Hbx Admin logs on to the Hbx Portal
@@ -13,7 +13,7 @@ Feature: Reset password of user
     When Hbx Admin clicks on Reset Password link in action drop down
     Then the reset password email should be sent to the user
 
-
+  @ma
   Scenario: Admin can add user email address to reset password if email does not exist
     Given Hbx Admin exists
     When Hbx Admin logs on to the Hbx Portal
