@@ -3,8 +3,8 @@ require 'rails_helper'
 describe 'ModelEvents::InitialEmployeePlanSelectionConfirmation', dbclean: :around_each  do
   let(:model_event)  { "initial_employee_plan_selection_confirmation" }
   let(:notice_event) { "initial_employee_plan_selection_confirmation" }
-   let!(:start_on) { TimeKeeper.date_of_record.beginning_of_month }
-  let!(:model_instance) { create(:employer_with_planyear, plan_year_state: 'enrolled', start_on: start_on)}
+  let!(:start_on) { TimeKeeper.date_of_record.beginning_of_month }
+  let!(:model_instance) { create(:employer_with_planyear, plan_year_state: 'enrolled', start_on: start_on, aasm_state: 'eligible')}
   let!(:benefit_group) { model_instance.published_plan_year.benefit_groups.first}
   let!(:organization) { model_instance.organization }
   let!(:census_employee){ employee = FactoryGirl.create :census_employee, employer_profile: model_instance
@@ -28,7 +28,16 @@ describe 'ModelEvents::InitialEmployeePlanSelectionConfirmation', dbclean: :arou
             expect(model_event).to have_attributes(:event_key => :initial_employee_plan_selection_confirmation, :klass_instance => model_instance, :options => {})
           end
         end
-        model_instance.trigger_model_event(:initial_employee_plan_selection_confirmation)
+        model_instance.binder_credited!
+      end
+    end
+
+    context "when employer is transitioned/updated to a different state other than binder_paid " do
+      it "should not trigger model event" do
+        model_instance.observer_peers.keys.each do |observer|
+          expect(observer).not_to receive(:employer_profile_update)
+        end
+        model_instance.enrollment_expired!
       end
     end
   end
@@ -42,11 +51,10 @@ describe 'ModelEvents::InitialEmployeePlanSelectionConfirmation', dbclean: :arou
          allow_any_instance_of(CensusEmployee).to receive(:employee_role).and_return(employee_role)
       end
       it "should trigger notice event" do
-        #allow(benefit_group).to receive("hbx_enrollment").and_return(hbx_enrollment)
         expect(subject).to receive(:notify) do |event_name, payload|
           expect(event_name).to eq "acapi.info.events.employee.initial_employee_plan_selection_confirmation"
-          expect(payload[:event_object_kind]).to eq 'EmployerProfile'
-          expect(payload[:event_object_id]).to eq model_instance.id.to_s
+          expect(payload[:event_object_kind]).to eq 'HbxEnrollment'
+          expect(payload[:event_object_id]).to eq hbx_enrollment.id.to_s
         end
         subject.employer_profile_update(model_event)
       end

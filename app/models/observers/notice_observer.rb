@@ -110,24 +110,19 @@ module Observers
             census_employees = employer_profile.census_employees.non_terminated
             census_employees.each do |ce|
               if ce.active_benefit_group_assignment.hbx_enrollment.present? && ce.active_benefit_group_assignment.hbx_enrollment.effective_on == employer_profile.plan_years.where(:aasm_state.in => ["enrolled", "enrolling"]).first.start_on
-                trigger_notice(recipient: ce.employee_role, event_object: employer_profile, notice_event: "initial_employee_plan_selection_confirmation")
+                trigger_notice(recipient: ce.employee_role, event_object: ce.active_benefit_group_assignment.hbx_enrollment, notice_event: "initial_employee_plan_selection_confirmation")
               end
             end
           end
         end
       end
 
-      if EmployerProfile::REGISTERED_EVENTS.include?(new_model_event.event_key)
-        employer_profile = new_model_event.klass_instance
-        if new_model_event.event_key == :welcome_notice_to_employer
-          trigger_notice(recipient: employer_profile, event_object: employer_profile, notice_event: "welcome_notice_to_employer")
-        end
-      end
-
-      if EmployerProfile::REGISTERED_EVENTS.include?(new_model_event.event_key)
+      if EmployerProfile::OTHER_EVENTS.include?(new_model_event.event_key)
         employer_profile = new_model_event.klass_instance
         if new_model_event.event_key == :broker_hired_confirmation_to_employer
           trigger_notice(recipient: employer_profile, event_object: employer_profile, notice_event: "broker_hired_confirmation_to_employer")
+        elsif new_model_event.event_key == :welcome_notice_to_employer
+          trigger_notice(recipient: employer_profile, event_object: employer_profile, notice_event: "welcome_notice_to_employer")
         end
       end
     end
