@@ -166,5 +166,17 @@ module Notifier
     def qle_reporting_deadline
       merge_model.qle.reporting_deadline = qle.blank? ? payload[:qle_reporting_deadline] : qle.reporting_deadline
     end
+
+    def dependents_name
+      names = []
+      payload["dep_hbx_ids"].each do |dep_id|
+        names << Person.where(hbx_id: dep_id).first.full_name
+      end
+      merge_model.dependents_name = names.join(", ")
+    end
+
+    def dependent_termination_date
+      merge_model.dependent_termination_date = format_date(TimeKeeper.date_of_record.end_of_month)
+    end
   end
 end
