@@ -8,6 +8,7 @@ module ModelEvents
     #TODO: The trigger for this notice is in the controller and it has to be eventually moved to observer pattern.
     #TODO: This is the temporary fix until then.
     OTHER_EVENTS = [
+      :generate_initial_employer_invoice,
       :broker_hired_confirmation_to_employer,
       :welcome_notice_to_employer
     ]
