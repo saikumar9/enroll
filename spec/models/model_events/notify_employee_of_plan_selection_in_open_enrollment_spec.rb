@@ -75,7 +75,7 @@ describe 'ModelEvents::NotifyEmployeeOfPlanSelectionInOpenEnrollment', dbclean: 
     end
 
     it "should return enrollment terminated_on date" do
-      expect(merge_model.enrollment.coverage_end_on).to eq model_instance.terminated_on
+      expect(merge_model.enrollment.coverage_end_on).to eq model_instance.terminated_on.to_s
     end
 
     it "should return enrollment coverage_kind" do
