@@ -48,8 +48,9 @@ namespace :migrations do
         end
 
         if plan_year.may_terminate?
+          plan_year.update(terminated_on: termination_date)
           plan_year.terminate!
-          plan_year.update_attributes!(end_on: end_on, :terminated_on => termination_date)
+          plan_year.update(end_on: end_on)
           # send_termination_notice_to_employer(organization) if generate_termination_notice
           bg_ids = plan_year.benefit_groups.map(&:id)
           census_employees = CensusEmployee.where({ :"benefit_group_assignments.benefit_group_id".in => bg_ids })
@@ -59,7 +60,6 @@ namespace :migrations do
             end
           end
           if generate_termination_notice
-            send_notice_to_employer(organization)
             send_notice_to_employees(organization, plan_year)
           end
         end
@@ -126,16 +126,6 @@ namespace :migrations do
       enrollments += family.active_household.hbx_enrollments.where(:benefit_group_id.in => id_list).any_of([HbxEnrollment::enrolled.selector, HbxEnrollment::renewing.selector]).to_a
     end
   end
-
-  def send_notice_to_employer(org)
-    puts "group_advance_termination_confirmation:Notification generated for employer" unless Rails.env.test?
-    begin
-      ShopNoticesNotifierJob.perform_later(org.employer_profile.id.to_s, "group_advance_termination_confirmation")
-    rescue Exception => e
-      (Rails.logger.error { "Unable to deliver Notices to #{org.employer_profile.legal_name} that initial Employer’s plan year will not be written due to #{e}" }) unless Rails.env.test?
-    end
-  end
-
 
   def send_notice_to_employees(org, plan_year)
     org.employer_profile.census_employees.active.each do |ce|
