@@ -3,14 +3,13 @@ module Notifier
     include Notifier::Builders::PlanYear
     include Notifier::Builders::Broker
     include Notifier::Builders::Enrollment
-    include Notifier::Builders::HbxEnrollment
     include Notifier::Builders::OfferedProduct
     include ActionView::Helpers::NumberHelper
     include Config::ContactCenterHelper
     include Config::SiteHelper
 
     attr_accessor :employer_profile, :merge_model, :payload
-    
+
     def initialize
       data_object = Notifier::MergeDataModels::EmployerProfile.new
       data_object.mailing_address = Notifier::MergeDataModels::Address.new
