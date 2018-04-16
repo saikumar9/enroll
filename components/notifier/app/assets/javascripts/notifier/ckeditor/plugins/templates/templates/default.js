@@ -123,7 +123,7 @@ CKEDITOR.addTemplates( 'default', {
     html: "<p>&nbsp;</p>" +
 "<p>​#{broker_profile.notice_date}</p>" +
 "<p><strong>SUBJECT: &lt;Change subject&gt;</strong></p>" +
-"<p>Dear ​#{broker_profile.broker_agency_name}:</p>" +
+"<p>Dear ​#{broker_profile.first_name} #{broker_profile.last_name}:</p>" +
 "<p>&lt;Paste Your Notice Body Here&gt;</p>" +
 "<h3>For Questions or Assistance:</h3>"+
 "<p>Please contact the Health Connector with any questions:</p>" +
