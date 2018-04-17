@@ -392,8 +392,9 @@ ready = function() {
       }
 
       });
+    
 
-    $(document).on('change', '.health .nav-tabs li input', function() {
+    $(document).on('change click', '.health .nav-tabs li input', function() {
       if (window.location.href.indexOf("edit") > -1 && window.location.href.indexOf("plan_years") > -1) {
         EmployerProfile.validateEditPlanYear();
 
@@ -751,23 +752,7 @@ function onlyShowEnabledCarrierChoices() {
     var metalLevelEnabled = (enabledYearsForMetalLevel.indexOf(startOnYear) != -1);
   <% end %>
 
-  if (soleSourceEnabled) {
-    $('li.sole-source-tab').removeClass('hidden');
-  } else {
-    $('li.sole-source-tab').addClass('hidden');
-  }
-
-  if (metalLevelEnabled) {
-    $('li.metal-level-tab').removeClass('hidden');
-  } else {
-    $('li.metal-level-tab').addClass('hidden');
-  }
-
-  if (singleCarrierEnabled) {
-    $('li.single-carrier-tab').removeClass('hidden');
-  } else {
-    $('li.single-carrier-tab').addClass('hidden');
-  }
+  
 
 }
 
