@@ -1,0 +1,10 @@
+<select class="security-question-select-<%= index %>" name="security_question_responses[][security_question_id]" required="true" >
+  <option name="id" value=""><%= l10n("users.security_questions_responses.please_select_a_question") %></option>
+  <% security_questions.each do |question| %>
+    <% if selected == question.id.to_s %>
+      <option name="id" value=<%= question.id %> data-question-number='<%= index %>' selected="selected"><%= question.title %></option>
+    <% else %>
+      <option name="id" value=<%= question.id %> data-question-number='<%= index %>'><%= question.title %></option>
+    <% end %>
+  <% end %>
+</select>
