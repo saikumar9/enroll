@@ -35,7 +35,7 @@ And(/^.+ enters general agency information$/) do
   fill_in 'organization[home_page]', with: 'www.housecare.example.com'
 
   find(:xpath, "//p[@class='label'][contains(., 'Select Practice Area')]").click
-  find(:xpath, "//li[contains(., 'Both – Individual & Family AND Small Business Marketplaces')]").click
+  find(:xpath, "//li[contains(., 'Both - Individual & Family AND Small Business Marketplaces')]").click
 
   find(:xpath, "//label[input[@name='organization[accept_new_clients]']]").trigger('click')
   find(:xpath, "//label[input[@name='organization[working_hours]']]").trigger('click')
@@ -55,7 +55,7 @@ Then(/^.+ should see the list of general agencies$/) do
 end
 
 When(/^.+ clicks the link of Housecare Inc$/) do
-  find(:xpath, "//a[contains(., 'Housecare Inc')]").click
+  find(:xpath, "//a[contains(., 'Housecare Inc')]").trigger('click')
 end
 
 Then(/^.+ should see the show page of general agency$/) do

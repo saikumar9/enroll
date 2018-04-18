@@ -1,4 +1,4 @@
-@individual_enabled
+@dc
 Feature: Consumer verification process
 
   Scenario: Outstanding verification

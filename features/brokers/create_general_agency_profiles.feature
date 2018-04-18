@@ -1,4 +1,3 @@
-@general_agency_enabled
 Feature: Create General Agency and General Agency Staff Role
   Scenario: General Agency has not signed up on the HBX
     When General Agency visit the HBX General Agency Registration form
@@ -11,6 +10,7 @@ Feature: Create General Agency and General Agency Staff Role
 
     Given Hbx Admin exists
       When Hbx Admin logs on to the Hbx Portal
+      And Hbx Admin clicks on the Brokers tab
       And Hbx Admin clicks on the link of General agency
       Then Hbx Admin should see the list of general agencies
       When Hbx Admin clicks the link of Housecare Inc

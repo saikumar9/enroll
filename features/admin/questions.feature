@@ -1,6 +1,5 @@
-@ma
 Feature: Add, Edit and Delete security questions
-
+@ma
   Scenario: Hbx Admin can add new security question
     Given Hbx Admin exists
     When Hbx Admin logs on to the Hbx Portal
@@ -14,7 +13,7 @@ Feature: Add, Edit and Delete security questions
     And Hbx Admin fill out New Question form detail
     When Hbx Admin submit the question form
     Then there is 1 questions available in the list
-
+@ma
   Scenario: Hbx Admin can edit and update an existing security question
     Given Hbx Admin exists
     When Hbx Admin logs on to the Hbx Portal
@@ -30,7 +29,7 @@ Feature: Add, Edit and Delete security questions
     When Hbx Admin submit the question form
     Then there is 1 questions available in the list
     And the question title updated successfully
-
+@ma
   Scenario: Hbx Admin can delete an existing security question
     Given Hbx Admin exists
     When Hbx Admin logs on to the Hbx Portal
@@ -43,7 +42,7 @@ Feature: Add, Edit and Delete security questions
     When Hbx Admin clicks on Delete Question link
     And I confirm the delete question popup
     Then there is 0 questions available in the list
-
+@ma
   Scenario: User should select security questions after signup/login if not selected previously
     Given There are preloaded security question on the system
     When I visit the Employer portal

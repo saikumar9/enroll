@@ -1600,8 +1600,54 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
         expect(coverage_effective_date).to eq expected_start_on
       end
     end
-  end
 
+    context "on the eleventh of the month" do
+      let(:date_of_record_to_use) { Date.new(2015, 7, 11) }
+      let(:expected_open_enrollment_start_on) { Date.new(2015, 7, 11) }
+      let(:expected_open_enrollment_end_on) { Date.new(2015, Settings.aca.shop_market.open_enrollment.monthly_end_on, Settings.aca.shop_market.open_enrollment.monthly_end_on) }
+      let(:expected_start_on) { Date.new(2015, x, 1) }
+      before do
+        TimeKeeper.set_date_of_record_unprotected!(date_of_record_to_use)
+      end
+
+      it "should suggest correct open enrollment start" do
+        expect(calculate_open_enrollment_date[:open_enrollment_start_on]).to eq expected_open_enrollment_start_on
+      end
+
+      it "should suggest correct open enrollment end" do
+                binding.pry
+
+        expect(calculate_open_enrollment_date[:open_enrollment_end_on]).to eq expected_open_enrollment_end_on
+      end
+
+      it "should have the right start on" do
+        expect(coverage_effective_date).to eq expected_start_on
+      end
+    end
+
+    context "on the twelfth of the month" do
+      let(:date_of_record_to_use) { Date.new(2015, 7, 12) }
+      let(:expected_open_enrollment_start_on) { Date.new(2015, 7, 12) }
+      let(:expected_open_enrollment_end_on) { Date.new(2015, 7, Settings.aca.shop_market.open_enrollment.monthly_end_on) }
+      let(:expected_start_on) { Date.new(2015, 8, 1) }
+      before do
+        TimeKeeper.set_date_of_record_unprotected!(date_of_record_to_use)
+      end
+
+      it "should suggest correct open enrollment start" do
+        expect(calculate_open_enrollment_date[:open_enrollment_start_on]).to eq expected_open_enrollment_start_on
+      end
+
+      it "should suggest correct open enrollment end" do
+        expect(calculate_open_enrollment_date[:open_enrollment_end_on]).to eq expected_open_enrollment_end_on
+      end
+
+      it "should have the right start on" do
+        expect(coverage_effective_date).to eq expected_start_on
+      end
+    end
+  end
+  
   context "map binder_payment_due_date" do
     it "in interval of map using shop_enrollment_timetable" do
       binder_payment_due_date = PlanYear.map_binder_payment_due_date_by_start_on(Date.new(TimeKeeper.date_of_record.year,binder_pay_month,1))

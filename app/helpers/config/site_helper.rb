@@ -163,4 +163,8 @@ module Config::SiteHelper
   def mail_address
     Settings.site.mail_address
   end
+
+  def security_questions
+    Settings.aca.security_questions
+  end
 end

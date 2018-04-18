@@ -32,13 +32,13 @@
 - if step == 1 && search_page == true
   = link_to "Continue", exchanges_residents_path(person: @person_params), method: :post, class: 'btn btn-lg btn-primary  btn-block'
 - elsif step == 1
-  %span{class: 'btn btn-lg btn-primary btn-br btn-block', onclick: 'PersonValidations.manageRequiredValidations($(this));'} CONTINUE
+  %span{class: 'btn btn-lg btn-primary btn-br btn-block interaction-click-control-continue', onclick: 'PersonValidations.manageRequiredValidations($(this));'} CONTINUE
   %button.btn.btn-lg.btn-primary.btn-br.btn-block.interaction-click-control-continue.hidden{type: 'submit'}
     CONTINUE
 - elsif defined? url
   = link_to 'Continue', url, class: 'btn btn-lg btn-primary  btn-block', id: 'btn-continue'
 - elsif step == 4
-  %button.btn.btn-lg.btn-primary.btn-block#btn-continue{disabled: true}
+  %button.btn.btn-lg.btn-primary.btn-block.interaction-click-control-continue#btn-continue{disabled: true}
     CONTINUE
   %br
 - elsif step == 5
@@ -46,7 +46,7 @@
 - elsif step == 6
   = link_to 'GO TO MY ACCOUNT', family_account_path, class: 'btn btn-primary ', id: 'btn-continue', style: 'width: 100%;'
 - else
-  %button.btn.btn-lg.btn-primary.btn-block#btn-continue{type: 'submit'}
+  %button.btn.btn-lg.btn-primary.btn-block.interaction-click-control-continue#btn-continue{type: 'submit'}
     CONTINUE
 
 %ul.list-unstyled.list-right-section

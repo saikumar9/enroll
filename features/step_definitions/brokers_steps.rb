@@ -29,8 +29,8 @@ And(/^.+ enters broker agency information for individual markets$/) do
   # find(:xpath, "//p[@class='label'][contains(., 'Select Entity Kind')]").click
   # find(:xpath, "//li[contains(., 'C Corporation')]").click
 
-  find(:xpath, "//p[@class='label'][contains(., 'Select Practice Area')]").click
-  find(:xpath, "//li[contains(., 'Both - Individual & Family AND Small Business Marketplaces')]").click
+  # find(:xpath, "//p[@class='label'][contains(., 'Select Practice Area')]").click
+  # find(:xpath, "//li[contains(., 'Both - Individual & Family AND Small Business Marketplaces')]").click
 
   find('button.multiselect').click
   find(:xpath, '//label[input[@value="bn"]]').click
@@ -77,6 +77,7 @@ Then(/^.+ should see broker registration successful message$/) do
 end
 
 And(/^.+ should see the list of broker applicants$/) do
+  find('.interaction-click-control-broker-applications').trigger('click')
 end
 
 Then(/^.+ clicks? on the current broker applicant show button$/) do
@@ -231,7 +232,7 @@ Then(/^.* creates and publishes a plan year$/) do
   find('.interaction-click-control-create-plan-year').trigger('click')
   find('.alert-notice')
 
-  if (Settings.aca.enforce_employer_attestation.to_s == "true")
+  if (Settings.aca.shop_market.enforce_employer_attestation.to_s == "true")
     find('.interaction-click-control-documents').click
     wait_for_ajax
     find('.interaction-click-control-upload').click

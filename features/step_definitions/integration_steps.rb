@@ -879,10 +879,7 @@ When(/^.+ should see a published success message without employee$/) do
 end
 
 When(/^.+ clicks? on the add employee button$/) do
-  evaluate_script(<<-JSCODE)
-  $('.interaction-click-control-add-employee')[0].click()
-  JSCODE
-  wait_for_ajax
+  find('.interaction-click-control-add-new-employee', :wait => 10).click
 end
 
 When(/^.+ clicks? to add the first employee$/) do
@@ -892,7 +889,7 @@ end
 When(/^(?:(?!General).)+ clicks? on the ((?:(?!General|Staff).)+) tab$/) do |tab_name|
     find(:xpath, "//li[contains(., '#{tab_name}')]", :wait => 10).click
   wait_for_ajax
-  if Settings.aca.state_abbreviation == "DC" && tab_name == "Families"
+  if Settings.aca.state_abbreviation == "DC" && tab_name == "Families" && !(page.should have_content('Legal LLC'))
     find(:xpath, "//*[@id='myTab']/li[2]/ul/li[1]/a/span[1]", :wait => 10).click
     wait_for_ajax
   end

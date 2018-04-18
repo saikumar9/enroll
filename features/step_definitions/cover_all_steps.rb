@@ -24,7 +24,7 @@ When(/HBX Admin goes to register an user as individual$/) do
 end
 
 Then(/^HBX Admin clicks on continue button$/) do
-  click_link "Continue"
+  find('.btn', text: 'CONTINUE').click
 end
 
 Then(/HBX Admin should see a form to enter personal information$/) do

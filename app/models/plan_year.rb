@@ -784,6 +784,7 @@ class PlanYear
     end
 
     def calculate_open_enrollment_date(start_on)
+      # debugger
       start_on = start_on.to_date
 
       # open_enrollment_start_on = [start_on - 1.month, TimeKeeper.date_of_record].max
@@ -808,7 +809,7 @@ class PlanYear
       open_enrollment_end_on = shop_enrollment_timetable(start_on)[:open_enrollment_latest_end_on]
 
       binder_payment_due_date = map_binder_payment_due_date_by_start_on(start_on)
-
+# debugger
       {open_enrollment_start_on: open_enrollment_start_on,
        open_enrollment_end_on: open_enrollment_end_on,
        binder_payment_due_date: binder_payment_due_date}

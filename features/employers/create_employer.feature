@@ -1,4 +1,3 @@
-@individual_enabled
 Feature: Create Employer
   In order for Employers to create and manage an account on the HBX for their organization
   In order for Employees to purchase insurance
@@ -10,10 +9,9 @@ Feature: Create Employer
   Employee should be able to create an account, match to their employer and roster family
   Employee should be able to  purchase insurance
 
-
+    
     Scenario: An Employer Representative has not signed up on the HBX
       Given Employer has not signed up as an HBX user
-      Given vertical and horizontal plan choices are offered
       When I visit the Employer portal
       Then John Doe creates an HBX account
       Then I should see a successful sign up message
@@ -30,16 +28,6 @@ Feature: Create Employer
       And Employer should see employer census family created success message
       When Employer goes to the benefits tab
       Then Employer should see the plan year
-      When Employer clicks on publish plan year
-      Then Employer should see Action Needed under document
-      When the employer goes to the documents tab
-      Then the employer should see upload button
-      When the employer clicks upload button
-      Then the employer should see model box with file upload
-      And the employer fill the document form
-      Then the employer clicks the upload button in popup
-      Then the employer should see the document list
-      When Employer goes to the benefits tab
       When Employer clicks on publish plan year
       Then Employer should see Publish Plan Year Modal with address warnings
       When Employer clicks on the Cancel button
@@ -89,3 +77,20 @@ Feature: Create Employer
       Then Employee should see the receipt page
       Then Employee should see the "my account" page
       And Employee logs out
+
+    Scenario: When fte_count, pte_count and msp_count are blank, CONTINUE button should be disabled
+      Given Employer has not signed up as an HBX user
+      When I visit the Employer portal
+      Then Jack Doe create a new account for employer
+      Then I should see a successful sign up message
+      Then I should click on employer portal
+      Then Jack Doe creates a new employer profile with default_office_location
+      When I go to the Profile tab
+      When Employer goes to the benefits tab
+      And Employer should see a button to create new plan year
+      When Employer enters plan year start date
+      Then Employer should see disabled button with text continue
+      When Employer enters total number of employees
+      When Employer clicks continue
+      Then Employer should see benefits page
+      And Employer logs out

@@ -1,4 +1,3 @@
-@general_agency_enabled
 Feature: Broker Assigns a General Agency to an Employer
 
   Background:

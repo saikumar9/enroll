@@ -1,7 +1,6 @@
-@individual_enabled
+@ma
 Feature: User Account page
   In order for the Hbx admin to acsess user accounts
-
   Scenario: Search for an employer
     Given a Hbx admin with read and write permissions and employers
     And a user exists with employer staff role

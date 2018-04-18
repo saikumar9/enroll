@@ -55,7 +55,7 @@ end
 And(/user should see your information page$/) do
   expect(page).to have_content("Your Information")
   expect(page).to have_content("CONTINUE")
-  click_link "CONTINUE"
+  find('.interaction-click-control-continue').trigger('click')
 end
 
 When(/user goes to register as an individual$/) do
@@ -63,7 +63,7 @@ When(/user goes to register as an individual$/) do
   fill_in 'person[last_name]', :with => (@u.last_name :last_name)
   fill_in 'jq_datepicker_ignore_person[dob]', :with => (@u.adult_dob :adult_dob)
   fill_in 'person[ssn]', :with => (@u.ssn :ssn)
-  find(:xpath, '//label[@for="radio_male"]').click
+  find(:xpath, '//label[@for="radio_male"]').trigger('click')
 
   screenshot("register")
   find('.btn', text: 'CONTINUE').click
@@ -71,7 +71,7 @@ end
 
 When(/^\w+ clicks? on continue button$/) do
   wait_for_ajax
-  find('.btn', text: 'CONTINUE').click
+  find('.interaction-click-control-continue').trigger('click')
 end
 
 Then(/^.+ should see heading labeled personal information/) do
