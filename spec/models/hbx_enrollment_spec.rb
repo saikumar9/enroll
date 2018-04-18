@@ -405,13 +405,14 @@ describe HbxEnrollment, dbclean: :after_all do
     end
 
     context "waive_coverage_by_benefit_group_assignment" do
-      before :all do
+      before :each do
         @enrollment4 = household.create_hbx_enrollment_from(
           employee_role: mikes_employee_role,
           coverage_household: coverage_household,
           benefit_group: mikes_benefit_group,
           benefit_group_assignment: @mikes_benefit_group_assignments
         )
+        allow(@enrollment4).to receive(:notify_on_save).and_return true
         @enrollment4.save
         @enrollment5 = household.create_hbx_enrollment_from(
           employee_role: mikes_employee_role,
@@ -420,6 +421,7 @@ describe HbxEnrollment, dbclean: :after_all do
           benefit_group_assignment: @mikes_benefit_group_assignments
 
         )
+        allow(@enrollment5).to receive(:notify_on_save).and_return true
         @enrollment5.save
         @enrollment4.waive_coverage_by_benefit_group_assignment("start a new job")
         @enrollment5.reload
@@ -443,7 +445,7 @@ describe HbxEnrollment, dbclean: :after_all do
     end
 
     context "should shedule termination previous auto renewing enrollment" do
-      before :all do
+      before :each do
         @enrollment6 = household.create_hbx_enrollment_from(
             employee_role: mikes_employee_role,
             coverage_household: coverage_household,
@@ -452,6 +454,7 @@ describe HbxEnrollment, dbclean: :after_all do
         )
         @enrollment6.effective_on=TimeKeeper.date_of_record + 1.days
         @enrollment6.aasm_state = "auto_renewing"
+        allow(@enrollment6).to receive(:notify_on_save).and_return true
         @enrollment6.save
         @enrollment7 = household.create_hbx_enrollment_from(
             employee_role: mikes_employee_role,
@@ -459,6 +462,7 @@ describe HbxEnrollment, dbclean: :after_all do
             benefit_group: mikes_benefit_group,
             benefit_group_assignment: @mikes_benefit_group_assignments
         )
+        allow(@enrollment7).to receive(:notify_on_save).and_return true
         @enrollment7.save
         @enrollment7.cancel_previous(TimeKeeper.date_of_record.year)
       end
@@ -1375,6 +1379,8 @@ context "Benefits are terminated" do
 
   context "SHOP benefit" do
     let(:shop_family)       { FactoryGirl.create(:family, :with_primary_family_member) }
+    let(:census_employee)   { FactoryGirl.create(:census_employee)}
+    let(:employee_role)     { FactoryGirl.create(:employee_role)}
     let(:shop_enrollment)   { FactoryGirl.create(:hbx_enrollment,
                                                  household: shop_family.latest_household,
                                                  coverage_kind: "health",
@@ -1382,12 +1388,16 @@ context "Benefits are terminated" do
                                                  enrollment_kind: "open_enrollment",
                                                  kind: "employer_sponsored",
                                                  submitted_at: effective_on_date - 10.days,
-                                                 benefit_group_id: benefit_group.id
+                                                 benefit_group_id: benefit_group.id,
+                                                 employee_role_id: employee_role.id
                                                  )
                               }
 
     let(:shop_termination_date)  { TimeKeeper.date_of_record.end_of_month }
 
+    before do
+      employee_role.update_attributes(census_employee_id: census_employee.id)
+    end
 
     it "should be SHOP enrollment kind" do
       expect(shop_enrollment.is_shop?).to be_truthy
@@ -2621,7 +2631,7 @@ describe HbxEnrollment, '.build_plan_premium', type: :model, dbclean: :after_all
   end
 end
 
-describe HbxEnrollment, '.ee_select_plan_during_oe', type: :model, dbclean: :after_all do
+describe HbxEnrollment, '.ee_select_plan_during_oe', type: :model, dbclean: :after_each do
 
   let!(:employer_profile) {
     org = FactoryGirl.create :organization, legal_name: "Corp 1"
@@ -2723,19 +2733,22 @@ describe HbxEnrollment, '.ee_select_plan_during_oe', type: :model, dbclean: :aft
       FactoryGirl.create(:hbx_enrollment,
                          household: family.active_household,
                          coverage_kind: "health",
-                         effective_on: TimeKeeper.date_of_record.next_month.beginning_of_month,
-                         enrollment_kind: "open_enrollment",
+                         effective_on: start_on.next_day,
+                         enrollment_kind: "special_enrollment",
                          kind: "employer_sponsored",
                          submitted_at: TimeKeeper.date_of_record,
                          benefit_group_id: current_benefit_group.id,
                          employee_role_id: person.active_employee_roles.first.id,
+                         special_enrollment_period_id: sep.id,
                          benefit_group_assignment_id: ce.active_benefit_group_assignment.id,
                          plan_id: plan.id,
                          aasm_state: 'shopping'
                          )
     }
+    let!(:sep) { FactoryGirl.create(:special_enrollment_period, family: family, effective_on: start_on.next_day, qle_on: start_on.next_day)}
+
     before do
-      TimeKeeper.set_date_of_record_unprotected!(open_enrollment_end_on.next_day)
+      TimeKeeper.set_date_of_record_unprotected!(start_on.next_day)
     end
 
     after do
