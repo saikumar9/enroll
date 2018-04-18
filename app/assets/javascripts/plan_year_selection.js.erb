@@ -752,7 +752,23 @@ function onlyShowEnabledCarrierChoices() {
     var metalLevelEnabled = (enabledYearsForMetalLevel.indexOf(startOnYear) != -1);
   <% end %>
 
-  
+  if (soleSourceEnabled) {
+    $('li.sole-source-tab').removeClass('hidden');
+  } else {
+    $('li.sole-source-tab').addClass('hidden');
+  }
+
+  if (metalLevelEnabled) {
+    $('li.metal-level-tab').removeClass('hidden');
+  } else {
+    $('li.metal-level-tab').addClass('hidden');
+  }
+
+  if (singleCarrierEnabled) {
+    $('li.single-carrier-tab').removeClass('hidden');
+  } else {
+    $('li.single-carrier-tab').addClass('hidden');
+  }
 
 }
 
