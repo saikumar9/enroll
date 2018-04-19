@@ -3,8 +3,7 @@ require 'rails_helper'
 describe 'ModelEvents::WelcomeNoticeToEmployer', dbclean: :around_each  do
   let(:model_event)  { "welcome_notice_to_employer" }
   let(:notice_event) { "welcome_notice_to_employer" }
-  let!(:model_instance) { create(:employer_profile)}
-  let(:person){ create :person}
+  let!(:model_instance) { build(:employer_profile)}
  
   describe "ModelEvent" do
     context "when ER successfully creates account" do
@@ -15,7 +14,7 @@ describe 'ModelEvents::WelcomeNoticeToEmployer', dbclean: :around_each  do
             expect(model_event).to have_attributes(:event_key => :welcome_notice_to_employer, :klass_instance => model_instance, :options => {})
           end
         end
-        model_instance.trigger_model_event(:welcome_notice_to_employer)
+        model_instance.notify_on_save
       end
     end
   end
