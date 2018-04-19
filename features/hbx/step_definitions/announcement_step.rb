@@ -1,8 +1,7 @@
 And /^Hbx admin should see the link of announcements and click$/ do
-  click_link 'Config'
   wait_for_ajax
   expect(page).to have_content("Announcements")
-  click_link 'Announcements'
+  find(:xpath, "//*[@id='inbox']/div/div/div/a[1]").trigger('click')
 end
 
 Then /^Hbx admin should see the page of announcements$/ do

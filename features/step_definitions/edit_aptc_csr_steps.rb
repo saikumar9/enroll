@@ -5,7 +5,7 @@ end
 
 When(/^Hbx Admin clicks on Families link$/) do
   click_link "Families"
-  if Settings.aca.state_abbreviation == "DC"
+  if Settings.aca.state_abbreviation = "DC"
     wait_for_ajax
     find(:xpath, "//*[@id='myTab']/li[2]/ul/li[1]/a/span[1]", :wait => 10).click
     wait_for_ajax

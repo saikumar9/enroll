@@ -152,7 +152,7 @@ When(/^.+ registers with valid information for ga flow$/) do
 end
 
 Then(/^.+ should receive an invitation email for ga flow$/) do
-  open_email("broker.martin@example.com", :with_subject => " Congratulations! You’re Broker Application for #{Settings.site.short_name} for Business has been Approved!")
+  open_email("broker.martin@example.com", :with_subject => "Invitation to create your Broker account on #{Settings.site.short_name} ")
   expect(current_email.to).to eq(["broker.martin@example.com"])
 end
 
@@ -180,6 +180,7 @@ When(/^.+ assign employer to general agency$/) do
   find("input[id^='broker_dt_employer_ids_']").click
   find(:xpath, "//p[@class='label'][contains(., 'Select General Agency')]").click
   find(:xpath, "//li[contains(., 'Housecare Inc')]").click
+  binding.pry
   find("#assign_general_agency").click
 
 end

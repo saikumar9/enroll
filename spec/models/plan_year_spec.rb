@@ -1601,49 +1601,148 @@ describe PlanYear, :type => :model, :dbclean => :after_each do
       end
     end
 
-    context "on the eleventh of the month" do
-      let(:date_of_record_to_use) { Date.new(2015, 7, 11) }
-      let(:expected_open_enrollment_start_on) { Date.new(2015, 7, 11) }
-      let(:expected_open_enrollment_end_on) { Date.new(2015, Settings.aca.shop_market.open_enrollment.monthly_end_on, Settings.aca.shop_market.open_enrollment.monthly_end_on) }
-      let(:expected_start_on) { Date.new(2015, x, 1) }
-      before do
-        TimeKeeper.set_date_of_record_unprotected!(date_of_record_to_use)
+    if Settings.aca.state_abbreviation == 'DC'
+      context "on the eleventh of the month for DC" do
+        let(:date_of_record_to_use) { Date.new(2015, 7, 11) }
+        let(:expected_open_enrollment_start_on) { Date.new(2015, 7, 11) }
+        let(:expected_open_enrollment_end_on) { Date.new(2015, 8, Settings.aca.shop_market.open_enrollment.monthly_end_on) }
+        let(:expected_start_on) { Date.new(2015, 9, 1) }
+        before do
+          TimeKeeper.set_date_of_record_unprotected!(date_of_record_to_use)
+        end
+
+        it "should suggest correct open enrollment start" do
+          expect(calculate_open_enrollment_date[:open_enrollment_start_on]).to eq expected_open_enrollment_start_on
+        end
+
+        it "should suggest correct open enrollment end" do
+          expect(calculate_open_enrollment_date[:open_enrollment_end_on]).to eq expected_open_enrollment_end_on
+        end
+
+        it "should have the right start on" do
+          expect(coverage_effective_date).to eq expected_start_on
+        end
       end
+    end  
 
-      it "should suggest correct open enrollment start" do
-        expect(calculate_open_enrollment_date[:open_enrollment_start_on]).to eq expected_open_enrollment_start_on
-      end
+    if Settings.aca.state_abbreviation == 'MA'  
+      context "on the eleventh of the month for MA" do
+        let(:date_of_record_to_use) { Date.new(2015, 7, 11) }
+        let(:expected_open_enrollment_start_on) { Date.new(2015, 7, 11) }
+        let(:expected_open_enrollment_end_on) { Date.new(2015, 7, Settings.aca.shop_market.open_enrollment.monthly_end_on) }
+        let(:expected_start_on) { Date.new(2015, 8, 1) }
+        before do
+          TimeKeeper.set_date_of_record_unprotected!(date_of_record_to_use)
+        end
 
-      it "should suggest correct open enrollment end" do
-                binding.pry
+        it "should suggest correct open enrollment start" do
+          expect(calculate_open_enrollment_date[:open_enrollment_start_on]).to eq expected_open_enrollment_start_on
+        end
 
-        expect(calculate_open_enrollment_date[:open_enrollment_end_on]).to eq expected_open_enrollment_end_on
-      end
+        it "should suggest correct open enrollment end" do
+          expect(calculate_open_enrollment_date[:open_enrollment_end_on]).to eq expected_open_enrollment_end_on
+        end
 
-      it "should have the right start on" do
-        expect(coverage_effective_date).to eq expected_start_on
+        it "should have the right start on" do
+          expect(coverage_effective_date).to eq expected_start_on
+        end
       end
     end
 
-    context "on the twelfth of the month" do
-      let(:date_of_record_to_use) { Date.new(2015, 7, 12) }
-      let(:expected_open_enrollment_start_on) { Date.new(2015, 7, 12) }
-      let(:expected_open_enrollment_end_on) { Date.new(2015, 7, Settings.aca.shop_market.open_enrollment.monthly_end_on) }
-      let(:expected_start_on) { Date.new(2015, 8, 1) }
-      before do
-        TimeKeeper.set_date_of_record_unprotected!(date_of_record_to_use)
-      end
+    if Settings.aca.state_abbreviation == 'DC'
+      context "on the twelfth of the month for DC" do
+        let(:date_of_record_to_use) { Date.new(2015, 7, 12) }
+        let(:expected_open_enrollment_start_on) { Date.new(2015, 7, 12) }
+        let(:expected_open_enrollment_end_on) { Date.new(2015, 8, Settings.aca.shop_market.open_enrollment.monthly_end_on) }
+        let(:expected_start_on) { Date.new(2015, 9, 1) }
+        before do
+          TimeKeeper.set_date_of_record_unprotected!(date_of_record_to_use)
+        end
 
-      it "should suggest correct open enrollment start" do
-        expect(calculate_open_enrollment_date[:open_enrollment_start_on]).to eq expected_open_enrollment_start_on
-      end
+        it "should suggest correct open enrollment start" do
+          expect(calculate_open_enrollment_date[:open_enrollment_start_on]).to eq expected_open_enrollment_start_on
+        end
 
-      it "should suggest correct open enrollment end" do
-        expect(calculate_open_enrollment_date[:open_enrollment_end_on]).to eq expected_open_enrollment_end_on
-      end
+        it "should suggest correct open enrollment end" do
+          expect(calculate_open_enrollment_date[:open_enrollment_end_on]).to eq expected_open_enrollment_end_on
+        end
 
-      it "should have the right start on" do
-        expect(coverage_effective_date).to eq expected_start_on
+        it "should have the right start on" do
+          expect(coverage_effective_date).to eq expected_start_on
+        end
+      end
+    end  
+
+    if Settings.aca.state_abbreviation == 'MA'
+      context "on the twelfth of the month for MA" do
+        let(:date_of_record_to_use) { Date.new(2015, 7, 12) }
+        let(:expected_open_enrollment_start_on) { Date.new(2015, 7, 12) }
+        let(:expected_open_enrollment_end_on) { Date.new(2015, 7, Settings.aca.shop_market.open_enrollment.monthly_end_on) }
+        let(:expected_start_on) { Date.new(2015, 8, 1) }
+        before do
+          TimeKeeper.set_date_of_record_unprotected!(date_of_record_to_use)
+        end
+
+        it "should suggest correct open enrollment start" do
+          expect(calculate_open_enrollment_date[:open_enrollment_start_on]).to eq expected_open_enrollment_start_on
+        end
+
+        it "should suggest correct open enrollment end" do
+          expect(calculate_open_enrollment_date[:open_enrollment_end_on]).to eq expected_open_enrollment_end_on
+        end
+
+        it "should have the right start on" do
+          expect(coverage_effective_date).to eq expected_start_on
+        end
+      end
+    end
+
+
+    if Settings.aca.state_abbreviation == 'DC'
+      context "on the twenty first of the month for DC" do
+        let(:date_of_record_to_use) { Date.new(2015, 7, 21) }
+        let(:expected_open_enrollment_start_on) { Date.new(2015, 7, 21) }
+        let(:expected_open_enrollment_end_on) { Date.new(2015, 8, Settings.aca.shop_market.open_enrollment.monthly_end_on) }
+        let(:expected_start_on) { Date.new(2015, 9, 1) }
+        before do
+          TimeKeeper.set_date_of_record_unprotected!(date_of_record_to_use)
+        end
+
+        it "should suggest correct open enrollment start" do
+          expect(calculate_open_enrollment_date[:open_enrollment_start_on]).to eq expected_open_enrollment_start_on
+        end
+
+        it "should suggest correct open enrollment end" do
+          expect(calculate_open_enrollment_date[:open_enrollment_end_on]).to eq expected_open_enrollment_end_on
+        end
+
+        it "should have the right start on" do
+          expect(coverage_effective_date).to eq expected_start_on
+        end
+      end
+    end  
+
+    if Settings.aca.state_abbreviation == 'MA'
+      context "on the twenty first of the month for MA" do
+        let(:date_of_record_to_use) { Date.new(2015, 7, 21) }
+        let(:expected_open_enrollment_start_on) { Date.new(2015, 7, 21) }
+        let(:expected_open_enrollment_end_on) { Date.new(2015, 8, Settings.aca.shop_market.open_enrollment.monthly_end_on) }
+        let(:expected_start_on) { Date.new(2015, 9, 1) }
+        before do
+          TimeKeeper.set_date_of_record_unprotected!(date_of_record_to_use)
+        end
+
+        it "should suggest correct open enrollment start" do
+          expect(calculate_open_enrollment_date[:open_enrollment_start_on]).to eq expected_open_enrollment_start_on
+        end
+
+        it "should suggest correct open enrollment end" do
+          expect(calculate_open_enrollment_date[:open_enrollment_end_on]).to eq expected_open_enrollment_end_on
+        end
+
+        it "should have the right start on" do
+          expect(coverage_effective_date).to eq expected_start_on
+        end
       end
     end
   end

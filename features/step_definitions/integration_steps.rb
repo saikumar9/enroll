@@ -887,7 +887,10 @@ When(/^.+ clicks? to add the first employee$/) do
 end
 
 When(/^(?:(?!General).)+ clicks? on the ((?:(?!General|Staff).)+) tab$/) do |tab_name|
+  binding.pry
+  if !(Settings.aca.state_abbreviation == "DC" && tab_name == "User Accounts")
     find(:xpath, "//li[contains(., '#{tab_name}')]", :wait => 10).click
+  end
   wait_for_ajax
   if Settings.aca.state_abbreviation == "DC" && tab_name == "Families" && !(page.should have_content('Legal LLC'))
     find(:xpath, "//*[@id='myTab']/li[2]/ul/li[1]/a/span[1]", :wait => 10).click
@@ -907,7 +910,6 @@ end
 When(/^(?:(?!General).)+ clicks? on the ((?:(?!General|Staff).)+) option$/) do |tab_name|
   find(".interaction-click-control-#{tab_name.downcase.gsub(' ','-')}").click
   wait_for_ajax
-  find('#myTabContent').trigger('click')
 end
 
 When(/^.+ clicks? on the tab for (.+)$/) do |tab_name|

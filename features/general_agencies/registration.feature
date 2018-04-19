@@ -1,4 +1,3 @@
-@general_agency_enabled
 Feature: Create a General Agency Profile
 
   Scenario: A General Agency Submits Application
@@ -11,6 +10,8 @@ Feature: Create a General Agency Profile
 
   Scenario: A General Agency is Approved
     Given an HBX admin exists
+    When HBX admin clicks on Brokers dropdown
+    And HBX admin clicks on General Agencies option
     And a general agency, pending approval, exists
     When the HBX admin visits the general agency list
     Then they should see the pending general agency

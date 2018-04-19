@@ -1,4 +1,3 @@
-@general_agency_enabled
 Feature: Admin Assigns a General Agency to an Employer
 
   Background:

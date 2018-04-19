@@ -1,6 +1,6 @@
 Feature: HBX Admin should be able to send the broker application to pending state
 
-  @ma
+ @ma
   Scenario: Broker can enter ACH information
     When Primary Broker visits the HBX Broker Registration form
     Given a valid ach record exists

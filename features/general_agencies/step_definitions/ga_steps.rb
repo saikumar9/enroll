@@ -20,7 +20,7 @@ Then /^they should see the new general agency form$/ do
 end
 
 When /^they complete the new general agency form and hit the 'Submit' button$/ do
-  FactoryGirl.create(:rating_area, zip_code: "01002", county: "Franklin", rating_area: Settings.aca.rating_areas.first)
+  # FactoryGirl.create(:rating_area, zip_code: "01002", county: "Franklin", rating_area: Settings.aca.rating_areas.first)
   fill_in 'organization[first_name]', with: Forgery(:name).first_name
   fill_in 'organization[last_name]', with: Forgery(:name).last_name
   fill_in 'jq_datepicker_ignore_organization[dob]', with: (Time.now - rand(20..50).years).strftime('%m/%d/%Y')
@@ -44,10 +44,11 @@ When /^they complete the new general agency form and hit the 'Submit' button$/ d
 
   fill_in 'organization[office_locations_attributes][0][address_attributes][zip]', with: '01002'
   wait_for_ajax
-  select "#{location[:county]}", :from => "organization[office_locations_attributes][0][address_attributes][county]"
+  # select "#{location[:county]}", :from => "organization[office_locations_attributes][0][address_attributes][county]"
+  binding.pry
 
-  fill_in 'organization[office_locations_attributes][0][phone_attributes][area_code]', with: Forgery(:address).phone.match(/\((\d\d\d)\)/)[1]
-  fill_in 'organization[office_locations_attributes][0][phone_attributes][number]', with: Forgery(:address).phone.match(/\)(.*)$/)[1]
+  fill_in 'organization[office_locations_attributes][0][phone_attributes][area_code]', :with => '202'
+  fill_in 'organization[office_locations_attributes][0][phone_attributes][number]', :with => '5551212'
 
   find('.interaction-click-control-create-general-agency').click
 end
@@ -64,6 +65,23 @@ And /^a general agency, pending approval, exists$/ do
   general_agency
   staff = general_agency.general_agency_profile.general_agency_staff_roles.last
   staff.person.emails.last.update(kind: 'work')
+end
+
+# When /^the HBX admin visits the general agency list$/ do
+#   login_as hbx_admin, scope: :user
+#   visit exchanges_hbx_profiles_root_path
+#   click_link 'General Agencies'
+# end
+
+When(/^HBX admin clicks on Brokers dropdown$/) do
+  binding.pry
+  find(:xpath, "//*[@id='myTab']/li[6]/a").click
+  wait_for_ajax
+end
+
+When(/^HBX admin clicks on General Agencies option$/) do
+  find(:xpath, "//*[@id='myTab']/li[6]/ul/li[3]/a/span[1]").click
+  wait_for_ajax
 end
 
 When /^the HBX admin visits the general agency list$/ do

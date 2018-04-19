@@ -172,7 +172,9 @@ end
 
 And(/^.+ should be able to enter plan year, benefits, relationship benefits for employer$/) do
   wait_for_ajax(2,2)
+  binding.pry
   find(:xpath, "//p[@class='label'][contains(., 'SELECT START ON')]").click
+  binding.pry
   start = (TimeKeeper.date_of_record - HbxProfile::ShopOpenEnrollmentBeginDueDayOfMonth + Settings.aca.shop_market.open_enrollment.maximum_length.months.months).beginning_of_month.year
   find(:xpath, "//li[@data-index='1'][contains(., '#{start}')]").click
 

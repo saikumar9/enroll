@@ -12,5 +12,5 @@ Then(/^.+ clicks on the broker$/) do
 end
 
 When(/^Hbx Admin clicks on the Fake broker$/) do
-  page.find_link('Logistics Inc').trigger('click')
+  click_link "Logistics Inc"
 end
