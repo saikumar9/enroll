@@ -13,7 +13,7 @@ class ChangeUsername < MongoidMigrationTask
         puts "update the user from #{old_user_oimid} to #{new_user_oimid}" unless Rails.env.test?
       end
     else
-      puts "#{new_user_omid} is already present in the Enroll system" unless Rails.env.test?
+      puts "#{new_user_oimid} is already present in the Enroll system" unless Rails.env.test?
     end
   end
 end
