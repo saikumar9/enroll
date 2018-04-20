@@ -180,7 +180,6 @@ When(/^.+ assign employer to general agency$/) do
   find("input[id^='broker_dt_employer_ids_']").click
   find(:xpath, "//p[@class='label'][contains(., 'Select General Agency')]").click
   find(:xpath, "//li[contains(., 'Housecare Inc')]").click
-  binding.pry
   find("#assign_general_agency").click
 
 end

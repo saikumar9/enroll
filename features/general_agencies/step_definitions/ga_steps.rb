@@ -45,7 +45,6 @@ When /^they complete the new general agency form and hit the 'Submit' button$/ d
   fill_in 'organization[office_locations_attributes][0][address_attributes][zip]', with: '01002'
   wait_for_ajax
   # select "#{location[:county]}", :from => "organization[office_locations_attributes][0][address_attributes][county]"
-  binding.pry
 
   fill_in 'organization[office_locations_attributes][0][phone_attributes][area_code]', :with => '202'
   fill_in 'organization[office_locations_attributes][0][phone_attributes][number]', :with => '5551212'
@@ -67,14 +66,7 @@ And /^a general agency, pending approval, exists$/ do
   staff.person.emails.last.update(kind: 'work')
 end
 
-# When /^the HBX admin visits the general agency list$/ do
-#   login_as hbx_admin, scope: :user
-#   visit exchanges_hbx_profiles_root_path
-#   click_link 'General Agencies'
-# end
-
 When(/^HBX admin clicks on Brokers dropdown$/) do
-  binding.pry
   find(:xpath, "//*[@id='myTab']/li[6]/a").click
   wait_for_ajax
 end
@@ -272,7 +264,6 @@ end
 
 And /^selects the general agency from dropdown for the employer$/ do
   expect(page).to have_content('EmployerA')
-  binding.pry
   # find("input[id^='broker_dt_employer_ids_']").click
   find(:xpath, "//p[@class='label'][contains(., 'Select General Agency')]").click
   find(:xpath, "//li[contains(., 'Rooxo')]").click

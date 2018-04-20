@@ -887,7 +887,6 @@ When(/^.+ clicks? to add the first employee$/) do
 end
 
 When(/^(?:(?!General).)+ clicks? on the ((?:(?!General|Staff).)+) tab$/) do |tab_name|
-  binding.pry
   if !(Settings.aca.state_abbreviation == "DC" && tab_name == "User Accounts")
     find(:xpath, "//li[contains(., '#{tab_name}')]", :wait => 10).click
   end
