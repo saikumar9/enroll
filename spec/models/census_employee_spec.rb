@@ -260,6 +260,7 @@ RSpec.describe CensusEmployee, type: :model, dbclean: :after_each do
 
                 context "using matching ssn and dob" do
                   let(:valid_employee_role)     { FactoryGirl.create(:employee_role, ssn: initial_census_employee.ssn, dob: initial_census_employee.dob, employer_profile: employer_profile) }
+                  let!(:user)     { FactoryGirl.create(:user, person: valid_employee_role.person) }
 
                   it "should return the roster instance" do
                     expect(CensusEmployee.matchable(valid_employee_role.ssn, valid_employee_role.dob).collect(&:id)).to eq [initial_census_employee.id]
@@ -276,7 +277,9 @@ RSpec.describe CensusEmployee, type: :model, dbclean: :after_each do
                     end
 
                     context "and the provided employee role identifying information does match a census employee" do
-                      before { initial_census_employee.employee_role = valid_employee_role }
+                      before { 
+                        initial_census_employee.employee_role = valid_employee_role 
+                      }
 
                       it "should link the roster instance and employer role" do
                         expect(initial_census_employee.employee_role_linked?).to be_truthy
@@ -574,6 +577,7 @@ RSpec.describe CensusEmployee, type: :model, dbclean: :after_each do
                                               dob: existing_census_employee.dob,
                                               gender: existing_census_employee.gender
                                             )}
+      let!(:user) { create(:user, person: person)}
       let!(:employee_role)                { EmployeeRole.create(
                                               person: person,
                                               hired_on: existing_census_employee.hired_on,
@@ -918,7 +922,7 @@ RSpec.describe CensusEmployee, type: :model, dbclean: :after_each do
       allow(notice_trigger).to receive_message_chain(:notice_builder,:camelize,:constantize,:new).and_return(builder)
       allow(notice_trigger).to receive_message_chain(:notice_trigger_element_group,:notice_peferences).and_return({})
       allow(ApplicationEventKind).to receive_message_chain(:where,:first).and_return(double("ApplicationEventKind",{:notice_triggers => notice_triggers,:title => "title",:event_name => "OutOfPocketNotice"}))
-      allow_any_instance_of(CheckbookServices::PlanComparision).to receive(:generate_url).and_return("http://temp.url")
+      allow_any_instance_of(Services::CheckbookServices::PlanComparision).to receive(:generate_url).and_return("fake_url")
     end
     context "#generate_and_deliver_checkbook_url" do
       it "should create a builder and deliver without expection" do
@@ -947,15 +951,17 @@ RSpec.describe CensusEmployee, type: :model, dbclean: :after_each do
 
     context "change the aasm state & populates terminated on of enrollments" do
       let(:census_employee) { FactoryGirl.create(:census_employee) }
+      let(:employee_role)     { FactoryGirl.create(:employee_role)}
       let(:family) { FactoryGirl.create(:family, :with_primary_family_member)}
 
-      let(:hbx_enrollment) { FactoryGirl.create(:hbx_enrollment, benefit_group: benefit_group, household: family.active_household, coverage_kind: 'health') }
-      let(:hbx_enrollment_two) { FactoryGirl.create(:hbx_enrollment, benefit_group: benefit_group, household: family.active_household, coverage_kind: 'dental') }
-      let(:hbx_enrollment_three) { FactoryGirl.create(:hbx_enrollment, benefit_group: benefit_group, household: family.active_household, aasm_state: 'renewing_waived') }
+      let(:hbx_enrollment) { FactoryGirl.create(:hbx_enrollment, benefit_group: benefit_group, household: family.active_household, coverage_kind: 'health', employee_role_id: employee_role.id) }
+      let(:hbx_enrollment_two) { FactoryGirl.create(:hbx_enrollment, benefit_group: benefit_group, household: family.active_household, coverage_kind: 'dental', employee_role_id: employee_role.id) }
+      let(:hbx_enrollment_three) { FactoryGirl.create(:hbx_enrollment, benefit_group: benefit_group, household: family.active_household, aasm_state: 'renewing_waived', employee_role_id: employee_role.id) }
 
       before do
         allow(census_employee).to receive(:active_benefit_group_assignment).and_return(double)
         allow(HbxEnrollment).to receive(:find_enrollments_by_benefit_group_assignment).and_return([hbx_enrollment, hbx_enrollment_two, hbx_enrollment_three], [])
+        employee_role.update_attributes(census_employee_id: census_employee.id)
       end
 
       termination_dates = [TimeKeeper.date_of_record - 5.days, TimeKeeper.date_of_record, TimeKeeper.date_of_record + 5.days]
@@ -1708,6 +1714,20 @@ RSpec.describe CensusEmployee, type: :model, dbclean: :after_each do
     end
   end
 
+  context "when active employeees opt to waive" do
+    let(:census_employee) { FactoryGirl.build(:census_employee, benefit_group_assignments: [benefit_group_assignment]) }
+    let(:benefit_group_assignment) { FactoryGirl.build(:benefit_group_assignment, benefit_group: benefit_group, aasm_state: "coverage_waived") }
+    
+    it "returns true when employees waive the coverage" do
+      expect(census_employee.waived?).to be_truthy
+    end
+    it "returns false for employees who are enrolling" do
+      benefit_group_assignment.aasm_state = "coverage_selected"
+      expect(census_employee.waived?).to be_falsey
+    end
+  end
+
+
   context '.renewal_benefit_group_assignment' do
     let(:census_employee) { CensusEmployee.new(**valid_params) }
     let(:benefit_group_assignment_one)  { FactoryGirl.create(:benefit_group_assignment, benefit_group: benefit_group, census_employee: census_employee) }
@@ -1808,6 +1828,21 @@ RSpec.describe CensusEmployee, type: :model, dbclean: :after_each do
 
 
   end
+
+  describe "#trigger_notice" do
+    let(:census_employee){FactoryGirl.build(:census_employee)}
+    let(:employee_role){FactoryGirl.build(:employee_role, :census_employee => census_employee)}
+    it "should trigger job in queue" do
+      ActiveJob::Base.queue_adapter = :test
+      ActiveJob::Base.queue_adapter.enqueued_jobs = []
+      census_employee.trigger_notice("ee_sep_request_accepted_notice")
+      queued_job = ActiveJob::Base.queue_adapter.enqueued_jobs.find do |job_info|
+        job_info[:job] == ShopNoticesNotifierJob
+      end
+      expect(queued_job[:args]).to eq [census_employee.id.to_s, 'ee_sep_request_accepted_notice']
+    end
+  end
+
   describe "search_hash" do
     context 'census search query' do
 
