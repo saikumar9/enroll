@@ -68,7 +68,9 @@ And(/^.+ enters broker agency information for SHOP markets$/) do
 end
 
 And(/^.+ clicks? on Create Broker Agency$/) do
+  binding.pry
   click_button "Create Broker Agency", wait: 100
+  wait_for_ajax
 end
 
 Then(/^.+ should see broker registration successful message$/) do

@@ -1,4 +1,3 @@
-if Settings.aca.security_questions == "true"
   def question_attrs
     { title: 'Updated security question', visible: false }
   end
@@ -8,7 +7,7 @@ if Settings.aca.security_questions == "true"
   end
 
   Then(/^Hbx Admin should see Security Question link$/) do
-    find_link('Security Question').visible?
+    find_link('Security Question').trigger('click')
   end
 
   Then(/^there is (\d+) questions available in the list$/) do |num|
@@ -82,4 +81,3 @@ if Settings.aca.security_questions == "true"
   Then 'I have landed on employer profile page' do
     page.should(have_content("Thank you for logging into your #{Settings.site.short_name} employer account."))
   end
-end
