@@ -943,7 +943,7 @@ class PlanYear
 
       transitions from: :draft, to: :draft,     :guard => :is_application_invalid?
       transitions from: :draft, to: :enrolling, :guard => [:is_application_eligible?, :is_event_date_valid?], :after => [:accept_application, :record_sic_and_rating_area]
-      transitions from: :draft, to: :published, :guard => :is_application_eligible?, :after => [:record_sic_and_rating_area]
+      transitions from: :draft, to: :published, :guard => :is_application_eligible?, :after => :record_sic_and_rating_area
       transitions from: :draft, to: :publish_pending
 
       transitions from: :renewing_draft, to: :renewing_draft,     :guard => :is_application_invalid?
@@ -1240,17 +1240,6 @@ class PlanYear
         self.employer_profile.trigger_notices("planyear_renewal_3b")
       rescue Exception => e
         Rails.logger.error { "Unable to deliver employer renewal force publish notice for #{self.employer_profile.organization.legal_name} due to #{e}" }
-      end
-    end
-  end
-
-  def notify_employee_of_initial_employer_ineligibility
-    return true if benefit_groups.any?{|bg| bg.is_congress?}
-    self.employer_profile.census_employees.non_terminated.each do |ce|
-      begin
-        ShopNoticesNotifierJob.perform_later(ce.id.to_s, "notify_employee_of_initial_employer_ineligibility")
-      rescue Exception => e
-        Rails.logger.error { "Unable to deliver employee initial eligibiliy notice for #{self.employer_profile.organization.legal_name} due to #{e}" }
       end
     end
   end

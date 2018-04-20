@@ -53,7 +53,7 @@ module Config::AcaModelConcern
     def aca_shop_market_transmit_scheduled_employers
       @@aca_shop_market_transmit_scheduled_employers ||= Settings.aca.shop_market.transmit_scheduled_employers
     end
-    
+
     def aca_shop_market_employer_transmission_day_of_month
       @@aca_shop_market_employer_transmission_day_of_month ||= Settings.aca.shop_market.employer_transmission_day_of_month
     end
@@ -102,12 +102,12 @@ module Config::AcaModelConcern
       @@non_owner_participation_count_minimum ||= Settings.aca.shop_market.non_owner_participation_count_minimum.to_f
     end
 
-    def enabled_metal_levels
-      @@enabled_metal_levels = Settings.aca.enabled_metal_levels_for_single_carrier
-    end
-
     def enrollment_shopping_start_day_offset
       @@enrollment_shopping_start_day_offset ||= Settings.aca.shop_market.initial_application.earliest_start_prior_to_effective_on.day_of_month.days
+    end
+
+    def enabled_metal_levels
+      @@enabled_metal_levels = Settings.aca.enabled_metal_levels_for_single_carrier
     end
 
     def offerings_constrained_to_service_areas?
