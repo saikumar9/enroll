@@ -593,7 +593,7 @@ class PlanYear
 
   # Employees who selected or waived and are not owners or direct family members of owners
   def non_business_owner_enrolled
-    enrolled.select{|ce| !ce.is_business_owner}
+    enrolled.select{|ce| !ce.is_business_owner && !ce.waived?}
   end
 
   # Any employee who selected or waived coverage
@@ -830,7 +830,7 @@ class PlanYear
         "2018-02-01" => '2018,1,23',
         "2018-03-01" => '2018,2,23',
         "2018-04-01" => '2018,3,23',
-        "2018-05-01" => '2018,4,23',
+        "2018-05-01" => '2018,4,24',
         "2018-06-01" => '2018,5,23',
         "2018-07-01" => '2018,6,25',
         "2018-08-01" => '2018,7,23',
