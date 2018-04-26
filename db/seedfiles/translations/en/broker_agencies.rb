@@ -65,6 +65,7 @@ BROKER_AGENCIES_TRANSLATIONS = {
 	"en.broker_agencies.profiles.first_time_applications_for_medicaid" => "First Time Applications for Medicaid",
 	"en.broker_agencies.profiles.and_premium_tax_credits"=> "and Premium Tax Credits",
 	"en.broker_messages" => "Broker Messages",
+	"en.broker_agencies.profiles.office_locations" => "Office Locations",
 	"en.broker_agency" => "Broker Agency",
 	"en.broker_agencies.profiles.edit_broker_agency_profile" => "Edit Broker Agency Profile",
 	"en.broker_name" => "Broker Name",
@@ -201,5 +202,6 @@ BROKER_AGENCIES_TRANSLATIONS = {
 	"en.carrier_appointments" => "Carrier Appointments",
 	"en.reason" => "Reason",
 	"en.broker_carrier_appointments_enabled_note" => "Note: Carrier appointments for broker are not necessary for participation in %{site_long_name}.",
-	"en.write_here" => "Write here"
+	"en.write_here" => "Write here",
+	"en.broker_agencies.broker_roles.broker_registration_text" => "By submitting this application to become a certified broker on the %{site_short_name} for Business, I agree to the terms and conditions described in the %{site_brokers_agreement_path}."
 }
