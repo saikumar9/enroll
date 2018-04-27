@@ -1,4 +1,4 @@
-module Observers
+\module Observers
   class NoticeObserver < Observer
 
     def plan_year_update(new_model_event)
@@ -50,8 +50,14 @@ module Observers
         end
 
         if new_model_event.event_key == :group_advance_termination_confirmation
-          if plan_year.terminated_on > current_date 
+          if plan_year.terminated_on > current_date
             trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "group_advance_termination_confirmation")
+          end
+        end
+
+        if new_model_event.event_key == :ineligible_initial_application_submitted
+          if (plan_year.application_eligibility_warnings.include?(:primary_office_location) || plan_year.application_eligibility_warnings.include?(:fte_count))
+              trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "employer_initial_eligibility_denial_notice")
           end
         end
 
