@@ -1,4 +1,4 @@
-\module Observers
+module Observers
   class NoticeObserver < Observer
 
     def plan_year_update(new_model_event)
