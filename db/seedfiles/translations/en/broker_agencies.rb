@@ -201,5 +201,6 @@ BROKER_AGENCIES_TRANSLATIONS = {
 	"en.carrier_appointments" => "Carrier Appointments",
 	"en.reason" => "Reason",
 	"en.broker_carrier_appointments_enabled_note" => "Note: Carrier appointments for broker are not necessary for participation in %{site_long_name}.",
-	"en.write_here" => "Write here"
+	"en.write_here" => "Write here", 
+	"en.broker_agencies.broker_roles.broker_registration_text" => "By submitting this application to become a certified broker on the %{site_short_name} for Business, I agree to the terms and conditions described in the %{site_brokers_agreement_path}."
 }
