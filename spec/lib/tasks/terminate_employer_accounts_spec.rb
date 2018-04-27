@@ -58,6 +58,8 @@ describe 'terminating employer active plan year & enrollments', :dbclean => :aro
       expect_any_instance_of(Observers::Observer).not_to receive(:trigger_notice).with(params).exactly(employer_profile.census_employees.active.size).times
       Rake::Task["migrations:terminate_employer_account"].reenable
       Rake::Task["migrations:terminate_employer_account"].invoke(fein,end_on,termination_date,"true")
+      # expect($stdout.string).to match("Notification generated for employer\n")
+      expect($stdout.string).to match("Notification generated for employee\n")
     end
 
     it 'should not send notification when we pass false in generate_termination_notice attribute' do
