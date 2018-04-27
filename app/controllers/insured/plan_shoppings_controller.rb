@@ -148,6 +148,17 @@ class Insured::PlanShoppingsController < ApplicationController
      end
     end
 
+  def sep_qle_request_accept_notice_ee(employee_id, enrollment)
+    sep = enrollment.special_enrollment_period
+    options = { :sep_qle_end_on => sep.end_on.to_s, :sep_qle_title => sep.title, :sep_qle_on => sep.qle_on.to_s }
+    begin
+      ShopNoticesNotifierJob.perform_later(employee_id, "notify_employee_of_special_enrollment_period", :sep => options)
+    rescue Exception => e
+      logger.debug("Exception raised in %s" % e.backtrace)
+      raise "Unable to trigger sep_qle_request_accept_notice_ee"
+    end
+  end
+
   def terminate
     hbx_enrollment = HbxEnrollment.find(params.require(:id))
 
