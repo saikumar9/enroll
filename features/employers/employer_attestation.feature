@@ -2,6 +2,7 @@ Feature: Employer Profile
   In order for initial employers to submit application
   Employer Staff should upload attestation document
   Background:
+    Given application has plan years
     Given shop health plans exist for both last and this year
     Given vertical and horizontal plan choices are offered
     When I visit the Employer portal
