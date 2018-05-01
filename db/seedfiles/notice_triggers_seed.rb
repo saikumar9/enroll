@@ -2777,4 +2777,3 @@ ivl_notice_triggers.each do |trigger_params|
 end
 
 puts "::: created notice triggers for #{Settings.aca.state_abbreviation} ApplicationEventKinds Successfully :::"
-
