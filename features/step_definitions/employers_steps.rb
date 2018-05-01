@@ -1,7 +1,3 @@
-Given /^application has plan years$/ do
-  pending if Date.today.day <= Settings.aca.shop_market.initial_application.earliest_start_prior_to_effective_on.day_of_month.days or Date.today > 15
-end
-
 Then(/^.+ should see a welcome page with successful sign in message$/) do
   Watir::Wait.until(30) { @browser.text.include?(/Signed in successfully./) }
   screenshot("employer_portal_sign_in_welcome")
@@ -349,6 +345,7 @@ And(/^Employer can see the sole source plan information$/) do
 end
 
 And(/^.+ should see a button to create new plan year$/) do
+  sleep 1
   screenshot("employer_plan_year")
   #Hackity Hack need both years reference plans b/c of Plan.valid_shop_dental_plans and Plan.by_active_year(params[:start_on]).shop_market.health_coverage.by_carrier_profile(@carrier_profile).and(hios_id: /-01/)
   find('a.interaction-click-control-add-plan-year').click
