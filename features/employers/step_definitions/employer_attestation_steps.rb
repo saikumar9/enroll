@@ -58,6 +58,7 @@ end
 
 Then (/^Admin should see Employer with (.*) status$/) do |state|
   wait_for_ajax
+  //*[@id="employer_datatable-table-671385000"]/tbody/tr[1]/td[12]
   expect(find(:xpath, '//*[@id="effective_datatable_wrapper"]/div/div/div[3]/div/table/tbody/tr[1]/td[12]')).to have_content state
 end
 
@@ -228,4 +229,8 @@ end
 Then(/^Employer should see Accepted document$/) do
   wait_for_ajax
   expect(page).to have_content('Accepted')
+end
+
+Then(/^Admin should see the employer record with (.*?) enrolled and waived status$/) do |text|
+  expect(page).to have_content(text)
 end
