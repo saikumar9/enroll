@@ -204,8 +204,12 @@ module Notifier
     def create_recipient_document(doc_uri)
       receiver = resource
       receiver = resource.person if (resource.is_a?(EmployeeRole) || resource.is_a?(BrokerRole))
+<<<<<<< HEAD
 
       doc_params = {
+=======
+      notice = receiver.documents.build({
+>>>>>>> bug-18900
         title: notice_filename, 
         creator: "hbx_staff",
         subject: document_subject,
