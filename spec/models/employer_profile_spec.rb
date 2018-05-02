@@ -505,6 +505,7 @@ describe EmployerProfile, "Class methods", dbclean: :after_each do
     let(:organization3)  {FactoryGirl.create(:organization, fein: "034267123")}
     let(:organization4)  {FactoryGirl.create(:organization, fein: "027636010")}
     let(:organization5)  {FactoryGirl.create(:organization, fein: "076747654")}
+    let(:observer) { Observers::Observer.new }
 
     def er3; organization3.create_employer_profile(entity_kind: "partnership", broker_agency_profile: broker_agency_profile, sic_code: '1111'); end
     def er4; organization4.create_employer_profile(entity_kind: "partnership", broker_agency_profile: broker_agency_profile, sic_code: '1111'); end
@@ -537,6 +538,17 @@ describe EmployerProfile, "Class methods", dbclean: :after_each do
       employer.save
       employers_with_broker7 = EmployerProfile.find_by_broker_agency_profile(broker_agency_profile7)
       expect(employers_with_broker7.size).to eq 0
+    end
+
+    it 'should trigger broker fired notice to broker and employer' do
+      employer = organization5.create_employer_profile(entity_kind: "partnership", sic_code: '1111');
+      employer.hire_broker_agency(broker_agency_profile7)
+      employer.save
+      employers_with_broker7 = EmployerProfile.find_by_broker_agency_profile(broker_agency_profile7)
+      employer = Organization.find(employer.organization.id).employer_profile
+      expect_any_instance_of(EmployerProfile).to receive(:trigger_notice_observer).exactly(3).times
+      employer.hire_broker_agency(broker_agency_profile)
+      employer.save
     end
 
     it 'shows an employer selected a broker for the first time' do
