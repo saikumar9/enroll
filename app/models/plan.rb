@@ -478,28 +478,30 @@ class Plan
 
   class << self
 
-    def has_rates_for_all_carriers?(date=nil)
+    def has_rates_for_all_carriers?(date=nil, carrier_id=nil)
 
       date = date || PlanYear.calculate_start_on_dates[0]
       return false if date.blank?
-      # date = aca_state_abbreviation == "MA" ? date.beginning_of_quarter : date.beginning_of_year
 
       Rails.cache.fetch("has_rates_for_all_carriers_#{date.to_s}", expires_in: 24.hours) do
 
-        all_carriers = Plan.where(active_year: date.year).pluck(:carrier_profile_id).uniq
-        carrier_count = all_carriers.size
+        carrier_ids = carrier_id.present? ? [BSON::ObjectId.from_string(carrier_id)] : Plan.where(active_year: date.year).pluck(:carrier_profile_id).uniq
+        carrier_count = carrier_ids.size
 
         result = Plan.collection.aggregate([
           {"$match" => {"active_year" => date.year}},
+          {"$match" => {"carrier_profile_id" => {"$in" => carrier_ids}}},
           {"$unwind" => '$premium_tables'},
-          {"$match" => { "premium_tables.start_on" => { "$lte" => date}}},
-          {"$match" => { "premium_tables.end_on" => { "$gte" => date}}},
+          {"$match" => {"premium_tables.start_on" => { "$lte" => date}}},
+          {"$match" => {"premium_tables.end_on" => { "$gte" => date}}},
           {"$group" => {
             "_id" => {"carrier" => "$carrier_profile_id"}, "count" => {"$sum" => 1}
             }
           },
         ],
         :allow_disk_use => true).map{|a| a["count"]}
+
+        # return false if carrier_id.blank? && result.size == 0
 
         carrier_count == result.size
       end
