@@ -479,11 +479,10 @@ class Plan
   class << self
 
     def has_rates_for_all_carriers?(date=nil, carrier_id=nil)
-
       date = date || PlanYear.calculate_start_on_dates[0]
       return false if date.blank?
 
-      Rails.cache.fetch("has_rates_for_all_carriers_#{date.to_s}", expires_in: 24.hours) do
+      Rails.cache.fetch("has_rates_for_all_carriers_#{date.to_s}_carrier_id_#{carrier_id}", expires_in: 24.hours) do
 
         carrier_ids = carrier_id.present? ? [BSON::ObjectId.from_string(carrier_id)] : Plan.where(active_year: date.year).pluck(:carrier_profile_id).uniq
         carrier_count = carrier_ids.size
@@ -501,9 +500,14 @@ class Plan
         ],
         :allow_disk_use => true).map{|a| a["count"]}
 
-        # return false if carrier_id.blank? && result.size == 0
+        if result.size == 0
+          false
+        elsif carrier_id.present?
+          carrier_count == result.size
+        else
+          true
+        end
 
-        carrier_count == result.size
       end
     end
 
