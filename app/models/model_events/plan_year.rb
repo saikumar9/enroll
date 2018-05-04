@@ -23,6 +23,7 @@ module ModelEvents
         :renewal_plan_year_first_reminder_before_soft_dead_line,
         :initial_employer_no_binder_payment_received,
         :renewal_plan_year_publish_dead_line,
+        :low_enrollment_notice_for_employer,
         :initial_employer_first_reminder_to_publish_plan_year,
         :initial_employer_second_reminder_to_publish_plan_year,
         :initial_employer_final_reminder_to_publish_plan_year
@@ -130,6 +131,10 @@ module ModelEvents
         # renewal_application with un-published plan year, send notice 2 days prior to the publish due date i.e 13th of the month
         if new_date.day == Settings.aca.shop_market.renewal_application.publish_due_day_of_month - 2
           is_renewal_plan_year_publish_dead_line = true
+        end
+
+        if new_date.day == Settings.aca.shop_market.renewal_application.monthly_open_enrollment_end_on - 2
+          is_low_enrollment_notice_for_employer = true
         end
 
         # remainder notices for initial application with unpublished plan year

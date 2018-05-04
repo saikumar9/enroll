@@ -147,6 +147,7 @@ module Observers
     end
 
     def plan_year_date_change(model_event)
+      current_date = TimeKeeper.date_of_record
       if PlanYear::DATA_CHANGE_EVENTS.include?(model_event.event_key)
         if model_event.event_key == :renewal_employer_publish_plan_year_reminder_after_soft_dead_line
           trigger_on_queried_records("renewal_employer_publish_plan_year_reminder_after_soft_dead_line")
@@ -165,6 +166,19 @@ module Observers
             if !org.employer_profile.binder_paid?
               py = org.employer_profile.plan_years.where(:aasm_state.in => PlanYear::INITIAL_ENROLLING_STATE).first
               trigger_notice(recipient: org.employer_profile, event_object: py, notice_event: "initial_employer_no_binder_payment_received")
+            end
+          end
+        end
+
+        if model_event.event_key == :low_enrollment_notice_for_employer
+          organizations_for_low_enrollment_notice(current_date).each do |organization|
+           begin
+             plan_year = organization.employer_profile.plan_years.where(:aasm_state.in => ["enrolling", "renewing_enrolling"]).first
+             #exclude congressional employees
+              next if ((plan_year.benefit_groups.any?{|bg| bg.is_congress?}) || (plan_year.effective_date.yday == 1))
+              if plan_year.enrollment_ratio < Settings.aca.shop_market.employee_participation_ratio_minimum
+                trigger_notice(recipient: organization.employer_profile, event_object: plan_year, notice_event: "low_enrollment_notice_for_employer")
+              end
             end
           end
         end
@@ -209,6 +223,15 @@ module Observers
         plan_year = organization.employer_profile.plan_years.where(:aasm_state => 'renewing_draft').first
         trigger_notice(recipient: organization.employer_profile, event_object: plan_year, notice_event:event_name)
       end
+    end
+
+    def organizations_for_low_enrollment_notice(current_date)
+      Organization.where(:"employer_profile.plan_years" =>
+        { :$elemMatch => {
+          :"aasm_state".in => ["enrolling", "renewing_enrolling"],
+          :"open_enrollment_end_on" => current_date+2.days
+          }
+      })
     end
 
     def trigger_initial_employer_publish_remainder(event_name)
