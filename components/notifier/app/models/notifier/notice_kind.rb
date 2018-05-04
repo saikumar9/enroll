@@ -11,8 +11,7 @@ module Notifier
       "Employer" => "Notifier::MergeDataModels::EmployerProfile",
       "Employee" => "Notifier::MergeDataModels::EmployeeProfile",
       "Broker" => "Notifier::MergeDataModels::BrokerProfile",
-      "Broker Agency" => "Notifier::MergeDataModels::BrokerAgencyProfile",
-      "GeneralAgency" => "Notifier::MergeDataModels::GeneralAgency"
+      "Broker Agency" => "Notifier::MergeDataModels::BrokerAgencyProfile"
     }
 
     field :title, type: String
