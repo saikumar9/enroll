@@ -300,7 +300,6 @@ if Settings.aca.state_abbreviation == "MA"
       #     }
       #   ]
       # },
-
       # {
       #   hbx_id: 'SHOP3B',
       #   title: 'Plan Offerings Finalized',
@@ -494,27 +493,27 @@ if Settings.aca.state_abbreviation == "MA"
       #   ]
       # },
 
-      {
-          hbx_id: 'SHOP_M017',
-          title: 'Open Enrollment Completed',
-          description: 'All initial Employers who complete their initial Open Enrollment Period and satisfy the minimum participation and non-owner enrollmnet requirements',
-          resource_name: 'employer',
-          event_name: 'initial_employer_open_enrollment_completed',
-          notice_triggers: [
-              {
-                  name: 'Initial Employee Open Enrollment Successfully Completed',
-                  notice_template: 'notices/shop_employer_notices/17_initial_employer_open_enrollment_completed',
-                  notice_builder: 'ShopEmployerNotices::InitialEmployerOpenEnrollmentCompleted',
-                  mpi_indicator: 'SHOP_M017',
-                  notice_trigger_element_group: {
-                      market_places: ['shop'],
-                      primary_recipients: ["employer"],
-                      primary_recipient_delivery_method: ["secure_message"],
-                      secondary_recipients: []
-                  }
-              }
-          ]
-      },
+      # {
+      #     hbx_id: 'SHOP_M017',
+      #     title: 'Open Enrollment Completed',
+      #     description: 'All initial Employers who complete their initial Open Enrollment Period and satisfy the minimum participation and non-owner enrollmnet requirements',
+      #     resource_name: 'employer',
+      #     event_name: 'initial_employer_open_enrollment_completed',
+      #     notice_triggers: [
+      #         {
+      #             name: 'Initial Employee Open Enrollment Successfully Completed',
+      #             notice_template: 'notices/shop_employer_notices/17_initial_employer_open_enrollment_completed',
+      #             notice_builder: 'ShopEmployerNotices::InitialEmployerOpenEnrollmentCompleted',
+      #             mpi_indicator: 'SHOP_M017',
+      #             notice_trigger_element_group: {
+      #                 market_places: ['shop'],
+      #                 primary_recipients: ["employer"],
+      #                 primary_recipient_delivery_method: ["secure_message"],
+      #                 secondary_recipients: []
+      #             }
+      #         }
+      #     ]
+      # },
 
       # {
       #   hbx_id: 'SHOP13',
@@ -621,30 +620,31 @@ if Settings.aca.state_abbreviation == "MA"
                       secondary_recipients: []
                   }
               }
-          ]
-      },
+          }
+      ]
+    },
 
-      {
-          hbx_id: 'SHOP42',
-          title: 'Termination of Employer’s Health Coverage Offered Through The Health Connector',
-          description: 'When an employer request termination at least 30 days in advance, all employees active on their roster will receive this notice to provide confirmation of the request and the coverage end date for their groups termination of coverage.',
-          resource_name: 'employee_role',
-          event_name: 'notify_employee_when_employer_requests_advance_termination',
-          notice_triggers: [
-            {
-              name: " Notice to EEs that active ER is terminated from SHOP",
-              notice_template: 'notices/shop_employee_notices/notice_to_employees_that_active_er_is_terminated_from_shop',
-              notice_builder: 'ShopEmployeeNotices::NoticeToEmployeesThatActiveErIsTerminatedFromShop',
-              mpi_indicator: 'SHOP_M042',
-              notice_trigger_element_group: {
-                    market_places: ['shop'],
-                    primary_recipients: ["employee"],
-                    primary_recipient_delivery_method: ["secure_message"],
-                    secondary_recipients: []
-                  }
-              }
-          ]
-      },
+    {
+        hbx_id: 'SHOP42',
+        title: 'Termination of Employer’s Health Coverage Offered Through The Health Connector',
+        description: 'When an employer request termination at least 30 days in advance, all employees active on their roster will receive this notice to provide confirmation of the request and the coverage end date for their groups termination of coverage.',
+        resource_name: 'employee_role',
+        event_name: 'notify_employee_when_employer_requests_advance_termination',
+        notice_triggers: [
+          {
+            name: " Notice to EEs that active ER is terminated from SHOP",
+            notice_template: 'notices/shop_employee_notices/notice_to_employees_that_active_er_is_terminated_from_shop',
+            notice_builder: 'ShopEmployeeNotices::NoticeToEmployeesThatActiveErIsTerminatedFromShop',
+            mpi_indicator: 'SHOP_M042',
+            notice_trigger_element_group: {
+                  market_places: ['shop'],
+                  primary_recipients: ["employee"],
+                  primary_recipient_delivery_method: ["secure_message"],
+                  secondary_recipients: []
+                }
+            }
+        ]
+    },
     # {
     #   hbx_id: 'SHOP_D018',
     #   title: 'Group Open Enrollment Successfully Completed',
@@ -2464,7 +2464,6 @@ elsif Settings.aca.state_abbreviation == "DC"
           }
       ]
     },
-
     {
       hbx_id: 'IVL_FRE',
       title: 'Review Your Insurance Plan Enrollment and Pay Your Bill Now',
@@ -2529,6 +2528,7 @@ elsif Settings.aca.state_abbreviation == "DC"
         }
       ]
     },
+
 
     {
       hbx_id: 'IVLR4',
