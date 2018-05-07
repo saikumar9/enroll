@@ -484,7 +484,7 @@ class Plan
 
       Rails.cache.fetch("has_rates_for_all_carriers_#{date.to_s}_carrier_id_#{carrier_id}", expires_in: 24.hours) do
 
-        carrier_ids = carrier_id.present? ? [BSON::ObjectId.from_string(carrier_id)] : Plan.where(active_year: date.year).pluck(:carrier_profile_id).uniq
+        carrier_ids = carrier_id.present? ? [BSON::ObjectId.from_string(carrier_id.to_s)] : Plan.where(active_year: date.year).pluck(:carrier_profile_id).uniq
         carrier_count = carrier_ids.size
 
         result = Plan.collection.aggregate([

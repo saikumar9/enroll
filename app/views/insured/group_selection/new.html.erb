@@ -6,7 +6,7 @@
     <%= form_tag(:insured_group_selections, :id => "group-selection-form") do %>
       <div class="col-xs-8">
         <% effective_on = @effective_on_date || @new_effective_on %>
-        <% late_rate_flag = can_employee_shop?(effective_on) %>
+        <% late_rate_flag = can_employee_shop?(effective_on, @benefit_group.reference_plan.carrier_profile_id.to_s) %>
         <% if late_rate_flag %>
          <div class="alert alert-info" role="alert">
            <strong><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <%= no_rates_error(Settings.site.exchange_name) %></strong>
