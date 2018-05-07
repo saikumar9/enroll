@@ -263,7 +263,6 @@ module Observers
         if model_event.event_key == :initial_employer_final_reminder_to_publish_plan_year
           trigger_initial_employer_publish_remainder("initial_employer_final_reminder_to_publish_plan_year")
         end
-
       end
     end
 
