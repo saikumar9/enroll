@@ -92,8 +92,8 @@
   <% end %>
 
   $('#plan_year_start_on').change(function() {
-    var date = $(this).val().split('-');
-    plansForDate(date[1]+'/'+date[2]+'/'+date[0]);
+    var date = $(this).val();
+    plansForDate(date);
   })
 
   function plansForDate(date) {
