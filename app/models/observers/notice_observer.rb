@@ -39,6 +39,10 @@ module Observers
           trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "renewal_application_published")
         end
 
+        if new_model_event.event_key == :initial_employer_open_enrollment_completed
+          trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "initial_employer_open_enrollment_completed")
+        end
+
         if new_model_event.event_key == :renewal_application_created
           trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "renewal_application_created")
         end
@@ -155,6 +159,19 @@ module Observers
           trigger_on_queried_records("renewal_plan_year_publish_dead_line")
         end
 
+        if model_event.event_key == :low_enrollment_notice_for_employer
+          organizations_for_low_enrollment_notice(current_date).each do |organization|
+           begin
+             plan_year = organization.employer_profile.plan_years.where(:aasm_state.in => ["enrolling", "renewing_enrolling"]).first
+             #exclude congressional employees
+              next if ((plan_year.benefit_groups.any?{|bg| bg.is_congress?}) || (plan_year.effective_date.yday == 1))
+              if plan_year.enrollment_ratio < Settings.aca.shop_market.employee_participation_ratio_minimum
+                trigger_notice(recipient: organization.employer_profile, event_object: plan_year, notice_event: "low_enrollment_notice_for_employer")
+              end
+            end
+          end
+        end
+
         if model_event.event_key == :initial_employer_first_reminder_to_publish_plan_year
           trigger_initial_employer_publish_remainder("initial_employer_first_reminder_to_publish_plan_year")
         end
@@ -187,6 +204,15 @@ module Observers
     def employer_profile_date_change(model_event); end
     def hbx_enrollment_date_change(model_event); end
     def census_employee_date_change(model_event); end
+
+    def organizations_for_low_enrollment_notice(current_date)
+      Organization.where(:"employer_profile.plan_years" =>
+        { :$elemMatch => {
+          :"aasm_state".in => ["enrolling", "renewing_enrolling"],
+          :"open_enrollment_end_on" => current_date+2.days
+          }
+      })
+    end
 
     def trigger_initial_employer_publish_remainder(event_name)
       start_on_1 = (TimeKeeper.date_of_record+1.month).beginning_of_month
