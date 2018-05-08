@@ -110,8 +110,27 @@ module Observers
 
     def employer_profile_update(new_model_event)
       raise ArgumentError.new("expected ModelEvents::ModelEvent") unless new_model_event.is_a?(ModelEvents::ModelEvent)
+      employer_profile = new_model_event.klass_instance
       if EmployerProfile::REGISTERED_EVENTS.include?(new_model_event.event_key)
-        employer_profile = new_model_event.klass_instance
+        if new_model_event.event_key == :initial_employee_plan_selection_confirmation
+          if employer_profile.is_new_employer?
+            census_employees = employer_profile.census_employees.non_terminated
+            census_employees.each do |ce|
+              if ce.active_benefit_group_assignment.hbx_enrollment.present? && ce.active_benefit_group_assignment.hbx_enrollment.effective_on == employer_profile.plan_years.where(:aasm_state.in => ["enrolled", "enrolling"]).first.start_on
+                trigger_notice(recipient: ce.employee_role, event_object: ce.active_benefit_group_assignment.hbx_enrollment, notice_event: "initial_employee_plan_selection_confirmation")
+              end
+            end
+          end
+        end
+      end
+
+      if EmployerProfile::OTHER_EVENTS.include?(new_model_event.event_key)
+       if new_model_event.event_key == :generate_initial_employer_invoice
+          if employer_profile.is_new_employer?
+            trigger_notice(recipient: employer_profile, event_object: employer_profile.plan_years.where(:aasm_state.in => PlanYear::PUBLISHED - ['suspended']).first, notice_event: "generate_initial_employer_invoice")
+          end
+        end
+
         if new_model_event.event_key == :broker_hired_confirmation_to_employer
           trigger_notice(recipient: employer_profile, event_object: employer_profile, notice_event: "broker_hired_confirmation_to_employer")
         elsif new_model_event.event_key == :welcome_notice_to_employer
@@ -159,6 +178,22 @@ module Observers
         end
       end
     end
+
+    def document_update(new_model_event)
+      raise ArgumentError.new("expected ModelEvents::ModelEvent") unless new_model_event.is_a?(ModelEvents::ModelEvent)
+
+      if Document::REGISTERED_EVENTS.include?(new_model_event.event_key)
+        document = new_model_event.klass_instance
+        if new_model_event.event_key == :initial_employer_invoice_available
+          employer_profile = document.documentable
+          trigger_notice(recipient: employer_profile, event_object: employer_profile.plan_years.where(:aasm_state.in => PlanYear::PUBLISHED - ['suspended']).first, notice_event: "initial_employer_invoice_available")
+        end
+      end
+    end
+
+    def vlp_document_update; end
+    def paper_application_update; end
+    def employer_attestation_document_update; end
 
     def plan_year_date_change(model_event)
       current_date = TimeKeeper.date_of_record
@@ -220,6 +255,8 @@ module Observers
     def employer_profile_date_change; end
     def hbx_enrollment_date_change; end
     def census_employee_date_change; end
+    def document_date_change; end
+
 
     def census_employee_update(new_model_event)
       raise ArgumentError.new("expected ModelEvents::ModelEvent") unless new_model_event.is_a?(ModelEvents::ModelEvent)
