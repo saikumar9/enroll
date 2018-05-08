@@ -535,27 +535,27 @@ if Settings.aca.state_abbreviation == "MA"
               }
           ]
       },
-    {
-      hbx_id: 'SHOP58',
-      title: "Notice To Initial Employer's No Binder Payment Received",
-      description: 'When an initial employer misses the binder payment deadline, this is sent the day after the binder payment deadline.',
-      resource_name: 'employer',
-      event_name: 'initial_employer_no_binder_payment_received',
-      notice_triggers: [
-          {
-              name: ' Initial Employer No Binding Payment Received',
-              notice_template: 'notices/shop_employer_notices/notice_to_employer_no_binder_payment_received',
-              notice_builder: 'ShopEmployerNotices::NoticeToEmployerNoBinderPaymentReceived',
-              mpi_indicator: 'SHOP_M058',
-              notice_trigger_element_group: {
-                  market_places: ['shop'],
-                  primary_recipients: ["employer"],
-                  primary_recipient_delivery_method: ["secure_message"],
-                  secondary_recipients: []
-              }
-          }
-      ]
-    },
+    # {
+    #       hbx_id: 'SHOP58',
+    #       title: "Notice To Initial Employer's No Binder Payment Received",
+    #       description: 'When an initial employer misses the binder payment deadline, this is sent the day after the binder payment deadline.',
+    #       resource_name: 'employer',
+    #       event_name: 'initial_employer_no_binder_payment_received',
+    #       notice_triggers: [
+    #           {
+    #               name: ' Initial Employer No Binding Payment Received',
+    #               notice_template: 'notices/shop_employer_notices/notice_to_employer_no_binder_payment_received',
+    #               notice_builder: 'ShopEmployerNotices::NoticeToEmployerNoBinderPaymentReceived',
+    #               mpi_indicator: 'SHOP_M058',
+    #               notice_trigger_element_group: {
+    #                   market_places: ['shop'],
+    #                   primary_recipients: ["employer"],
+    #                   primary_recipient_delivery_method: ["secure_message"],
+    #                   secondary_recipients: []
+    #               }
+    #           }
+    #       ]
+    #   },
 
     {
       hbx_id: 'SHOP33',
@@ -578,50 +578,49 @@ if Settings.aca.state_abbreviation == "MA"
         }
       ]
     },
-    {
-      hbx_id: 'SHOP32',
-      title: 'EE SEP Requested Enrollment Period Approval Notice',
-      description: 'Notification to Employee Regarding SEP Request Enrollment Approval',
-      resource_name: 'employee_role',
-      event_name: 'notify_employee_of_special_enrollment_period',
-      notice_triggers: [
-          {
-              name: 'Notification to employee regarding their Special enrollment period',
-              notice_template: 'notices/shop_employee_notices/notification_to_employee_due_to_sep',
-              notice_builder: 'ShopEmployeeNotices::EmployeeSepQleAcceptNotice',
-              mpi_indicator: 'SHOP_M032',
-              notice_trigger_element_group: {
-                  market_places: ['shop'],
-                  primary_recipients: ["employee"],
-                  primary_recipient_delivery_method: ["secure_message"],
-                  secondary_recipients: []
-
-              }
-          }
-      ]
-    },
-
-    {
-        hbx_id: 'SHOP42',
-        title: 'Termination of Employer’s Health Coverage Offered Through The Health Connector',
-        description: 'When an employer request termination at least 30 days in advance, all employees active on their roster will receive this notice to provide confirmation of the request and the coverage end date for their groups termination of coverage.',
-        resource_name: 'employee_role',
-        event_name: 'notify_employee_when_employer_requests_advance_termination',
-        notice_triggers: [
-          {
-            name: " Notice to EEs that active ER is terminated from SHOP",
-            notice_template: 'notices/shop_employee_notices/notice_to_employees_that_active_er_is_terminated_from_shop',
-            notice_builder: 'ShopEmployeeNotices::NoticeToEmployeesThatActiveErIsTerminatedFromShop',
-            mpi_indicator: 'SHOP_M042',
-            notice_trigger_element_group: {
-                  market_places: ['shop'],
-                  primary_recipients: ["employee"],
-                  primary_recipient_delivery_method: ["secure_message"],
-                  secondary_recipients: []
-                }
+      {
+          hbx_id: 'SHOP32',
+          title: 'EE SEP Requested Enrollment Period Approval Notice',
+          description: 'Notification to Employee Regarding SEP Request Enrollment Approval',
+          resource_name: 'employee_role',
+          event_name: 'notify_employee_of_special_enrollment_period',
+          notice_triggers: [
+              {
+                  name: 'Notification to employee regarding their Special enrollment period',
+                  notice_template: 'notices/shop_employee_notices/notification_to_employee_due_to_sep',
+                  notice_builder: 'ShopEmployeeNotices::EmployeeSepQleAcceptNotice',
+                  mpi_indicator: 'SHOP_M032',
+                  notice_trigger_element_group: {
+                      market_places: ['shop'],
+                      primary_recipients: ["employee"],
+                      primary_recipient_delivery_method: ["secure_message"],
+                      secondary_recipients: []
+                         }
             }
         ]
     },
+
+      {
+          hbx_id: 'SHOP42',
+          title: 'Termination of Employer’s Health Coverage Offered Through The Health Connector',
+          description: 'When an employer request termination at least 30 days in advance, all employees active on their roster will receive this notice to provide confirmation of the request and the coverage end date for their groups termination of coverage.',
+          resource_name: 'employee_role',
+          event_name: 'notify_employee_when_employer_requests_advance_termination',
+          notice_triggers: [
+            {
+              name: " Notice to EEs that active ER is terminated from SHOP",
+              notice_template: 'notices/shop_employee_notices/notice_to_employees_that_active_er_is_terminated_from_shop',
+              notice_builder: 'ShopEmployeeNotices::NoticeToEmployeesThatActiveErIsTerminatedFromShop',
+              mpi_indicator: 'SHOP_M042',
+              notice_trigger_element_group: {
+                    market_places: ['shop'],
+                    primary_recipients: ["employee"],
+                    primary_recipient_delivery_method: ["secure_message"],
+                    secondary_recipients: []
+                  }
+              }
+          ]
+      },
     # {
     #   hbx_id: 'SHOP_D018',
     #   title: 'Group Open Enrollment Successfully Completed',
@@ -1064,27 +1063,6 @@ if Settings.aca.state_abbreviation == "MA"
                       secondary_recipients: []
                   }
               }
-          ]
-      },
-      {
-          hbx_id: 'SHOP59',
-          title: 'Termination of Employer’s Health Coverage Offered Through The Health Connector',
-          description: 'When an initial group misses the binder payment deadline this notice is sent to employees to let them know the group will not be offering coverage',
-          resource_name: 'employee_role',
-          event_name: 'ee_ers_plan_year_will_not_be_written_notice',
-          notice_triggers: [
-            {
-              name: " Notice to EEs that ER’s plan year will not be written",
-              notice_template: 'notices/shop_employee_notices/termination_of_employers_health_coverage',
-              notice_builder: 'ShopEmployeeNotices::TerminationOfEmployersHealthCoverage',
-              mpi_indicator: 'SHOP_M059',
-              notice_trigger_element_group: {
-                    market_places: ['shop'],
-                    primary_recipients: ["employee"],
-                    primary_recipient_delivery_method: ["secure_message"],
-                    secondary_recipients: []
-              }
-            }
           ]
       },
     # {
@@ -2505,7 +2483,6 @@ elsif Settings.aca.state_abbreviation == "DC"
         }
       ]
     },
-
     {
       hbx_id: 'IVLR3',
       title: '2017 Health Insurance Coverage and Preliminary Renewal Information',
