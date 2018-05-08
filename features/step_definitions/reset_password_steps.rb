@@ -6,7 +6,7 @@ end
 
 When(/^Hbx Admin clicks on the Action button of primary applicant$/) do
   within('.effective-datatable') do
-    find_all('.dropdown-toggle').first.click
+    find_all('.dropdown-toggle').last.click
   end
 end
 
