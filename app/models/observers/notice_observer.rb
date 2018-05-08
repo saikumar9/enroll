@@ -54,7 +54,9 @@ module Observers
         end
 
         if new_model_event.event_key == :group_advance_termination_confirmation
-          trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "group_advance_termination_confirmation")
+          if plan_year.terminated_on > current_date
+            trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "group_advance_termination_confirmation")
+          end
         end
 
         if new_model_event.event_key == :ineligible_initial_application_submitted
