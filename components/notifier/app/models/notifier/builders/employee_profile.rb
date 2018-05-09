@@ -82,7 +82,8 @@ module Notifier
     end
 
     def qle_title
-      merge_model.qle.title = qle.blank? ? payload['qle_title'] : qle.title
+      title = (payload['notice_params'].present? && payload['notice_params'][:qle_title].present?) ? payload['notice_params'][:qle_title] : nil
+      merge_model.qle.title = qle.blank? ? title : qle.title
     end
 
     def qle_start_on
@@ -96,18 +97,18 @@ module Notifier
     end
 
     def qle_event_on
-      return if qle.blank?
-      merge_model.qle.event_on = qle.event_on.blank? ? Date.strptime(payload['qle_event_on'], '%m/%d/%Y') : qle.event_on
+      return if qle.blank? && (payload['notice_params'].nil? || payload['notice_params'][:qle_event_on].nil? )
+      merge_model.qle.event_on = qle.blank? ? Date.strptime(payload['notice_params'][:qle_event_on], '%m/%d/%Y') : qle.event_on
     end
 
-    def qle_reported_on
-      return if qle.blank?
-      merge_model.qle.reported_on = qle.updated_at
+    def qle_reported_on 
+      merge_model.qle.reported_on = TimeKeeper.date_of_record
     end
 
     def qle_reporting_deadline
-      return if qle.blank? && payload['qle_reporting_deadline'].nil?
-      merge_model.qle.reporting_deadline = Date.strptime(payload['qle_reporting_deadline'], '%m/%d/%Y')
+      return if payload['notice_params'].nil? || payload['notice_params'][:qle_reporting_deadline].nil?
+      merge_model.qle.reporting_deadline = Date.strptime(payload['notice_params'][:qle_reporting_deadline], '%m/%d/%Y')
     end
+
   end
 end
