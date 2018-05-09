@@ -101,7 +101,7 @@ describe 'ModelEvents::SepRequestDenialNotice', :dbclean => :after_each  do
       end
 
       it "should return qle_event_on" do
-        expect(merge_model.qle.event_on).to eq  Date.strptime(payload['qle_event_on'], '%m/%d/%Y')
+        expect(merge_model.qle.event_on).to eq  Date.strptime(payload['notice_params']['qle_event_on'], '%m/%d/%Y')
       end
     end
   end
