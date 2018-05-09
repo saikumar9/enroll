@@ -36,9 +36,9 @@ module Effective
           }, :filter => false, :sortable => true
         table_column :invoiced?, :proc => Proc.new { |row| boolean_to_glyph(row.current_month_invoice.present?)}, :filter => false
         # table_column :participation, :proc => Proc.new { |row| @latest_plan_year.try(:employee_participation_percent)}, :filter => false
-        # table_column :enrolled_waived, :label => 'Enrolled/Waived', :proc => Proc.new { |row|
-        #   [@latest_plan_year.try(:enrolled_summary), @latest_plan_year.try(:waived_summary)].compact.join("/")
-        #   }, :filter => false, :sortable => false
+        table_column :enrolled_waived, :label => 'Enrolled/Waived', :proc => Proc.new { |row|
+          [@latest_plan_year.covered_count, @latest_plan_year.waived_count].compact.join("/") unless @latest_plan_year.nil?
+          }, :filter => false, :sortable => false
         table_column :xml_submitted, :label => 'XML Submitted', :proc => Proc.new {|row| format_time_display(@employer_profile.xml_transmitted_timestamp)}, :filter => false, :sortable => false
         if employer_attestation_is_enabled?
           table_column :attestation_status, :label => 'Attestation Status', :proc => Proc.new {|row| row.employer_profile.employer_attestation.aasm_state.titleize if row.employer_profile.employer_attestation }, :filter => false, :sortable => false
