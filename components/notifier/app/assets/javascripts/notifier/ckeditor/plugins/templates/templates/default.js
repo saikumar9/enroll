@@ -97,45 +97,6 @@ CKEDITOR.addTemplates( 'default', {
 "</table>" +
 "[[ end ]]" +
 "<p>___________________________________________________________________________________________________________________________________________________</p>" +
-<<<<<<< HEAD
-"<p><small>This notice is being provided in accordance with 45 C.F.R. 155.735(g).</small></p>"
-  },
-  {
-    title: 'Broker Agency Template',
-    image: 'template1.gif',
-    description: 'Standard template for the notices received by Broker Agencies.',
-    html: "<p>&nbsp;</p>" +
-"<p>​#{broker_agency_profile.notice_date}</p>" +
-"<p><strong>SUBJECT: &lt;Change subject&gt;</strong></p>" +
-"<p>Dear ​#{broker_agency_profile.broker_agency_name}:</p>" +
-"<p>&lt;Paste Your Notice Body Here&gt;</p>" +
-"<h3>For Questions or Assistance:</h3>"+
-"<p>Please contact the Health Connector with any questions:</p>" +
-"<ul>" +
-  "<li>By calling #{Settings.contact_center.phone_number}</li>" +
-  "<li>TTY: #{Settings.contact_center.tty_number}</li>" +
-  "<li>Online at <a href=#{Settings.site.main_web_address_url}>#{Settings.site.website_name}</a></li>" +
-"</ul>"
-  },
-    {
-    title: 'Broker Template',
-    image: 'template1.gif',
-    description: 'Standard template for the notices received by Brokers.',
-    html: "<p>&nbsp;</p>" +
-"<p>​#{broker_profile.notice_date}</p>" +
-"<p><strong>SUBJECT: &lt;Change subject&gt;</strong></p>" +
-"<p>Dear ​#{broker_profile.first_name} #{broker_profile.last_name}:</p>" +
-"<p>&lt;Paste Your Notice Body Here&gt;</p>" +
-"<h3>For Questions or Assistance:</h3>"+
-"<p>Please contact the Health Connector with any questions:</p>" +
-"<ul>" +
-  "<li>By calling #{Settings.contact_center.phone_number}</li>" +
-  "<li>TTY: #{Settings.contact_center.tty_number}</li>" +
-  "<li>Online at <a href=#{Settings.site.main_web_address_url}>#{Settings.site.website_name}</a></li>" +
-"</ul>"
-  }
-  ]
-=======
 "<p><small>This notice is being provided in accordance with &lt;Insert Legal Compliance Code&gt;.</small></p>"
 	},
 {
@@ -157,5 +118,4 @@ CKEDITOR.addTemplates( 'default', {
 "</ul>"
 	}
 	]
->>>>>>> origin/dc_notice_engine_updates_20345
 } );
