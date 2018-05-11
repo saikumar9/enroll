@@ -108,6 +108,7 @@ module Notifier
           })
         }})
       end
+      options
     end
 
     def notice_path
