@@ -55,7 +55,6 @@ module Observers
 
         if new_model_event.event_key == :group_advance_termination_confirmation
           trigger_notice(recipient: plan_year.employer_profile, event_object: plan_year, notice_event: "group_advance_termination_confirmation")
-
           plan_year.employer_profile.census_employees.active.each do |ce|
             trigger_notice(recipient: ce.employee_role, event_object: plan_year, notice_event: "notify_employee_of_group_advance_termination")
           end
