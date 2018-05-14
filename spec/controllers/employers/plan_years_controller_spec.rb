@@ -228,6 +228,7 @@ RSpec.describe Employers::PlanYearsController, :dbclean => :after_each do
    before :each do
     allow(hbx_staff_role).to receive(:permission).and_return(double('Permission', modify_employer: true))
     sign_in user
+    allow(Plan).to receive(:has_rates_for_all_carriers?).and_return(true)
     allow(::Forms::PlanYearForm).to receive(:rebuild).with(plan_year, plan_year_params).and_return(plan_year)
     allow(EmployerProfile).to receive(:find).with(employer_profile_id).and_return(employer_profile)
     allow(employer_profile).to receive(:plan_years).and_return(plan_years)
@@ -315,63 +316,67 @@ RSpec.describe Employers::PlanYearsController, :dbclean => :after_each do
     let(:plan_year) { double(:benefit_groups => [benefit_group] ) }
     let(:relationship_benefits_attributes) {
       { "0" => {
-       :relationship => "spouse",
-       :premium_pct => "0.66",
-       :employer_max_amt => "123.45",
-       :offered => "false"
-       } }
-     }
-     let(:benefit_groups_attributes) {
+        :relationship => "spouse",
+        :premium_pct => "0.66",
+        :employer_max_amt => "123.45",
+        :offered => "false"
+        }
+      }
+    }
+
+    let(:benefit_groups_attributes) {
       { "0" => {
-       :title => "My benefit group",
-       :reference_plan_id => "rp_id",
-       :effective_on_offset => "e_on_offset",
-       :plan_option_kind => "single_plan",
-       :employer_max_amt_in_cents => "2232",
-       :relationship_benefits_attributes => relationship_benefits_attributes
-       } }
-     }
+        :title => "My benefit group",
+        :reference_plan_id => "rp_id",
+        :effective_on_offset => "e_on_offset",
+        :plan_option_kind => "single_plan",
+        :employer_max_amt_in_cents => "2232",
+        :relationship_benefits_attributes => relationship_benefits_attributes
+        }
+      }
+    }
 
-     let(:plan_year_params) {
+    let(:plan_year_params) {
       {
-       :start_on => "01/01/2015",
-       :end_on => "12/31/2015",
-       :fte_count => "1",
-       :pte_count => "3",
-       :msp_count => "5",
-       :open_enrollment_start_on => "12/01/2014",
-       :open_enrollment_end_on => "12/15/2014",
-       :benefit_groups_attributes => benefit_groups_attributes
-     }
-   }
+        :start_on => "01/01/2015",
+        :end_on => "12/31/2015",
+        :fte_count => "1",
+        :pte_count => "3",
+        :msp_count => "5",
+        :open_enrollment_start_on => "12/01/2014",
+        :open_enrollment_end_on => "12/15/2014",
+        :benefit_groups_attributes => benefit_groups_attributes
+      }
+    }
 
-   let(:plan_year_request_params) {
-    {
-     :start_on => "01/01/2015",
-     :end_on => "12/31/2015",
-     :fte_count => 1,
-     :pte_count => 3,
-     :msp_count => 5,
-     :open_enrollment_start_on => "12/01/2014",
-     :open_enrollment_end_on => "12/15/2014",
-     :benefit_groups_attributes => benefit_groups_attributes
-   }
- }
+    let(:plan_year_request_params) {
+      {
+        :start_on => "01/01/2015",
+        :end_on => "12/31/2015",
+        :fte_count => 1,
+        :pte_count => 3,
+        :msp_count => 5,
+        :open_enrollment_start_on => "12/01/2014",
+        :open_enrollment_end_on => "12/15/2014",
+        :benefit_groups_attributes => benefit_groups_attributes
+      }
+    }
 
- before :each do
-  allow(hbx_staff_role).to receive(:permission).and_return(double('Permission', modify_employer: true))
-  sign_in user
-  allow(::Forms::PlanYearForm).to receive(:build).with(employer_profile, plan_year_params).and_return(plan_year)
-  allow(EmployerProfile).to receive(:find).with(employer_profile_id).and_return(employer_profile)
-  allow(employer_profile).to receive(:default_benefit_group).and_return(nil)
-  allow(benefit_group).to receive(:elected_plans=).and_return("test")
-  allow(benefit_group).to receive(:elected_dental_plans=).and_return("test")
-  allow(benefit_group).to receive(:plan_option_kind).and_return("single_plan")
-  allow(benefit_group).to receive(:elected_plans_by_option_kind).and_return([])
-  allow(benefit_group).to receive(:elected_dental_plans_by_option_kind).and_return([])
-  allow(benefit_group).to receive(:dental_plan_option_kind).and_return("single_carrier")
+    before :each do
+      allow(hbx_staff_role).to receive(:permission).and_return(double('Permission', modify_employer: true))
+      sign_in user
+      allow(Plan).to receive(:has_rates_for_all_carriers?).and_return(true)
+      allow(::Forms::PlanYearForm).to receive(:build).with(employer_profile, plan_year_params).and_return(plan_year)
+      allow(EmployerProfile).to receive(:find).with(employer_profile_id).and_return(employer_profile)
+      allow(employer_profile).to receive(:default_benefit_group).and_return(nil)
+      allow(benefit_group).to receive(:elected_plans=).and_return("test")
+      allow(benefit_group).to receive(:elected_dental_plans=).and_return("test")
+      allow(benefit_group).to receive(:plan_option_kind).and_return("single_plan")
+      allow(benefit_group).to receive(:elected_plans_by_option_kind).and_return([])
+      allow(benefit_group).to receive(:elected_dental_plans_by_option_kind).and_return([])
+      allow(benefit_group).to receive(:dental_plan_option_kind).and_return("single_carrier")
 
-  allow(benefit_group).to receive(:default=)
+      allow(benefit_group).to receive(:default=)
       #allow(benefit_group).to receive(:reference_plan_id).and_return(FactoryGirl.create(:plan).id)
       allow(benefit_group).to receive(:reference_plan_id).and_return(nil)
       allow(benefit_group).to receive(:sole_source?).and_return(false)
