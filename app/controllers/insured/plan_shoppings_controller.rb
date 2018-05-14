@@ -281,6 +281,8 @@ class Insured::PlanShoppingsController < ApplicationController
       build_same_plan_premiums
     end
 
+    @plans = @plans.select{|plan| Plan.has_rates_for_all_carriers?(nil,plan.carrier_profile_id.to_s)}
+
     # for carrier search options
     carrier_profile_ids = @plans.map(&:carrier_profile_id).map(&:to_s).uniq
     @carrier_names_map = Organization.valid_carrier_names_filters.select{|k, v| carrier_profile_ids.include?(k)}

@@ -6,8 +6,14 @@
     <%= form_tag(:insured_group_selections, :id => "group-selection-form") do %>
       <div class="col-xs-8">
         <% effective_on = @effective_on_date || @new_effective_on %>
-        <% late_rate_flag = can_employee_shop?(effective_on, @benefit_group.reference_plan.carrier_profile_id.to_s) %>
-        <% if late_rate_flag %>
+        <% late_rate_flag = can_employee_shop?(effective_on, @hbx_enrollment.try(:plan).try(:carrier_profile_id).try(:to_s)) %>
+        <% one_plan_late_rate_flag = @benefit_group.plan_option_kind == "metal_level" && late_rate_flag %>
+        <% if one_plan_late_rate_flag %>
+          <% late_rate_flag = false %>
+          <div class="alert alert-info" role="alert">
+           <strong><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <%= no_rates_error_for_metal_level(Settings.site.exchange_name) %></strong>
+         </div>
+        <% elsif late_rate_flag %>
          <div class="alert alert-info" role="alert">
            <strong><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <%= no_rates_error(Settings.site.exchange_name) %></strong>
          </div>
@@ -122,7 +128,7 @@
               <%= submit_tag l10n('shop_for_new_plan'), class: 'btn btn-primary  btn-lg'+ pundit_class(Family, :updateable?), disabled: late_rate_flag %>
             <% if @hbx_enrollment.present? && @hbx_enrollment.may_terminate_coverage? %>
               <% if show_keep_existing_plan(@shop_for_plans, @hbx_enrollment, @new_effective_on) %>
-                <%= submit_tag l10n('keep_existing_plan'), class: 'btn btn-primary  btn-lg' + pundit_class(Family, :updateable?), disabled: late_rate_flag %>
+                <%= submit_tag l10n('keep_existing_plan'), class: 'btn btn-primary  btn-lg' + pundit_class(Family, :updateable?), disabled: one_plan_late_rate_flag %>
               <% end %>
 
               <%= link_to l10n('select_plan_to_terminate'), terminate_selection_insured_group_selections_path(person_id: @person.id, change_plan: @change_plan),

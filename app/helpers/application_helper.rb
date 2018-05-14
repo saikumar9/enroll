@@ -4,6 +4,10 @@ module ApplicationHelper
     "Benefits for which you may be eligible to offer are not currently approved by the #{exchange}, please return in 24 hours."
   end
 
+  def no_rates_error_for_metal_level(exchange)
+    "Some benefits for which you may be eligible to shop are not currently approved by #{exchange}, please return in 24 hours or proceed to select from a limited selection."
+  end
+
   def rates_available?(employer, date=nil)
     employer.applicant? && !Plan.has_rates_for_all_carriers?(date) ? "blocking" : ""
   end
