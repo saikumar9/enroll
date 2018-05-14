@@ -356,6 +356,12 @@ function checkContributionLevels(contributions) {
       contributions_are_valid.push((contribution.premium_pct >= minimum_employee_contribution));
     } else if (contribution.relationship == 'family'){
       contributions_are_valid.push((contribution.premium_pct >= minimum_family_contribution));
+    } else if (contribution.relationship == 'spouse'){
+      contributions_are_valid.push((contribution.premium_pct >= minimum_family_contribution));
+    } else if (contribution.relationship == 'domestic_partner'){
+      contributions_are_valid.push((contribution.premium_pct >= minimum_family_contribution));
+    } else if (contribution.relationship == 'child_under_26'){
+      contributions_are_valid.push((contribution.premium_pct >= minimum_family_contribution));
     }
   });
   return contributions_are_valid.every(function(val) {

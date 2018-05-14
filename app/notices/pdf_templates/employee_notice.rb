@@ -4,7 +4,6 @@ module PdfTemplates
 
     attribute :notification_type, String
     attribute :subject, String
-    attribute :mpi_indicator, String
     attribute :first_name, String
     attribute :last_name, String
     attribute :primary_fullname, String
@@ -14,6 +13,7 @@ module PdfTemplates
     attribute :census_employee, PdfTemplates::CensusEmployee
     attribute :employer_name, String
     attribute :employer_full_name, String
+    attribute :primary_email, String
     attribute :broker, PdfTemplates::Broker
     attribute :hbe, PdfTemplates::Hbe
     attribute :plan, PdfTemplates::Plan
@@ -25,6 +25,18 @@ module PdfTemplates
 
     def shop?
       return true
+    end
+
+    def broker?
+      return false
+    end
+
+    def employee_notice?
+      return true
+    end
+
+    def general_agency?
+      false
     end
   end
 end
