@@ -59,10 +59,10 @@ And(/^.+ enters broker agency information for SHOP markets$/) do
 
   find(:xpath, "//label[input[@name='organization[accept_new_clients]']]").trigger('click')
   find(:xpath, "//label[input[@name='organization[working_hours]']]").trigger('click')
-
+  fill_in 'organization[ach_record][account_number]', with: '9999999999999999'
   fill_in 'organization[ach_record][routing_number]', with: '123456789'
   fill_in 'organization[ach_record][routing_number_confirmation]', with: '123456789'
-  fill_in 'organization[ach_record][account_number]', with: '9999999999999999'
+  
 end
 
 And(/^.+ clicks? on Create Broker Agency$/) do
