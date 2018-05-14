@@ -48,7 +48,7 @@ RSpec.describe "insured/group_selection/new.html.erb" do
     context "when benefit group plan option kind is not solesource" do
 
       it "should show the title of family members" do
-        expect(rendered).to match /Choose Coverage for your Household/
+        expect(rendered).to match (/Choose Coverage for your Household/)
       end
 
       it "should have four checkbox option" do
@@ -131,7 +131,7 @@ RSpec.describe "insured/group_selection/new.html.erb" do
       end
 
       it "should show the title of family members" do
-        expect(rendered).to match /Choose Coverage for your Household/
+        expect(rendered).to match (/Choose Coverage for your Household/)
       end
 
       it "should have three checkbox option" do
@@ -143,7 +143,7 @@ RSpec.describe "insured/group_selection/new.html.erb" do
       end
 
       it "should have coverage_kinds area" do
-        expect(rendered).to match /Benefit Type/
+        expect(rendered).to match (/Benefit Type/)
       end
 
       it "should have health radio button" do

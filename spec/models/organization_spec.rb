@@ -138,6 +138,7 @@ RSpec.describe Organization, dbclean: :after_each do
     context "carrier_names" do
       before :each do
         allow(Plan).to receive(:valid_shop_health_plans).and_return([carrier_plan])
+        allow(Plan).to receive(:has_rates_for_all_carriers?).and_return(true)
       end
 
       context "base case" do

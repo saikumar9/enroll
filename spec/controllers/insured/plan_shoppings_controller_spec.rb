@@ -450,9 +450,9 @@ RSpec.describe Insured::PlanShoppingsController, :type => :controller do
   end
 
   context "GET show" do
-    let(:plan1) {double("Plan1", id: '10', deductible: '$10', total_employee_cost: 1000, carrier_profile_id: '12345')}
-    let(:plan2) {double("Plan2", id: '11', deductible: '$20', total_employee_cost: 2000, carrier_profile_id: '12346')}
-    let(:plan3) {double("Plan3", id: '12', deductible: '$30', total_employee_cost: 3000, carrier_profile_id: '12347')}
+    let(:plan1) {double("Plan1", id: '10', deductible: '$10', total_employee_cost: 1000, carrier_profile_id: '5a4615c18b35bc7ad8002063')}
+    let(:plan2) {double("Plan2", id: '11', deductible: '$20', total_employee_cost: 2000, carrier_profile_id: '5a4615c18b35bc7ad8002064')}
+    let(:plan3) {double("Plan3", id: '12', deductible: '$30', total_employee_cost: 3000, carrier_profile_id: '5a4615c18b35bc7ad8002065')}
     let(:plans) {[plan1, plan2, plan3]}
     let(:coverage_kind){"health"}
 
@@ -472,6 +472,7 @@ RSpec.describe Insured::PlanShoppingsController, :type => :controller do
       allow(plan2).to receive(:[]).with(:id)
       allow(plan3).to receive(:[]).with(:id)
       allow(benefit_group).to receive(:decorated_elected_plans).with(hbx_enrollment, coverage_kind).and_return(plans)
+      allow(plans).to receive(:select).and_return(plans)
       allow(family).to receive(:currently_enrolled_plans).and_return([])
       allow(hbx_enrollment).to receive(:can_complete_shopping?).and_return(true)
       allow(hbx_enrollment).to receive(:effective_on).and_return(Date.new(2015))

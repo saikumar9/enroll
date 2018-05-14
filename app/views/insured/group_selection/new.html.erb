@@ -7,7 +7,7 @@
       <div class="col-xs-8">
         <% effective_on = @effective_on_date || @new_effective_on %>
         <% late_rate_flag = can_employee_shop?(effective_on, @hbx_enrollment.try(:plan).try(:carrier_profile_id).try(:to_s)) %>
-        <% one_plan_late_rate_flag = @benefit_group.plan_option_kind == "metal_level" && late_rate_flag %>
+        <% one_plan_late_rate_flag = @benefit_group.present? && @benefit_group.plan_option_kind == "metal_level" && late_rate_flag %>
         <% if one_plan_late_rate_flag %>
           <% late_rate_flag = false %>
           <div class="alert alert-info" role="alert">
