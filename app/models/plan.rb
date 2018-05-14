@@ -500,11 +500,9 @@ class Plan
         ],
         :allow_disk_use => true).map{|a| a["count"]}
 
-        binding.pry
+        # binding.pry
         if result.size == 0
           false
-        # elsif result.size != carrier_ids.size
-          # false
         elsif carrier_id.present?
           carrier_count == result.size
         else
