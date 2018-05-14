@@ -124,10 +124,12 @@ module Employers::EmployerHelper
       return "1 Plan Only" if benefit_group.single_plan_type?
       return "Sole Source Plan" if benefit_group.plan_option_kind == 'sole_source'
       if benefit_group.plan_option_kind == "single_carrier"
-        plan_count = Plan.for_service_areas_and_carriers(query, start_on).shop_market.check_plan_offerings_for_single_carrier.health_coverage.and(hios_id: /-01/).count
+        plans = Plan.for_service_areas_and_carriers(query, start_on).shop_market.check_plan_offerings_for_single_carrier.health_coverage.and(hios_id: /-01/)
+        plan_count = plans.select{|plan| Plan.has_rates_for_all_carriers?(nil,plan.carrier_profile_id.to_s)}.count
         "All #{reference_plan.carrier_profile.legal_name} Plans (#{plan_count})"
       else
-        plan_count = Plan.for_service_areas_and_carriers(profile_and_service_area_pairs, start_on).shop_market.check_plan_offerings_for_metal_level.health_coverage.by_metal_level(reference_plan.metal_level).and(hios_id: /-01/).count
+        plans = Plan.for_service_areas_and_carriers(profile_and_service_area_pairs, start_on).shop_market.check_plan_offerings_for_metal_level.health_coverage.by_metal_level(reference_plan.metal_level).and(hios_id: /-01/)
+        plan_count = plans.select{|plan| Plan.has_rates_for_all_carriers?(nil,plan.carrier_profile_id.to_s)}.count
         "#{reference_plan.metal_level.titleize} Plans (#{plan_count})"
       end
     end

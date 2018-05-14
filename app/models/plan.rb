@@ -482,9 +482,9 @@ class Plan
       date = date || PlanYear.calculate_start_on_dates[0]
       return false if date.blank?
 
-      Rails.cache.fetch("has_rates_for_all_carriers_#{date.to_s}_carrier_id_#{carrier_id}", expires_in: 24.hours) do
+      carrier_ids = carrier_id.present? ? [BSON::ObjectId.from_string(carrier_id.to_s)] : Plan.where(active_year: date.year).pluck(:carrier_profile_id).uniq
+      # Rails.cache.fetch("has_rates_for_all_carriers_#{date.to_s}_carrier_id_#{carrier_ids}", expires_in: 24.hours) do
 
-        carrier_ids = carrier_id.present? ? [BSON::ObjectId.from_string(carrier_id.to_s)] : Plan.where(active_year: date.year).pluck(:carrier_profile_id).uniq
         carrier_count = carrier_ids.size
 
         result = Plan.collection.aggregate([
@@ -500,15 +500,18 @@ class Plan
         ],
         :allow_disk_use => true).map{|a| a["count"]}
 
+        binding.pry
         if result.size == 0
           false
+        # elsif result.size != carrier_ids.size
+          # false
         elsif carrier_id.present?
           carrier_count == result.size
         else
           true
         end
 
-      end
+      # end
     end
 
     def monthly_premium(plan_year, hios_id, insured_age, coverage_begin_date)
