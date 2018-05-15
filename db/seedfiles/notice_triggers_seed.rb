@@ -618,7 +618,6 @@ if Settings.aca.state_abbreviation == "MA"
                       primary_recipients: ["employee"],
                       primary_recipient_delivery_method: ["secure_message"],
                       secondary_recipients: []
-                  }
               }
           }
       ]
