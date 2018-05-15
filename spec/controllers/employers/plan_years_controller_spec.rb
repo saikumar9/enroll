@@ -23,7 +23,7 @@ RSpec.describe Employers::PlanYearsController, :dbclean => :after_each do
     it 'should return qhp cost share variance for the plan' do
       allow(Products::QhpCostShareVariance).to receive(:find_qhp_cost_share_variances).and_return([qhp_cost_share_variance])
       sign_in
-      xhr :get, :reference_plan_summary, coverage_kind: "health", start_on: 2016, hios_id: "48484848", employer_profile_id: "1111", format: :js
+      xhr :get, :reference_plan_summary, coverage_kind: "health", start_on: TimeKeeper.date_of_record.beginning_of_month, hios_id: "48484848", employer_profile_id: "1111", format: :js
       expect(response).to have_http_status(:success)
       expect(response).to render_template("reference_plan_summary")
       expect(assigns[:visit_types].size).to eq 11

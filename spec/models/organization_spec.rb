@@ -188,7 +188,7 @@ RSpec.describe Organization, dbclean: :after_each do
           carrier_names[carrier_profile_1.id.to_s] = carrier_profile_1.legal_name
           multiple_carriers[carrier_profile_1.id.to_s] = carrier_profile_1.legal_name
           multiple_carriers[sole_source_participater.id.to_s] = sole_source_participater.legal_name
-          expect(Organization.valid_carrier_names(primary_office_location: office_location, active_year: 2017, selected_carrier_level: 'sole_source')).to match_array carrier_names
+          expect(Organization.valid_carrier_names(primary_office_location: office_location, start_on: Date.new(TimeKeeper.date_of_record.year - 1, 1,1), selected_carrier_level: 'sole_source')).to match_array carrier_names
           expect(Organization.valid_carrier_names(primary_office_location: office_location, active_year: 2018, selected_carrier_level: 'sole_source')).to match_array multiple_carriers
         end
 
