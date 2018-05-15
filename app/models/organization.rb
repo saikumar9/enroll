@@ -245,8 +245,8 @@ class Organization
   end
 
   def self.load_carriers(filters = { sole_source_only: false, primary_office_location: nil, selected_carrier_level: nil, start_on: nil })
-    start_on_date = filters[:start_on].present? ? filters[:start_on] : nil
-    active_year = start_on_date.present? ? start_on_date.to_date.year : nil
+    start_on_date = filters[:start_on].present? ? filters[:start_on].to_date : nil
+    active_year = start_on_date.present? ? start_on_date.year : nil
     return self.valid_health_carrier_names unless constrain_service_areas?
 
     cache_string = "load-carriers"
@@ -285,15 +285,15 @@ class Organization
         if (filters[:sole_source_only]) ## Only sole source carriers requested
           next carrier_names unless org.carrier_profile.offers_sole_source?  # skip carrier unless it is a sole source provider
         end
-        carrier_names[org.carrier_profile.id.to_s] = org.carrier_profile.legal_name if Plan.valid_shop_health_plans("carrier", org.carrier_profile.id).present? && Plan.has_rates_for_all_carriers?(start_on_date.to_date,org.carrier_profile.id.to_s)
+        carrier_names[org.carrier_profile.id.to_s] = org.carrier_profile.legal_name if Plan.valid_shop_health_plans("carrier", org.carrier_profile.id).present? && Plan.has_rates_for_all_carriers?(start_on_date,org.carrier_profile.id.to_s)
         carrier_names
       end
     end
   end
 
   def self.valid_carrier_names(filters = { sole_source_only: false, primary_office_location: nil, selected_carrier_level: nil, start_on: nil })
-    start_on_date = filters[:start_on].present? ? filters[:start_on] : nil
-    active_year = start_on_date.present? ? start_on_date.to_date.year : nil
+    start_on_date = filters[:start_on].present? ? filters[:start_on].to_date : nil
+    active_year = start_on_date.present? ? start_on_date.year : nil
 
     return self.valid_health_carrier_names unless constrain_service_areas?
 
@@ -344,7 +344,7 @@ class Organization
             carrier_plans.select! { |plan| plan.is_sole_source }
           end
         end
-        carrier_names[org.carrier_profile.id.to_s] = org.carrier_profile.legal_name if carrier_plans.any? && Plan.has_rates_for_all_carriers?(start_on_date.to_date,org.carrier_profile.id.to_s)
+        carrier_names[org.carrier_profile.id.to_s] = org.carrier_profile.legal_name if carrier_plans.any? && Plan.has_rates_for_all_carriers?(start_on_date, org.carrier_profile.id.to_s)
         carrier_names
       end
     end

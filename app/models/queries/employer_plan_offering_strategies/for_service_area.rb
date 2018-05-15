@@ -15,9 +15,9 @@ module Queries
       end
 
       def metal_level_offered_health_plans(metal_level, start_on)
-        profile_and_service_area_pairs = CarrierProfile.carrier_profile_service_area_pairs_for(employer_profile, start_on)
-        plans = Plan.for_service_areas_and_carriers(profile_and_service_area_pairs, start_on).shop_market.check_plan_offerings_for_metal_level.health_coverage.by_metal_level(metal_level).and(hios_id: /-01/)
-        plans = plans.select{|plan| Plan.has_rates_for_all_carriers?(nil,plan.carrier_profile_id.to_s) }
+        profile_and_service_area_pairs = CarrierProfile.carrier_profile_service_area_pairs_for(employer_profile, start_on.year)
+        plans = Plan.for_service_areas_and_carriers(profile_and_service_area_pairs, start_on.year).shop_market.check_plan_offerings_for_metal_level.health_coverage.by_metal_level(metal_level).and(hios_id: /-01/)
+        plans = plans.select{|plan| Plan.has_rates_for_all_carriers?(start_on,plan.carrier_profile_id.to_s) }
       end
 
       def single_option_offered_health_plans(carrier_id, start_on)

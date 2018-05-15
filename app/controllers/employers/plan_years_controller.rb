@@ -51,7 +51,7 @@ class Employers::PlanYearsController < ApplicationController
       offering_query.single_carrier_offered_health_plans(params[:carrier_id], year)
     when "metal_level"
       @metal_level = params[:metal_level]
-      offering_query.metal_level_offered_health_plans(params[:metal_level], year)
+      offering_query.metal_level_offered_health_plans(params[:metal_level], params[:start_on].to_date)
     when "single_plan"
       @single_plan = params[:single_plan]
       @carrier_id = params[:carrier_id]
@@ -77,7 +77,7 @@ class Employers::PlanYearsController < ApplicationController
     @coverage_kind = params[:coverage_kind]
     @hios_id = params[:hios_id]
     hios_id = [] << params[:hios_id]
-    @qhps = Products::QhpCostShareVariance.find_qhp_cost_share_variances(hios_id.to_a, params[:start_on], params[:coverage_kind])
+    @qhps = Products::QhpCostShareVariance.find_qhp_cost_share_variances(hios_id.to_a, @start_on.to_date.year, params[:coverage_kind])
     @visit_types = params[:coverage_kind] == "health" ? Products::Qhp::VISIT_TYPES : Products::Qhp::DENTAL_VISIT_TYPES
     @visit_types = @qhps.first.qhp_service_visits.map(&:visit_type) if params.has_key?(:details)
     respond_to do |format|

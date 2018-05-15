@@ -60,7 +60,7 @@ $(document).on('click', "#<%= @location_id %> .fa.fa-trash-o", function () {
 });
 // make summary links
 $("#<%= @location_id %> <%= @coverage_type %> <%= @coverage_type %>-view-summary").show();
-start_on = $("#plan_year_start_on").val().substr(0,4);
+start_on = $("#plan_year_start_on").val();
 $("#<%= @location_id %> <%= @coverage_type %> <%= @coverage_type %>-view-summary a").each(function() {
   var url = $(this).attr('href');
   $(this).attr('href', url+"&start_on="+start_on);

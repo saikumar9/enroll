@@ -37,7 +37,7 @@ ready = function() {
     var plan_year_id = $('a#generate-dental-carriers-and-plans').data('plan-year-id');
     var location_id = $(this).closest('.benefit-group-fields').attr('id');
     var carrier_id = 'all_plans';
-    var start_on = $("#plan_year_start_on").val().substr(0,4);
+    var start_on = $("#plan_year_start_on").val();
     if ( $('h1:first:contains("Edit")').length > 0 ) {
       var is_edit = true;
     } else {
@@ -81,7 +81,7 @@ ready = function() {
     var dental_target_url = $('a#generate-dental-carriers-and-plans').attr('href');
     var plan_year_id = $('a#generate-dental-carriers-and-plans').data('planYearId');
     var location_id = $('.benefit-group-fields:last').attr('id');
-    var active_year = $("#plan_year_start_on").val().substr(0,4);
+    var active_year = $("#plan_year_start_on").val();
     $.ajax({
       type: "GET",
       data:{
@@ -139,13 +139,13 @@ ready = function() {
       $(this).closest('.reference-steps').hide();
 
     });
-      start_on = $("#plan_year_start_on").val().substr(0,4);
+      start_on = $("#plan_year_start_on").val();
       $('.plan-options a').each(function() {
         var url = $(this).attr('href');
         $(this).attr('href', url+"&start_on="+start_on);
       });
       $("#plan_year_start_on").on('change', function() {
-        start_on = $(this).val().substr(0,4);
+        start_on = $(this).val();
         $('.plan-options a').each(function() {
           var url = $(this).attr('href');
           $(this).attr('href', url+"&start_on="+start_on);
@@ -299,7 +299,7 @@ ready = function() {
   $(".package-offering tr:contains('Child under 26')").closest('tr').attr('style','border-bottom: none;');
   // move start date to url for plan options
   $("#plan_year_start_on").on('change', function() {
-    start_on = $(this).val().substr(0,4);
+    start_on = $(this).val();
     $('.plan-options a').each(function() {
       var url = $(this).attr('href');
       $(this).attr('href', url+"&start_on="+start_on);
