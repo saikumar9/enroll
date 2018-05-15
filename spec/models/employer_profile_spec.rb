@@ -372,7 +372,7 @@ describe EmployerProfile, dbclean: :after_each do
     it "should trigger renewal_notice job in queue" do
       ActiveJob::Base.queue_adapter = :test
       ActiveJob::Base.queue_adapter.enqueued_jobs = []
-      employer_profile.trigger_notices("employer_invoice_available")
+      employer_profile.deliver("employer_invoice_available")
       queued_job = ActiveJob::Base.queue_adapter.enqueued_jobs.find do |job_info|
         job_info[:job] == ShopNoticesNotifierJob
       end
@@ -505,7 +505,7 @@ describe EmployerProfile, "Class methods", dbclean: :after_each do
     let(:organization3)  {FactoryGirl.create(:organization, fein: "034267123")}
     let(:organization4)  {FactoryGirl.create(:organization, fein: "027636010")}
     let(:organization5)  {FactoryGirl.create(:organization, fein: "076747654")}
-    let(:observer) { Observers::Observer.new }
+    let(:observer) { Observers::NoticeObserver.new }
 
     def er3; organization3.create_employer_profile(entity_kind: "partnership", broker_agency_profile: broker_agency_profile, sic_code: '1111'); end
     def er4; organization4.create_employer_profile(entity_kind: "partnership", broker_agency_profile: broker_agency_profile, sic_code: '1111'); end

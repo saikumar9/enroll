@@ -30,7 +30,7 @@ describe 'ModelEvents::GenerateInitialEmployerInvoice', dbclean: :after_each do
       let(:model_event) { ModelEvents::ModelEvent.new(:generate_initial_employer_invoice, model_instance, {}) }
 
       it "should trigger notice event" do
-        expect(subject).to receive(:notify) do |event_name, payload|
+        expect(subject.notifier).to receive(:notify) do |event_name, payload|
           expect(event_name).to eq "acapi.info.events.employer.generate_initial_employer_invoice"
           expect(payload[:employer_id]).to eq model_instance.hbx_id.to_s
           expect(payload[:event_object_kind]).to eq 'PlanYear'
