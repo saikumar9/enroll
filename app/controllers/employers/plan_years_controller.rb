@@ -41,26 +41,27 @@ class Employers::PlanYearsController < ApplicationController
     @plan_year = PlanYear.find(params[:plan_year_id])
     @location_id = params[:location_id]
     @dental_plans = Plan.by_active_year(params[:start_on]).shop_market.dental_coverage.all
+    year = params[:start_on].to_date.year
 
     offering_query = Queries::EmployerPlanOfferings.new(@employer_profile)
     @plans = case params[:plan_option_kind]
     when "single_carrier"
       @carrier_id = params[:carrier_id]
       @carrier_profile = CarrierProfile.find(params[:carrier_id])
-      offering_query.single_carrier_offered_health_plans(params[:carrier_id], params[:start_on])
+      offering_query.single_carrier_offered_health_plans(params[:carrier_id], year)
     when "metal_level"
       @metal_level = params[:metal_level]
-      offering_query.metal_level_offered_health_plans(params[:metal_level], params[:start_on])
+      offering_query.metal_level_offered_health_plans(params[:metal_level], year)
     when "single_plan"
       @single_plan = params[:single_plan]
       @carrier_id = params[:carrier_id]
       @carrier_profile = CarrierProfile.find(params[:carrier_id])
-      offering_query.single_option_offered_health_plans(params[:carrier_id], params[:start_on])
+      offering_query.single_option_offered_health_plans(params[:carrier_id], year)
     when "sole_source"
       @single_plan = params[:single_plan]
       @carrier_id = params[:carrier_id]
       @carrier_profile = CarrierProfile.find(params[:carrier_id])
-      offering_query.sole_source_offered_health_plans(params[:carrier_id], params[:start_on])
+      offering_query.sole_source_offered_health_plans(params[:carrier_id], year)
     end
     @carriers_cache = CarrierProfile.all.inject({}){|carrier_hash, carrier_profile| carrier_hash[carrier_profile.id] = carrier_profile.legal_name; carrier_hash;}
     respond_to do |format|
@@ -325,19 +326,19 @@ class Employers::PlanYearsController < ApplicationController
         @plan_year = build_plan_year
         @benefit_group = params[:benefit_group]
         @location_id = params[:location_id]
-        @start_on = params[:start_on].to_date.year
+        @start_on = params[:start_on]
 
         ## TODO: different if we dont have service areas enabled
         ## TODO: awfully slow
         @single_carriers = Organization.load_carriers(
                             primary_office_location: @employer_profile.organization.primary_office_location,
                             selected_carrier_level: 'single_carrier',
-                            active_year: @start_on
+                            start_on: @start_on
                             )
         @sole_source_carriers = Organization.load_carriers(
                             primary_office_location: @employer_profile.organization.primary_office_location,
                             selected_carrier_level: 'sole_source',
-                            active_year: @start_on
+                            start_on: @start_on
                             )
         @open_enrollment_dates = PlanYear.calculate_open_enrollment_date(start_on)
         @schedule= PlanYear.shop_enrollment_timetable(start_on)
@@ -470,7 +471,7 @@ class Employers::PlanYearsController < ApplicationController
     @carrier_names = Organization.load_carriers(
                         primary_office_location: @employer_profile.organization.primary_office_location,
                         selected_carrier_level: params[:selected_carrier_level],
-                        active_year: @start_on
+                        start_on: @start_on
                         )
   end
 
