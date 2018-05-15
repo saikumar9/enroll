@@ -14,7 +14,7 @@ describe 'ModelEvents::BrokerAgencyFiredConfirmation', dbclean: :around_each  do
     context "when ER successfully hires a broker" do
       subject { Observers::NoticeObserver.new }
       it "should trigger notice event" do
-        expect(subject).to receive(:notify) do |event_name, payload|
+        expect(subject.notifier).to receive(:notify) do |event_name, payload|
           expect(event_name).to eq "acapi.info.events.broker_agency.broker_agency_fired_confirmation"
           expect(payload[:event_object_kind]).to eq 'EmployerProfile'
           expect(payload[:event_object_id]).to eq model_instance.id.to_s
