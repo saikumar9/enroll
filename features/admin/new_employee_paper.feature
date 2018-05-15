@@ -1,3 +1,4 @@
+@ma
 Feature: Phone and Paper Enrollment options exist
   In order to support paper enrollments
   Link is provided that will track paper enrollment

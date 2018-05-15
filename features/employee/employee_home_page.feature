@@ -1,4 +1,4 @@
-@individual_enabled
+@dc
 Feature: Employee only user should be able to enroll in IVL market
 
   Scenario: User with only employee role

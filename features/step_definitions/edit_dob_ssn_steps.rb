@@ -11,7 +11,7 @@ end
 # FIXME: Make this take a 'for' argument, that way we can select which user
 When(/^Hbx Admin clicks on the Action button$/) do
   within('.effective-datatable') do
-    find_all('.dropdown-toggle', :wait => 10).last.click
+    find_all('.dropdown-toggle', :wait => 10).last.trigger('click')
   end
 end
 

@@ -1,3 +1,5 @@
+@dc
+@ma
 Feature: Add Sep with read and write permissions
   In order to limit who can give an enrollment a Sep,
   only hbx admins with read and write permissions can have the

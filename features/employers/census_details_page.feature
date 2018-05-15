@@ -1,3 +1,5 @@
+@dc
+@ma
 Feature: Employer can terminate EE from Census details page
 
 Scenario: Employer terminated EE with DOT as today

@@ -1,3 +1,5 @@
+@dc
+@ma
 Feature: Employee passive renewal should be canceled when Employee waived coverage
 
   After passive renewal is generated for a renewing employee from previous year plan selection

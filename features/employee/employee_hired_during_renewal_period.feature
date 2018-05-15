@@ -1,3 +1,5 @@
+@dc
+@ma
 Feature: Employee hired during renewal period
   In order for the New Employee to purchase insurance
   Given Employer is a Renewing Employer

@@ -136,9 +136,9 @@ And(/^.+ enters broker agency information for ga flow$/) do
   fill_in 'organization[dba]', with: "CareFirst Inc"
   # Auto-Generates FEIN
   # fill_in 'organization[fein]', with: "890222111"
-
-  find(:xpath, "//p[@class='label'][contains(., 'Select Practice Area')]").click
-  find(:xpath, "//li[contains(., 'Both – Individual & Family AND Small Business Marketplaces')]").click
+  find('.selectric-interaction-choice-control-organization-market-kind').click
+  # find(:xpath, "//li[contains(., 'Both – Individual & Family AND Small Business Marketplaces')]").click
+  find(:xpath, "//li[contains(., 'Small Business Marketplace ONLY')]").click
 
   find(:xpath, "//label[input[@name='organization[accept_new_clients]']]").trigger('click')
   find(:xpath, "//label[input[@name='organization[working_hours]']]").trigger('click')
@@ -152,7 +152,7 @@ When(/^.+ registers with valid information for ga flow$/) do
 end
 
 Then(/^.+ should receive an invitation email for ga flow$/) do
-  open_email("broker.martin@example.com", :with_subject => "Invitation to create your Broker account on #{Settings.site.short_name} ")
+  open_email("broker.martin@example.com", :with_subject => "Welcome! You've Submitted a Broker Application on the #{Settings.site.short_name} for Business")
   expect(current_email.to).to eq(["broker.martin@example.com"])
 end
 
@@ -180,7 +180,7 @@ When(/^.+ assign employer to general agency$/) do
   find("input[id^='broker_dt_employer_ids_']").click
   find(:xpath, "//p[@class='label'][contains(., 'Select General Agency')]").click
   find(:xpath, "//li[contains(., 'Housecare Inc')]").click
-  find("#assign_general_agency").click
+  find("#assign_general_agency").trigger('click')
 
 end
 

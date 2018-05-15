@@ -66,17 +66,19 @@
     end
   end
 
-  Then(/^I select the all security question and give the answer$/) do
-    (0..2).each do |num|
-      page.all('.security-question-select')[num].set("Security Question #{num + 1}")
-      page.all('.interaction-field-control-security-question-response-question-answer')[num].set("Answer #{num+1}")
-    end
-  end
+  # if Settings.aca.state_abbreviation == "MA"
+    Then(/^I select the all security question and give the answer$/) do
+      pending if Settings.aca.state_abbreviation == "DC"
+        (0..2).each do |num|
+          page.all('.security-question-select')[num].set("Security Question #{num + 1}")
+          page.all('.interaction-field-control-security-question-response-question-answer')[num].set("Answer #{num+1}")
+        end
+      end
 
-  When(/I have submit the security questions$/) do
-    screenshot("group_selection")
-    find('.interaction-click-control-save-responses').click
-  end
+      When(/I have submit the security questions$/) do
+        screenshot("group_selection")
+        find('.interaction-click-control-save-responses').click
+      end
 
   Then 'I have landed on employer profile page' do
     page.should(have_content("Thank you for logging into your #{Settings.site.short_name} employer account."))

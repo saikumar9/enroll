@@ -8,6 +8,6 @@ Feature: Admin Assigns a General Agency to an Employer
 
   Scenario: Then the Admin should see the 'Assign' link under the broker profile
     And Hbx Admin logs on to the Hbx Portal
+    And Hbx Admin clicks on the Brokers dropdown
     And Hbx Admin clicks on the Broker Agencies tab
-    And Hbx Admin clicks on the broker
     Then he should be able to see the Assign link under his profile

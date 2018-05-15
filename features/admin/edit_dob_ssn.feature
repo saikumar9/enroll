@@ -1,3 +1,5 @@
+@dc
+@ma
 Feature: Update DOB and SSN
     In order to update DOB and SSN
     User should have the role of an admin

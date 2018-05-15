@@ -42,12 +42,16 @@ When(/^Hbx admin enter announcement info with invalid params$/) do
   fill_in 'announcement[content]', with: 'invalid announcement'
   fill_in 'jq_datepicker_ignore_announcement[start_date]', with: (TimeKeeper.date_of_record + 5.days).to_s
   fill_in 'jq_datepicker_ignore_announcement[end_date]', with: (TimeKeeper.date_of_record).to_s
-  find('#announcement_audiences_ivl').click
+  find('#announcement_audiences_ivl').trigger('click')
   find('.interaction-click-control-create-announcement').trigger('click')
 end
 
 Then(/^Hbx admin should see the alert msg$/) do
-  binding.pry
+  fill_in 'announcement[content]', with: 'invalid announcement'
+  fill_in 'jq_datepicker_ignore_announcement[start_date]', with: (TimeKeeper.date_of_record + 5.days).to_s
+  fill_in 'jq_datepicker_ignore_announcement[end_date]', with: (TimeKeeper.date_of_record).to_s
+  find('#announcement_audiences_ivl').trigger('click')
+  find('.interaction-click-control-create-announcement').trigger('click')
   expect(page).to have_content('prohibited this announcement from being saved')
   expect(page).to have_content('End Date should be later than Start date')
 end

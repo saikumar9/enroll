@@ -1,4 +1,4 @@
-@individual_enabled
+@dc
 #TODO actually click through were button really is
 Feature: Outstanding Verifications screen
 
