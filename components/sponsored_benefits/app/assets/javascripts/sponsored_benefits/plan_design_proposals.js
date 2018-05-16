@@ -50,7 +50,7 @@ function attachEmployerHealthContributionShowHide() {
 }
 
 function fetchCarriers() {
-  var active_year = $("#forms_plan_design_proposal_effective_date").val().substr(0,4);
+  var start_on = $("#forms_plan_design_proposal_effective_date").val();
   var selected_carrier_level = $(this).siblings('input').val();
   var plan_design_organization_id = $('#plan_design_organization_id').val();
   $(this).closest('.health-plan-design').find('.nav-tabs li').removeClass('active');
@@ -60,7 +60,7 @@ function fetchCarriers() {
   $.ajax({
     type: "GET",
     data:{
-      active_year: active_year,
+      start_on: start_on,
       selected_carrier_level: selected_carrier_level,
     },
     success: function() {

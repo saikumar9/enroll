@@ -4,15 +4,16 @@ module SponsoredBenefits
 
       def index
         offering_query = ::Queries::EmployerPlanOfferings.new(plan_design_organization)
+        year = params[:start_on].try(:to_date).try(:year)
         @plans = case selected_carrier_level
           when "single_carrier"
-            offering_query.single_carrier_offered_health_plans(params[:carrier_id], params[:active_year])
+            offering_query.single_carrier_offered_health_plans(params[:carrier_id], year)
           when "metal_level"
-            offering_query.metal_level_offered_health_plans(params[:metal_level], params[:active_year])
+            offering_query.metal_level_offered_health_plans(params[:metal_level], params[:start_on].try(:to_date))
           when "single_plan"
-            offering_query.single_option_offered_health_plans(params[:carrier_id], params[:active_year])
+            offering_query.single_option_offered_health_plans(params[:carrier_id], year)
           when "sole_source"
-            offering_query.sole_source_offered_health_plans(params[:carrier_id], params[:active_year])
+            offering_query.sole_source_offered_health_plans(params[:carrier_id], year)
           end
         @search_options = ::Plan.search_options(@plans)
         @search_option_titles = {
