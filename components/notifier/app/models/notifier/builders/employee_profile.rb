@@ -5,11 +5,7 @@ module Notifier
     include Notifier::Builders::Broker
     include Notifier::Builders::Enrollment
 
-<<<<<<< HEAD
-    attr_accessor :employee_role, :merge_model, :payload, :sep_id
-=======
-    attr_accessor :employee_role, :merge_model, :payload, :qle_title, :qle_event_on, :qle_reporting_deadline
->>>>>>> origin/notice_engine_21938
+    attr_accessor :employee_role, :merge_model, :payload, :sep_id, :qle_title, :qle_event_on, :qle_reporting_deadline
 
     def initialize
       data_object = Notifier::MergeDataModels::EmployeeProfile.new
@@ -17,12 +13,9 @@ module Notifier
       data_object.broker = Notifier::MergeDataModels::Broker.new
       data_object.enrollment = Notifier::MergeDataModels::Enrollment.new
       data_object.plan_year = Notifier::MergeDataModels::PlanYear.new
-<<<<<<< HEAD
       data_object.census_employee = Notifier::MergeDataModels::CensusEmployee.new
       data_object.special_enrollment_period = Notifier::MergeDataModels::SpecialEnrollmentPeriod.new
-=======
       data_object.qle = Notifier::MergeDataModels::QualifyingLifeEventKind.new
->>>>>>> origin/notice_engine_21938
       @merge_model = data_object
     end
 

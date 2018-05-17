@@ -682,6 +682,7 @@ RSpec.describe Insured::FamiliesController do
             expect(event_name).to eq "acapi.info.events.employee.employee_notice_for_sep_denial"
             expect(payload[:event_object_kind]).to eq 'PlanYear'
             expect(payload[:event_object_id]).to eq plan_year.id.to_s
+            binding.pry
             expect(payload[:notice_params][:qle_title]).to eq qle.title
             expect(payload[:notice_params][:qle_reporting_deadline]).to eq date
             expect(payload[:notice_params][:qle_event_on]).to eq date
