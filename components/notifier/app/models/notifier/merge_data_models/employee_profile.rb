@@ -25,6 +25,7 @@ module Notifier
     attribute :plan_year, MergeDataModels::PlanYear
     attribute :census_employee, MergeDataModels::CensusEmployee
     attribute :special_enrollment_period, MergeDataModels::SpecialEnrollmentPeriod
+    attribute :qle, MergeDataModels::QualifyingLifeEventKind
   
     def self.stubbed_object
       notice = Notifier::MergeDataModels::EmployeeProfile.new({
@@ -45,6 +46,7 @@ module Notifier
       notice.plan_year = Notifier::MergeDataModels::PlanYear.stubbed_object
       notice.census_employee = Notifier::MergeDataModels::CensusEmployee.stubbed_object
       notice.special_enrollment_period = Notifier::MergeDataModels::SpecialEnrollmentPeriod.stubbed_object
+      notice.qle = Notifier::MergeDataModels::QualifyingLifeEventKind.stubbed_object
       notice
     end
 

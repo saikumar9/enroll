@@ -5,7 +5,11 @@ module Notifier
     include Notifier::Builders::Broker
     include Notifier::Builders::Enrollment
 
+<<<<<<< HEAD
     attr_accessor :employee_role, :merge_model, :payload, :sep_id
+=======
+    attr_accessor :employee_role, :merge_model, :payload, :qle_title, :qle_event_on, :qle_reporting_deadline
+>>>>>>> origin/notice_engine_21938
 
     def initialize
       data_object = Notifier::MergeDataModels::EmployeeProfile.new
@@ -13,8 +17,12 @@ module Notifier
       data_object.broker = Notifier::MergeDataModels::Broker.new
       data_object.enrollment = Notifier::MergeDataModels::Enrollment.new
       data_object.plan_year = Notifier::MergeDataModels::PlanYear.new
+<<<<<<< HEAD
       data_object.census_employee = Notifier::MergeDataModels::CensusEmployee.new
       data_object.special_enrollment_period = Notifier::MergeDataModels::SpecialEnrollmentPeriod.new
+=======
+      data_object.qle = Notifier::MergeDataModels::QualifyingLifeEventKind.new
+>>>>>>> origin/notice_engine_21938
       @merge_model = data_object
     end
 
@@ -177,6 +185,42 @@ module Notifier
     def format_date(date)
       return '' if date.blank?
       date.strftime('%m/%d/%Y')
+    end
+
+    def qle
+      return @qle if defined? @qle
+      if payload['event_object_kind'].constantize == QualifyingLifeEventKind
+        @qle = QualifyingLifeEventKind.find(payload['event_object_id'])
+      end
+    end
+
+    def qle_title
+      merge_model.qle.title = qle.blank? ? payload['qle_title'] : qle.title
+    end
+
+    def qle_start_on
+      return if qle.blank?
+      merge_model.qle.start_on = qle.start_on
+    end
+
+    def qle_end_on
+      return if qle.blank?
+      merge_model.qle.end_on = qle.end_on
+    end
+
+    def qle_event_on
+      return if qle.blank?
+      merge_model.qle.event_on = qle.event_on.blank? ? Date.strptime(payload['qle_event_on'], '%m/%d/%Y') : qle.event_on
+    end
+
+    def qle_reported_on
+      return if qle.blank?
+      merge_model.qle.reported_on = qle.updated_at
+    end
+
+    def qle_reporting_deadline
+      return if qle.blank? && payload['qle_reporting_deadline'].nil?
+      merge_model.qle.reporting_deadline = Date.strptime(payload['qle_reporting_deadline'], '%m/%d/%Y')
     end
   end
 end
