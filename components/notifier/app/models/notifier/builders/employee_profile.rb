@@ -5,7 +5,7 @@ module Notifier
     include Notifier::Builders::Broker
     include Notifier::Builders::Enrollment
 
-    attr_accessor :employee_role, :merge_model, :payload
+    attr_accessor :employee_role, :merge_model, :payload, :sep_id
 
     def initialize
       data_object = Notifier::MergeDataModels::EmployeeProfile.new
@@ -14,6 +14,7 @@ module Notifier
       data_object.enrollment = Notifier::MergeDataModels::Enrollment.new
       data_object.plan_year = Notifier::MergeDataModels::PlanYear.new
       data_object.census_employee = Notifier::MergeDataModels::CensusEmployee.new
+      data_object.special_enrollment_period = Notifier::MergeDataModels::SpecialEnrollmentPeriod.new
       @merge_model = data_object
     end
 
@@ -142,6 +143,40 @@ module Notifier
 
     def dependent_termination_date
       merge_model.dependent_termination_date = format_date(TimeKeeper.date_of_record.end_of_month)
+    end
+    
+    def special_enrollment_period
+      return @special_enrollment_period if defined? @special_enrollment_period
+      if payload['event_object_kind'].constantize == SpecialEnrollmentPeriod
+        @special_enrollment_period = employee_role.person.primary_family.special_enrollment_periods.find(payload['event_object_id'])
+      else
+        @special_enrollment_period = employee_role.person.primary_family.current_sep
+      end
+    end
+
+    def special_enrollment_period_title
+      merge_model.special_enrollment_period.title = special_enrollment_period.title
+    end
+
+    def special_enrollment_period_qle_reported_on
+      merge_model.special_enrollment_period.qle_reported_on = format_date(special_enrollment_period.qle_on)
+    end
+
+    def special_enrollment_period_start_on
+      merge_model.special_enrollment_period.start_on = format_date(special_enrollment_period.start_on)
+    end
+
+    def special_enrollment_period_end_on
+      merge_model.special_enrollment_period.end_on = format_date(special_enrollment_period.end_on)
+    end
+
+    def special_enrollment_period_submitted_at
+      merge_model.special_enrollment_period.submitted_at = format_date(special_enrollment_period.submitted_at)
+    end
+
+    def format_date(date)
+      return '' if date.blank?
+      date.strftime('%m/%d/%Y')
     end
   end
 end

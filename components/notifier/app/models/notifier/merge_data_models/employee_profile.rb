@@ -24,7 +24,8 @@ module Notifier
     attribute :enrollment, MergeDataModels::Enrollment
     attribute :plan_year, MergeDataModels::PlanYear
     attribute :census_employee, MergeDataModels::CensusEmployee
-
+    attribute :special_enrollment_period, MergeDataModels::SpecialEnrollmentPeriod
+  
     def self.stubbed_object
       notice = Notifier::MergeDataModels::EmployeeProfile.new({
         notice_date: TimeKeeper.date_of_record.strftime('%m/%d/%Y'),
@@ -43,6 +44,7 @@ module Notifier
       notice.enrollment = Notifier::MergeDataModels::Enrollment.stubbed_object
       notice.plan_year = Notifier::MergeDataModels::PlanYear.stubbed_object
       notice.census_employee = Notifier::MergeDataModels::CensusEmployee.stubbed_object
+      notice.special_enrollment_period = Notifier::MergeDataModels::SpecialEnrollmentPeriod.stubbed_object
       notice
     end
 
