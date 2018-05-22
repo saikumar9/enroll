@@ -175,10 +175,8 @@ end
 When(/^.+ clicks? on Edit family button for a census family$/) do
   click_link 'Employees'
   wait_for_ajax
-  within '.census-employees-table' do
-    find('.top').click
-  end
-  find('.fa-pencil').click
+  click_link CensusEmployee.all.first.full_name
+  #find('.fa-pencil').click
 end
 
 When(/^.+ edits? ssn and dob on employee detail page after linked$/) do
@@ -206,7 +204,7 @@ Then(/^.+ should see a form to update the contents of the census employee$/) do
   fill_in 'census_employee[first_name]', :with => 'Patrick'
   fill_in 'jq_datepicker_ignore_census_employee[dob]', :with => '01/01/1980'
   fill_in 'census_employee[ssn]', :with => '786120965'
-  find('.census-employee-add').click
+  #find('.census-employee-add').click
   find(:xpath, '//p[@class="label"][contains(., "GA")]').click
   find(:xpath, "//li[contains(., 'VA')]").click
 
@@ -347,8 +345,9 @@ And(/^Employer can see the sole source plan information$/) do
 end
 
 And(/^.+ should see a button to create new plan year$/) do
-  screenshot("employer_plan_year")
-  #Hackity Hack need both years reference plans b/c of Plan.valid_shop_dental_plans and Plan.by_active_year(params[:start_on]).shop_market.health_coverage.by_carrier_profile(@carrier_profile).and(hios_id: /-01/)
+  year = (Date.today + 2.months).year
+  plan = FactoryGirl.create :plan, :with_premium_tables, active_year: year, market: 'shop', coverage_kind: 'health', deductible: 4000
+  plan2 = FactoryGirl.create :plan, :with_premium_tables, active_year: (year - 1), market: 'shop', coverage_kind: 'health', deductible: 4000, carrier_profile_id: plan.carrier_profile_id
   find('a.interaction-click-control-add-plan-year').click
 end
 
@@ -368,19 +367,11 @@ And(/^.+ should be able to enter plan year, benefits, relationship benefits with
 
   fill_in "plan_year[pte_count]", :with => "15"
   fill_in "plan_year[msp_count]", :with => "3"
-
   find('.interaction-click-control-continue').click
-
   # Benefit Group
   fill_in "plan_year[benefit_groups_attributes][0][title]", :with => "Silver PPO Group"
-
-  find('.interaction-choice-control-plan-year-start-on').click
-  find('li.interaction-choice-control-plan-year-start-on-1').click
-
-  fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][0][premium_pct]", :with => 50
-  fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][1][premium_pct]", :with => 50
-  fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][2][premium_pct]", :with => 50
-  fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][3][premium_pct]", :with => 50
+  #find('.interaction-choice-control-plan-year-start-on').click
+  #find('li.interaction-choice-control-plan-year-start-on-1').click
 
   find(:xpath, '//li/label[@for="plan_year_benefit_groups_attributes_0_plan_option_kind_single_carrier"]').click
   wait_for_ajax
@@ -388,6 +379,13 @@ And(/^.+ should be able to enter plan year, benefits, relationship benefits with
   wait_for_ajax(10,2)
   find('.reference-plans label').click
   wait_for_ajax(10,2)
+
+  fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][0][premium_pct]", :with => 50
+  fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][1][premium_pct]", :with => 50
+  fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][2][premium_pct]", :with => 50
+  fill_in "plan_year[benefit_groups_attributes][0][relationship_benefits_attributes][3][premium_pct]", :with => 50
+
+  
   find('.interaction-click-control-create-plan-year').trigger('click')
 end
 
@@ -446,11 +444,19 @@ Then(/^.+ should see Action Needed button/) do
 end
 
 Then(/^.+ should see Publish Plan Year Modal with address warnings$/) do
-  expect(find('.modal-body')).to have_content("Primary office must be located in #{Settings.aca.state_name}")
+  if Settings.aca.employer_attestation
+   expect(find('.modal-body')).to have_content("Primary office must be located in #{Settings.aca.state_name}")
+  else
+    expect(find('.modal-body')).to have_content("As submitted, this application is ineligible for coverage under the DC Health Link exchange for reasons identified below. Click Cancel to go back and correct inaccurate information. If the information provided is accurate, you may click Publish to proceed. However, if you choose to proceed and the eligibility determination is deemed correct by DC Health Link officials, this organization may not again apply for coverage for 90 days, or until the reason for ineligibility changes, whichever is later.")
+  end
 end
 
 Then(/^.+ should see Publish Plan Year Modal with FTE warnings$/) do
-  expect(find('.modal-body')).to have_content("Has #{Settings.aca.shop_market.small_market_employee_count_maximum} or fewer full time equivalent employees")
+  if Settings.aca.employer_attestation
+    expect(find('.modal-body')).to have_content("Has #{Settings.aca.shop_market.small_market_employee_count_maximum} or fewer full time equivalent employees")
+  else
+    expect(find('.modal-body')).to have_content("As submitted, this application is ineligible for coverage under the DC Health Link exchange for reasons identified below. Click Cancel to go back and correct inaccurate information. If the information provided is accurate, you may click Publish to proceed. However, if you choose to proceed and the eligibility determination is deemed correct by DC Health Link officials, this organization may not again apply for coverage for 90 days, or until the reason for ineligibility changes, whichever is later.")
+  end
 end
 
 Then(/^.+ clicks? on the Cancel button$/) do
@@ -460,12 +466,16 @@ end
 
 Then(/^.+ should be on the business info page with warnings$/) do
   expect(page).to have_content 'Primary Office Location'
-  expect(find('.alert-error')).to have_content("Primary office must be located in #{Settings.aca.state_name}")
+  if Settings.aca.employer_attestation
+    expect(find('.alert-error')).to have_content("Primary office must be located in #{Settings.aca.state_name}")
+  else
+    expect(find('.alert-error')).to have_content("Is a small business located in #{Settings.aca.state_name}")
+  end
 end
 
 Then(/^.+ should be on the Plan Year Edit page with warnings$/) do
   expect(page).to have_css('#plan_year')
-  expect(find('.alert-plan-year')).to have_content("Has #{Settings.aca.shop_market.small_market_employee_count_maximum} or fewer full time equivalent employees")
+  expect(find('.alert-plan-year')).to have_content("Has 1 -#{Settings.aca.shop_market.small_market_employee_count_maximum} full time equivalent employees")
 end
 
 Then(/^.+ updates the address location with correct address$/) do
