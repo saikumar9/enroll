@@ -1,3 +1,4 @@
+@dc
 Feature: Create Employer
   In order for Employers to create and manage an account on the HBX for their organization
   In order for Employees to purchase insurance
@@ -77,20 +78,3 @@ Feature: Create Employer
       Then Employee should see the receipt page
       Then Employee should see the "my account" page
       And Employee logs out
-
-    Scenario: When fte_count, pte_count and msp_count are blank, CONTINUE button should be disabled
-      Given Employer has not signed up as an HBX user
-      When I visit the Employer portal
-      Then Jack Doe create a new account for employer
-      Then I should see a successful sign up message
-      Then I should click on employer portal
-      Then Jack Doe creates a new employer profile with default_office_location
-      When I go to the Profile tab
-      When Employer goes to the benefits tab
-      And Employer should see a button to create new plan year
-      When Employer enters plan year start date
-      Then Employer should see disabled button with text continue
-      When Employer enters total number of employees
-      When Employer clicks continue
-      Then Employer should see benefits page
-      And Employer logs out

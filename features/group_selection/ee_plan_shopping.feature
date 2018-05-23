@@ -1,3 +1,4 @@
+@dc
 Feature: EE plan purchase
 
   Scenario: when EE purchase plan for self & dependent

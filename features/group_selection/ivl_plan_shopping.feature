@@ -1,4 +1,4 @@
-@individual_enabled
+@dc
 Feature: IVL plan purchase
 
   Scenario: when IVL purchase plan for self & dependent

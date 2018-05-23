@@ -1,4 +1,4 @@
-@attestation_disabled
+@ma
 Feature: Employer Profile
   In order for initial employers to submit application
   Employer Staff should upload attestation document

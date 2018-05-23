@@ -1,4 +1,4 @@
-@more_than_sole_source
+@ma
 Feature: COBRA basic
   Scenario: An Employer is new to the Exchange and needs to enter COBRA enrollees
     Given shop health plans exist for both last and this year

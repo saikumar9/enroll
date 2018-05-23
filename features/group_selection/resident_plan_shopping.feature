@@ -1,4 +1,4 @@
-@individual_enabled
+@dc
 Feature: IVL plan purchase
 
   Scenario: when Resident purchase plan for self & dependent
