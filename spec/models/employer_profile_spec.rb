@@ -372,7 +372,7 @@ describe EmployerProfile, dbclean: :after_each do
     it "should trigger renewal_notice job in queue" do
       ActiveJob::Base.queue_adapter = :test
       ActiveJob::Base.queue_adapter.enqueued_jobs = []
-      employer_profile.trigger_notices("employer_invoice_available")
+      employer_profile.deliver("employer_invoice_available")
       queued_job = ActiveJob::Base.queue_adapter.enqueued_jobs.find do |job_info|
         job_info[:job] == ShopNoticesNotifierJob
       end
