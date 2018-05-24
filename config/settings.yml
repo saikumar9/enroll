@@ -3,12 +3,12 @@ site:
   subdomain: "mhc"
   domain_name: "hbxshop.org"
   home_url: "https://enroll.mhc.hbxshop.org"
-  main_web_address_url: "https://www.MAhealthconnector.org"
   home_business_url: "https://www.mahealthconnector.org/business/"
-  business_resource_center_url: "https://www.mahealthconnector.org/business/business-resource-center"
-  nondiscrimination_notice_url: "https://www.MAhealthconnector.org/site-policies/nondiscrimination-notice"
   help_url: "https://www.mahealthconnector.org/business/help-center"
   faqs_url: "https://www.mahealthconnector.org/business/help-center/faqs"
+  business_resource_center_url: "https://www.mahealthconnector.org/business/business-resource-center"
+  nondiscrimination_notice_url: "https://www.MAhealthconnector.org/site-policies/nondiscrimination-notice"
+  main_web_address_url: "https://www.MAhealthconnector.org"
   policies_url: "https://www.mahealthconnector.org/about/policy-center/policies"
   invoice_bill_url: "https://ww2.e-billexpress.com/ebpp/maconnector/"
   payment_pdf_url: "https://www.mahealthconnector.org/help-center-answers/how-to-pay-your-premiums-online"
@@ -22,9 +22,9 @@ site:
   copyright_period_start: "2017"
   header_message: "The Right Place for the Right Plan"
   logo_file_name: "mhc_logo.svg"
+  make_their_premium_payments_online: "https://ww2.e-billexpress.com/ebpp/MAConnector/"
   tab_icon: 'favicon.ico'
   mailer_logo_file_name: "health_connector.png"
-  make_their_premium_payments_online: "https://www.mahealthconnector.org/business/employers/payment-information"
   employer_application_deadline_link: "https://www.mahealthconnector.org/business/employers/employer-resources-and-information/employer-coverage-deadlines"
   s3_prefix: "mhc"
   broker_quoting_enabled: false
@@ -40,7 +40,6 @@ site:
   registration_path: "https://www.mahealthconnector.org/business/create-a-business-account"
   home_forms_url: "https://dchealthlink.com/forms"
   forms_name: "DCHealthLink.com/forms"
-  website_name: "www.DCHealthLink.com"
   healthcare_name: "www.healthcare.gov"
   healthcare_url: "https://www.healthcare.gov/"
   irs_url: "https://www.irs.gov/"
@@ -60,6 +59,7 @@ contact_center:
   alt_phone_number: "1-888-813-9220"
   payment_phone_number: "1-888-813-9220"
   ivl_number: "1-877-623-6765"
+  ivl_phone_number: "1-877-623-6765"
   email_address: "smallbusiness@mahealthconnector.org"
   small_business_email: "smallbusiness@MAhealthconnector.org"
   non_discrimination_email: "Nondiscrimination@state.ma.us"
@@ -154,7 +154,7 @@ aca:
     employer_family_contribution_percent_minimum: 33
     employee_participation_ratio_minimum: <%= 3 / 4.0 %>
     non_owner_participation_count_minimum: 1
-    binder_payment_due_on: 23
+    binder_payment_due_on: 25
     new_employee_paper_application: true
     census_employees_template_file: 'Health Connector - Employee Census Template'
     coverage_start_period: "2 months"
