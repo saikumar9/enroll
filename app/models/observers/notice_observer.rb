@@ -91,7 +91,7 @@ module Observers
 
         if new_model_event.event_key == :application_denied
           errors = plan_year.enrollment_errors
-          
+
           if(errors.include?(:enrollment_ratio) || errors.include?(:non_business_owner_enrollment_count))
             plan_year.employer_profile.census_employees.non_terminated.each do |ce|
               if ce.employee_role.present?
@@ -146,7 +146,7 @@ module Observers
       if HbxEnrollment::REGISTERED_EVENTS.include?(new_model_event.event_key)
         hbx_enrollment = new_model_event.klass_instance
         if hbx_enrollment.is_shop? && hbx_enrollment.census_employee.is_active?
-          
+
           is_valid_employer_py_oe = (hbx_enrollment.benefit_group.plan_year.open_enrollment_contains?(hbx_enrollment.submitted_at) || hbx_enrollment.benefit_group.plan_year.open_enrollment_contains?(hbx_enrollment.created_at))
 
           if new_model_event.event_key == :notify_employee_of_plan_selection_in_open_enrollment
@@ -159,7 +159,7 @@ module Observers
             if is_valid_employer_py_oe
               trigger_notice(recipient: hbx_enrollment.employee_role, event_object: hbx_enrollment, notice_event: "notify_employee_of_plan_selection_in_open_enrollment") #initial EE notice
             end
-            
+
             if !is_valid_employer_py_oe && (hbx_enrollment.enrollment_kind == "special_enrollment" || hbx_enrollment.census_employee.new_hire_enrollment_period.cover?(TimeKeeper.date_of_record))
               trigger_notice(recipient: hbx_enrollment.census_employee.employee_role, event_object: hbx_enrollment, notice_event: "employee_plan_selection_confirmation_sep_new_hire")
             end
@@ -220,6 +220,15 @@ module Observers
               if plan_year.enrollment_ratio < Settings.aca.shop_market.employee_participation_ratio_minimum
                 trigger_notice(recipient: organization.employer_profile, event_object: plan_year, notice_event: "low_enrollment_notice_for_employer")
               end
+            end
+          end
+        end
+
+        if model_event.event_key == :initial_employer_no_binder_payment_received
+          EmployerProfile.initial_employers_enrolled_plan_year_state.each do |org|
+            if !org.employer_profile.binder_paid?
+              py = org.employer_profile.plan_years.where(:aasm_state.in => PlanYear::INITIAL_ENROLLING_STATE).first
+              trigger_notice(recipient: org.employer_profile, event_object: py, notice_event: "initial_employer_no_binder_payment_received")
             end
           end
         end

@@ -5,7 +5,7 @@ module Notifier
     include Notifier::Builders::Broker
     include Notifier::Builders::Enrollment
 
-    attr_accessor :employee_role, :merge_model, :payload, :sep_id, :qle_title, :qle_event_on, :qle_reporting_deadline
+    attr_accessor :employee_role, :merge_model, :payload, :event_name, :sep_id, :qle_title, :qle_event_on, :qle_reporting_deadline
 
     def initialize
       data_object = Notifier::MergeDataModels::EmployeeProfile.new
@@ -56,7 +56,14 @@ module Notifier
       return @enrollment if defined? @enrollment
       if payload['event_object_kind'].constantize == HbxEnrollment
         @enrollment = employee_role.person.primary_family.active_household.hbx_enrollments.find(payload['event_object_id'])
+      elsif event_name == "employee_notice_for_employee_terminated_from_roster"
+        @enrollment = latest_terminated_health_enrollment if latest_terminated_health_enrollment.present?
       end
+    end
+
+    def enrollment_coverage_end_on
+      return if enrollment.blank?
+      merge_model.enrollment.coverage_end_on = format_date(enrollment.terminated_on)
     end
 
     def enrollment_coverage_start_on
@@ -120,14 +127,30 @@ module Notifier
       census_employee_health_enrollment? && census_employee_dental_enrollment?
     end
 
+    def latest_terminated_health_enrollment
+      enrollment = employee_role.person.primary_family.active_household.hbx_enrollments.shop_market.by_coverage_kind("health").where(:aasm_state.in => ["coverage_termination_pending", "coverage_terminated"]).detect do |hbx|
+        census_employee_record.employment_terminated_on < hbx.terminated_on
+      end
+      enrollment
+    end
+
+    def latest_terminated_dental_enrollment
+      enrollment = employee_role.person.primary_family.active_household.hbx_enrollments.shop_market.by_coverage_kind("dental").where(:aasm_state.in => ["coverage_termination_pending", "coverage_terminated"]).detect do |hbx|
+        census_employee_record.employment_terminated_on < hbx.terminated_on
+      end
+      enrollment
+    end
+
     def census_employee_latest_terminated_health_enrollment_plan_name
-      merge_model.census_employee.load_data(payload) if !merge_model.census_employee.is_data_initialized?
-      merge_model.census_employee.latest_terminated_health_enrollment_plan_name
+      if latest_terminated_health_enrollment.present?
+        merge_model.census_employee.latest_terminated_health_enrollment_plan_name = latest_terminated_health_enrollment.plan.name
+      end
     end
 
     def census_employee_latest_terminated_dental_enrollment_plan_name
-      merge_model.census_employee.load_data(payload) if !merge_model.census_employee.is_data_initialized?
-      merge_model.census_employee.latest_terminated_dental_enrollment_plan_name
+      if latest_terminated_dental_enrollment.present?
+        merge_model.census_employee.latest_terminated_dental_enrollment_plan_name = latest_terminated_dental_enrollment.plan.name
+      end
     end
 
     def employer_profile
@@ -145,7 +168,7 @@ module Notifier
     def dependent_termination_date
       merge_model.dependent_termination_date = format_date(TimeKeeper.date_of_record.end_of_month)
     end
-    
+
     def special_enrollment_period
       return @special_enrollment_period if defined? @special_enrollment_period
       if payload['event_object_kind'].constantize == SpecialEnrollmentPeriod
