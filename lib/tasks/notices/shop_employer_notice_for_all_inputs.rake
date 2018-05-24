@@ -37,8 +37,8 @@ namespace :notice do
   end
 
   def trigger_notice(employer_profile)
-    observer = Observers::NoticeObserver.new
+    observer = Observers::Observer.new
     plan_year = employer_profile.plan_years.first
-    observer.deliver(recipient: employer_profile, event_object: plan_year, notice_event: @event_name)
+    observer.trigger_notice(recipient: employer_profile, event_object: plan_year, notice_event: @event_name)
   end
 end
